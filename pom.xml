@@ -12,6 +12,68 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- VARIABLES FOR PROJECT DEPENDENCIES VERSIONS -->
+        <!-- UNIVERSAL -->
+        <junitJupiter.version>5.12.0</junitJupiter.version>
+        <junitSuite.version>1.12.0</junitSuite.version>
+        <javafaker.version>1.0.2</javafaker.version>
+        <assertjCore.version>3.27.3</assertjCore.version>
+        <dotenvJava.version>3.2.0</dotenvJava.version>
+        <!-- BACKEND -->
+        <restAssured.version>5.5.1</restAssured.version>
+        <jsonSchemaValidatorRestAssured.version>5.5.1</jsonSchemaValidatorRestAssured.version>
     </properties>
 
+    <dependencies>
+        <!-- UNIVERSAL -->
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junitJupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-suite -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>${junitSuite.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>${javafaker.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertjCore.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>${dotenvJava.version}</version>
+        </dependency>
+        <!-- Allure Report - dodać i skonfigurować później -->
+        <!-- Logback Classic - dodać i skonfigurować później -->
+        <!-- BACKEND -->
+        <!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${restAssured.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.rest-assured/json-schema-validator -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>${jsonSchemaValidatorRestAssured.version}</version>
+        </dependency>
+    </dependencies>
 </project>
