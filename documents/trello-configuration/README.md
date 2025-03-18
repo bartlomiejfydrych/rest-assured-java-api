@@ -17,7 +17,7 @@
      - Klikamy przycisk `Kontynuuj`
 4. Na poniższej stronie zapoznajemy się z informacjami z sekcji **Managing your API Key**:  
    https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/
-5. Tworzymy **Trello Power-Up**:
+5. Tworzymy `Trello Power-Up`:
    - Wchodzimy na poniższą stronę i zaczynamy zapoznawać się z informacjami:  
      https://developer.atlassian.com/cloud/trello/guides/power-ups/managing-power-ups/#adding-a-new-custom-power-up
    - Zarządzanie `Power-Up'ami` odbywa się za pośrednictwem strony:  
