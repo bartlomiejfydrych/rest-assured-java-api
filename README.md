@@ -21,7 +21,7 @@ A separate repository will be allocated for **Frontend testing using Selenium.**
 
 This repository contains **API Tests using REST Assured and Java.**
 
-I covered with tests **API** of the website **Piwik PRO**.
+I covered with tests **API** of the website **Trello**.
 
 A description of the site and a list of things I learned are in the later sections of this document.
 
@@ -37,14 +37,12 @@ a certain method/test this way and not another.
 
 ### Link
 
-[Piwik PRO](https://developers.piwik.pro/reference/authentication)
+[Trello](https://developer.atlassian.com/cloud/trello/rest/api-group-actions/#api-group-actions)
 
 ### Description
 
-**Piwik PRO** – I'll just put her description here:  
-*Reliable data that lets you maximize the impact of your marketing investment.  
-Unify your marketing insights, get a complete view of your performance, and take action to drive better results – all
-from a single analytics and data activation platform.*
+**Trello** – a web application for managing kanban boards, created in 2011 by two programmers: Joel Spolsky
+and Michael Pryor. The software is currently managed and developed by Trello Enterprise – a subsidiary of Atlassian.
 
 I won't copy here what mechanisms their API consists of. Everything is in the documentation, in the above URL.
 
@@ -53,6 +51,7 @@ I won't copy here what mechanisms their API consists of. Everything is in the do
 **Summary:**
   - Number of tests: 🔴SOON
   - Average test execution time: 🔴SOON
+  - 🔴\<dodać opis gdzie jest rozpisane pokrycie\>
 
 ## 🏆Certificates - test automation course (Sii Poland)
 
