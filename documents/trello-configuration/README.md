@@ -33,3 +33,24 @@
      - Podajemy `email pomocy technicznej` (może być nasz)
      - Podajemy `autora` (możemy być my)
      - Klikamy przycisk `Utwórz`
+6. Po udanym stworzeniu `Power UP'a` zostaniemy przeniesieni na stronę z `Podstawowymi informacjami`.  
+   ![Power Up – podstawowe informacje](images/trello_powerup_3.PNG)
+   Opcjonalnie możemy wybrać kategorie:
+    - Główną: `Automatyzacja`
+    - Dodatkową: `IT i zarządzanie projektami`
+    - Klikamy przycisk `Zapisz`
+7. W menu po lewej klikamy `Możliwości` i **włączamy** wszystkie `opcje`  
+   (Wydaje mi się, że umożliwi to pisanie testów pod większą ilość endpoint'ów)  
+   ![Power Up – możliwości](images/trello_powerup_4.PNG)
+8. W menu po lewej klikamy `Klucz API` i **generujemy nowy klucz API** lub **używamy istniejącego klucza API**  
+   ![Power Up – klucz API tworzenie](images/trello_powerup_5.PNG)
+9. Gdy to się uda zostanie otwarta strona z `kluczem API` oraz `Sekretem`  
+   ![Power Up – klucz API utworzony](images/trello_powerup_6.PNG)
+   - Kopiujemy/Zapisujemy gdzieś `Klucz API`
+   - Kopiujemy/Zapisujemy gdzieś `Sekret`
+10. Po prawej od `Klucz API` klikamy hiperłącze w słowie `token`
+11. Zostaniemy przeniesieni do strony z podsumowaniem i klikamy przycisk `Pozwalaj`
+    ![Power Up – token formularz do zatwierdzenia](images/trello_powerup_7.PNG)
+12. Zostaniemy przeniesieni na stronę, na której będzie wyświetlony nasz `token`.  
+    Kopiujemy/Zapisujemy go.
+    ![Power Up – token](images/trello_powerup_8.PNG)
