@@ -54,3 +54,12 @@
 12. Zostaniemy przeniesieni na stronę, na której będzie wyświetlony nasz `token`.  
     Kopiujemy/Zapisujemy go.  
     ![Power Up – token](images/trello_powerup_8.PNG)
+13. Możemy rozpocząć pisanie `pierwszych requestów do API`
+
+# 🧭Dalsze kroki — rozpoczęcie pisania testów <a name="next_steps_writing_tests"></a>
+
+Dalsze kroki opisujące jak rozpocząć pisanie testów znajdują się w:  
+📁rest-assured-java-api (projekt)  
+&emsp;📁documents  
+&emsp;&emsp;📁notes  
+&emsp;&emsp;&emsp;📂rest-assured-and-tests
