@@ -1,5 +1,7 @@
 package configuration;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
@@ -8,10 +10,11 @@ import java.util.Properties;
 public class Config {
 
     private static final Properties properties = new Properties();
+    private static final Dotenv dotenv = Dotenv.load();
 
-    // --------------------------------------
-    // Method that loads a configuration file
-    // --------------------------------------
+    // ----------------------------------------------------------
+    // Method that loads a configuration file (config.properties)
+    // ----------------------------------------------------------
 
     /*
     NOTE FOR ME:
@@ -35,23 +38,45 @@ public class Config {
     // Utils
     // -----
 
-    // Utility method to get property values with optional defaults
+    // config.properties – Utility method to get property value with optional defaults
     private static String getProperty(String key, String defaultValue) {
         return Optional.ofNullable(properties.getProperty(key)).orElse(defaultValue).trim();
     }
 
-    private static String getRequiredProperty(String key) {
+    // config.properties – Utility method to get required property value, returning information if such a property does not exist
+    private static String getRequiredConfigProperty(String key) {
         return Optional.ofNullable(properties.getProperty(key))
                 .map(String::trim)
-                .orElseThrow(() -> new IllegalStateException("Missing required configuration key: " + key));
+                .orElseThrow(() -> new IllegalStateException("Missing required key from 'config.properties' file: " + key));
     }
 
-    // ------------------------------------------------------
-    // Methods that retrieve data from the configuration file
-    // ------------------------------------------------------
+    // .env – Utility method to get required property value, returning information if such a property does not exist
+    private static String getRequiredEnvProperty(String key) {
+        return Optional.ofNullable(dotenv.get(key))
+                .map(String::trim)
+                .orElseThrow(() -> new IllegalStateException("Missing required key from '.env' file: " + key));
+    }
+
+    // --------------------------------------------------------
+    // config.properties – Methods that retrieve data from file
+    // --------------------------------------------------------
 
     // Get API base URL, mandatory
     public static String getBaseUrl() {
-        return getRequiredProperty("baseUrl");
+        return getRequiredConfigProperty("baseUrl");
+    }
+
+    // -------------------------------------------
+    // .env – Methods that retrieve data from file
+    // -------------------------------------------
+
+    // Get Trello API key, mandatory
+    public static String getTrelloApiKey() {
+        return getRequiredEnvProperty("TRELLO_API_KEY");
+    }
+
+    // Get Trello token, mandatory
+    public static String getTrelloToken() {
+        return getRequiredEnvProperty("TRELLO_TOKEN");
     }
 }

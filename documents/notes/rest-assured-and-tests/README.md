@@ -43,4 +43,29 @@
    TRELLO_API_KEY=yourTrelloApiKey
    TRELLO_TOKEN=yourTrelloToken
    ```
-11. CDN
+11. W pliku `Config.java` dopisujemy następujące rzeczy:  
+   ```java
+   private static final Dotenv dotenv = Dotenv.load();
+   
+   // .env – Utility method to get required property value, returning information if such a property does not exist
+   private static String getRequiredEnvProperty(String key) {
+      return Optional.ofNullable(dotenv.get(key))
+              .map(String::trim)
+              .orElseThrow(() -> new IllegalStateException("Missing required key from '.env' file: " + key));
+   }
+   
+   // -------------------------------------------
+   // .env – Methods that retrieve data from file
+   // -------------------------------------------
+   
+   // Get Trello API key, mandatory
+   public static String getTrelloApiKey() {
+      return getRequiredEnvProperty("TRELLO_API_KEY");
+   }
+   
+   // Get Trello token, mandatory
+   public static String getTrelloToken() {
+      return getRequiredEnvProperty("TRELLO_TOKEN");
+   }
+   ```
+12. CDN
