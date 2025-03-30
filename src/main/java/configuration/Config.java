@@ -39,44 +39,68 @@ public class Config {
     // -----
 
     // config.properties – Utility method to get property value with optional defaults
-    private static String getProperty(String key, String defaultValue) {
-        return Optional.ofNullable(properties.getProperty(key)).orElse(defaultValue).trim();
-    }
-
-    // config.properties – Utility method to get required property value, returning information if such a property does not exist
-    private static String getRequiredConfigProperty(String key) {
+    private static String getConfigProperty(String key, String defaultValue) {
         return Optional.ofNullable(properties.getProperty(key))
                 .map(String::trim)
-                .orElseThrow(() -> new IllegalStateException("Missing required key from 'config.properties' file: " + key));
+                .orElse(defaultValue != null ? defaultValue : "ERROR: Missing required key from 'config.properties' file: " + key);
     }
 
-    // .env – Utility method to get required property value, returning information if such a property does not exist
-    private static String getRequiredEnvProperty(String key) {
+    // .env – Utility method to get property value with optional defaults
+    private static String getEnvProperty(String key, String defaultValue) {
         return Optional.ofNullable(dotenv.get(key))
                 .map(String::trim)
-                .orElseThrow(() -> new IllegalStateException("Missing required key from '.env' file: " + key));
+                .orElse(defaultValue != null ? defaultValue : "ERROR: Missing required key from '.env' file: " + key);
     }
 
     // --------------------------------------------------------
     // config.properties – Methods that retrieve data from file
     // --------------------------------------------------------
 
-    // Get API base URL, mandatory
+    // BASE URL
+
+    // Get API base URL
     public static String getBaseUrl() {
-        return getRequiredConfigProperty("baseUrl");
+        return getConfigProperty("baseUrl", "https://api.trello.com/1");
+    }
+
+    // Get API base URL Protocol
+    public static String getBaseUrlProtocol() {
+        return getConfigProperty("baseUrlProtocol", "https");
+    }
+
+    // Get API base URL Subdomain
+    public static String getBaseUrlSubdomain() {
+        return getConfigProperty("baseUrlSubdomain", "api");
+    }
+
+    // Get API base URL Domain
+    public static String getBaseUrlDomain() {
+        return getConfigProperty("baseUrlDomain", "trello");
+    }
+
+    // Get API base URL TLD
+    public static String getBaseUrlTLD() {
+        return getConfigProperty("baseUrlTLD", "com");
+    }
+
+    // Get API base URL Number
+    public static String getBaseUrlNumber() {
+        return getConfigProperty("baseUrlNumber", "1");
     }
 
     // -------------------------------------------
     // .env – Methods that retrieve data from file
     // -------------------------------------------
 
-    // Get Trello API key, mandatory
+    // TRELLO API KEY & TOKEN
+
+    // Get Trello API key
     public static String getTrelloApiKey() {
-        return getRequiredEnvProperty("TRELLO_API_KEY");
+        return getEnvProperty("TRELLO_API_KEY", null);
     }
 
-    // Get Trello token, mandatory
+    // Get Trello token
     public static String getTrelloToken() {
-        return getRequiredEnvProperty("TRELLO_TOKEN");
+        return getEnvProperty("TRELLO_TOKEN", null);
     }
 }
