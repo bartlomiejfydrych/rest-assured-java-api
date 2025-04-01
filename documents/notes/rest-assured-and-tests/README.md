@@ -102,28 +102,59 @@
        }
    }
    ```
-14. W katalogu `src/test/java` tworzymy katalog o nazwie `base`
-15. W katalogu `src/test/java/base` tworzymy plik o nazwie `TestBase.java`
-16. W pliku `TestBase.java` tworzymy wstępną konfigurację:  
-   ```java
-   public class TestBase {
-       // Object containing all request settings
-       protected static RequestSpecification requestSpecificationCommon;
-   
-       @BeforeAll
-       public static void setUpAll() {
-           // Print in console all request and response data
-           RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
-           // Class that allows you to configure API requests in a readable and reusable way
-           RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
-           requestSpecBuilder.addQueryParam("key", Config.getTrelloApiKey());
-           requestSpecBuilder.addQueryParam("token", Config.getTrelloToken());
-           requestSpecBuilder.setBaseUri(BaseUrlBuilder.buildBaseUrl());
-           requestSpecBuilder.setContentType(ContentType.JSON);
-           requestSpecificationCommon = requestSpecBuilder.build();
-       }
-   }
-   ```
+14. W katalogu `src/test/java` tworzymy katalog package o nazwie `configuration`
+15. W katalogu `src/test/java/configuration` tworzymy plik `RequestSpecConfig`  
+    Dlaczego tutaj, a nie w `main`?  
+    Ponieważ `REST Assured` jest używane tylko do testów i jego specyfikacja tak zaleca.  
+    Żeby obejść to ograniczenie można też w `pom.xml` usunąć wiersz z `<scope>test</scope>`.
+16. W pliku `RequestSpecConfig` piszemy naszą wspólną konfigurację dla wszystkich requestów:
+    ```java
+    package configuration;
+    
+    import io.restassured.builder.RequestSpecBuilder;
+    import io.restassured.http.ContentType;
+    import io.restassured.specification.RequestSpecification;
+    
+    public class RequestSpecConfig {
+    
+        private static final RequestSpecification requestSpecification = new RequestSpecBuilder()
+                .addQueryParam("key", Config.getTrelloApiKey())
+                .addQueryParam("token", Config.getTrelloToken())
+                .setBaseUri(BaseUrlBuilder.buildBaseUrl())
+                .setContentType(ContentType.JSON)
+                .build();
+    
+        public static RequestSpecification getRequestSpecification() {
+            return requestSpecification;
+        }
+    }
+    ```
+17. W katalogu `src/test/java` tworzymy katalog o nazwie `base`
+18. W katalogu `src/test/java/base` tworzymy plik o nazwie `TestBase.java`
+19. W pliku `TestBase.java` tworzymy wstępną konfigurację:  
+    ```java
+    package base;
+    
+    import configuration.RequestSpecConfig;
+    import io.restassured.RestAssured;
+    import io.restassured.filter.log.RequestLoggingFilter;
+    import io.restassured.filter.log.ResponseLoggingFilter;
+    import io.restassured.specification.RequestSpecification;
+    import org.junit.jupiter.api.BeforeAll;
+    
+    public class TestBase {
+        // Object containing all request settings
+        protected static RequestSpecification requestSpecificationCommon;
+    
+        @BeforeAll
+        public static void setUpAll() {
+            // Print in console all request and response data
+            RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+            // Class that allows you to configure API requests in a readable and reusable way
+            requestSpecificationCommon = RequestSpecConfig.getRequestSpecification();
+        }
+    }
+    ```
 
 ---
 
