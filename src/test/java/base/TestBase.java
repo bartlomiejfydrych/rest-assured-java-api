@@ -1,5 +1,6 @@
 package base;
 
+import configuration.Config;
 import configuration.RequestSpecConfig;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -13,8 +14,20 @@ public class TestBase {
 
     @BeforeAll
     public static void setUpAll() {
-        // Print in console all request and response data
-        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+
+        // LOGS
+
+        // Always print in console all request and response data
+        if (Config.getLogsAlways()) {
+            RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        }
+        // Only when test fail print in console all request and response data
+        if (Config.getLogsWhenFail()) {
+            RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        }
+
+        // OTHERS
+
         // Class that allows you to configure API requests in a readable and reusable way
         requestSpecificationCommon = RequestSpecConfig.getRequestSpecification();
     }

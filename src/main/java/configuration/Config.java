@@ -38,18 +38,50 @@ public class Config {
     // Utils
     // -----
 
-    // config.properties – Utility method to get property value with optional defaults
+    // STRING
+
+    // config.properties – Utility method to get string property value with optional defaults
     private static String getConfigProperty(String key, String defaultValue) {
         return Optional.ofNullable(properties.getProperty(key))
                 .map(String::trim)
                 .orElse(defaultValue != null ? defaultValue : "ERROR: Missing required key from 'config.properties' file: " + key);
     }
 
-    // .env – Utility method to get property value with optional defaults
+    // .env – Utility method to get string property value with optional defaults
     private static String getEnvProperty(String key, String defaultValue) {
         return Optional.ofNullable(dotenv.get(key))
                 .map(String::trim)
                 .orElse(defaultValue != null ? defaultValue : "ERROR: Missing required key from '.env' file: " + key);
+    }
+
+    // BOOLEAN
+
+    // config.properties – Utility method to get boolean property value with optional defaults
+    private static boolean getConfigPropertyBoolean(String key, Boolean defaultValue) {
+        return Optional.ofNullable(properties.getProperty(key))
+                .map(String::trim)
+                .map(Boolean::parseBoolean)
+                .orElseGet(() -> {
+                    if (defaultValue != null) {
+                        return defaultValue;
+                    } else {
+                        throw new IllegalStateException("ERROR: Missing required key from 'config.properties' file: " + key);
+                    }
+                });
+    }
+
+    // .env – Utility method to get boolean property value with optional defaults
+    private static boolean getEnvPropertyBoolean(String key, Boolean defaultValue) {
+        return Optional.ofNullable(dotenv.get(key))
+                .map(String::trim)
+                .map(Boolean::parseBoolean)
+                .orElseGet(() -> {
+                    if (defaultValue != null) {
+                        return defaultValue;
+                    } else {
+                        throw new IllegalStateException("ERROR: Missing required key from '.env' file: " + key);
+                    }
+                });
     }
 
     // --------------------------------------------------------
@@ -91,6 +123,18 @@ public class Config {
     // -------------------------------------------
     // .env – Methods that retrieve data from file
     // -------------------------------------------
+
+    // LOGS MANAGEMENT
+
+    // Get Logs when Fail
+    public static boolean getLogsWhenFail() {
+        return getEnvPropertyBoolean("LOGS_WHEN_FAIL", true);
+    }
+
+    // Get Logs when Fail
+    public static boolean getLogsAlways() {
+        return getEnvPropertyBoolean("LOGS_ALWAYS", false);
+    }
 
     // TRELLO API KEY & TOKEN
 

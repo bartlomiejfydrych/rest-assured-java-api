@@ -6,6 +6,8 @@
 - [RequestSpecification](#request_specification)
 - [RestAssured.filters()](#rest_assured_filters)
 - [RequestSpecBuilder](#request_spec_builder)
+- [RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()](#enable_log_fail)
+- [RecursiveComparisonConfiguration()](#assertj_recursive_comparison_configuration)
 
 ---
 
@@ -30,62 +32,189 @@
    baseUrlTLD=com
    baseUrlNumber=1
    ```
-3. W katalogu `src/main/java` tworzymy katalog o nazwie `configuration`
-4. W katalogu `configuration` tworzymy plik java class o nazwie `Config.java`
-5. W klasie tej tworzymy:
-   - mechanizm ładujący/czytający i re-używający plik konfiguracyjny
-   - metody pomocnicze dla plików 'config.properties' oraz '.env', w których możemy podawać wartość domyślną oraz które
-     zwracają błąd, gdy w pliku nie ma podanej właściwości
-   - metody pobierające każdą 'property' z pliku
-6. Sprawdzamy, czy mamy w `pom.xml` dodane dependecy o nazwie `Dotenv Java`
-7. Otwieramy plik `.gitignore` i dopisujemy w nim:  
+3. Sprawdzamy, czy mamy w `pom.xml` dodane dependecy o nazwie `Dotenv Java`
+4. Otwieramy plik `.gitignore` i dopisujemy w nim:  
    ```ignore
    ### MY FILES
 
    # environment
    environment/.env
    ```
-8. W głównym katalogu projektu tworzymy katalog o nazwie `environment`
-9. W nim tworzymy dwa pliki:  
+5. W głównym katalogu projektu tworzymy katalog o nazwie `environment`
+6. W nim tworzymy dwa pliki:  
    - `.env` (tutaj będziemy przechowywać nasze prawdziwe zmienne)
    - `.env.example` (tutaj będzie pusty wzór dostępny na repozytorium)
-10. W plikach `.env` definiujemy zmienne z naszym `API key` oraz `token`:  
+7. W plikach `.env` definiujemy:  
+   - Sekcję na włączanie logów przy failach testów oraz pokazywania logów zawsze
+   - Sekcję na `API key` oraz `token`
    ```properties
    # File .env – environment variables
-   
+    
+   # LOGS MANAGEMENT
+   LOGS_WHEN_FAIL=true/false
+   LOGS_ALWAYS=true/false
+    
    # TRELLO API KEY & TOKEN
    TRELLO_API_KEY=yourTrelloApiKey
    TRELLO_TOKEN=yourTrelloToken
    ```
-11. W pliku `Config.java` dopisujemy następujące rzeczy:  
-   ```java
-   private static final Dotenv dotenv = Dotenv.load();
-   
-   // .env – Utility method to get property value with optional defaults
-   private static String getEnvProperty(String key, String defaultValue) {
-      return Optional.ofNullable(dotenv.get(key))
-              .map(String::trim)
-              .orElse(defaultValue != null ? defaultValue : "ERROR: Missing required key from '.env' file: " + key);
-   }
-   
-   // -------------------------------------------
-   // .env – Methods that retrieve data from file
-   // -------------------------------------------
-   
-   // TRELLO API KEY & TOKEN
-   
-   // Get Trello API key
-   public static String getTrelloApiKey() {
-      return getEnvProperty("TRELLO_API_KEY", null);
-   }
-   
-   // Get Trello token
-   public static String getTrelloToken() {
-      return getEnvProperty("TRELLO_TOKEN", null);
-   }
-   ```
-12. W katalogu `src/main/java/configuration` tworzymy plik `BaseUrlBuilder`
-13. W pliku `BaseUrlBuilder` piszemy budowanie naszego URL ze zmiennych konfiguracyjnych projektu:  
+8. W katalogu `src/main/java` tworzymy katalog o nazwie `configuration`
+9. W katalogu `configuration` tworzymy plik java class o nazwie `Config.java`
+10. W pliku `Config.java` dopisujemy następujące rzeczy:  
+    ```java
+    package configuration;
+    
+    import io.github.cdimascio.dotenv.Dotenv;
+    
+    import java.io.IOException;
+    import java.io.InputStream;
+    import java.util.Optional;
+    import java.util.Properties;
+    
+    public class Config {
+    
+        private static final Properties properties = new Properties();
+        private static final Dotenv dotenv = Dotenv.load();
+    
+        // ----------------------------------------------------------
+        // Method that loads a configuration file (config.properties)
+        // ----------------------------------------------------------
+    
+        /*
+        NOTE FOR ME:
+        Mechanizm, który zapewni, że plik z config.properties będzie wczytany tylko raz i później re-używany
+        do wszystkich metod, które pobierają informacje z tego pliku konfiguracyjnego.
+        */
+    
+        // Static initializer to load the configuration file
+        static {
+            try (InputStream inputStream = Config.class.getClassLoader().getResourceAsStream("configs/config.properties")) {
+                if (inputStream == null) {
+                    throw new IllegalStateException("Configuration file 'config.properties' not found");
+                }
+                properties.load(inputStream);
+            } catch (IOException e) {
+                throw new IllegalStateException("Error loading configuration file", e);
+            }
+        }
+    
+        // -----
+        // Utils
+        // -----
+    
+        // STRING
+    
+        // config.properties – Utility method to get string property value with optional defaults
+        private static String getConfigProperty(String key, String defaultValue) {
+            return Optional.ofNullable(properties.getProperty(key))
+                    .map(String::trim)
+                    .orElse(defaultValue != null ? defaultValue : "ERROR: Missing required key from 'config.properties' file: " + key);
+        }
+    
+        // .env – Utility method to get string property value with optional defaults
+        private static String getEnvProperty(String key, String defaultValue) {
+            return Optional.ofNullable(dotenv.get(key))
+                    .map(String::trim)
+                    .orElse(defaultValue != null ? defaultValue : "ERROR: Missing required key from '.env' file: " + key);
+        }
+    
+        // BOOLEAN
+    
+        // config.properties – Utility method to get boolean property value with optional defaults
+        private static boolean getConfigPropertyBoolean(String key, Boolean defaultValue) {
+            return Optional.ofNullable(properties.getProperty(key))
+                    .map(String::trim)
+                    .map(Boolean::parseBoolean)
+                    .orElseGet(() -> {
+                        if (defaultValue != null) {
+                            return defaultValue;
+                        } else {
+                            throw new IllegalStateException("ERROR: Missing required key from 'config.properties' file: " + key);
+                        }
+                    });
+        }
+    
+        // .env – Utility method to get boolean property value with optional defaults
+        private static boolean getEnvPropertyBoolean(String key, Boolean defaultValue) {
+            return Optional.ofNullable(dotenv.get(key))
+                    .map(String::trim)
+                    .map(Boolean::parseBoolean)
+                    .orElseGet(() -> {
+                        if (defaultValue != null) {
+                            return defaultValue;
+                        } else {
+                            throw new IllegalStateException("ERROR: Missing required key from '.env' file: " + key);
+                        }
+                    });
+        }
+    
+        // --------------------------------------------------------
+        // config.properties – Methods that retrieve data from file
+        // --------------------------------------------------------
+    
+        // BASE URL
+    
+        // Get API base URL
+        public static String getBaseUrl() {
+            return getConfigProperty("baseUrl", "https://api.trello.com/1");
+        }
+    
+        // Get API base URL Protocol
+        public static String getBaseUrlProtocol() {
+            return getConfigProperty("baseUrlProtocol", "https");
+        }
+    
+        // Get API base URL Subdomain
+        public static String getBaseUrlSubdomain() {
+            return getConfigProperty("baseUrlSubdomain", "api");
+        }
+    
+        // Get API base URL Domain
+        public static String getBaseUrlDomain() {
+            return getConfigProperty("baseUrlDomain", "trello");
+        }
+    
+        // Get API base URL TLD
+        public static String getBaseUrlTLD() {
+            return getConfigProperty("baseUrlTLD", "com");
+        }
+    
+        // Get API base URL Number
+        public static String getBaseUrlNumber() {
+            return getConfigProperty("baseUrlNumber", "1");
+        }
+    
+        // -------------------------------------------
+        // .env – Methods that retrieve data from file
+        // -------------------------------------------
+    
+        // LOGS MANAGEMENT
+    
+        // Get Logs when Fail
+        public static boolean getLogsWhenFail() {
+            return getEnvPropertyBoolean("LOGS_WHEN_FAIL", true);
+        }
+    
+        // Get Logs when Fail
+        public static boolean getLogsAlways() {
+            return getEnvPropertyBoolean("LOGS_ALWAYS", false);
+        }
+    
+        // TRELLO API KEY & TOKEN
+    
+        // Get Trello API key
+        public static String getTrelloApiKey() {
+            return getEnvProperty("TRELLO_API_KEY", null);
+        }
+    
+        // Get Trello token
+        public static String getTrelloToken() {
+            return getEnvProperty("TRELLO_TOKEN", null);
+        }
+    }
+    ```
+11. W katalogu `src/main/java/configuration` tworzymy plik `BaseUrlBuilder`
+12. W pliku `BaseUrlBuilder` piszemy budowanie naszego URL ze zmiennych konfiguracyjnych projektu:  
    ```java
    package configuration;
    
@@ -102,12 +231,12 @@
        }
    }
    ```
-14. W katalogu `src/test/java` tworzymy katalog package o nazwie `configuration`
-15. W katalogu `src/test/java/configuration` tworzymy plik `RequestSpecConfig`  
+13. W katalogu `src/test/java` tworzymy katalog package o nazwie `configuration`
+14. W katalogu `src/test/java/configuration` tworzymy plik `RequestSpecConfig`  
     Dlaczego tutaj, a nie w `main`?  
     Ponieważ `REST Assured` jest używane tylko do testów i jego specyfikacja tak zaleca.  
     Żeby obejść to ograniczenie można też w `pom.xml` usunąć wiersz z `<scope>test</scope>`.
-16. W pliku `RequestSpecConfig` piszemy naszą wspólną konfigurację dla wszystkich requestów:
+15. W pliku `RequestSpecConfig` piszemy naszą wspólną konfigurację dla wszystkich requestów:
     ```java
     package configuration;
     
@@ -129,12 +258,13 @@
         }
     }
     ```
-17. W katalogu `src/test/java` tworzymy katalog o nazwie `base`
-18. W katalogu `src/test/java/base` tworzymy plik o nazwie `TestBase.java`
-19. W pliku `TestBase.java` tworzymy wstępną konfigurację:  
+16. W katalogu `src/test/java` tworzymy katalog o nazwie `base`
+17. W katalogu `src/test/java/base` tworzymy plik o nazwie `TestBase.java`
+18. W pliku `TestBase.java` tworzymy wstępną konfigurację:  
     ```java
     package base;
     
+    import configuration.Config;
     import configuration.RequestSpecConfig;
     import io.restassured.RestAssured;
     import io.restassured.filter.log.RequestLoggingFilter;
@@ -148,8 +278,20 @@
     
         @BeforeAll
         public static void setUpAll() {
-            // Print in console all request and response data
-            RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+    
+            // LOGS
+    
+            // Always print in console all request and response data
+            if (Config.getLogsAlways()) {
+                RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+            }
+            // Only when test fail print in console all request and response data
+            if (Config.getLogsWhenFail()) {
+                RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+            }
+    
+            // OTHERS
+    
             // Class that allows you to configure API requests in a readable and reusable way
             requestSpecificationCommon = RequestSpecConfig.getRequestSpecification();
         }
@@ -429,3 +571,174 @@ given()
 📌 **`RequestSpecBuilder`** pozwala konfigurować **bazowy URL, nagłówki, parametry, body i inne ustawienia requestów**.  
 📌 **Zwiększa czytelność kodu**, eliminując powtarzające się konfiguracje w testach API.  
 📌 **Pozwala na wielokrotne użycie tej samej specyfikacji**, co sprawia, że testy są **modularne i łatwiejsze w utrzymaniu**. 🚀
+
+---
+
+## 📄RestAssured.enableLoggingOfRequestAndResponseIfValidationFails() <a name="enable_log_fail"></a>
+
+📌 **Co robi ta metoda?**  
+Metoda **`RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();`** włącza automatyczne logowanie żądań
+(**request**) i odpowiedzi (**response**) **tylko w przypadku, gdy asercja testowa zakończy się niepowodzeniem**.
+
+### **🔹 Jak to działa?**
+1. Jeśli test przejdzie pomyślnie → **nie loguje requestu i response'u**.
+2. Jeśli test zakończy się błędem (np. zwróci inny status HTTP lub inne dane) → **wtedy loguje request i response**.
+
+### **🔹 Przykład użycia**
+```java
+import io.restassured.RestAssured;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
+public class TestExample {
+
+    public static void main(String[] args) {
+
+        // Włączenie logowania TYLKO gdy test nie przejdzie
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+
+        given()
+            .baseUri("https://jsonplaceholder.typicode.com")
+            .basePath("/posts/1")
+        .when()
+            .get()
+        .then()
+            .statusCode(200)  // Jeśli zwróci np. 404, to zostanie zalogowany cały request/response
+            .body("title", equalTo("Niepoprawny tytuł"));  // Celowy błąd -> logowanie
+    }
+}
+```
+💡 Jeśli test nie przejdzie, w konsoli zobaczysz np.:
+```
+Request method: GET
+Request URI: https://jsonplaceholder.typicode.com/posts/1
+Response status code: 200
+Response body: { "userId": 1, "id": 1, "title": "słuszny tytuł", ... }
+java.lang.AssertionError: JSON path title doesn't match. Expected: Niepoprawny tytuł, but was: słuszny tytuł
+```
+Natomiast jeśli test przejdzie **bez błędu**, nie zobaczysz żadnego loga.
+
+### **🔹 Zalety tej metody**
+✅ **Redukuje ilość logów** – logi pojawiają się tylko, gdy są potrzebne.  
+✅ **Pomaga w debugowaniu** – od razu widzisz szczegóły błędnego requestu.  
+✅ **Łatwa implementacja** – wystarczy **jedna linia kodu**.
+
+### **🔹 Kiedy stosować?**
+✔ W **większości testów API** jako domyślne ustawienie.  
+✔ Gdy **nie chcesz zaśmiecać logów** niepotrzebnymi requestami.  
+✔ Gdy testujesz **duże API** i ważne jest przejrzyste logowanie tylko błędów.
+
+### **🔹 Alternatywy**
+1️⃣ **Pełne logowanie requestów i response'ów zawsze:**
+```java
+RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+```
+➡️ Loguje **wszystkie żądania i odpowiedzi**, niezależnie od wyniku testu.
+
+2️⃣ **Logowanie tylko requestów:**
+```java
+RestAssured.filters(new RequestLoggingFilter());
+```
+
+3️⃣ **Logowanie tylko response'ów:**
+```java
+RestAssured.filters(new ResponseLoggingFilter());
+```
+
+### **🔹 Podsumowanie**
+- **RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();** to **inteligentne logowanie**, które włącza się
+tylko w przypadku **niepowodzenia testu**.
+- Świetne rozwiązanie dla **czytelnych logów i efektywnego debugowania** testów API.
+- Jest **zalecaną praktyką** w testach automatycznych REST Assured. 🚀
+
+---
+
+## 📄RecursiveComparisonConfiguration() <a name="assertj_recursive_comparison_configuration"></a>
+
+### **`RecursiveComparisonConfiguration` – Co to jest?**
+
+`RecursiveComparisonConfiguration` to klasa z **AssertJ**, która pozwala na **rekurencyjne porównywanie obiektów**
+w testach. Dzięki niej możemy szczegółowo kontrolować, jak działa porównywanie, np.:
+- Pomijanie niektórych pól,
+- Ignorowanie różnic w typach,
+- Dostosowywanie sposobu porównywania kolekcji i map,
+- Porównywanie pól w sposób niestandardowy.
+
+### **🔹 Przykład użycia:**
+Załóżmy, że mamy dwie instancje klasy `User`, które chcemy porównać:
+
+#### **1️⃣ Standardowe porównanie (`equals()`)**
+```java
+User expectedUser = new User("Mateusz", "Tadla", "mtadla@example.com");
+User actualUser = new User("Mateusz", "Tadla", "mtadla@example.com");
+
+assertThat(actualUser).isEqualTo(expectedUser);
+```
+Jeśli **obiekty są identyczne**, test przejdzie. Ale jeśli np. `User` ma inne ID, test się wywali.
+
+#### **2️⃣ Porównanie rekurencyjne (pomijając `id`)**
+```java
+import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
+
+RecursiveComparisonConfiguration config = new RecursiveComparisonConfiguration();
+config.ignoreFields("id"); // Ignorujemy pole "id"
+
+assertThat(actualUser)
+    .usingRecursiveComparison(config)
+    .isEqualTo(expectedUser);
+```
+✔️ **Dzięki temu test przejdzie, nawet jeśli `id` jest inne!**
+
+### **🔹 Główne możliwości `RecursiveComparisonConfiguration`**
+#### 1️⃣ **Ignorowanie pól**
+Możesz pominąć konkretne pola, np. `id`, `createdAt`:
+```java
+config.ignoreFields("id", "createdAt");
+```
+
+#### 2️⃣ **Ignorowanie pól tylko w jednym obiekcie**
+Jeśli np. pole `timestamp` jest w `actualUser`, ale nie w `expectedUser`, możesz je pominąć:
+```java
+config.ignoreFieldsOfTypes(LocalDateTime.class);
+```
+
+#### 3️⃣ **Ignorowanie kolejności w kolekcjach**
+```java
+config.ignoreCollectionOrder();
+```
+✔️ Dzięki temu `[1,2,3]` i `[3,2,1]` będą uznane za **równe**.
+
+#### 4️⃣ **Porównywanie pól niestandardowo**
+Możesz określić własny sposób porównywania np. `BigDecimal` (aby ignorować precyzję dziesiętną):
+```java
+config.withComparatorForType(BigDecimal::compareTo, BigDecimal.class);
+```
+
+### **🔹 Przykładowy test z `RecursiveComparisonConfiguration`**
+```java
+@Test
+void shouldCompareUsersIgnoringId() {
+    User expectedUser = new User("Mateusz", "Tadla", "mtadla@example.com");
+    User actualUser = new User("Mateusz", "Tadla", "mtadla@example.com");
+    actualUser.setId(999); // Różne ID
+
+    RecursiveComparisonConfiguration config = new RecursiveComparisonConfiguration();
+    config.ignoreFields("id"); // Ignorujemy ID
+
+    assertThat(actualUser)
+        .usingRecursiveComparison(config)
+        .isEqualTo(expectedUser);
+}
+```
+✔️ **Test przejdzie pomimo różnicy w `id`!**
+
+### **🔹 Podsumowanie**
+| Możliwość                                                        | Opis                                             |
+|------------------------------------------------------------------|--------------------------------------------------|
+| `ignoreFields("id")`                                             | Pomija konkretne pola                            |
+| `ignoreFieldsOfTypes(LocalDateTime.class)`                       | Pomija pola określonego typu                     |
+| `ignoreCollectionOrder()`                                        | Ignoruje kolejność w listach i zbiorach          |
+| `withComparatorForType(BigDecimal::compareTo, BigDecimal.class)` | Niestandardowe porównywanie dla określonego typu |
+
+Dzięki `RecursiveComparisonConfiguration` możesz **uniknąć problemów z `equals()`**, dostosować sposób porównywania
+i **uniknąć niepotrzebnych failów** w testach. 🚀🔥
