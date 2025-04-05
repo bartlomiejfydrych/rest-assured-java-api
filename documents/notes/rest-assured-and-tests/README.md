@@ -74,7 +74,7 @@
     public class Config {
     
         private static final Properties properties = new Properties();
-        private static final Dotenv dotenv = Dotenv.load();
+        private static final Dotenv dotenv = Dotenv.configure().directory("./environment").load();
     
         // ----------------------------------------------------------
         // Method that loads a configuration file (config.properties)
