@@ -128,6 +128,11 @@ The course consisted of 3 parts:
 
 ### API tests (REST Assured)
 
+- Splitting `base URL` into configurable variables
+- Configuring common settings for all requests with `RequestSpecBuilder()`
+- Configuring logging only for failed tests with `RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();`
+- Configuring logging of all request data (e.g. for debugging) with `RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());`
+- Comparing objects with omitting ID and other parameters with `RecursiveComparisonConfiguration();`
 - 🔴SOON
 
 ### Solved problems
