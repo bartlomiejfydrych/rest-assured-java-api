@@ -133,6 +133,10 @@ The course consisted of 3 parts:
 - Configuring logging only for failed tests with `RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();`
 - Configuring logging of all request data (e.g. for debugging) with `RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());`
 - Comparing objects with omitting ID and other parameters with `RecursiveComparisonConfiguration();`
+- Creating methods that call requests with the option of passing parameters or payload as an argument
+- Organize your file structure to be as consistent as possible with your organization's API documentation format
+- Test Documentation management
+- Creating classes/builders to manage payload/queryParameters
 - 🔴SOON
 
 ### Solved problems

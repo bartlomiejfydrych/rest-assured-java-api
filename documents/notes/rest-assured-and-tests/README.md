@@ -333,6 +333,144 @@
         }
     }
     ```
+22. W katalogu `src/test/java` tworzymy katalog o nazwie `endpoints`
+23. W katalogu `src/test/java/endpoints` tworzymy katalog o nazwie `boards` (na wzór dokumentacji)  
+    **Wyjaśnienie:**  
+    W zależności od formatu dokumentacji (Swagger lub to, czego używa Trello) tworzymy strukturę katalogów i klas,
+    która będzie zgodna z nią np. jeśli w Swaggerze endpoint jest zgrupowany w jeden nieduży controller to wszystkie jego
+    warianty (POST, PATCH/PUT, GET, DELETE) tworzymy w jednym pliku np. `Boards` od `/boards`.  
+    W sytuacji, w której controller dla tego endpointa jest duży lub tak jak w dokumentacji Trello wiele endpointów jest
+    zgrupowane w jednej ogólnej sekcji `Boards` tworzymy wtedy pod każdą metodę HTTP danego endpointu osobny plik/klasę.  
+    Przykłady: `POST_CreateBoard`, `PUT_UpdateBoard`, `DELETE_DeleteBoard` itd.
+24. W katalogu tym tworzymy plik/klasę pod nasz pierwszy endpoint o nazwie `POST_CreateBoard`  
+    **Wyjaśnienie:**  
+    Z reguły konwencja nazw klas w Java nie zaleca używania `_` natomiast w niczym to nie przeszkadza (potwierdzone
+    przez czatGPT), zwłaszcza w testach API, a w tym przypadku fajnie zwiększa to czytelność. Zgodnie z konwencją ten
+    plik nazywałby się wtedy `PostCreateBoard`.
+25. W pliku tym:
+    - Dziedziczymy/Rozszerzamy tę klasę po `TestBase`, żeby nasz endpoint mógł używać wspólnej konfiguracji `requestSpecificationCommon`  
+      Jeżeli byśmy tego nie zrobili, to musielibyśmy tutaj i w każdym kolejnym pliku wywoływać tę konfigurację:  
+      ```java
+      RequestSpecification requestSpecificationCommon = RequestSpecConfig.getRequestSpecification();
+      ```
+    - Tworzymy metodę lub metody wywołujące ten request i używające jako argumentów podawanych przez nas parametrów lub
+      payloadów
+    ```java
+    package endpoints.boards;
+    
+    import base.TestBase;
+    import io.restassured.response.Response;
+    import io.restassured.specification.RequestSpecification;
+    
+    import java.util.Map;
+    
+    import static io.restassured.RestAssured.given;
+    
+    public class POST_CreateBoard extends TestBase {
+    
+        private static final String url = "/boards";
+    
+        public static Response postCreateBoard(String name, Map<String, Object> queryParams) {
+    
+            RequestSpecification spec = given().
+                    spec(requestSpecificationCommon)
+                    .queryParam("name", name);
+    
+            if (queryParams != null && !queryParams.isEmpty()) {
+                spec.queryParams(queryParams);
+            }
+    
+            return spec.
+                    when().
+                        post(url).
+                    then().
+                        extract().
+                        response();
+        }
+    }
+    ```
+26. W katalogu `src/test` tworzymy katalog o nazwie `documentation`
+27. W katalogu `src/test/documentation` tworzymy katalog o nazwie `endpoints`
+28. W katalogu `src/test/documentation/endpoints` tworzymy katalog o nazwie `boards` (zgodnie ze strukturą dokumentacji API)
+29. W katalogu `src/test/documentation/endpoints/boards` tworzymy plik o nazwie `POST_CreateBoard.md`
+30. W przypadku słabego prowadzenia lub nawet braku głównej dokumentacji API w projekcie testerzy mogą w takich plikach
+    prowadzić własne "notatki" np.:
+    - Opis działania
+    - Uwagi i informacje
+    - URL
+    - Obsługiwane parametry
+    - Przykładowy payload
+    - Przykładowy response
+31. W katalogu `src/test/java` tworzymy katalog o nazwie `payloads`  
+    **Wyjaśnienie:**  
+    Nie każdy endpoint będzie miał osobny plik na payload/parametry.  
+    W przypadku małej ilości parametrów dane te będą podawane jako argumenty na bieżąco w testach.
+32. W katalogu `src/test/java/payloads` tworzymy katalog o nazwie `boards`
+33. W katalogu `src/test/java/payloads/boards` tworzymy plik o nazwie `POST_CreateBoardPayload`
+34. W pliku `POST_CreateBoardPayload` piszemy:
+    - Zmienne/Parametry jakie posiada
+    - Metodę pomocniczą, która konwertuje nasze dane na queryParams
+    - Konstruktor dla Buildera
+    - Gettery
+    - Builder
+    - Settery do ustawiania zmiennych w Builderze
+    - Poniżej powycinane fragmenty kodu:
+    ```java
+    // Zmienne
+    private String name;
+    
+    // Helper przerabiający zmienne na queryParams
+    public Map<String, Object> toQueryParams() {
+        Map<String, Object> params = new HashMap<>();
+    
+        if (name != null) params.put("name", name);
+        // CDN
+    
+        return params;
+    }
+    
+    // Konstruktor
+    private POST_CreateBoardPayload(Builder builder) {
+        this.name = builder.name;
+        // CDN
+    }
+    
+    // Gettery
+    public String getName() {
+        return name;
+    }
+    // CDN
+    
+    // Builder
+    public static class Builder {
+        // Jego zmienne
+        private String name;
+        // CDN
+    
+        // Settery
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+        // CDN
+    
+        // Build
+        public POST_CreateBoardPayload build() {
+            return new POST_CreateBoardPayload(this);
+        }
+    }
+    ```
+    - Przykład użycia
+    ```java
+    POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+        .setName("Tablica API")
+        .setDesc("Testowa tablica")
+        .setDefaultLabels(false)
+        .setPrefs_background("blue")
+        .build();
+    
+    Map<String, Object> queryParams = payload.toQueryParams();
+    ```
 
 ---
 
