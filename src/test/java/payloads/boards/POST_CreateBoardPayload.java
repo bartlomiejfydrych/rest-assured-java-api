@@ -9,22 +9,22 @@ public class POST_CreateBoardPayload {
     // Query parameters
     // ----------------
 
-    private String name;
-    private Boolean defaultLabels;
-    private Boolean defaultLists;
-    private String desc;
-    private String idOrganization;
-    private String idBoardSource;
-    private String keepFromSource;
-    private String powerUps;
-    private String prefsPermissionLevel;
-    private String prefsVoting;
-    private String prefsComments;
-    private String prefsInvitations;
-    private Boolean prefsSelfJoin;
-    private Boolean prefsCardCovers;
-    private String prefsBackground;
-    private String prefsCardAging;
+    private final String name;
+    private final Boolean defaultLabels;
+    private final Boolean defaultLists;
+    private final String desc;
+    private final String idOrganization;
+    private final String idBoardSource;
+    private final String keepFromSource;
+    private final String powerUps;
+    private final String prefsPermissionLevel;
+    private final String prefsVoting;
+    private final String prefsComments;
+    private final String prefsInvitations;
+    private final Boolean prefsSelfJoin;
+    private final Boolean prefsCardCovers;
+    private final String prefsBackground;
+    private final String prefsCardAging;
 
     // -----------------------------------------
     // Helper method – conversion to queryParams

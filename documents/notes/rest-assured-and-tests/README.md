@@ -275,6 +275,8 @@
     public class TestBase {
         // Object containing all request settings
         protected static RequestSpecification requestSpecificationCommon;
+        protected static Response response;
+        protected static Faker faker = new Faker();
     
         @BeforeAll
         public static void setUpAll() {
@@ -417,7 +419,7 @@
     - Poniżej powycinane fragmenty kodu:
     ```java
     // Zmienne
-    private String name;
+    private final String name;
     
     // Helper przerabiający zmienne na queryParams
     public Map<String, Object> toQueryParams() {
@@ -471,6 +473,58 @@
     
     Map<String, Object> queryParams = payload.toQueryParams();
     ```
+35. W katalogu z `endpoints` tworzymy plik `GET_GetBoard`:
+    ```java
+    package endpoints.boards;
+    
+    import base.TestBase;
+    import io.restassured.response.Response;
+    
+    import static io.restassured.RestAssured.given;
+    
+    public class GET_GetBoard extends TestBase {
+    
+        private static final String url = "/boards";
+    
+        public static Response getGetBoard(String id) {
+            return given().
+                        spec(requestSpecificationCommon).
+                    when().
+                        get(url + "/" + id).
+                    then().
+                        extract().
+                        response();
+        }
+    }
+    ```
+36. W katalogu z `endpoints` tworzymy plik `DELETE_DeleteBoard`:
+    ```java
+    package endpoints.boards;
+    
+    import base.TestBase;
+    import io.restassured.response.Response;
+    
+    import static io.restassured.RestAssured.given;
+    
+    public class DELETE_DeleteBoard extends TestBase {
+    
+        private static final String url = "/boards";
+    
+        public static Response deleteDeleteBoard(String id) {
+            return given().
+                        spec(requestSpecificationCommon).
+                    when().
+                        delete(url + "/" + id).
+                    then().
+                        extract().
+                        response();
+        }
+    }
+    ```
+37. Mając przygotowanego naszego pierwszego mini CRUD'a w katalogu `src/test/java` tworzymy katalog o nazwie `tests`
+38. W nim tworzymy katalog o nazwie sekcji/kontrolera z dokumentacji. W tym przypadku `boards`
+39. Następnie tworzymy plik `POST_CreateBoardTest`
+40. W pliku `POST_CreateBoardTest` piszemy nasz pierwszy test:
 
 ---
 

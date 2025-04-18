@@ -1,16 +1,20 @@
 package base;
 
+import com.github.javafaker.Faker;
 import configuration.Config;
 import configuration.RequestSpecConfig;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeAll;
 
 public class TestBase {
     // Object containing all request settings
     protected static RequestSpecification requestSpecificationCommon;
+    protected static Response response;
+    protected static Faker faker = new Faker();
 
     @BeforeAll
     public static void setUpAll() {
