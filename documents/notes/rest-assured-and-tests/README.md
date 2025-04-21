@@ -525,6 +525,13 @@
 38. W nim tworzymy katalog o nazwie sekcji/kontrolera z dokumentacji. W tym przypadku `boards`
 39. Następnie tworzymy plik `POST_CreateBoardTest`
 40. W pliku `POST_CreateBoardTest` piszemy nasz pierwszy test:
+   <🔴dokończyć>
+41. W katalogu `src/test/java` tworzymy katalog o nazwie `expected_responses`
+42. W katalogu tym tworzymy pod-katalog zgodny z układem w dokumentacji API, w tym przypadku `boards`
+43. W katalogu tym tworzymy klasę z nazwą zgodną z endpointem, dla którego będziemy trzymać w niej oczekiwane respons'y,
+    w tym przypadku `POST_CreateBoardExpected`
+44. W klasie tej tworzymy zmienną typu String, w której umieszczamy nasz oczekiwany JSON pomiędzy takimi znakami `"""{json}"""` 
+45. 
 
 ---
 

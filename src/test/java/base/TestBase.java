@@ -1,5 +1,6 @@
 package base;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import configuration.Config;
 import configuration.RequestSpecConfig;
@@ -15,6 +16,7 @@ public class TestBase {
     protected static RequestSpecification requestSpecificationCommon;
     protected static Response response;
     protected static Faker faker = new Faker();
+    protected static ObjectMapper mapper;
 
     @BeforeAll
     public static void setUpAll() {
