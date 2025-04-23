@@ -14,9 +14,12 @@ import org.junit.jupiter.api.BeforeAll;
 public class TestBase {
     // Object containing all request settings
     protected static RequestSpecification requestSpecificationCommon;
+    // Variable to save response
     protected static Response response;
+    // Faker object to generate fake random data
     protected static Faker faker = new Faker();
-    protected static ObjectMapper mapper;
+    // Jackson class used to JSON conversion
+    protected static ObjectMapper mapper = new ObjectMapper();
 
     @BeforeAll
     public static void setUpAll() {

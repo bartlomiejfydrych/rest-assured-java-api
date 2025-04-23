@@ -8,6 +8,8 @@
 - [RequestSpecBuilder](#request_spec_builder)
 - [RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()](#enable_log_fail)
 - [RecursiveComparisonConfiguration()](#assertj_recursive_comparison_configuration)
+- [Porównywanie JSON'ów – ObjectMapper](#json_compare_object_mapper)
+- [Porównywanie JSON'ów – JsonNode](#json_compare_json_node)
 
 ---
 
@@ -977,3 +979,175 @@ void shouldCompareUsersIgnoringId() {
 
 Dzięki `RecursiveComparisonConfiguration` możesz **uniknąć problemów z `equals()`**, dostosować sposób porównywania
 i **uniknąć niepotrzebnych failów** w testach. 🚀🔥
+
+---
+
+## 📄Porównywanie JSON'ów – ObjectMapper <a name="json_compare_object_mapper"></a>
+
+`ObjectMapper` to **klasa z biblioteki Jackson (`com.fasterxml.jackson.databind`)**, która służy do **konwersji między
+obiektami Java a JSON-em**.
+
+### 🔁 Główne zastosowania `ObjectMapper`:
+
+| Czynność                     | Co robi                                                  |
+|------------------------------|----------------------------------------------------------|
+| `readValue()` / `readTree()` | 📥 Parsuje JSON → na obiekt Java (`POJO`) lub `JsonNode` |
+| `writeValueAsString()`       | 📤 Obiekt Java → na JSON jako `String`                   |
+| `writeValue()`               | 📝 Obiekt Java → zapisany bezpośrednio do pliku          |
+
+### ✅ Przykłady
+
+#### 1. **JSON na obiekt Java (deserializacja)**
+
+```java
+String json = "{\"name\":\"Test Board\",\"closed\":false}";
+
+ObjectMapper mapper = new ObjectMapper();
+Board board = mapper.readValue(json, Board.class);
+```
+
+#### 2. **Obiekt Java na JSON (serializacja)**
+
+```java
+Board board = new Board("Test Board", false);
+
+String json = mapper.writeValueAsString(board);
+// => {"name":"Test Board","closed":false}
+```
+
+#### 3. **JSON jako drzewo (JsonNode)** – przydatne np. do testów
+
+```java
+JsonNode node = mapper.readTree(json);
+String name = node.get("name").asText();  // => "Test Board"
+```
+
+### ✅ Dlaczego `ObjectMapper` jest fajny?
+
+- Bardzo elastyczny
+- Obsługuje adnotacje (`@JsonProperty`, `@JsonIgnore`, itd.)
+- Możesz nim parsować JSON **nawet bez tworzenia klasy modelowej**, np. do `Map`, `List`, `JsonNode`
+- Używany w **Springu**, RestAssured, testach, itp.
+
+---
+
+## 📄Porównywanie JSON'ów – JsonNode <a name="json_compare_json_node"></a>
+
+### 🔍 `JsonNode` – co to jest?
+
+`JsonNode` to **reprezentacja struktury JSON-a w Javie** – konkretnie w bibliotece **Jackson**
+(`com.fasterxml.jackson.databind.JsonNode`). Dzięki niej możesz **parsować, odczytywać, modyfikować i porównywać dane
+JSON-owe** jak obiekty, bez potrzeby mapowania ich na klasy POJO.
+
+### ✅ Przykład działania:
+
+```java
+ObjectMapper mapper = new ObjectMapper();
+String json = "{ \"name\": \"Ala\", \"age\": 25 }";
+
+// Parsowanie na JsonNode
+JsonNode rootNode = mapper.readTree(json);
+
+// Odczyt pól
+String name = rootNode.get("name").asText();   // "Ala"
+int age = rootNode.get("age").asInt();         // 25
+```
+
+### 🔧 Co można z tym robić?
+
+| Co chcesz zrobić          | Jak to wygląda w kodzie                        |
+|---------------------------|------------------------------------------------|
+| Parsować JSON jako drzewo | `JsonNode node = mapper.readTree(jsonString);` |
+| Odczytać wartość          | `node.get("field").asText()`                   |
+| Iterować po polach        | `node.fields()` albo `node.fieldNames()`       |
+| Usuwać pola               | `((ObjectNode) node).remove("id")`             |
+| Porównywać JSON-y         | `node1.equals(node2)`                          |
+| Zmieniać JSON             | `((ObjectNode) node).put("key", "newValue")`   |
+
+### 🔁 Porównywanie JSON-ów
+
+To właśnie dzięki `JsonNode` możesz zrobić coś takiego:
+
+```java
+boolean areEqual = node1.equals(node2);
+```
+
+I to **porównuje całe struktury JSON**, nie tylko tekst.
+
+### 🌪 Iterowanie po tablicach, filtrowanie po wartościach, zmienianie zagnieżdżonych danych
+
+#### ✅ 1. Parsowanie JSON-a
+
+```java
+String json = """
+{
+  "name": "Ala",
+  "age": 25,
+  "skills": ["Java", "REST", "JSON"]
+}
+""";
+
+ObjectMapper mapper = new ObjectMapper();
+JsonNode rootNode = mapper.readTree(json);
+```
+
+#### 🔍 2. Odczyt wartości
+
+```java
+String name = rootNode.get("name").asText();       // "Ala"
+int age = rootNode.get("age").asInt();             // 25
+JsonNode skillsNode = rootNode.get("skills");
+```
+
+#### 🔁 3. Iteracja po tablicy (`ArrayNode`)
+
+```java
+for (JsonNode skill : skillsNode) {
+    System.out.println("Skill: " + skill.asText());
+}
+// Output:
+// Skill: Java
+// Skill: REST
+// Skill: JSON
+```
+
+#### 🧭 4. Iteracja po polach obiektu
+
+```java
+Iterator<Map.Entry<String, JsonNode>> fields = rootNode.fields();
+while (fields.hasNext()) {
+    Map.Entry<String, JsonNode> field = fields.next();
+    System.out.println(field.getKey() + ": " + field.getValue());
+}
+```
+
+#### 🧹 5. Usuwanie pola
+
+```java
+((ObjectNode) rootNode).remove("age");
+```
+
+#### 🧪 6. Porównanie dwóch JSON-ów
+
+```java
+String json1 = "{\"name\": \"Ala\", \"age\": 25}";
+String json2 = "{\"name\": \"Ala\", \"age\": 25}";
+
+JsonNode node1 = mapper.readTree(json1);
+JsonNode node2 = mapper.readTree(json2);
+
+System.out.println(node1.equals(node2));  // true
+```
+
+#### 🧱 7. Dodawanie / modyfikowanie pól
+
+```java
+((ObjectNode) rootNode).put("age", 26);
+((ObjectNode) rootNode).put("newField", "addedValue");
+```
+
+#### 📥 8. Ładowanie JSON-a z pliku
+
+```java
+JsonNode jsonFromFile = mapper.readTree(new File("src/test/resources/response.json"));
+```
