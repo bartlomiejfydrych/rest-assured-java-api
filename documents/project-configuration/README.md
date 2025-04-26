@@ -29,6 +29,7 @@
      - [Allure Report](#allure_report_dependency)
    - [🌐Backend](#backend)
      - [REST Assured](#rest_assured)
+     - [JSONassert](json_assert)
      - [JSON Schema Validator](#json_schema_validator)
      - [Project Lombok](#project_lombok)
      - [Jackson Databind](#jackson_databind)
@@ -130,6 +131,7 @@
         - Logback Classic (opcjonalne, żeby nie denerwowały nas warningi `SLF4J`, które może powodować `Allure Report`)
     - **Backend**
         - REST Assured
+        - JSONassert (do porównywania JSON'ów wraz z wyświetlaniem różnic)
         - JSON Schema Validator (ten od REST Assured)
         - Project Lombok (opcjonalne)
         - Jackson Databind (opcjonalne)
@@ -1061,6 +1063,325 @@ given()
 ✅ **Eliminacja potrzeby używania dodatkowych klientów HTTP (np. HttpClient, OkHttp)**
 
 👉 **REST Assured to najlepsze narzędzie do testowania API w Java!** 🚀
+
+---
+
+### 📘JSONassert <a name="json_assert"></a>
+
+**JSONassert** to lekkie **Java dependency** (biblioteka), która umożliwia łatwe i **precyzyjne porównywanie dwóch
+dokumentów JSON** podczas pisania testów jednostkowych lub integracyjnych.
+
+#### ✨ Co umożliwia JSONassert?
+
+- **Porównywanie dwóch JSON-ów** — sprawdza, czy struktury i wartości JSON są zgodne.
+- **Porównywanie z dokładnością** — możesz zdecydować, czy JSON-y muszą być dokładnie takie same (strict) lub czy
+  wystarczy zgodność kluczowych pól (non-strict).
+- **Łatwa obsługa** — nie musisz parsować JSON-ów ręcznie, tylko przekazujesz je jako `String`.
+- **Świetne do testów REST API** — sprawdzasz odpowiedzi serwera (`response.body()`) bez budowania obiektów Java.
+
+#### 📦 Popularne metody JSONassert:
+
+```java
+JSONAssert.assertEquals(expectedJson, actualJson, strict);
+```
+
+- `expectedJson` – oczekiwany JSON jako `String`
+- `actualJson` – otrzymany JSON jako `String`
+- `strict` – `true` = dokładne dopasowanie (`order`, `klucze`, `wartości`)  
+  `false` = luźniejsze dopasowanie (ignoruje kolejność, dodatkowe pola)
+
+#### ✅ Przykład użycia:
+
+```java
+import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+
+public class SampleJsonTest {
+
+    @Test
+    void shouldCompareJsonStrings() throws Exception {
+        String expected = "{\"id\":1, \"name\":\"Board A\"}";
+        String actual = "{\"name\":\"Board A\", \"id\":1}";
+
+        JSONAssert.assertEquals(expected, actual, false); // kolejność nieistotna
+    }
+}
+```
+
+#### 🛠 Kiedy warto używać JSONassert?
+
+- Testy odpowiedzi API (`REST Assured`, `HttpClient`, itp.)
+- Testy transformacji danych JSON → JSON
+- Testy walidacji odpowiedzi backendu
+- Gdy nie chcesz pisać własnych parserów/mapperów
+
+#### 📥 Maven dependency:
+
+```xml
+<dependency>
+    <groupId>org.skyscreamer</groupId>
+    <artifactId>jsonassert</artifactId>
+    <version>1.5.1</version> <!-- lub najnowsza -->
+    <scope>test</scope>
+</dependency>
+```
+
+Chcesz, że podam Ci też przykład **porównania z błędem** i jak wygląda wtedy komunikat w teście? 📜  
+(bo JSONassert ma naprawdę fajne, czytelne komunikaty o błędach!) 🚀  
+Super! Oto przykład, jak wygląda **porównanie, które się nie powiedzie** z użyciem JSONassert — razem z komunikatem
+błędu, jaki zobaczysz w teście:
+
+#### 🔥 Przykład testu, który się nie powiedzie:
+
+```java
+import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+
+public class JsonFailureTest {
+
+    @Test
+    void shouldFailWhenJsonDoesNotMatch() throws Exception {
+        String expected = "{\"id\":1, \"name\":\"Board A\"}";
+        String actual = "{\"id\":2, \"name\":\"Board B\"}";
+
+        JSONAssert.assertEquals(expected, actual, true); // strict = true
+    }
+}
+```
+
+#### ❗ Wynik testu (przykładowy komunikat błędu):
+
+```css
+org.junit.ComparisonFailure:
+Expected: {
+  "id": 1,
+  "name": "Board A"
+}
+Actual: {
+  "id": 2,
+  "name": "Board B"
+}
+Difference is: Different value found in node "id". Expected 1 but got 2.
+Different value found in node "name". Expected "Board A" but got "Board B".
+
+	at org.skyscreamer.jsonassert.JSONAssert.assertEquals(JSONAssert.java:xxx)
+	...
+```
+
+#### ✍ Co tu się stało?
+
+- JSONassert najpierw przeparsował oba JSON-y do struktury drzewa.
+- Potem przeszedł po każdym kluczu i **wskazał dokładnie**, gdzie są różnice (`"id"` i `"name"`).
+- Dostałeś **czytelny, szczegółowy raport**, a nie ogólny "Assertion failed" jak w zwykłych `assertEquals()`.
+
+#### 🧠 Ciekawostka:
+
+Jeśli byś ustawił `strict = false`, to JSONassert **zignorowałby** kolejność pól i ewentualne dodatkowe pola,
+ale **wartości kluczy muszą się zgadzać**.
+
+Chcesz, że jeszcze pokażę Ci przykład jak porównywać **część JSON-a** (np. tylko pewne klucze)? 🌟  
+(bo JSONassert też to wspiera!) 🚀
+Super! 🚀  
+To pokażę Ci teraz, jak za pomocą **JSONassert** porównywać **tylko fragment JSON-a**, czyli nie wszystko na raz.
+
+#### 🔥 Przykład: porównanie tylko wybranych kluczy (partial match)
+
+```java
+import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+
+public class JsonPartialTest {
+
+    @Test
+    void shouldPartiallyMatchJson() throws Exception {
+        String expectedPartialJson = "{\"name\":\"Board A\"}";
+        String actualFullJson = "{\"id\":2, \"name\":\"Board A\", \"createdAt\":\"2024-04-26T18:30:00\"}";
+
+        JSONAssert.assertEquals(expectedPartialJson, actualFullJson, false); // strict = false
+    }
+}
+```
+
+#### ✅ Wynik testu:
+
+✅ Test przejdzie pomyślnie, nawet jeśli pełny JSON zawiera więcej danych (`id`, `createdAt`).
+
+**Dlaczego?**  
+Bo `strict = false` mówi JSONassertowi:
+> "Sprawdź tylko, czy w tym dużym JSON-ie jest `name = Board A`. Reszta mnie nie interesuje."
+
+#### 🧠 Kiedy się tego używa?
+
+- Gdy **nie interesują Cię wszystkie pola** (np. data utworzenia, ID generowane losowo).
+- Gdy API **dodaje nowe pola** i nie chcesz, by Twój test od razu wybuchał.
+- Gdy testujesz **częściowe odpowiedzi**, np. weryfikujesz tylko status lub tytuł.
+
+#### ⚡ Jeszcze bardziej sprytnie: JSON z "wildcards"
+
+JSONassert obsługuje też **specjalne znaki** (`*`) do bardziej zaawansowanego porównywania!  
+Np. możesz napisać:
+
+```java
+String expected = "{\"id\":\"*\", \"name\":\"Board A\"}";
+JSONAssert.assertEquals(expected, actual, false);
+```
+
+I wtedy `id` może mieć **cokolwiek** — byle był obecny!
+
+Chcesz, że jeszcze pokażę Ci przykład jak użyć JSONassert razem z **dynamicznymi danymi** (np. ID, które zmieniają się
+za każdym razem)? 🔥  
+To jest mega przydatne w testach REST API!
+Super! 😎 To teraz pokażę Ci **praktyczny przykład** użycia **JSONassert** w sytuacji, gdy masz **dynamiczne dane**
+(np. ID, które za każdym razem jest inne).
+
+#### 🔥 Przykład: Ignorowanie zmieniających się danych (np. `id`, `createdAt`)
+
+Wyobraź sobie, że dostajesz z API taki **dynamiczny JSON**:
+
+```json
+{
+  "id": 12345,
+  "name": "Board A",
+  "createdAt": "2025-04-26T18:45:00"
+}
+```
+
+➡️ `id` oraz `createdAt` **za każdym razem są inne**.  
+➡️ Ale **`name`** musi być zawsze `"Board A"`.
+
+#### ✍ Kod testu:
+
+```java
+import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+
+public class JsonDynamicFieldsTest {
+
+    @Test
+    void shouldIgnoreDynamicFields() throws Exception {
+        String expectedJson = "{"
+                + "\"name\":\"Board A\""
+                + "}";
+
+        String actualJson = "{"
+                + "\"id\":99999,"
+                + "\"name\":\"Board A\","
+                + "\"createdAt\":\"2025-04-26T18:50:00\""
+                + "}";
+
+        JSONAssert.assertEquals(expectedJson, actualJson, false); // strict = false
+    }
+}
+```
+
+✅ Test przejdzie, bo porównuje **tylko `name`**.  
+❌ Nie wymaga zgodności `id` i `createdAt`.
+
+#### 🧠 Co robi parametr `false`?
+
+W tym miejscu:
+
+```java
+JSONAssert.assertEquals(expectedJson, actualJson, false);
+```
+
+- `false` oznacza **"nie sprawdzaj dokładnego dopasowania wszystkich pól"**.
+- JSON może mieć więcej danych — liczy się tylko to, co Ty podałeś.
+
+#### 🔥 Opcjonalnie: pełna walidacja (strict = true)
+
+Jeśli byś ustawił:
+
+```java
+JSONAssert.assertEquals(expectedJson, actualJson, true);
+```
+
+to test by się **wywalił**, bo JSONy nie są **identyczne** (brakuje pól `id` i `createdAt` w expected).
+
+#### ✨ Podsumowanie
+
+- **strict = false** — sprawdzamy tylko to, co nas interesuje.
+- Idealne do testów **REST API**, gdy np. ID, timestampy albo inne dane są dynamiczne.
+- JSONassert = szybkie, lekkie i bardzo czytelne asercje JSON.
+
+Chcesz, że jeszcze pokażę Ci jak **porównywać tablice JSON** (np. lista obiektów)? 🔥  
+W API to bardzo często się przydaje! 🚀  
+Świetnie! 🔥 Lecimy dalej — teraz pokażę Ci **jak JSONassert radzi sobie z tablicami JSON** (czyli np. gdy API
+zwraca **listę obiektów**).
+
+#### 🧠 Załóżmy, że dostajesz taki JSON od API:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Board A"
+  },
+  {
+    "id": 2,
+    "name": "Board B"
+  }
+]
+```
+
+#### ✍ Kod testu w Java z JSONassert:
+
+```java
+import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+
+public class JsonArrayTest {
+
+    @Test
+    void shouldCompareJsonArray() throws Exception {
+        String expectedJson = "["
+                + "{ \"name\": \"Board A\" },"
+                + "{ \"name\": \"Board B\" }"
+                + "]";
+
+        String actualJson = "["
+                + "{ \"id\": 1, \"name\": \"Board A\" },"
+                + "{ \"id\": 2, \"name\": \"Board B\" }"
+                + "]";
+
+        JSONAssert.assertEquals(expectedJson, actualJson, false); // strict = false
+    }
+}
+```
+
+#### 📋 Co się tutaj dzieje?
+
+- **`expectedJson`** — podajemy tylko pola, które **nas interesują** (`name`).
+- **`actualJson`** — może mieć dodatkowe dane (`id`).
+- **`strict = false`** — oznacza, że **extra pola są ignorowane**.
+
+✅ Test przejdzie!  
+Nie musisz podawać ID ani innych zmieniających się danych.
+
+#### 💥 A co jakby `strict = true`?
+
+Jeśli napiszemy:
+
+```java
+JSONAssert.assertEquals(expectedJson, actualJson, true);
+```
+
+➡️ test się **wywali**, bo brakuje w expected takich samych `id` jak w actual.  
+Przy `strict = true` **JSONy muszą być identyczne**.
+
+#### 🧩 Co jeszcze możesz robić z tablicami?
+
+- Sprawdzać kolejność elementów (jeśli strict = true).
+- Weryfikować konkretne elementy (np. pierwszy element tablicy).
+- Testować fragmenty dużych odpowiedzi JSON.
+
+#### ✨ Podsumowując
+
+| Cecha                                         | strict = false | strict = true          |
+|:----------------------------------------------|:---------------|:-----------------------|
+| Czy porównuje wszystkie pola?                 | ❌ Nie          | ✅ Tak                  |
+| Czy ważna jest kolejność elementów w tablicy? | ❌ Nie          | ✅ Tak                  |
+| Czy sprawdza dodatkowe pola?                  | ❌ Ignoruje     | ✅ Wymaga identyczności |
 
 ---
 

@@ -80,6 +80,7 @@ The course consisted of 3 parts:
 ### Backend (API tests)
 
 - REST Assured
+- JSONassert
 - JSON Schema Validator (From REST Assured)
 
 ### Tests
@@ -120,11 +121,10 @@ The course consisted of 3 parts:
 
 #### Tests
 
-- Configuring `Allure Report` and generating a test report
 - Generating random test data with `JavaFaker`
-- Using the `Arrange-Act-Assert` pattern
-- Setting tests to run in a specific order with `JUnit Suite`
-- Using assertions from the `AssertJ` framework
+- 🟡(check)Configuring `Allure Report` and generating a test report
+- 🟡(check)Setting tests to run in a specific order with `JUnit Suite`
+- 🟡(check)Using assertions from the `AssertJ` framework
 
 ### API tests (REST Assured)
 

@@ -8,6 +8,7 @@
 - [RequestSpecBuilder](#request_spec_builder)
 - [RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()](#enable_log_fail)
 - [RecursiveComparisonConfiguration()](#assertj_recursive_comparison_configuration)
+- [Porównywanie JSON'ów – wyzwania, podejścia, praktyki](#json_compare_intro)
 - [Porównywanie JSON'ów – ObjectMapper](#json_compare_object_mapper)
 - [Porównywanie JSON'ów – JsonNode](#json_compare_json_node)
 
@@ -533,7 +534,7 @@
 43. W katalogu tym tworzymy klasę z nazwą zgodną z endpointem, dla którego będziemy trzymać w niej oczekiwane respons'y,
     w tym przypadku `POST_CreateBoardExpected`
 44. W klasie tej tworzymy zmienną typu String, w której umieszczamy nasz oczekiwany JSON pomiędzy takimi znakami `"""{json}"""` 
-45. 
+45. 🔴JsonUtils <dokończyć>
 
 ---
 
@@ -979,6 +980,74 @@ void shouldCompareUsersIgnoringId() {
 
 Dzięki `RecursiveComparisonConfiguration` możesz **uniknąć problemów z `equals()`**, dostosować sposób porównywania
 i **uniknąć niepotrzebnych failów** w testach. 🚀🔥
+
+---
+
+## 📄Porównywanie JSON'ów – wyzwania, podejścia, praktyki <a name="json_compare_intro"></a>
+
+**Link do źródła:**  
+https://medium.com/@keployio/diff-json-a-complete-guide-to-comparing-json-data-7e536533c514
+
+### 📌Uwagi
+
+Tutaj, standardowe porównywanie JSON'ów zwraca wartość `true` lub `false`.  
+W celu porównywania wraz ze zwracaniem różnic w konsoli należy użyć np. `JsonAssert`.
+
+### 🗻Wyzwania w porównywaniu JSON
+
+Porównywanie obiektów JSON może wydawać się proste, ale może być trudne, szczególnie w przypadku:
+
+- **Struktury zagnieżdżone:** dane JSON mogą być głęboko zagnieżdżone, co sprawia, że ręczne porównywanie jest żmudne
+i podatne na błędy.
+- **Wrażliwość na kolejność:** tablice w formacie JSON są wrażliwe na kolejność, co oznacza, że [1,2] i [2,1] nie są równe,
+nawet jeśli zawierają te same elementy.
+- **Niezgodności typów danych:** Wartość zapisana jako „1” (ciąg) w jednym obiekcie JSON może wymagać porównania
+z wartością 1 (liczba) w innym obiekcie.
+- **Dynamiczne struktury danych:** Gdy dane JSON często się zmieniają (np. odpowiedzi API), śledzenie różnic może być skomplikowane.
+
+Wyzwania te podkreślają potrzebę stosowania skutecznych narzędzi do porównywania plików JSON lub niestandardowej logiki porównawczej.
+
+### 🔑Kluczowe podejścia do różnicowania danych JSON
+
+Istnieje wiele sposobów porównywania danych JSON w zależności od przypadku użycia i wymaganego poziomu precyzji:
+
+1. **Strict Equality Comparison:**  
+   To podejście zapewnia **dokładne dopasowanie** kluczy, wartości i typów danych. Jest przydatne w sytuacjach, w których
+   nawet drobne zmiany mają znaczenie, takich jak testowanie API.
+2. **Porównanie strukturalne:**  
+   Tutaj struktura (tj. hierarchia kluczy) jest porównywana bez skupiania się na konkretnych wartościach.
+   Jest to przydatne, gdy **układ ma większe znaczenie** niż rzeczywiste dane, takie jak walidacja schematu.
+3. **Częściowe porównanie:**  
+   W tym podejściu **porównywane są tylko określone klucze lub pola.** Jest to korzystne w przypadku dynamicznych
+   odpowiedzi JSON, w których weryfikacji wymagają tylko niektóre części (np. kody statusu).
+
+Wybór odpowiedniego podejścia gwarantuje, że porównanie JSON będzie zgodne ze szczególnymi wymaganiami danego zadania.
+
+### 👨‍💻Jak porównać JSON za pomocą kodu
+
+Przykład w Javie (z wykorzystaniem Jacksona):
+```java
+ObjectMapper mapper = new ObjectMapper (); 
+JsonNode json1 = mapper.readTree( "{ \" name \" : \" Alice \" , \" age \" :25}" ); 
+JsonNode json2 = mapper.readTree( "{ \" name \" : \" Alice \" , \" age \" :30}" ); 
+boolean isEqual = json1.equals(json2); 
+System .out.println( "Czy pliki JSON są równe? "  + isEqual);
+```
+
+### 🏆Najlepsze praktyki dotyczące różnic JSON
+
+Aby zapewnić wiarygodność porównania JSON, postępuj zgodnie z poniższymi najlepszymi praktykami:
+
+- **Ignoruj kolejność, jeśli to możliwe:** Jeśli kolejność nie ma znaczenia, unikaj ścisłego porównywania tablic,
+  aby zapobiec niepotrzebnym niezgodnościom.
+- **Odpowiednie obchodzenie się z polami opcjonalnymi:** stosuj tolerancyjną logikę porównawczą, aby uwzględnić pola
+  opcjonalne lub struktury dynamiczne.
+- **Skuteczne rejestrowanie różnic:** W przypadku wykrycia różnic **należy je wyraźnie zarejestrować,** co ułatwi rozwiązywanie
+  problemów.
+- **Zautomatyzuj porównywanie JSON:** Zintegruj narzędzia lub biblioteki do porównywania JSON z **procesami CI/CD** w celu
+  automatycznego testowania i walidacji.
+
+Przestrzeganie tych zasad pomoże Ci uniknąć typowych pułapek i usprawnić Twój przepływ pracy.
 
 ---
 

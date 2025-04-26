@@ -22,6 +22,7 @@
         <!-- BACKEND -->
         <restAssured.version>5.5.1</restAssured.version>
         <jsonSchemaValidatorRestAssured.version>5.5.1</jsonSchemaValidatorRestAssured.version>
+        <jsonAssert.version>1.5.3</jsonAssert.version>
         <jacksonDatabind.version>2.18.3</jacksonDatabind.version>
     </properties>
 
@@ -75,6 +76,13 @@
             <groupId>io.rest-assured</groupId>
             <artifactId>json-schema-validator</artifactId>
             <version>${jsonSchemaValidatorRestAssured.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.skyscreamer/jsonassert -->
+        <dependency>
+            <groupId>org.skyscreamer</groupId>
+            <artifactId>jsonassert</artifactId>
+            <version>${jsonAssert.version}</version>
+            <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
