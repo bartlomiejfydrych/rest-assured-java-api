@@ -22,15 +22,15 @@ public class POST_CreateBoardTest extends TestBase {
         try {
             assertThat(response.statusCode()).isEqualTo(200);
             boardId = response.jsonPath().getString("id");
+            // TODO: sprawdzanie struktury i typów danych response (DTO/Schema)
             // TODO: porównywanie zmiennych elementów response
             // TODO: porównywanie pozostałych elementów response z oczekiwanym response
-            // TODO: sprawdzanie struktury i typów danych response (DTO/Schema)
             // GET
             response = GET_GetBoard.getGetBoard(boardId);
             assertThat(response.statusCode()).isEqualTo(200);
+            // TODO: sprawdzanie struktury i typów danych response (DTO/Schema)
             // TODO: porównywanie zmiennych elementów response
             // TODO: porównywanie pozostałych elementów response z oczekiwanym response
-            // TODO: sprawdzanie struktury i typów danych response (DTO/Schema)
         } finally {
             // DELETE
             response = DELETE_DeleteBoard.deleteDeleteBoard(boardId);

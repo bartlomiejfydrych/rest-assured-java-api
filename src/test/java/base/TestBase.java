@@ -1,6 +1,5 @@
 package base;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import configuration.Config;
 import configuration.RequestSpecConfig;
@@ -18,8 +17,6 @@ public class TestBase {
     protected static Response response;
     // Faker object to generate fake random data
     protected static Faker faker = new Faker();
-    // Jackson class used to JSON conversion
-    protected static ObjectMapper mapper = new ObjectMapper();
 
     @BeforeAll
     public static void setUpAll() {
