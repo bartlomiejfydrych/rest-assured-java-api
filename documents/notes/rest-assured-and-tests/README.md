@@ -8,6 +8,7 @@
 - [RequestSpecBuilder](#request_spec_builder)
 - [RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()](#enable_log_fail)
 - [RecursiveComparisonConfiguration()](#assertj_recursive_comparison_configuration)
+- [Struktura JSON – JsonSchema vs. DTO/POJO](#json_schema_dto_pojo)
 - [Porównywanie JSON'ów – wyzwania, podejścia, praktyki](#json_compare_intro)
 - [Porównywanie JSON'ów – ObjectMapper](#json_compare_object_mapper)
 - [Porównywanie JSON'ów – JsonNode](#json_compare_json_node)
@@ -980,6 +981,87 @@ void shouldCompareUsersIgnoringId() {
 
 Dzięki `RecursiveComparisonConfiguration` możesz **uniknąć problemów z `equals()`**, dostosować sposób porównywania
 i **uniknąć niepotrzebnych failów** w testach. 🚀🔥
+
+---
+
+## 📄Struktura JSON – JsonSchema vs. DTO/POJO <a name="json_schema_dto_pojo"></a>
+
+Świetne pytanie — i odpowiedź zależy głównie od **celu**, jaki chcesz osiągnąć (np. testy, walidacja, serializacja, dokumentacja API itp.).  
+Poniżej przedstawiam **porównanie**: `JsonSchema` vs `DTO/POJO` — co to jest, do czego służy, różnice i kiedy co wybrać.
+
+### 🔷 1. **POJO/DTO (Plain Old Java Object / Data Transfer Object)**
+
+#### ✅ Co to:
+- Klasa w Javie (lub inny obiekt w języku programowania) z polami, getterami/setterami, opcjonalnie adnotacjami
+  (`@JsonProperty`, `@NotNull`, itd.).
+- Używane do:
+    - serializacji / deserializacji JSON ↔ obiekt Java (np. przez Jackson lub Gson),
+    - walidacji danych (np. Hibernate Validator),
+    - operacji na danych (np. logika biznesowa),
+    - komunikacji między warstwami aplikacji.
+
+#### ✅ Zalety:
+- Typy statyczne – kompilator wykryje błędy.
+- IDE podpowiada pola, adnotacje.
+- Łatwe testowanie i refaktoryzacja.
+- Lepsza integracja z frameworkami (Spring, Hibernate itp.).
+
+#### ❌ Wady:
+- Język-specyficzne (Java, Kotlin, itp.).
+- Potrzeba rekompilacji po zmianach.
+- Brak automatycznej walidacji struktury JSON bez dodatkowych bibliotek.
+
+### 🔷 2. **JSON Schema**
+
+#### ✅ Co to:
+- Niezależny od języka opis **struktury i ograniczeń JSON-a**, w formacie JSON.
+- Definiuje:
+    - jakie pola są wymagane,
+    - typy danych (`string`, `number`, `array`, itp.),
+    - zakresy (`minimum`, `maxLength`),
+    - struktury zagnieżdżone (`properties`, `definitions`),
+    - wzorce walidacyjne (`pattern`, `enum`, itp.).
+
+#### ✅ Zalety:
+- Język-agnostyczny (można używać z dowolnym językiem).
+- Doskonały do walidacji wejścia/wyjścia (np. w REST API).
+- Może służyć jako kontrakt w API.
+- Wspierany przez narzędzia takie jak:
+    - OpenAPI / Swagger,
+    - Postman, Insomnia,
+    - JSON Schema Validator, ajv (JS), everit (Java), itp.
+
+#### ❌ Wady:
+- Brak bezpośredniej integracji z kodem (chyba że wygenerujesz klasy z JSON Schema).
+- Mniej wygodne w edycji / refaktoryzacji niż kod Java.
+- Trudniejsze w testowaniu logiki aplikacyjnej.
+
+### 🔁 Różnice (head-to-head)
+
+| Cecha                      | DTO/POJO (Java)          | JSON Schema                  |
+|----------------------------|--------------------------|------------------------------|
+| Format                     | Kod Java                 | JSON                         |
+| Typowanie                  | Kompilator               | Runtime                      |
+| Walidacja struktury        | Z adnotacjami lub ręczna | Automatyczna na wejściu      |
+| Integracja z Spring        | Bardzo dobra             | Wymaga adapterów             |
+| Przenośność                | Tylko Java               | Dowolny język                |
+| Czy może być "kontraktem"? | Raczej nie               | Tak (np. dla API lub testów) |
+| Narzędzia developerskie    | IDE, debug, refactor     | Lintery, generatory, CLI     |
+
+### 🧠 Co wybrać?
+
+| Potrzebujesz...                             | Wybierz         |
+|---------------------------------------------|-----------------|
+| Operować na danych w Javie                  | POJO/DTO        |
+| Walidować strukturę danych (np. response)   | JSON Schema     |
+| Tworzyć dokumentację REST API               | JSON Schema     |
+| Obsługiwać wiele formatów językowych        | JSON Schema     |
+| Testować backend + typowanie + refactor     | DTO/POJO        |
+
+### 🔧 Pro tip:
+Można łączyć oba podejścia:
+- Używasz **DTO** w aplikacji,
+- a do walidacji requestów/response’ów (np. w testach kontraktowych lub API Gateway) używasz **JSON Schema**.
 
 ---
 
