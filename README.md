@@ -80,6 +80,8 @@ The course consisted of 3 parts:
 ### Backend (API tests)
 
 - REST Assured
+- Hibernate Validator Engine
+- Jakarta Validation API
 - JSONassert
 - JSON Schema Validator (From REST Assured)
 
