@@ -21,6 +21,8 @@
         <dotenvJava.version>3.2.0</dotenvJava.version>
         <!-- BACKEND -->
         <restAssured.version>5.5.1</restAssured.version>
+        <hibernateValidator.version>8.0.2.Final</hibernateValidator.version>
+        <jakartaValidation.version>3.1.1</jakartaValidation.version>
         <jsonSchemaValidatorRestAssured.version>5.5.1</jsonSchemaValidatorRestAssured.version>
         <jsonAssert.version>1.5.3</jsonAssert.version>
         <jacksonDatabind.version>2.18.3</jacksonDatabind.version>
@@ -70,6 +72,18 @@
             <artifactId>rest-assured</artifactId>
             <version>${restAssured.version}</version>
             <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernateValidator.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakartaValidation.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.rest-assured/json-schema-validator -->
         <dependency>

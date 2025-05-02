@@ -29,6 +29,8 @@
      - [Allure Report](#allure_report_dependency)
    - [🌐Backend](#backend)
      - [REST Assured](#rest_assured)
+     - [Hibernate Validator Engine](#dto_hibernate_validator)
+     - [Jakarta Validation API](#dto_jakarta_validation)
      - [JSONassert](json_assert)
      - [JSON Schema Validator](#json_schema_validator)
      - [Project Lombok](#project_lombok)
@@ -131,6 +133,9 @@
         - Logback Classic (opcjonalne, żeby nie denerwowały nas warningi `SLF4J`, które może powodować `Allure Report`)
     - **Backend**
         - REST Assured
+        - Te dwa muszą być razem:
+          - Hibernate Validator Engine (do walidacji DTO)
+          - Jakarta Validation API (do walidacji DTO)
         - JSONassert (do porównywania JSON'ów wraz z wyświetlaniem różnic)
         - JSON Schema Validator (ten od REST Assured)
         - Project Lombok (opcjonalne)
@@ -1063,6 +1068,203 @@ given()
 ✅ **Eliminacja potrzeby używania dodatkowych klientów HTTP (np. HttpClient, OkHttp)**
 
 👉 **REST Assured to najlepsze narzędzie do testowania API w Java!** 🚀
+
+---
+
+### 📘Hibernate Validator Engine <a name="dto_hibernate_validator"></a>
+
+**Hibernate Validator Engine** to biblioteka do **walidacji danych** w Javie, stanowiąca **referencyjną implementację
+specyfikacji Bean Validation** (JSR 380 – Bean Validation 2.0).
+
+#### 🔧 Co to oznacza w praktyce?
+
+Umożliwia łatwe **dodawanie reguł walidacji** do pól klas (np. DTO, encji) za pomocą adnotacji, np.:
+
+```java
+public class User {
+
+    @NotNull
+    @Size(min = 2, max = 30)
+    private String name;
+
+    @Email
+    private String email;
+}
+```
+
+#### 💡 Co robi Hibernate Validator?
+
+✅ Sprawdza dane w czasie działania (runtime)  
+✅ Może walidować dane w kontrolerach, formularzach, DTO  
+✅ Obsługuje standardowe adnotacje: `@NotNull`, `@Email`, `@Min`, `@Pattern`, itd.  
+✅ Pozwala tworzyć **własne adnotacje walidacyjne**  
+✅ Integruje się z frameworkami (Spring, JAX-RS, Jakarta EE itd.)
+
+#### 🚀 Jak użyć?
+
+Dodajesz do `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>org.hibernate.validator</groupId>
+    <artifactId>hibernate-validator</artifactId>
+</dependency>
+```
+
+Opcjonalnie:
+
+```xml
+<dependency>
+    <groupId>org.glassfish</groupId>
+    <artifactId>jakarta.el</artifactId>
+</dependency>
+```
+
+#### ✅ Przykład walidacji:
+
+```java
+ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+Validator validator = factory.getValidator();
+
+Set<ConstraintViolation<User>> violations = validator.validate(user);
+
+for (ConstraintViolation<User> v : violations) {
+    System.out.println(v.getPropertyPath() + ": " + v.getMessage());
+}
+```
+
+#### 🧰 Przykładowe adnotacje:
+
+* `@NotNull`, `@NotBlank`
+* `@Size(min=, max=)`
+* `@Email`
+* `@Min`, `@Max`
+* `@Pattern(regex=...)`
+
+#### 📌 Podsumowanie
+
+| Cecha        | Opis                                  |
+|--------------|---------------------------------------|
+| Framework    | Hibernate Validator                   |
+| Specyfikacja | Bean Validation (JSR 380)             |
+| Zastosowanie | Walidacja danych w obiektach Java     |
+| Obsługa      | Adnotacje + programowe API            |
+| Integracje   | Spring, Jakarta EE, JAX-RS, JSF, itp. |
+
+---
+
+### 📘Jakarta Validation API <a name="dto_jakarta_validation"></a>
+
+**Jakarta Validation API** to oficjalna specyfikacja (API) dla walidacji danych w Javie – wcześniej znana jako
+**Bean Validation API** (JSR 303/349/380), a obecnie pod marką **Jakarta EE**.
+
+#### 🧩 Co to jest?
+
+`jakarta.validation:jakarta.validation-api` to **interfejsy i adnotacje**, które definiują sposób opisywania
+i wykonywania walidacji w Javie. **Nie zawiera implementacji** — do działania potrzebujesz np. Hibernate Validator
+(który implementuje to API).
+
+#### 📦 Przykładowa zależność Maven:
+
+```xml
+<dependency>
+    <groupId>jakarta.validation</groupId>
+    <artifactId>jakarta.validation-api</artifactId>
+    <version>3.0.2</version> <!-- lub nowsza -->
+</dependency>
+```
+
+#### 🏷️ Przykładowe adnotacje w API:
+
+* `@NotNull`
+* `@Size(min, max)`
+* `@Email`
+* `@Pattern`
+* `@Min`, `@Max`
+* `@Positive`, `@Negative`
+
+#### ✅ Przykład użycia:
+
+```java
+import jakarta.validation.constraints.*;
+
+public class User {
+
+    @NotNull
+    private String username;
+
+    @Email
+    private String email;
+
+    @Size(min = 8)
+    private String password;
+}
+```
+
+Aby walidacja działała, musisz użyć implementacji, np. Hibernate Validator:
+
+```java
+Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+Set<ConstraintViolation<User>> violations = validator.validate(user);
+```
+
+#### 🔄 Różnica: API vs. Implementacja
+
+| Element           | Przykład                                 |
+|-------------------|------------------------------------------|
+| API               | `jakarta.validation-api`                 |
+| Implementacja     | `hibernate-validator`                    |
+| Porównanie        | API to kontrakt, implementacja to logika |
+| Typowe połączenie | API + Hibernate Validator                |
+
+#### 📌 Podsumowanie
+
+| Cecha                   | Opis                                                     |
+|-------------------------|----------------------------------------------------------|
+| Nazwa                   | Jakarta Validation API                                   |
+| Zastosowanie            | Walidacja danych przez adnotacje                         |
+| Część                   | Specyfikacji Jakarta EE                                  |
+| Potrzeba implementacji? | Tak (np. Hibernate Validator)                            |
+| Popularność             | Bardzo szeroko stosowane w Spring Boot, Jakarta EE, itp. |
+
+#### ❓ Czy hibernate-validator oraz jakarta.validation-api muszą być razem?
+
+Świetne pytanie — **tak**, w praktyce **`hibernate-validator` i `jakarta.validation-api` muszą iść razem**,
+ponieważ pełnią **różne, uzupełniające się role**:
+
+##### 🧩 Różnice i zależność:
+
+| Biblioteka               | Rola                                                                         | Obowiązkowa?                     |
+|--------------------------|------------------------------------------------------------------------------|----------------------------------|
+| `jakarta.validation-api` | **Specyfikacja interfejsów i adnotacji** (np. `@NotNull`, `@Size`, `@Valid`) | ✅ TAK — to "API", czyli kontrakt |
+| `hibernate-validator`    | **Implementacja specyfikacji** — faktyczne wykonywanie walidacji             | ✅ TAK — to konkretne działanie   |
+
+##### 📌 Co się stanie, jeśli dodasz tylko jedną?
+
+* **Tylko `jakarta.validation-api`**:
+  → Masz adnotacje, ale **nie zadziała żadna walidacja** — brak silnika, który by je wykonał.
+
+* **Tylko `hibernate-validator`**:
+  → Nie zadziała kompilacja, bo brakuje interfejsów i adnotacji z API.
+
+##### ✅ Dlatego zawsze używaj obu:
+
+W `pom.xml` (lub odpowiednik dla Gradle):
+
+```xml
+<dependency>
+    <groupId>org.hibernate.validator</groupId>
+    <artifactId>hibernate-validator</artifactId>
+    <version>8.0.1.Final</version>
+</dependency>
+<dependency>
+    <groupId>jakarta.validation</groupId>
+    <artifactId>jakarta.validation-api</artifactId>
+    <version>3.0.2</version>
+</dependency>
+```
+
+Hibernate Validator **implementuje** `jakarta.validation-api`.
 
 ---
 
