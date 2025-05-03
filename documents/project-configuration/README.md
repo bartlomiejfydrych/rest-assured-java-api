@@ -27,6 +27,7 @@
      - [Java Faker](#java_faker)
      - [Dotenv Java](#dotenv_java)
      - [Allure Report](#allure_report_dependency)
+     - [Project Lombok](#project_lombok)
    - [🌐Backend](#backend)
      - [REST Assured](#rest_assured)
      - [Hibernate Validator Engine](#dto_hibernate_validator)
@@ -131,6 +132,7 @@
         - Dotenv Java
         - Allure Report
         - Logback Classic (opcjonalne, żeby nie denerwowały nas warningi `SLF4J`, które może powodować `Allure Report`)
+        - Project Lombok (dla lepszej czytelności klas DTO)
     - **Backend**
         - REST Assured
         - Te dwa muszą być razem:
@@ -963,6 +965,77 @@ public class AllureExampleTest {
 🔹 **Łatwe debugowanie testów i śledzenie historii ich wykonania.**
 
 👉 **Allure Report to jedno z najlepszych narzędzi do generowania raportów z testów automatycznych!** 🚀
+
+---
+
+### 📕Project Lombok <a name="project_lombok"></a>
+
+**Project Lombok** to popularna biblioteka Java, która eliminuje *boilerplate code* (czyli powtarzalny, techniczny kod)
+poprzez automatyczne generowanie metod i konstruktorów za pomocą adnotacji.
+
+#### 📦 Maven dependency:
+
+```xml
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.18.30</version> <!-- sprawdź najnowszą wersję -->
+    <scope>provided</scope>
+</dependency>
+```
+
+#### ✅ Główne funkcjonalności:
+
+| Adnotacja                                                               | Co robi?                                                                                           |
+|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| `@Getter` / `@Setter`                                                   | Generuje gettery i settery dla pól                                                                 |
+| `@ToString`                                                             | Tworzy metodę `toString()`                                                                         |
+| `@EqualsAndHashCode`                                                    | Tworzy `equals()` i `hashCode()`                                                                   |
+| `@NoArgsConstructor`, `@AllArgsConstructor`, `@RequiredArgsConstructor` | Generuje konstruktory                                                                              |
+| `@Data`                                                                 | Skrót łączący: `@Getter`, `@Setter`, `@ToString`, `@EqualsAndHashCode`, `@RequiredArgsConstructor` |
+| `@Builder`                                                              | Tworzy wzorzec buildera                                                                            |
+| `@Slf4j`                                                                | Tworzy logger (np. `private static final Logger log = LoggerFactory.getLogger(...);`)              |
+| `@Value`                                                                | Tworzy immutable klasę (jak `@Data`, ale z finalnymi polami)                                       |
+
+#### 🧪 Przykład użycia:
+
+```java
+import lombok.Data;
+import lombok.Builder;
+
+@Data
+@Builder
+public class User {
+    private String name;
+    private int age;
+}
+```
+
+Powyższy kod automatycznie generuje:
+
+* gettery i settery,
+* `toString()`, `equals()`, `hashCode()`,
+* konstruktor,
+* builder.
+
+#### ⚙️ Uwaga dla IDE
+
+Aby IDE (np. IntelliJ IDEA, Eclipse) prawidłowo obsługiwało Lomboka:
+
+* Zainstaluj **plugin "Lombok"**.
+* Włącz opcję **annotation processing** w ustawieniach kompilatora.
+
+#### 📌 Zalety
+
+* Mniej kodu, większa czytelność.
+* Ułatwia pracę przy DTO, encjach, modelach domenowych.
+* Łatwiejsze stosowanie wzorców projektowych (np. builder).
+
+#### ⚠️ Wady i uwagi
+
+* Magiczne generowanie kodu może być nieczytelne dla początkujących.
+* Może wymagać wsparcia IDE / build toola (np. Maven, Gradle).
+* Potencjalne trudności przy debugowaniu i refleksji.
 
 ## 🌐Backend <a name="backend"></a>
 

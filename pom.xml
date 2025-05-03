@@ -19,6 +19,7 @@
         <javafaker.version>1.0.2</javafaker.version>
         <assertjCore.version>3.27.3</assertjCore.version>
         <dotenvJava.version>3.2.0</dotenvJava.version>
+        <projectLombok.version>1.18.38</projectLombok.version>
         <!-- BACKEND -->
         <restAssured.version>5.5.1</restAssured.version>
         <hibernateValidator.version>8.0.2.Final</hibernateValidator.version>
@@ -65,6 +66,13 @@
         </dependency>
         <!-- Allure Report - dodać i skonfigurować później -->
         <!-- Logback Classic - dodać i skonfigurować później -->
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${projectLombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- BACKEND -->
         <!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
         <dependency>
