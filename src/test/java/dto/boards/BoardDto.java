@@ -1,3 +1,18 @@
+/*
+
+------------------------------------------------------------------------------------------
+NOTE:
+I tried, but I didn't like the conversion and validation of the response structure to DTO.
+However, I chose "Json Schema" and moving around the standard JSON response.
+
+What I didn't like:
+- Lack of more reliable validation of missing fields
+- The need to write to each field separately that it is required
+- Uncertainty when compiling annotations from Lombok
+
+I leave the code below as a souvenir and a lesson.
+------------------------------------------------------------------------------------------
+
 package dto.boards;
 
 import jakarta.validation.Valid;
@@ -173,3 +188,5 @@ public class BoardDto {
         private String black_light;
     }
 }
+
+*/
