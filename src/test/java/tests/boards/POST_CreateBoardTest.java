@@ -6,11 +6,16 @@ import endpoints.boards.GET_GetBoard;
 import endpoints.boards.POST_CreateBoard;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.nio.file.Paths;
+
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class POST_CreateBoardTest extends TestBase {
 
-    private static String boardId;
+    private String boardId;
+    private final File boardSchema = Paths.get(baseSchemaPath, "boards", "board_schema.json").toFile();
 
     @Test
     public void P1_shouldCreateBoardWithOnlyRequiredParameters() {
@@ -22,13 +27,16 @@ public class POST_CreateBoardTest extends TestBase {
         try {
             assertThat(response.statusCode()).isEqualTo(200);
             boardId = response.jsonPath().getString("id");
-            // TODO: sprawdzanie struktury i typów danych response (DTO/Schema)
+            response.then().assertThat().body(matchesJsonSchema(boardSchema));
             // TODO: porównywanie zmiennych elementów response
+            // name
+            // shortUrl
+            // url
             // TODO: porównywanie pozostałych elementów response z oczekiwanym response
             // GET
             response = GET_GetBoard.getGetBoard(boardId);
             assertThat(response.statusCode()).isEqualTo(200);
-            // TODO: sprawdzanie struktury i typów danych response (DTO/Schema)
+            response.then().assertThat().body(matchesJsonSchema(boardSchema));
             // TODO: porównywanie zmiennych elementów response
             // TODO: porównywanie pozostałych elementów response z oczekiwanym response
         } finally {

@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "name", "desc", "descData", "closed", "idOrganization", "idEnterprise",
+    "pinned", "url", "shortUrl", "prefs", "labelNames"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 16384
+    },
+    "desc": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 16384
+    },
+    "descData": { "type": ["object", "null"] },
+    "closed": { "type": "boolean" },
+    "idOrganization": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "idEnterprise": { "type": ["string", "null"] },
+    "pinned": { "type": "boolean" },
+    "url": { "type": "string", "format": "uri" },
+    "shortUrl": { "type": "string", "format": "uri" },
+    "prefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "permissionLevel", "hideVotes", "voting", "comments", "invitations", "selfJoin",
+        "cardCovers", "showCompleteStatus", "cardCounts", "isTemplate", "cardAging",
+        "calendarFeedEnabled", "hiddenPluginBoardButtons", "switcherViews", "autoArchive",
+        "background", "backgroundColor", "backgroundDarkColor", "backgroundImage",
+        "backgroundDarkImage", "backgroundImageScaled", "backgroundTile", "backgroundBrightness",
+        "sharedSourceUrl", "backgroundBottomColor", "backgroundTopColor", "canBePublic",
+        "canBeEnterprise", "canBeOrg", "canBePrivate", "canInvite"
+      ],
+      "properties": {
+        "permissionLevel": {
+          "type": "string",
+          "enum": ["org", "private", "public"]
+        },
+        "hideVotes": { "type": "boolean" },
+        "voting": {
+          "type": "string",
+          "enum": ["org", "private", "public", "disabled"]
+        },
+        "comments": {
+          "type": "string",
+          "enum": ["disabled", "members", "observers", "org", "public"]
+        },
+        "invitations": {
+          "type": "string",
+          "enum": ["members", "admins"]
+        },
+        "selfJoin": { "type": "boolean" },
+        "cardCovers": { "type": "boolean" },
+        "showCompleteStatus": { "type": "boolean" },
+        "cardCounts": { "type": "boolean" },
+        "isTemplate": { "type": "boolean" },
+        "cardAging": {
+          "type": "string",
+          "enum": ["pirate", "regular"]
+        },
+        "calendarFeedEnabled": { "type": "boolean" },
+        "hiddenPluginBoardButtons": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "switcherViews": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["viewType", "enabled"],
+            "properties": {
+              "viewType": { "type": "string" },
+              "enabled": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "autoArchive": { "type": ["boolean", "null"] },
+        "background": {
+          "type": "string",
+          "enum": ["blue", "orange", "green", "red", "purple", "pink", "lime", "sky", "grey"]
+        },
+        "backgroundColor": { "type": "string" },
+        "backgroundDarkColor": { "type": ["string", "null"] },
+        "backgroundImage": { "type": ["string", "null"] },
+        "backgroundDarkImage": { "type": ["string", "null"] },
+        "backgroundImageScaled": { "type": ["array", "null"] },
+        "backgroundTile": { "type": "boolean" },
+        "backgroundBrightness": { "type": "string" },
+        "sharedSourceUrl": { "type": ["string", "null"] },
+        "backgroundBottomColor": { "type": "string" },
+        "backgroundTopColor": { "type": "string" },
+        "canBePublic": { "type": "boolean" },
+        "canBeEnterprise": { "type": "boolean" },
+        "canBeOrg": { "type": "boolean" },
+        "canBePrivate": { "type": "boolean" },
+        "canInvite": { "type": "boolean" }
+      }
+    },
+    "labelNames": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false
+    }
+  }
+}

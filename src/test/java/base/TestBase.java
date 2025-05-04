@@ -10,6 +10,9 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeAll;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class TestBase {
     // Object containing all request settings
     protected static RequestSpecification requestSpecificationCommon;
@@ -17,6 +20,8 @@ public class TestBase {
     protected static Response response;
     // Faker object to generate fake random data
     protected static Faker faker = new Faker();
+    // Base path to all schemas
+    protected static final String baseSchemaPath = "src/test/resources/schema";
 
     @BeforeAll
     public static void setUpAll() {
