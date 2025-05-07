@@ -109,10 +109,6 @@
     "labelNames": {
       "type": "object",
       "additionalProperties": { "type": "string" }
-    },
-    "limits": {
-      "type": "object",
-      "additionalProperties": false
     }
   }
 }

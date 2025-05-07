@@ -15,7 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class POST_CreateBoardTest extends TestBase {
 
     private String boardId;
-    private final File boardSchema = Paths.get(baseSchemaPath, "boards", "board_schema.json").toFile();
+    private final File postCreateBoardSchema = Paths.get(baseSchemaPath, "boards", "POST_create_board_schema.json").toFile();
+    private final File getGetBoardSchema = Paths.get(baseSchemaPath, "boards", "GET_get_board.json").toFile();
 
     @Test
     public void P1_shouldCreateBoardWithOnlyRequiredParameters() {
@@ -23,26 +24,24 @@ public class POST_CreateBoardTest extends TestBase {
         String boardName = faker.company().name() + " board" + " " + faker.number().randomNumber();
 
         // POST
-        response = POST_CreateBoard.postCreateBoard(boardName, null);
+        responsePost = POST_CreateBoard.postCreateBoard(boardName, null);
+        assertThat(responsePost.statusCode()).isEqualTo(200);
         try {
-            assertThat(response.statusCode()).isEqualTo(200);
-            boardId = response.jsonPath().getString("id");
-            response.then().assertThat().body(matchesJsonSchema(boardSchema));
-            // TODO: porównywanie zmiennych elementów response
-            // name
-            // shortUrl
-            // url
-            // TODO: porównywanie pozostałych elementów response z oczekiwanym response
+            boardId = responsePost.jsonPath().getString("id");
+            responsePost.then().assertThat().body(matchesJsonSchema(postCreateBoardSchema));
+            assertThat(responsePost.jsonPath().getString("name")).isEqualTo(boardName);
+            // assertJsonEqualsIgnoringFields(P1ExpectedPostBoardResponse, responsePost.toString(), Set.of("name", "shortUrl", "url"), true);
             // GET
-            response = GET_GetBoard.getGetBoard(boardId);
-            assertThat(response.statusCode()).isEqualTo(200);
-            response.then().assertThat().body(matchesJsonSchema(boardSchema));
-            // TODO: porównywanie zmiennych elementów response
-            // TODO: porównywanie pozostałych elementów response z oczekiwanym response
+            responseGet = GET_GetBoard.getGetBoard(boardId);
+            assertThat(responseGet.statusCode()).isEqualTo(200);
+            responseGet.then().assertThat().body(matchesJsonSchema(getGetBoardSchema));
+            assertThat(responseGet.jsonPath().getString("name")).isEqualTo(boardName);
+            // assertJsonEqualsIgnoringFields(responsePost.toString(), responseGet.toString(), Set.of("limits"), true);
         } finally {
             // DELETE
-            response = DELETE_DeleteBoard.deleteDeleteBoard(boardId);
-            assertThat(response.statusCode()).isEqualTo(200);
+            responseDelete = DELETE_DeleteBoard.deleteDeleteBoard(boardId);
+            assertThat(responseDelete.statusCode()).isEqualTo(200);
+            // assertJsonEqualsIgnoringFields(expectedDeleteBoardSuccessfulResponse, responseDelete.toString(), Set.of("name", "shortUrl", "url"), true);
         }
     }
 }
