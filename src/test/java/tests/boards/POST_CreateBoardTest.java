@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 public class POST_CreateBoardTest extends TestBase {
 
@@ -26,22 +27,21 @@ public class POST_CreateBoardTest extends TestBase {
         // POST
         responsePost = POST_CreateBoard.postCreateBoard(boardName, null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
+        boardId = responsePost.jsonPath().getString("id");
         try {
-            boardId = responsePost.jsonPath().getString("id");
             responsePost.then().assertThat().body(matchesJsonSchema(postCreateBoardSchema));
-            assertThat(responsePost.jsonPath().getString("name")).isEqualTo(boardName);
+            responsePost.then().body("name", equalTo(boardName));
             // assertJsonEqualsIgnoringFields(P1ExpectedPostBoardResponse, responsePost.toString(), Set.of("name", "shortUrl", "url"), true);
             // GET
             responseGet = GET_GetBoard.getGetBoard(boardId);
             assertThat(responseGet.statusCode()).isEqualTo(200);
             responseGet.then().assertThat().body(matchesJsonSchema(getGetBoardSchema));
-            assertThat(responseGet.jsonPath().getString("name")).isEqualTo(boardName);
+            responseGet.then().body("name", equalTo(boardName));
             // assertJsonEqualsIgnoringFields(responsePost.toString(), responseGet.toString(), Set.of("limits"), true);
         } finally {
             // DELETE
             responseDelete = DELETE_DeleteBoard.deleteDeleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
-            // assertJsonEqualsIgnoringFields(expectedDeleteBoardSuccessfulResponse, responseDelete.toString(), Set.of("name", "shortUrl", "url"), true);
         }
     }
 }
