@@ -19,14 +19,11 @@
         <javafaker.version>1.0.2</javafaker.version>
         <assertjCore.version>3.27.3</assertjCore.version>
         <dotenvJava.version>3.2.0</dotenvJava.version>
-        <projectLombok.version>1.18.38</projectLombok.version>
         <!-- BACKEND -->
         <restAssured.version>5.5.1</restAssured.version>
-        <hibernateValidator.version>8.0.2.Final</hibernateValidator.version>
-        <jakartaValidation.version>3.1.1</jakartaValidation.version>
         <jsonSchemaValidatorRestAssured.version>5.5.1</jsonSchemaValidatorRestAssured.version>
+        <jacksonDatabind.version>2.19.0</jacksonDatabind.version>
         <jsonAssert.version>1.5.3</jsonAssert.version>
-        <jacksonDatabind.version>2.18.3</jacksonDatabind.version>
     </properties>
 
     <dependencies>
@@ -79,6 +76,12 @@
             <groupId>io.rest-assured</groupId>
             <artifactId>json-schema-validator</artifactId>
             <version>${jsonSchemaValidatorRestAssured.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jacksonDatabind.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.skyscreamer/jsonassert -->
         <dependency>
