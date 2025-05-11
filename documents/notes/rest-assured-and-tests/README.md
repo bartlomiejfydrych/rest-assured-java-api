@@ -12,6 +12,7 @@
 - [Porównywanie JSON'ów – wyzwania, podejścia, praktyki](#json_compare_intro)
 - [Porównywanie JSON'ów – ObjectMapper](#json_compare_object_mapper)
 - [Porównywanie JSON'ów – JsonNode](#json_compare_json_node)
+- [REST Assured – asercja dla pustego obiektu](#rest_assured_assert_empty_object)
 
 ---
 
@@ -1302,3 +1303,50 @@ System.out.println(node1.equals(node2));  // true
 ```java
 JsonNode jsonFromFile = mapper.readTree(new File("src/test/resources/response.json"));
 ```
+
+---
+
+## 📄REST Assured – asercja dla pustego obiektu <a name="rest_assured_assert_empty_object"></a>
+
+Response zwraca taki oto pusty obiekt:
+```json
+"limits": {
+    
+}
+```
+
+Taki test nie przejdzie:
+```java
+responsePost.then().body("limits", equalTo("{}"));
+```
+
+Asercja zwróci takie coś:
+```java
+java.lang.AssertionError: 1 expectation failed.
+JSON path limits doesn't match.
+Expected: {}
+  Actual: <{}>
+```
+
+Ten problem wynika z nieprecyzyjnego porównania pustego obiektu `{}` w JSON-ie przy pomocy `equalTo("{}")`, co
+**porównuje typy niewłaściwie** — `equalTo("{}")` porównuje pusty obiekt z literalnym stringiem `"{}"`.
+
+✅ **Rozwiązanie: użyj pustej mapy zamiast stringa**
+
+Zamiast porównywać do `"{}"` jako stringa, porównaj do **pustej mapy**, co dokładnie odwzorowuje pusty obiekt JSON:
+```java
+import java.util.Collections;
+
+responsePost.then().body("limits", equalTo(Collections.emptyMap()));
+```
+
+🔍 Dlaczego to działa?
+
+W JSON:
+```json
+"limits": {}
+```
+
+To jest pusty obiekt → w Javie odwzorowuje się jako `Map<String, Object>`.
+
+Używając `equalTo("{}")`, porównujesz `Map` z `String`, co nigdy nie przejdzie (nawet jeśli zawartość wygląda na taką samą).

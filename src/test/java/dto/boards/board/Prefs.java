@@ -116,8 +116,8 @@ public class Prefs {
         return isTemplate;
     }
 
-    public void setTemplate(boolean template) {
-        isTemplate = template;
+    public void setIsTemplate(boolean template) {
+        this.isTemplate = template;
     }
 
     public String getCardAging() {
