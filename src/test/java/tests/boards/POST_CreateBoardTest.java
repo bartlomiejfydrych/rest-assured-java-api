@@ -50,7 +50,7 @@ public class POST_CreateBoardTest extends TestBase {
             responseGet.then().assertThat().body(matchesJsonSchema(getGetBoardSchema));
             responseGet.then().body("name", equalTo(boardName));
             GET_GetBoardDto actualResponseGet = responseGet.as(GET_GetBoardDto.class);
-            compareObjectsWithIgnoredFields(actualResponsePost, actualResponseGet, "id", "limits");
+            compareObjectsWithIgnoredFields(actualResponsePost, actualResponseGet, "limits");
         } finally {
             // DELETE
             responseDelete = DELETE_DeleteBoard.deleteDeleteBoard(boardId);
