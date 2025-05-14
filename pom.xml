@@ -23,6 +23,8 @@
         <restAssured.version>5.5.1</restAssured.version>
         <jsonSchemaValidatorRestAssured.version>5.5.1</jsonSchemaValidatorRestAssured.version>
         <jacksonDatabind.version>2.19.0</jacksonDatabind.version>
+        <hibernateValidator.version>8.0.2.Final</hibernateValidator.version>
+        <jakartaValidationApi.version>3.1.1</jakartaValidationApi.version>
         <jsonAssert.version>1.5.3</jsonAssert.version>
     </properties>
 
@@ -82,6 +84,18 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jacksonDatabind.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernateValidator.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakartaValidationApi.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.skyscreamer/jsonassert -->
         <dependency>
