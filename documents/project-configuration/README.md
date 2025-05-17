@@ -32,6 +32,8 @@
      - [REST Assured](#rest_assured)
      - [Hibernate Validator Engine](#dto_hibernate_validator)
      - [Jakarta Validation API](#dto_jakarta_validation)
+     - [Jakarta Expression Language Implementation](#dto_jakarta_el)
+     - [Jakarta Expression Language API](#dto_jakarta_el)
      - [JSONassert](json_assert)
      - [JSON Schema Validator](#json_schema_validator)
      - [Project Lombok](#project_lombok)
@@ -135,9 +137,11 @@
         - Project Lombok (dla lepszej czytelności klas DTO)
     - **Backend**
         - REST Assured
-        - Te dwa muszą być razem:
+        - Te muszą być razem:
           - Hibernate Validator Engine (do walidacji DTO)
           - Jakarta Validation API (do walidacji DTO)
+          - Jakarta Expression Language Implementation (do lepszych komunikatów DTO)
+          - Jakarta Expression Language API (do lepszych komunikatów DTO)
         - JSONassert (do porównywania JSON'ów wraz z wyświetlaniem różnic)
         - JSON Schema Validator (ten od REST Assured)
         - Project Lombok (opcjonalne)
@@ -1338,6 +1342,80 @@ W `pom.xml` (lub odpowiednik dla Gradle):
 ```
 
 Hibernate Validator **implementuje** `jakarta.validation-api`.
+
+---
+
+### 📘Jakarta Expression Language API <a name="dto_jakarta_el"></a>
+
+**`jakarta.el:jakarta.el-api`** to biblioteka definiująca **Expression Language (EL)**, czyli **język wyrażeń**
+używany w aplikacjach Java do dynamicznego wiązania danych (np. w JSP, JSF, CDI, beanach).
+
+#### 🔍 Do czego służy EL?
+
+Expression Language umożliwia:
+
+* **odczyt/zapis właściwości obiektów** (np. `${user.name}`),
+* **wywoływanie metod**, operatorów logicznych, porównań (`${user.age > 18}`),
+* **integrację z beanami**, kontekstem aplikacji, zmiennymi środowiskowymi.
+
+#### 🧩 Główne zastosowania:
+
+* **JavaServer Faces (JSF)**
+* **JavaServer Pages (JSP)**
+* **Jakarta CDI (Contexts and Dependency Injection)**
+* **Jakarta Bean Validation** (np. w `@AssertTrue(expression = ...)`)
+
+#### 🏷️ Przykład dependency w `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>jakarta.el</groupId>
+    <artifactId>jakarta.el-api</artifactId>
+    <version>5.0.1</version>
+</dependency>
+```
+
+> 💡 Uwaga: Samo API nie zawiera implementacji — to tylko interfejsy. Do działania potrzebna jest **implementacja**, np.:
+>
+> ```xml
+> <dependency>
+>     <groupId>org.glassfish</groupId>
+>     <artifactId>jakarta.el</artifactId>
+>     <version>5.0.1</version>
+> </dependency>
+> ```
+
+#### 🧾 Przykład EL w praktyce (np. w JSF):
+
+```xml
+<h:outputText value="#{user.name}" />
+```
+
+Lub w Bean Validation (Hibernate Validator):
+
+```java
+@AssertTrue(message = "User must be an adult")
+@ELAssert(expression = "this.age >= 18")
+private boolean isAdult;
+```
+
+Kod z moich testów:
+
+```java
+@NotNull
+@Size(min = 1, max = 16384, message = "'name' must be between {min} and {max} characters long")
+public String name;
+```
+
+#### 📌 Podsumowanie
+
+| Właściwość            | Opis                                   |
+|-----------------------|----------------------------------------|
+| **Nazwa**             | `jakarta.el-api`                       |
+| **Typ**               | API (interfejsy)                       |
+| **Zastosowanie**      | EL w JSF, JSP, CDI, bean validation    |
+| **Wersja Java EE**    | Następca `javax.el` w `Jakarta EE`     |
+| **Potrzebuje impl.?** | ✅ Tak – np. `org.glassfish:jakarta.el` |
 
 ---
 

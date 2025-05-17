@@ -25,6 +25,8 @@
         <jacksonDatabind.version>2.19.0</jacksonDatabind.version>
         <hibernateValidator.version>8.0.2.Final</hibernateValidator.version>
         <jakartaValidationApi.version>3.1.1</jakartaValidationApi.version>
+        <jakartaEl.version>4.0.2</jakartaEl.version>
+        <jakartaElApi.version>6.0.1</jakartaElApi.version>
         <jsonAssert.version>1.5.3</jsonAssert.version>
     </properties>
 
@@ -96,6 +98,19 @@
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
             <version>${jakartaValidationApi.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>${jakartaEl.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/jakarta.el/jakarta.el-api -->
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <version>${jakartaElApi.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.skyscreamer/jsonassert -->
         <dependency>

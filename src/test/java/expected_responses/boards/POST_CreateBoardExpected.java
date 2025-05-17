@@ -56,6 +56,7 @@ public class POST_CreateBoardExpected {
                             "enabled": false
                         }
                     ],
+                    "autoArchive": null,
                     "background": "blue",
                     "backgroundColor": "#0079BF",
                     "backgroundDarkColor": null,

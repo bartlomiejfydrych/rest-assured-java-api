@@ -15,7 +15,7 @@ public class BoardBaseDto {
     public String id;
 
     @NotNull
-    @Size(min = 1, max = 16384)
+    @Size(min = 1, max = 16384, message = "'name' must be between {min} and {max} characters long")
     public String name;
 
     @NotNull
