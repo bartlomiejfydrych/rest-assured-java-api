@@ -1,25 +1,25 @@
 package dto.boards.board.prefs;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
+
 public class SwitcherView {
-    private String viewType;
-    private boolean enabled;
+
+    @NotNull
+    public String viewType;
+    @NotNull
+    public Boolean enabled;
+
+    @JsonCreator
+    public SwitcherView(
+            @JsonProperty(value = "viewType", required = true) String viewType,
+            @JsonProperty(value = "enabled", required = true) Boolean enabled
+    ) {
+        this.viewType = viewType;
+        this.enabled = enabled;
+    }
 
     public SwitcherView() {
-    }
-
-    public String getViewType() {
-        return viewType;
-    }
-
-    public void setViewType(String viewType) {
-        this.viewType = viewType;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 }

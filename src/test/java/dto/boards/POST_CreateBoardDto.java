@@ -1,128 +1,39 @@
 package dto.boards;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import dto.boards.board.LabelNames;
 import dto.boards.board.Prefs;
+import jakarta.validation.constraints.NotNull;
 
-import java.util.Map;
+@JsonIgnoreProperties(ignoreUnknown = false)
+public class POST_CreateBoardDto extends BoardBaseDto {
 
-public class POST_CreateBoardDto {
-    private String id;
-    private String name;
-    private String desc;
-    private Object descData;
-    private boolean closed;
-    private String idOrganization;
-    private Object idEnterprise;
-    private boolean pinned;
-    private String url;
-    private String shortUrl;
-    private Prefs prefs;
-    private Map<String, String> labelNames;
-    private Map<String, Object> limits;
+    @NotNull
+    public Object limits;
+
+    @JsonCreator
+    public POST_CreateBoardDto(
+            @JsonProperty(value = "id", required = true) String id,
+            @JsonProperty(value = "name", required = true) String name,
+            @JsonProperty(value = "desc", required = true) String desc,
+            @JsonProperty(value = "descData", required = true) Object descData,
+            @JsonProperty(value = "closed", required = true) Boolean closed,
+            @JsonProperty(value = "idOrganization", required = true) String idOrganization,
+            @JsonProperty(value = "idEnterprise", required = true) Object idEnterprise,
+            @JsonProperty(value = "pinned", required = true) Boolean pinned,
+            @JsonProperty(value = "url", required = true) String url,
+            @JsonProperty(value = "shortUrl", required = true) String shortUrl,
+            @JsonProperty(value = "prefs", required = true) Prefs prefs,
+            @JsonProperty(value = "labelNames", required = true) LabelNames labelNames,
+            @JsonProperty(value = "limits", required = true) Object limits
+    ) {
+        super(id, name, desc, descData, closed, idOrganization, idEnterprise, pinned, url, shortUrl, prefs, labelNames);
+        this.limits = limits;
+    }
 
     public POST_CreateBoardDto() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public Object getDescData() {
-        return descData;
-    }
-
-    public void setDescData(Object descData) {
-        this.descData = descData;
-    }
-
-    public boolean isClosed() {
-        return closed;
-    }
-
-    public void setClosed(boolean closed) {
-        this.closed = closed;
-    }
-
-    public String getIdOrganization() {
-        return idOrganization;
-    }
-
-    public void setIdOrganization(String idOrganization) {
-        this.idOrganization = idOrganization;
-    }
-
-    public Object getIdEnterprise() {
-        return idEnterprise;
-    }
-
-    public void setIdEnterprise(Object idEnterprise) {
-        this.idEnterprise = idEnterprise;
-    }
-
-    public boolean isPinned() {
-        return pinned;
-    }
-
-    public void setPinned(boolean pinned) {
-        this.pinned = pinned;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getShortUrl() {
-        return shortUrl;
-    }
-
-    public void setShortUrl(String shortUrl) {
-        this.shortUrl = shortUrl;
-    }
-
-    public Prefs getPrefs() {
-        return prefs;
-    }
-
-    public void setPrefs(Prefs prefs) {
-        this.prefs = prefs;
-    }
-
-    public Map<String, String> getLabelNames() {
-        return labelNames;
-    }
-
-    public void setLabelNames(Map<String, String> labelNames) {
-        this.labelNames = labelNames;
-    }
-
-    public Map<String, Object> getLimits() {
-        return limits;
-    }
-
-    public void setLimits(Map<String, Object> limits) {
-        this.limits = limits;
+        super();
     }
 }

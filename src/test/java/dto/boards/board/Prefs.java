@@ -1,290 +1,157 @@
 package dto.boards.board;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dto.boards.board.prefs.SwitcherView;
+import jakarta.validation.constraints.*;
 
 import java.util.List;
 
 public class Prefs {
-    private String permissionLevel;
-    private boolean hideVotes;
-    private String voting;
-    private String comments;
-    private String invitations;
-    private boolean selfJoin;
-    private boolean cardCovers;
-    private boolean showCompleteStatus;
-    private boolean cardCounts;
-    private boolean isTemplate;
-    private String cardAging;
-    private boolean calendarFeedEnabled;
-    private List<Object> hiddenPluginBoardButtons;
-    private List<SwitcherView> switcherViews;
-    private Object autoArchive;
-    private String background;
-    private String backgroundColor;
-    private Object backgroundDarkColor;
-    private Object backgroundImage;
-    private Object backgroundDarkImage;
-    private Object backgroundImageScaled;
-    private boolean backgroundTile;
-    private String backgroundBrightness;
-    private Object sharedSourceUrl;
-    private String backgroundBottomColor;
-    private String backgroundTopColor;
-    private boolean canBePublic;
-    private boolean canBeEnterprise;
-    private boolean canBeOrg;
-    private boolean canBePrivate;
-    private boolean canInvite;
+
+    @NotNull
+    @Pattern(regexp = "org|private|public")
+    public String permissionLevel;
+
+    @NotNull
+    public Boolean hideVotes;
+
+    @NotNull
+    @Pattern(regexp = "org|private|public")
+    public String voting;
+
+    @NotNull
+    @Pattern(regexp = "disabled|members|observers|org|public")
+    public String comments;
+
+    @NotNull
+    @Pattern(regexp = "members|admins")
+    public String invitations;
+
+    @NotNull
+    public Boolean selfJoin;
+    @NotNull
+    public Boolean cardCovers;
+    @NotNull
+    public Boolean showCompleteStatus;
+    @NotNull
+    public Boolean cardCounts;
+    @NotNull
+    public Boolean isTemplate;
+
+    @NotNull
+    @Pattern(regexp = "pirate|regular")
+    public String cardAging;
+
+    @NotNull
+    public Boolean calendarFeedEnabled;
+    @NotNull
+    public List<Object> hiddenPluginBoardButtons;
+    @NotNull
+    public List<SwitcherView> switcherViews;
+
+    public Object autoArchive;
+
+    @NotNull
+    @Pattern(regexp = "blue|orange|green|red|purple|pink|lime|sky|grey")
+    public String background;
+
+    @NotNull
+    public String backgroundColor;
+    public Object backgroundDarkColor;
+    public Object backgroundImage;
+    public Object backgroundDarkImage;
+    public Object backgroundImageScaled;
+
+    @NotNull
+    public Boolean backgroundTile;
+    @NotNull
+    public String backgroundBrightness;
+    public Object sharedSourceUrl;
+
+    @NotNull
+    public String backgroundBottomColor;
+    @NotNull
+    public String backgroundTopColor;
+
+    @NotNull
+    public Boolean canBePublic;
+    @NotNull
+    public Boolean canBeEnterprise;
+    @NotNull
+    public Boolean canBeOrg;
+    @NotNull
+    public Boolean canBePrivate;
+    @NotNull
+    public Boolean canInvite;
+
+    @JsonCreator
+    public Prefs(
+            @JsonProperty(value = "permissionLevel", required = true) String permissionLevel,
+            @JsonProperty(value = "hideVotes", required = true) Boolean hideVotes,
+            @JsonProperty(value = "voting", required = true) String voting,
+            @JsonProperty(value = "comments", required = true) String comments,
+            @JsonProperty(value = "invitations", required = true) String invitations,
+            @JsonProperty(value = "selfJoin", required = true) Boolean selfJoin,
+            @JsonProperty(value = "cardCovers", required = true) Boolean cardCovers,
+            @JsonProperty(value = "showCompleteStatus", required = true) Boolean showCompleteStatus,
+            @JsonProperty(value = "cardCounts", required = true) Boolean cardCounts,
+            @JsonProperty(value = "isTemplate", required = true) Boolean isTemplate,
+            @JsonProperty(value = "cardAging", required = true) String cardAging,
+            @JsonProperty(value = "calendarFeedEnabled", required = true) Boolean calendarFeedEnabled,
+            @JsonProperty(value = "hiddenPluginBoardButtons", required = true) List<Object> hiddenPluginBoardButtons,
+            @JsonProperty(value = "switcherViews", required = true) List<SwitcherView> switcherViews,
+            @JsonProperty("autoArchive") Object autoArchive,
+            @JsonProperty(value = "background", required = true) String background,
+            @JsonProperty(value = "backgroundColor", required = true) String backgroundColor,
+            @JsonProperty("backgroundDarkColor") Object backgroundDarkColor,
+            @JsonProperty("backgroundImage") Object backgroundImage,
+            @JsonProperty("backgroundDarkImage") Object backgroundDarkImage,
+            @JsonProperty("backgroundImageScaled") Object backgroundImageScaled,
+            @JsonProperty(value = "backgroundTile", required = true) Boolean backgroundTile,
+            @JsonProperty(value = "backgroundBrightness", required = true) String backgroundBrightness,
+            @JsonProperty("sharedSourceUrl") Object sharedSourceUrl,
+            @JsonProperty(value = "backgroundBottomColor", required = true) String backgroundBottomColor,
+            @JsonProperty(value = "backgroundTopColor", required = true) String backgroundTopColor,
+            @JsonProperty(value = "canBePublic", required = true) Boolean canBePublic,
+            @JsonProperty(value = "canBeEnterprise", required = true) Boolean canBeEnterprise,
+            @JsonProperty(value = "canBeOrg", required = true) Boolean canBeOrg,
+            @JsonProperty(value = "canBePrivate", required = true) Boolean canBePrivate,
+            @JsonProperty(value = "canInvite", required = true) Boolean canInvite
+    ) {
+        this.permissionLevel = permissionLevel;
+        this.hideVotes = hideVotes;
+        this.voting = voting;
+        this.comments = comments;
+        this.invitations = invitations;
+        this.selfJoin = selfJoin;
+        this.cardCovers = cardCovers;
+        this.showCompleteStatus = showCompleteStatus;
+        this.cardCounts = cardCounts;
+        this.isTemplate = isTemplate;
+        this.cardAging = cardAging;
+        this.calendarFeedEnabled = calendarFeedEnabled;
+        this.hiddenPluginBoardButtons = hiddenPluginBoardButtons;
+        this.switcherViews = switcherViews;
+        this.autoArchive = autoArchive;
+        this.background = background;
+        this.backgroundColor = backgroundColor;
+        this.backgroundDarkColor = backgroundDarkColor;
+        this.backgroundImage = backgroundImage;
+        this.backgroundDarkImage = backgroundDarkImage;
+        this.backgroundImageScaled = backgroundImageScaled;
+        this.backgroundTile = backgroundTile;
+        this.backgroundBrightness = backgroundBrightness;
+        this.sharedSourceUrl = sharedSourceUrl;
+        this.backgroundBottomColor = backgroundBottomColor;
+        this.backgroundTopColor = backgroundTopColor;
+        this.canBePublic = canBePublic;
+        this.canBeEnterprise = canBeEnterprise;
+        this.canBeOrg = canBeOrg;
+        this.canBePrivate = canBePrivate;
+        this.canInvite = canInvite;
+    }
 
     public Prefs() {
-    }
-
-    public String getPermissionLevel() {
-        return permissionLevel;
-    }
-
-    public void setPermissionLevel(String permissionLevel) {
-        this.permissionLevel = permissionLevel;
-    }
-
-    public boolean isHideVotes() {
-        return hideVotes;
-    }
-
-    public void setHideVotes(boolean hideVotes) {
-        this.hideVotes = hideVotes;
-    }
-
-    public String getVoting() {
-        return voting;
-    }
-
-    public void setVoting(String voting) {
-        this.voting = voting;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public String getInvitations() {
-        return invitations;
-    }
-
-    public void setInvitations(String invitations) {
-        this.invitations = invitations;
-    }
-
-    public boolean isSelfJoin() {
-        return selfJoin;
-    }
-
-    public void setSelfJoin(boolean selfJoin) {
-        this.selfJoin = selfJoin;
-    }
-
-    public boolean isCardCovers() {
-        return cardCovers;
-    }
-
-    public void setCardCovers(boolean cardCovers) {
-        this.cardCovers = cardCovers;
-    }
-
-    public boolean isShowCompleteStatus() {
-        return showCompleteStatus;
-    }
-
-    public void setShowCompleteStatus(boolean showCompleteStatus) {
-        this.showCompleteStatus = showCompleteStatus;
-    }
-
-    public boolean isCardCounts() {
-        return cardCounts;
-    }
-
-    public void setCardCounts(boolean cardCounts) {
-        this.cardCounts = cardCounts;
-    }
-
-    public boolean isTemplate() {
-        return isTemplate;
-    }
-
-    public void setIsTemplate(boolean template) {
-        this.isTemplate = template;
-    }
-
-    public String getCardAging() {
-        return cardAging;
-    }
-
-    public void setCardAging(String cardAging) {
-        this.cardAging = cardAging;
-    }
-
-    public boolean isCalendarFeedEnabled() {
-        return calendarFeedEnabled;
-    }
-
-    public void setCalendarFeedEnabled(boolean calendarFeedEnabled) {
-        this.calendarFeedEnabled = calendarFeedEnabled;
-    }
-
-    public List<Object> getHiddenPluginBoardButtons() {
-        return hiddenPluginBoardButtons;
-    }
-
-    public void setHiddenPluginBoardButtons(List<Object> hiddenPluginBoardButtons) {
-        this.hiddenPluginBoardButtons = hiddenPluginBoardButtons;
-    }
-
-    public List<SwitcherView> getSwitcherViews() {
-        return switcherViews;
-    }
-
-    public void setSwitcherViews(List<SwitcherView> switcherViews) {
-        this.switcherViews = switcherViews;
-    }
-
-    public Object getAutoArchive() {
-        return autoArchive;
-    }
-
-    public void setAutoArchive(Object autoArchive) {
-        this.autoArchive = autoArchive;
-    }
-
-    public String getBackground() {
-        return background;
-    }
-
-    public void setBackground(String background) {
-        this.background = background;
-    }
-
-    public String getBackgroundColor() {
-        return backgroundColor;
-    }
-
-    public void setBackgroundColor(String backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
-
-    public Object getBackgroundDarkColor() {
-        return backgroundDarkColor;
-    }
-
-    public void setBackgroundDarkColor(Object backgroundDarkColor) {
-        this.backgroundDarkColor = backgroundDarkColor;
-    }
-
-    public Object getBackgroundImage() {
-        return backgroundImage;
-    }
-
-    public void setBackgroundImage(Object backgroundImage) {
-        this.backgroundImage = backgroundImage;
-    }
-
-    public Object getBackgroundDarkImage() {
-        return backgroundDarkImage;
-    }
-
-    public void setBackgroundDarkImage(Object backgroundDarkImage) {
-        this.backgroundDarkImage = backgroundDarkImage;
-    }
-
-    public Object getBackgroundImageScaled() {
-        return backgroundImageScaled;
-    }
-
-    public void setBackgroundImageScaled(Object backgroundImageScaled) {
-        this.backgroundImageScaled = backgroundImageScaled;
-    }
-
-    public boolean isBackgroundTile() {
-        return backgroundTile;
-    }
-
-    public void setBackgroundTile(boolean backgroundTile) {
-        this.backgroundTile = backgroundTile;
-    }
-
-    public String getBackgroundBrightness() {
-        return backgroundBrightness;
-    }
-
-    public void setBackgroundBrightness(String backgroundBrightness) {
-        this.backgroundBrightness = backgroundBrightness;
-    }
-
-    public Object getSharedSourceUrl() {
-        return sharedSourceUrl;
-    }
-
-    public void setSharedSourceUrl(Object sharedSourceUrl) {
-        this.sharedSourceUrl = sharedSourceUrl;
-    }
-
-    public String getBackgroundBottomColor() {
-        return backgroundBottomColor;
-    }
-
-    public void setBackgroundBottomColor(String backgroundBottomColor) {
-        this.backgroundBottomColor = backgroundBottomColor;
-    }
-
-    public String getBackgroundTopColor() {
-        return backgroundTopColor;
-    }
-
-    public void setBackgroundTopColor(String backgroundTopColor) {
-        this.backgroundTopColor = backgroundTopColor;
-    }
-
-    public boolean isCanBePublic() {
-        return canBePublic;
-    }
-
-    public void setCanBePublic(boolean canBePublic) {
-        this.canBePublic = canBePublic;
-    }
-
-    public boolean isCanBeEnterprise() {
-        return canBeEnterprise;
-    }
-
-    public void setCanBeEnterprise(boolean canBeEnterprise) {
-        this.canBeEnterprise = canBeEnterprise;
-    }
-
-    public boolean isCanBeOrg() {
-        return canBeOrg;
-    }
-
-    public void setCanBeOrg(boolean canBeOrg) {
-        this.canBeOrg = canBeOrg;
-    }
-
-    public boolean isCanBePrivate() {
-        return canBePrivate;
-    }
-
-    public void setCanBePrivate(boolean canBePrivate) {
-        this.canBePrivate = canBePrivate;
-    }
-
-    public boolean isCanInvite() {
-        return canInvite;
-    }
-
-    public void setCanInvite(boolean canInvite) {
-        this.canInvite = canInvite;
     }
 }
