@@ -2,6 +2,7 @@ package utils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.response.Response;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -14,6 +15,10 @@ public class ResponseUtils {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
             .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true) // require @JsonCreator inside DTO
             .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true);
+
+    public static <T> T deserializeAndValidate(Response response, Class<T> clazz) {
+        return deserializeAndValidate(response.asString(), clazz);
+    }
 
     public static <T> T deserializeAndValidate(String json, Class<T> clazz) {
         T dto = deserializeJson(json, clazz);
