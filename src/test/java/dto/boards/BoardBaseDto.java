@@ -7,6 +7,8 @@ import dto.boards.board.LabelNames;
 import dto.boards.board.Prefs;
 import jakarta.validation.constraints.*;
 
+import java.net.URL;
+
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class BoardBaseDto {
 
@@ -37,10 +39,10 @@ public class BoardBaseDto {
     public Boolean pinned;
 
     @NotNull
-    public String url;
+    public URL url;
 
     @NotNull
-    public String shortUrl;
+    public URL shortUrl;
 
     @NotNull
     public Prefs prefs;
@@ -58,8 +60,8 @@ public class BoardBaseDto {
             @JsonProperty(value = "idOrganization", required = true) String idOrganization,
             @JsonProperty(value = "idEnterprise", required = true) Object idEnterprise,
             @JsonProperty(value = "pinned", required = true) Boolean pinned,
-            @JsonProperty(value = "url", required = true) String url,
-            @JsonProperty(value = "shortUrl", required = true) String shortUrl,
+            @JsonProperty(value = "url", required = true) URL url,
+            @JsonProperty(value = "shortUrl", required = true) URL shortUrl,
             @JsonProperty(value = "prefs", required = true) Prefs prefs,
             @JsonProperty(value = "labelNames", required = true) LabelNames labelNames
     ) {

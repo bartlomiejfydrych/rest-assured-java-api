@@ -7,8 +7,12 @@ import dto.boards.board.LabelNames;
 import dto.boards.board.Prefs;
 import jakarta.validation.constraints.NotNull;
 
+import java.net.URL;
+
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class POST_CreateBoardDto extends BoardBaseDto {
+
+    public static final String FIELD_LIMITS = "limits";
 
     @NotNull
     public Object limits;
@@ -23,8 +27,8 @@ public class POST_CreateBoardDto extends BoardBaseDto {
             @JsonProperty(value = "idOrganization", required = true) String idOrganization,
             @JsonProperty(value = "idEnterprise", required = true) Object idEnterprise,
             @JsonProperty(value = "pinned", required = true) Boolean pinned,
-            @JsonProperty(value = "url", required = true) String url,
-            @JsonProperty(value = "shortUrl", required = true) String shortUrl,
+            @JsonProperty(value = "url", required = true) URL url,
+            @JsonProperty(value = "shortUrl", required = true) URL shortUrl,
             @JsonProperty(value = "prefs", required = true) Prefs prefs,
             @JsonProperty(value = "labelNames", required = true) LabelNames labelNames,
             @JsonProperty(value = "limits", required = true) Object limits
