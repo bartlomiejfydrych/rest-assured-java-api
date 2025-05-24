@@ -20,8 +20,6 @@ public class TestBase {
     protected static Response responseDelete;
     // Faker object to generate fake random data
     protected static Faker faker = new Faker();
-    // Base path to all schemas
-    protected static final String baseSchemaPath = "src/test/resources/schema";
 
     @BeforeAll
     public static void setUpAll() {

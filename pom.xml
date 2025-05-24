@@ -21,7 +21,6 @@
         <dotenvJava.version>3.2.0</dotenvJava.version>
         <!-- BACKEND -->
         <restAssured.version>5.5.1</restAssured.version>
-        <jsonSchemaValidatorRestAssured.version>5.5.1</jsonSchemaValidatorRestAssured.version>
         <jacksonDatabind.version>2.19.0</jacksonDatabind.version>
         <hibernateValidator.version>8.0.2.Final</hibernateValidator.version>
         <jakartaValidationApi.version>3.1.1</jakartaValidationApi.version>
@@ -74,12 +73,6 @@
             <artifactId>rest-assured</artifactId>
             <version>${restAssured.version}</version>
             <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/io.rest-assured/json-schema-validator -->
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>json-schema-validator</artifactId>
-            <version>${jsonSchemaValidatorRestAssured.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
