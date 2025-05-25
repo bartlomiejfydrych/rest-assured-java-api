@@ -3,18 +3,9 @@ package tests.boards;
 import base.TestBase;
 import dto.boards.GET_GetBoardDto;
 import dto.boards.POST_CreateBoardDto;
-import endpoints.boards.DELETE_DeleteBoard;
-import endpoints.boards.GET_GetBoard;
-import endpoints.boards.POST_CreateBoard;
-import expected_responses.boards.POST_CreateBoardExpected;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import utils.ResponseUtils;
-
-import java.io.File;
-import java.nio.file.Paths;
-import java.util.Collections;
 
 import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
 import static endpoints.boards.GET_GetBoard.getGetBoard;
@@ -26,7 +17,7 @@ import static utils.ObjectComparator.*;
 import static utils.ResponseUtils.deserializeAndValidate;
 import static utils.ResponseUtils.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.prepareExpectedResponsePost;
-import static utils_tests.boards.POST_CreateBoardUtils.validateGetBoardResponseAgainstPost;
+import static utils_tests.boards.POST_CreateBoardUtils.validateGetAgainstPost;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class POST_CreateBoardTest extends TestBase {
@@ -116,7 +107,7 @@ public class POST_CreateBoardTest extends TestBase {
         POST_CreateBoardDto expectedResponsePostDto = prepareExpectedResponsePost(P1ExpectedPostBoardResponse, responsePostDto, boardName);
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
-        validateGetBoardResponseAgainstPost(responsePostDto);
+        validateGetAgainstPost(responsePostDto);
     }
 
     @Test

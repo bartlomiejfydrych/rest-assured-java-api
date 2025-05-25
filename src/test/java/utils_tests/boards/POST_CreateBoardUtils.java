@@ -21,7 +21,7 @@ public class POST_CreateBoardUtils extends TestBase {
         return expectedResponsePostDto;
     }
 
-    public static void validateGetBoardResponseAgainstPost(POST_CreateBoardDto responsePostDto) {
+    public static void validateGetAgainstPost(POST_CreateBoardDto responsePostDto) {
         responseGet = getGetBoard(responsePostDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
