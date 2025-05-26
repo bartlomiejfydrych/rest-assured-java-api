@@ -34,7 +34,7 @@
      - [Jakarta Validation API](#dto_jakarta_validation)
      - [Jakarta Expression Language Implementation](#dto_jakarta_el)
      - [Jakarta Expression Language API](#dto_jakarta_el)
-     - [JSONassert](json_assert)
+     - [JSONassert](#json_assert)
      - [JSON Schema Validator](#json_schema_validator)
      - [Project Lombok](#project_lombok)
      - [Jackson Databind](#jackson_databind)
