@@ -5,6 +5,7 @@
 - [JsonSchema Validation](#json_schema_validation)
 - [DTO – pierwsze słabe próby deserializacji i walidacji](#dto_first)
 - [JSON – porównywanie Stringów](#json_compare_as_string)
+- [Obiekty – porównywanie z pomijaniem pól-getterów](#object_comparator)
 
 # 📝Opis
 
@@ -746,3 +747,290 @@ W powyższym przykładzie:
 | **Pomijanie pól** | Tak, z obsługą wildcardów (np. `"prefs.*"`)                                            |
 | **Biblioteka**    | JSONAssert (`org.skyscreamer.jsonassert`)                                              |
 | **Zastosowanie**  | Testy integracyjne, testy API, porównanie snapshotów                                   |
+
+---
+
+## 📄Obiekty – porównywanie z pomijaniem pól-getterów <a name="object_comparator"></a>
+
+Kod ten znajdował się w `scr/test/java/utils` w pliku o nazwie `ObjectComparator`.
+
+### Kod:
+
+```java
+package utils;
+
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
+
+import java.io.Serializable;
+import java.lang.invoke.SerializedLambda;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class ObjectComparator {
+
+    private ObjectComparator() {
+        throw new UnsupportedOperationException("Utility class should not be instantiated");
+    }
+
+    @FunctionalInterface
+    public interface Getter<T, R> extends Function<T, R>, Serializable {
+    }
+
+    @FunctionalInterface
+    public interface GetterChainComponent<T, R> extends Function<T, R>, Serializable {
+    }
+
+    // Pomocnicza metoda do podawania getterów bez rzutowania
+    public static <T, R> GetterChainComponent<T, R> getter(GetterChainComponent<T, R> g) {
+        return g;
+    }
+
+    @SafeVarargs
+    public static <T> void compareObjectsWithIgnoredFields(
+            T actual,
+            T expected,
+            GetterChain<T>... ignoredGetterChains
+    ) {
+        List<String> ignoredPaths = Arrays.stream(ignoredGetterChains)
+                .map(GetterChain::toFieldPath)
+                .toList();
+
+        RecursiveComparisonConfiguration config = new RecursiveComparisonConfiguration();
+        config.ignoreFields(ignoredPaths.toArray(new String[0]));
+
+        Assertions.assertThat(actual)
+                .usingRecursiveComparison(config)
+                .isEqualTo(expected);
+    }
+
+    public static <T> GetterChain<T> getters(GetterChainComponent<?, ?>... chain) {
+        return new GetterChain<>(chain);
+    }
+
+    public static class GetterChain<T> {
+        private final List<GetterChainComponent<?, ?>> getters;
+
+        public GetterChain(GetterChainComponent<?, ?>... getters) {
+            this.getters = Arrays.asList(getters);
+        }
+
+        public String toFieldPath() {
+            return getters.stream()
+                    .map(ObjectComparator::extractFieldName)
+                    .collect(Collectors.joining("."));
+        }
+    }
+
+    private static String extractFieldName(Function<?, ?> getter) {
+        try {
+            Method writeReplace = getter.getClass().getDeclaredMethod("writeReplace");
+            writeReplace.setAccessible(true);
+            SerializedLambda lambda = (SerializedLambda) writeReplace.invoke(getter);
+            String methodName = lambda.getImplMethodName();
+
+            if (methodName.startsWith("get")) {
+                return decapitalize(methodName.substring(3));
+            } else if (methodName.startsWith("is")) {
+                return decapitalize(methodName.substring(2));
+            } else {
+                throw new IllegalStateException("Unsupported getter method: " + methodName);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Could not extract field name from lambda", e);
+        }
+    }
+
+    private static String decapitalize(String name) {
+        if (name == null || name.isEmpty()) return name;
+        return Character.toLowerCase(name.charAt(0)) + name.substring(1);
+    }
+
+    public static <T> void compareObjectsIgnoringId(T actual, T expected) {
+        compareObjectsWithIgnoredFields(actual, expected,
+                getters(getter(ObjectComparator.<T>castGetter(ObjectComparator::getId)))
+        );
+    }
+
+    // Pomocnicza metoda do rzutowania referencji do gettera
+    @SuppressWarnings("unchecked")
+    private static <T> GetterChainComponent<T, ?> castGetter(Function<?, ?> getter) {
+        return (GetterChainComponent<T, ?>) getter;
+    }
+
+    // Zakładamy, że wszystkie obiekty mają metodę getId()
+    private static Object getId(Object o) {
+        try {
+            Method method = o.getClass().getMethod("getId");
+            return method.invoke(o);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not call getId()", e);
+        }
+    }
+}
+
+/*
+
+Example of use:
+
+compareObjectsWithIgnoredFields(actualResponsePost, expectedResponsePost,
+getters(getter(POST_CreateBoardDto::getId)),
+getters(getter(POST_CreateBoardDto::getPrefs), getter(Prefs::isTemplate)),
+getters(getter(POST_CreateBoardDto::getName)),
+getters(getter(POST_CreateBoardDto::getShortUrl)),
+getters(getter(POST_CreateBoardDto::getUrl))
+);
+
+*/
+```
+
+### Opis kodu:
+
+Kod klasy `ObjectComparator` to **zaawansowane narzędzie do porównywania obiektów w testach** z użyciem biblioteki
+AssertJ, z możliwością ignorowania wskazanych pól (nawet zagnieżdżonych!). Kod ten jest przemyślaną implementacją
+porównywania *rekursywnego* (`usingRecursiveComparison`) i opiera się na refleksji i analizie wyrażeń lambda.
+
+### 🎯 Główne cele `ObjectComparator`
+
+* Porównywanie dwóch obiektów (`actual`, `expected`) z pominięciem wskazanych pól.
+* Umożliwia ignorowanie zagnieżdżonych pól poprzez przekazanie *łańcucha getterów*.
+* Wspiera API w stylu fluent/testowym z małym ryzykiem błędów typów.
+* Oparty na bibliotece [AssertJ](https://assertj.github.io/doc/), w szczególności na `RecursiveComparisonConfiguration`.
+
+### 📦 Używane biblioteki i klasy
+
+* `AssertJ` – do porównań z `assertThat(actual).usingRecursiveComparison(...)`.
+* `SerializedLambda` – pozwala analizować wyrażenia lambda (np. `POST::getId`) i uzyskać nazwę metody.
+* `Function`, `Serializable` – umożliwiają przekazywanie bezpiecznych lambda-getterów jako argumentów.
+* `RecursiveComparisonConfiguration` – konfigurator z AssertJ do porównań z pomijaniem pól.
+
+### 🧱 Budowa klasy
+
+#### 🔐 Konstruktor prywatny
+
+```java
+private ObjectComparator() {
+    throw new UnsupportedOperationException("Utility class should not be instantiated");
+}
+```
+
+To klasa narzędziowa – **nie powinna być instancjonowana**.
+
+### 🧩 Kluczowe interfejsy funkcyjne
+
+#### `Getter<T, R>` i `GetterChainComponent<T, R>`
+
+```java
+@FunctionalInterface
+public interface Getter<T, R> extends Function<T, R>, Serializable
+```
+
+* Oba rozszerzają `Function` i `Serializable`, co umożliwia ich introspekcję przez `SerializedLambda`.
+* **Służą jako typy lambda-wyrażeń** wskazujących pola obiektów (np. `x -> x.getId()`).
+
+### 🛠 Główna metoda
+
+#### `compareObjectsWithIgnoredFields(...)`
+
+```java
+@SafeVarargs
+public static <T> void compareObjectsWithIgnoredFields(
+        T actual,
+        T expected,
+        GetterChain<T>... ignoredGetterChains
+)
+```
+
+* Porównuje dwa obiekty rekursywnie.
+* Argumenty:
+
+    * `actual`, `expected` – obiekty do porównania.
+    * `ignoredGetterChains` – lista pól do zignorowania (w formie łańcucha getterów).
+* Internie:
+
+    1. Tworzy listę ścieżek pól (`List<String>`) jak `"prefs.template"` z `GetterChain`.
+    2. Tworzy konfigurację `RecursiveComparisonConfiguration` z tymi ścieżkami.
+    3. Używa `AssertJ` do porównania.
+
+### 🧠 Mechanizm budowania ścieżek pól
+
+#### `GetterChain<T>`
+
+```java
+public static class GetterChain<T>
+```
+
+* Przyjmuje tablicę getterów (`Function`s).
+* `toFieldPath()` analizuje każdy getter i buduje np. `prefs.template` z `POST::getPrefs` + `Prefs::isTemplate`.
+
+##### `extractFieldName(...)`
+
+```java
+private static String extractFieldName(Function<?, ?> getter)
+```
+
+* Używa `SerializedLambda` do odczytu nazwy metody (np. `getName` → `name`).
+* Obsługuje `getX()` i `isX()`.
+
+### 📦 Pomocnicze metody
+
+#### `getter(...)`
+
+```java
+public static <T, R> GetterChainComponent<T, R> getter(GetterChainComponent<T, R> g)
+```
+
+* Ułatwia przekazywanie wyrażeń lambda bez rzutowania.
+
+#### `getters(...)`
+
+```java
+public static <T> GetterChain<T> getters(GetterChainComponent<?, ?>... chain)
+```
+
+* Tworzy obiekt `GetterChain<T>` z przekazanych getterów (jeden lub więcej).
+* Dzięki temu można zdefiniować ścieżki takie jak:
+
+  ```java
+  getters(getter(POST::getPrefs), getter(Prefs::isTemplate))
+  ```
+
+### 🔁 Skrócona metoda dla `getId`
+
+#### `compareObjectsIgnoringId(...)`
+
+```java
+public static <T> void compareObjectsIgnoringId(T actual, T expected)
+```
+
+* Skrócony wariant porównania ignorujący tylko `getId()`.
+* Używa `getId()` (refleksyjnego) jako getter.
+
+### 🧪 Przykład użycia
+
+```java
+compareObjectsWithIgnoredFields(actual, expected,
+    getters(getter(POST::getId)),
+    getters(getter(POST::getPrefs), getter(Prefs::isTemplate)),
+    getters(getter(POST::getShortUrl))
+);
+```
+
+* Ignoruje `id`, `prefs.template` i `shortUrl`.
+* Porównanie głębokie (rekursywne).
+* Bardzo czytelne w testach jednostkowych lub integracyjnych.
+
+### ✅ Podsumowanie
+
+| Element               | Opis                                                                        |
+|-----------------------|-----------------------------------------------------------------------------|
+| **Cel**               | Porównanie obiektów z możliwością ignorowania wskazanych pól                |
+| **Wsparcie dla**      | Getterów lambda, pól zagnieżdżonych                                         |
+| **Technologie**       | AssertJ (`RecursiveComparisonConfiguration`), `SerializedLambda`, refleksja |
+| **Funkcja specjalna** | `compareObjectsIgnoringId()` – skrót dla typowego przypadku                 |
+| **Zastosowanie**      | Testy jednostkowe/modelowe DTO, porównywanie danych JSON/API/ORM            |
+
+---

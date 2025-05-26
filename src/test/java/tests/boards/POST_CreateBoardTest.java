@@ -13,7 +13,7 @@ import static endpoints.boards.POST_CreateBoard.postCreateBoard;
 import static expected_responses.boards.POST_CreateBoardExpected.P1ExpectedPostBoardResponse;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.ObjectComparator.*;
+import static utils.UtilsCompare.*;
 import static utils.ResponseUtils.deserializeAndValidate;
 import static utils.ResponseUtils.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.prepareExpectedResponsePost;
