@@ -4,6 +4,7 @@
 
 - [JsonSchema Validation](#json_schema_validation)
 - [DTO – pierwsze słabe próby deserializacji i walidacji](#dto_first)
+- [JSON – porównywanie Stringów](#json_compare_as_string)
 
 # 📝Opis
 
@@ -341,7 +342,8 @@ private static final Validator VALIDATOR = Validation
         .getValidator();
 ```
 
-Statyczne pole `VALIDATOR` tworzy singletona `Validator`, którego można używać do sprawdzania zgodności obiektów z adnotacjami typu `@NotNull`, `@Size`, `@Email` itd.
+Statyczne pole `VALIDATOR` tworzy singletona `Validator`, którego można używać do sprawdzania zgodności obiektów
+z adnotacjami typu `@NotNull`, `@Size`, `@Email` itd.
 
 ### 🔄 **Deserializacja DTO z odpowiedzi HTTP**
 
@@ -423,4 +425,324 @@ DtoUtils.validateDto(user);
 * Walidacji tych DTO z użyciem Jakarta Bean Validation,
 * Rzucania czytelnych błędów w testach, jeśli walidacja nie powiedzie się.
 
-💡 Idealna do **automatycznych testów API**, by upewnić się, że odpowiedzi serwera są nie tylko poprawne formalnie (statusy HTTP), ale również zgodne z oczekiwanym modelem danych.
+💡 Idealna do **automatycznych testów API**, by upewnić się, że odpowiedzi serwera są nie tylko poprawne formalnie
+(statusy HTTP), ale również zgodne z oczekiwanym modelem danych.
+
+---
+
+## 📄JSON – porównywanie Stringów <a name="json_compare_as_string"></a>
+
+Kod ten znajdował się w `scr/test/java/utils` w pliku o nazwie `JsonUtils`.
+
+### Kod:
+
+```java
+package utils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.skyscreamer.jsonassert.*;
+import org.skyscreamer.jsonassert.comparator.CustomComparator;
+
+import java.util.Set;
+
+/**
+ * Utility class for JSON comparison operations with options for ignoring specific fields
+ * and supporting both strict and lenient modes.
+ */
+public class JsonUtils {
+
+    // ------------
+    // MAIN METHODS
+    // ------------
+
+    /**
+     * Asserts that two JSON strings are equal while ignoring specified fields.
+     *
+     * @param expectedJson   the expected JSON string
+     * @param actualJson     the actual JSON string
+     * @param fieldsToIgnore set of field paths to ignore during comparison (supports wildcards like "prefs.*")
+     * @param strict         if true, enforces strict order and values; if false, allows lenient comparison
+     * @throws JSONException  if the JSON parsing or comparison fails
+     * @throws AssertionError if the JSONs are not equal according to the comparison criteria
+     */
+    public static void assertJsonEqualsIgnoringFields(String expectedJson, String actualJson, Set<String> fieldsToIgnore, boolean strict) throws JSONException {
+        JSONCompareResult result = compareJsonIgnoringFields(expectedJson, actualJson, fieldsToIgnore, strict);
+        if (!result.passed()) {
+            throw new AssertionError(formatError(result));
+        }
+    }
+
+    /**
+     * Asserts that two JSON strings are exactly equal, without ignoring any fields.
+     *
+     * @param expectedJson the expected JSON string
+     * @param actualJson   the actual JSON string
+     * @param strict       if true, enforces strict order and values; if false, allows lenient comparison
+     * @throws JSONException  if the JSON parsing or comparison fails
+     * @throws AssertionError if the JSONs are not equal according to the comparison criteria
+     */
+    public static void assertJsonEquals(String expectedJson, String actualJson, boolean strict) throws JSONException {
+        JSONCompareResult result = compareJson(expectedJson, actualJson, strict);
+        if (!result.passed()) {
+            throw new AssertionError(formatError(result));
+        }
+    }
+
+    // --------------
+    // HELPER METHODS
+    // --------------
+
+    // BIG HELPERS
+
+    /**
+     * Compares two JSON strings while ignoring specific fields.
+     *
+     * @param expectedJson   the expected JSON string
+     * @param actualJson     the actual JSON string
+     * @param fieldsToIgnore set of field paths to ignore during comparison
+     * @param strict         if true, uses strict comparison; otherwise uses lenient mode
+     * @return JSONCompareResult containing the comparison result
+     * @throws JSONException if JSON parsing fails
+     */
+    private static JSONCompareResult compareJsonIgnoringFields(String expectedJson, String actualJson, Set<String> fieldsToIgnore, boolean strict) throws JSONException {
+        JSONCompareMode mode = strict ? JSONCompareMode.STRICT : JSONCompareMode.LENIENT;
+
+        Customization[] customizations = fieldsToIgnore.stream()
+                .map(JsonUtils::createDeepCustomization)
+                .toArray(Customization[]::new);
+
+        CustomComparator comparator = new CustomComparator(mode, customizations);
+
+        Object expected = parseJson(expectedJson, "expectedJson");
+        Object actual = parseJson(actualJson, "actualJson");
+
+        return JSONCompare.compareJSON(expected.toString(), actual.toString(), comparator);
+    }
+
+    /**
+     * Compares two JSON strings without ignoring any fields.
+     *
+     * @param expectedJson the expected JSON string
+     * @param actualJson   the actual JSON string
+     * @param strict       if true, uses strict comparison; otherwise uses lenient mode
+     * @return JSONCompareResult containing the comparison result
+     * @throws JSONException if JSON parsing fails
+     */
+    private static JSONCompareResult compareJson(String expectedJson, String actualJson, boolean strict) throws JSONException {
+        JSONCompareMode mode = strict ? JSONCompareMode.STRICT : JSONCompareMode.LENIENT;
+        Object expected = parseJson(expectedJson, "expectedJson");
+        Object actual = parseJson(actualJson, "actualJson");
+
+        return JSONCompare.compareJSON(expected.toString(), actual.toString(), mode);
+    }
+
+    // SMALL HELPERS
+
+    /**
+     * Parses a JSON string into either a {@link JSONObject} or {@link JSONArray}.
+     * <p>
+     * In case of parsing failure or invalid structure, throws a {@link RuntimeException}
+     * containing details about the specific input (label) that caused the error.
+     * <p>
+     * Designed to help quickly identify issues with malformed JSON inputs during tests.
+     *
+     * @param json  the JSON string to parse
+     * @param label a label (e.g., "expectedJson" or "actualJson") used for clearer error reporting
+     * @return a parsed {@link JSONObject} or {@link JSONArray}
+     * @throws RuntimeException if parsing fails or if the parsed object is neither a JSONObject nor JSONArray
+     */
+    private static Object parseJson(String json, String label) {
+        try {
+            Object parsed = JSONParser.parseJSON(json);
+            if (parsed instanceof JSONObject || parsed instanceof JSONArray) {
+                return parsed;
+            } else {
+                throw new IllegalArgumentException("Provided " + label + " is neither an object nor an array.");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("\nFailed to parse " + label + ".\nInput:\n" + json + "\nError: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Creates a Customization object for field ignoring.
+     * Supports both exact field ignoring and wildcard section ignoring (e.g., "prefs.*").
+     *
+     * @param path the field path to ignore
+     * @return Customization that matches the provided field path
+     */
+    private static Customization createDeepCustomization(String path) {
+        if (path.endsWith(".*")) {
+            String prefix = path.substring(0, path.length() - 2);
+            return new Customization(prefix, (o1, o2) -> true);
+        } else {
+            return new Customization(path, (o1, o2) -> true);
+        }
+    }
+
+    // LOGS
+
+    /**
+     * Formats the differences found during JSON comparison into a readable string.
+     *
+     * @param result the JSONCompareResult containing differences
+     * @return a formatted String listing all differences
+     */
+    private static String formatError(JSONCompareResult result) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Differences:\n");
+
+        for (FieldComparisonFailure failure : result.getFieldFailures()) {
+            sb.append("- Field: ").append(failure.getField())
+                    .append("\n  Expected: ").append(failure.getExpected())
+                    .append("\n  Actual:   ").append(failure.getActual())
+                    .append("\n\n");
+        }
+
+        return sb.toString();
+    }
+}
+```
+
+### Opis kodu:
+
+Poniżej znajduje się **szczegółowa analiza klasy `JsonUtils`**. Klasa ta jest narzędziem do **porównywania JSON-ów**
+w testach, z możliwością pomijania wskazanych pól oraz trybem porównania ścisłego lub luźnego.
+
+### 📦 Pakiet i biblioteki
+
+```java
+package utils;
+```
+
+Klasa należy do pakietu `utils` – czyli zestawu narzędzi pomocniczych.
+
+**Wykorzystywane biblioteki:**
+
+* `org.skyscreamer.jsonassert` – biblioteka `JSONAssert`, umożliwiająca porównywanie JSON-ów.
+* `org.json.*` – biblioteki do pracy z JSON-em.
+* `Set` – kolekcje Java.
+* `CustomComparator`, `Customization` – pozwalają dostosowywać sposób porównania pól.
+
+### 🎯 Główne zadania `JsonUtils`
+
+1. Porównuje dwa JSON-y w testach.
+2. Pozwala ignorować wybrane pola (np. `"timestamp"`, `"prefs.*"`).
+3. Obsługuje tryb **ścisły** (kolejność i wartości muszą być dokładnie takie same) oraz **luźny** (kolejność elementów
+   nie ma znaczenia).
+4. Rzuca `AssertionError` z dokładnym raportem różnic, jeśli JSON-y nie są równe.
+
+### 🛠️ Publiczne metody
+
+#### 1. `assertJsonEqualsIgnoringFields(...)`
+
+```java
+public static void assertJsonEqualsIgnoringFields(String expectedJson, String actualJson, Set<String> fieldsToIgnore, boolean strict)
+```
+
+* Porównuje dwa JSON-y, **ignorując podane pola**.
+* Parametry:
+
+    * `expectedJson`, `actualJson` – JSON-y jako tekst.
+    * `fieldsToIgnore` – zestaw pól do zignorowania (np. `Set.of("id", "timestamp")`).
+    * `strict` – `true`: porównanie ścisłe, `false`: porównanie luźne.
+* W przypadku różnic – rzuca `AssertionError` z czytelnym opisem.
+
+#### 2. `assertJsonEquals(...)`
+
+```java
+public static void assertJsonEquals(String expectedJson, String actualJson, boolean strict)
+```
+
+* Porównuje JSON-y **bez ignorowania jakichkolwiek pól**.
+* Wykorzystuje metodę pomocniczą `compareJson(...)`.
+* Tryb porównania kontrolowany przez `strict`.
+
+### 🔧 Metody pomocnicze
+
+#### 3. `compareJsonIgnoringFields(...)`
+
+```java
+private static JSONCompareResult compareJsonIgnoringFields(...)
+```
+
+* Właściwe porównanie dwóch JSON-ów z pomijaniem pól.
+* Tworzy tablicę `Customization[]`, gdzie każde pominięcie jest zdefiniowane jako warunek "ignoruj to pole".
+* Używa `CustomComparator` z trybem `STRICT` lub `LENIENT`.
+
+#### 4. `compareJson(...)`
+
+```java
+private static JSONCompareResult compareJson(...)
+```
+
+* Porównuje JSON-y bez ignorowania pól.
+* Również obsługuje tryb `STRICT` / `LENIENT`.
+
+#### 5. `parseJson(...)`
+
+```java
+private static Object parseJson(String json, String label)
+```
+
+* Parsuje JSON string do obiektu `JSONObject` lub `JSONArray`.
+* Używa `JSONParser.parseJSON(...)`.
+* Jeśli JSON jest nieprawidłowy – rzuca `RuntimeException` z etykietą (`expectedJson` lub `actualJson`), co ułatwia
+  debugowanie w testach.
+
+### 🔍 Pomocnicze elementy ignorowania pól
+
+#### 6. `createDeepCustomization(...)`
+
+```java
+private static Customization createDeepCustomization(String path)
+```
+
+* Tworzy obiekt `Customization`, który ignoruje pole o zadanej nazwie lub z użyciem wildcardów (`.*`).
+
+    * `"prefs.*"` – zignoruje wszystkie podpola w obiekcie `prefs`.
+    * `"id"` – zignoruje tylko konkretne pole.
+* `Customization` opiera się na zasadzie, że porównywane pola zawsze zwracają `true` – czyli są "równe" niezależnie od wartości.
+
+### 📋 Formatowanie różnic
+
+#### 7. `formatError(...)`
+
+```java
+private static String formatError(JSONCompareResult result)
+```
+
+* Tworzy przyjazny człowiekowi raport różnic, np.:
+
+```
+Differences:
+- Field: name
+  Expected: "John"
+  Actual:   "Jane"
+```
+
+### 🧪 Przykład użycia w teście
+
+```java
+String expected = "{ \"name\": \"John\", \"timestamp\": 123456 }";
+String actual = "{ \"name\": \"John\", \"timestamp\": 987654 }";
+
+JsonUtils.assertJsonEqualsIgnoringFields(expected, actual, Set.of("timestamp"), true);
+```
+
+W powyższym przykładzie:
+
+* Test przejdzie, bo `timestamp` jest ignorowany.
+* `strict = true` wymusza zgodność co do kolejności i wartości pozostałych pól.
+
+### 🧠 Podsumowanie
+
+| Cecha             | Opis                                                                                   |
+|-------------------|----------------------------------------------------------------------------------------|
+| **Cel**           | Porównywanie JSON-ów w testach                                                         |
+| **Tryby**         | `strict` – porównuje dokładnie (łącznie z kolejnością), `lenient` – ignoruje kolejność |
+| **Pomijanie pól** | Tak, z obsługą wildcardów (np. `"prefs.*"`)                                            |
+| **Biblioteka**    | JSONAssert (`org.skyscreamer.jsonassert`)                                              |
+| **Zastosowanie**  | Testy integracyjne, testy API, porównanie snapshotów                                   |

@@ -26,7 +26,6 @@
         <jakartaValidationApi.version>3.1.1</jakartaValidationApi.version>
         <jakartaEl.version>4.0.2</jakartaEl.version>
         <jakartaElApi.version>6.0.1</jakartaElApi.version>
-        <jsonAssert.version>1.5.3</jsonAssert.version>
     </properties>
 
     <dependencies>
@@ -104,13 +103,6 @@
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
             <version>${jakartaElApi.version}</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.skyscreamer/jsonassert -->
-        <dependency>
-            <groupId>org.skyscreamer</groupId>
-            <artifactId>jsonassert</artifactId>
-            <version>${jsonAssert.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
