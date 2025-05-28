@@ -7,8 +7,8 @@ import dto.boards.POST_CreateBoardDto;
 import static endpoints.boards.GET_GetBoard.getGetBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.ResponseUtils.deserializeAndValidate;
-import static utils.ResponseUtils.deserializeJson;
+import static utils.UtilsResponse.deserializeAndValidate;
+import static utils.UtilsResponse.deserializeJson;
 
 public class POST_CreateBoardUtils extends TestBase {
 

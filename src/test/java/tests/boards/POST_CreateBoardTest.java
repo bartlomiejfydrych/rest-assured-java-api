@@ -14,8 +14,8 @@ import static expected_responses.boards.POST_CreateBoardExpected.P1ExpectedPostB
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.*;
-import static utils.ResponseUtils.deserializeAndValidate;
-import static utils.ResponseUtils.deserializeJson;
+import static utils.UtilsResponse.deserializeAndValidate;
+import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.prepareExpectedResponsePost;
 import static utils_tests.boards.POST_CreateBoardUtils.validateGetAgainstPost;
 

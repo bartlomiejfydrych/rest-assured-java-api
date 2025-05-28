@@ -11,7 +11,7 @@ import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Set;
 
-public class ResponseUtils {
+public class UtilsResponse {
 
     // ------------------------
     // Deserialization settings
