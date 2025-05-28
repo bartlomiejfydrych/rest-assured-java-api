@@ -84,11 +84,13 @@
     - Klikamy `Install` przy wybranym pluginie
     - W zakładce `Installed` mamy listę pluginów, które są już zainstalowane
     - Wyszukujemy i instalujemy następujące **pluginy**:
-      - .ignore
-      - Rainbow Brackets
-      - Allure Report
-      - Lombok (opcjonalne)
-      - Key Promoter X (opcjonalne)
+      - Wymagane:
+        - .ignore
+        - Rainbow Brackets
+        - Allure Report
+      - Opcjonalne:
+        - Lombok
+        - Key Promoter X
 
 ## Dodawanie projektu do GitHub <a name="adding_project_to_github"></a>
 
@@ -127,26 +129,30 @@
     - Pomiędzy `<dependencies>` wklejamy nasze `<dependency>` z repozytorium `Maven`
 17. Wrzucamy następujące `<dependencies>`:
     - **Uniwersalne**
+      - Wymagane:
         - JUnit Jupiter (Aggregator)
         - JUnit Platform Suite (Aggregator)
         - Java Faker
         - AssertJ Core
         - Dotenv Java
         - Allure Report
-        - Logback Classic (opcjonalne, żeby nie denerwowały nas warningi `SLF4J`, które może powodować `Allure Report`)
+        - Logback Classic (przydatne, żeby nie denerwowały nas warningi `SLF4J`, które może powodować `Allure Report`)
+      - Opcjonalne:
         - Project Lombok (dla lepszej czytelności klas DTO)
     - **Backend**
+      - Wymagane:
         - REST Assured
-        - Te muszą być razem:
+        - Jackson Databind (do deserializacji JSON na DTO)
+        - Razem muszą być:
           - Hibernate Validator Engine (do walidacji DTO)
           - Jakarta Validation API (do walidacji DTO)
           - Jakarta Expression Language Implementation (do lepszych komunikatów DTO)
           - Jakarta Expression Language API (do lepszych komunikatów DTO)
-        - JSONassert (do porównywania JSON'ów wraz z wyświetlaniem różnic)
+      - Opcjonalne:
         - JSON Schema Validator (ten od REST Assured)
-        - Project Lombok (opcjonalne)
-        - Jackson Databind (opcjonalne)
-        - Jakarta JSON Processing API (opcjonalne)
+        - JSONassert (do porównywania JSON'ów wraz z wyświetlaniem różnic)
+        - Jakarta JSON Processing API (taki troszkę słabszy Jackson)
+        - Project Lombok (generuje takie rzeczy jak gettery i settery "w locie")
 18. Jeżeli chcemy, możemy w `<properties>` zdefiniować sobie zmienne dla numerów wersji naszych dependencies  
     (Instrukcja jak to zrobić jest w niższych sekcjach tego dokumentu)
 19. Po wklejeniu naszych dependencies gdzieś w okolicach prawego, górnego rogu powinna pojawić się `ikona Mavena`.  
@@ -973,6 +979,15 @@ public class AllureExampleTest {
 ---
 
 ### 📕Project Lombok <a name="project_lombok"></a>
+
+#### 🚨 UWAGA!
+
+Po sprawdzeniu opinii na Internecie wyszło na to, że lepiej tego nie używać!  
+Nawet jeśli kod dzięki temu fajniej wygląda, to ukryte elementy są generowane w trakcie kompilacji.  
+Stwarza to zawsze ryzyko, że w którymś momencie może to przestać działać i nie będziemy wiedzieli dlaczego.  
+Lepiej już mieć rozpisany kod, stały dostęp do niego i większą pewność, że zadziała.
+
+#### 📄 Opis
 
 **Project Lombok** to popularna biblioteka Java, która eliminuje *boilerplate code* (czyli powtarzalny, techniczny kod)
 poprzez automatyczne generowanie metod i konstruktorów za pomocą adnotacji.
