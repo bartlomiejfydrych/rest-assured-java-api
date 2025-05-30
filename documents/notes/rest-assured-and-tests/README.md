@@ -26,320 +26,80 @@
 2. W katalogu `src/main/resources` tworzymy katalog `configs`, a w nim plik o nazwie `config.properties`  
    Wszelkie ustawienia projektu warto trzymać i odczytywać z osobnego pliku, aby nie musieć nic zmieniać w samym kodzie.  
    Zapisujemy w nim takie rzeczy jak:
-   ```properties
-   # File config.properties - project variables
-   
-   # BASE URL
-   baseUrl=https://api.trello.com/1
-   baseUrlProtocol=https
-   baseUrlSubdomain=api
-   baseUrlDomain=trello
-   baseUrlTLD=com
-   baseUrlNumber=1
-   ```
+    - bazowy URL w całości
+    - bazowy URL rozbity na osobne segmenty:
+      - protokół
+      - subdomena
+      - domena
+      - TLD
+      - Numer
 3. Sprawdzamy, czy mamy w `pom.xml` dodane dependecy o nazwie `Dotenv Java`
-4. Otwieramy plik `.gitignore` i dopisujemy w nim:  
-   ```ignore
-   ### MY FILES
-
-   # environment
-   environment/.env
-   ```
+4. Otwieramy plik `.gitignore` i dopisujemy w nim: `environment/.env`
 5. W głównym katalogu projektu tworzymy katalog o nazwie `environment`
 6. W nim tworzymy dwa pliki:  
    - `.env` (tutaj będziemy przechowywać nasze prawdziwe zmienne)
    - `.env.example` (tutaj będzie pusty wzór dostępny na repozytorium)
-7. W plikach `.env` definiujemy:  
-   - Sekcję na włączanie logów przy failach testów oraz pokazywania logów zawsze
-   - Sekcję na `API key` oraz `token`
-   ```properties
-   # File .env – environment variables
-    
-   # LOGS MANAGEMENT
-   LOGS_WHEN_FAIL=true/false
-   LOGS_ALWAYS=true/false
-    
-   # TRELLO API KEY & TOKEN
-   TRELLO_API_KEY=yourTrelloApiKey
-   TRELLO_TOKEN=yourTrelloToken
-   ```
+7. W plikach `.env` definiujemy:
+    - Sekcję do zarządzania logami:
+      - czy wyświetlać logi, kiedy test się wywali
+      - czy zawsze wyświetlać logi
+    - Sekcję na klucz API oraz token:
+      - api key
+      - token
 8. W katalogu `src/main/java` tworzymy katalog o nazwie `configuration`
 9. W katalogu `configuration` tworzymy plik java class o nazwie `Config.java`
-10. W pliku `Config.java` dopisujemy następujące rzeczy:  
-    ```java
-    package configuration;
-    
-    import io.github.cdimascio.dotenv.Dotenv;
-    
-    import java.io.IOException;
-    import java.io.InputStream;
-    import java.util.Optional;
-    import java.util.Properties;
-    
-    public class Config {
-    
-        private static final Properties properties = new Properties();
-        private static final Dotenv dotenv = Dotenv.configure().directory("./environment").load();
-    
-        // ----------------------------------------------------------
-        // Method that loads a configuration file (config.properties)
-        // ----------------------------------------------------------
-    
-        /*
-        NOTE FOR ME:
-        Mechanizm, który zapewni, że plik z config.properties będzie wczytany tylko raz i później re-używany
-        do wszystkich metod, które pobierają informacje z tego pliku konfiguracyjnego.
-        */
-    
-        // Static initializer to load the configuration file
-        static {
-            try (InputStream inputStream = Config.class.getClassLoader().getResourceAsStream("configs/config.properties")) {
-                if (inputStream == null) {
-                    throw new IllegalStateException("Configuration file 'config.properties' not found");
-                }
-                properties.load(inputStream);
-            } catch (IOException e) {
-                throw new IllegalStateException("Error loading configuration file", e);
-            }
-        }
-    
-        // -----
-        // Utils
-        // -----
-    
-        // STRING
-    
-        // config.properties – Utility method to get string property value with optional defaults
-        private static String getConfigProperty(String key, String defaultValue) {
-            return Optional.ofNullable(properties.getProperty(key))
-                    .map(String::trim)
-                    .orElse(defaultValue != null ? defaultValue : "ERROR: Missing required key from 'config.properties' file: " + key);
-        }
-    
-        // .env – Utility method to get string property value with optional defaults
-        private static String getEnvProperty(String key, String defaultValue) {
-            return Optional.ofNullable(dotenv.get(key))
-                    .map(String::trim)
-                    .orElse(defaultValue != null ? defaultValue : "ERROR: Missing required key from '.env' file: " + key);
-        }
-    
-        // BOOLEAN
-    
-        // config.properties – Utility method to get boolean property value with optional defaults
-        private static boolean getConfigPropertyBoolean(String key, Boolean defaultValue) {
-            return Optional.ofNullable(properties.getProperty(key))
-                    .map(String::trim)
-                    .map(Boolean::parseBoolean)
-                    .orElseGet(() -> {
-                        if (defaultValue != null) {
-                            return defaultValue;
-                        } else {
-                            throw new IllegalStateException("ERROR: Missing required key from 'config.properties' file: " + key);
-                        }
-                    });
-        }
-    
-        // .env – Utility method to get boolean property value with optional defaults
-        private static boolean getEnvPropertyBoolean(String key, Boolean defaultValue) {
-            return Optional.ofNullable(dotenv.get(key))
-                    .map(String::trim)
-                    .map(Boolean::parseBoolean)
-                    .orElseGet(() -> {
-                        if (defaultValue != null) {
-                            return defaultValue;
-                        } else {
-                            throw new IllegalStateException("ERROR: Missing required key from '.env' file: " + key);
-                        }
-                    });
-        }
-    
-        // --------------------------------------------------------
-        // config.properties – Methods that retrieve data from file
-        // --------------------------------------------------------
-    
-        // BASE URL
-    
-        // Get API base URL
-        public static String getBaseUrl() {
-            return getConfigProperty("baseUrl", "https://api.trello.com/1");
-        }
-    
-        // Get API base URL Protocol
-        public static String getBaseUrlProtocol() {
-            return getConfigProperty("baseUrlProtocol", "https");
-        }
-    
-        // Get API base URL Subdomain
-        public static String getBaseUrlSubdomain() {
-            return getConfigProperty("baseUrlSubdomain", "api");
-        }
-    
-        // Get API base URL Domain
-        public static String getBaseUrlDomain() {
-            return getConfigProperty("baseUrlDomain", "trello");
-        }
-    
-        // Get API base URL TLD
-        public static String getBaseUrlTLD() {
-            return getConfigProperty("baseUrlTLD", "com");
-        }
-    
-        // Get API base URL Number
-        public static String getBaseUrlNumber() {
-            return getConfigProperty("baseUrlNumber", "1");
-        }
-    
-        // -------------------------------------------
-        // .env – Methods that retrieve data from file
-        // -------------------------------------------
-    
-        // LOGS MANAGEMENT
-    
-        // Get Logs when Fail
-        public static boolean getLogsWhenFail() {
-            return getEnvPropertyBoolean("LOGS_WHEN_FAIL", true);
-        }
-    
-        // Get Logs when Fail
-        public static boolean getLogsAlways() {
-            return getEnvPropertyBoolean("LOGS_ALWAYS", false);
-        }
-    
-        // TRELLO API KEY & TOKEN
-    
-        // Get Trello API key
-        public static String getTrelloApiKey() {
-            return getEnvProperty("TRELLO_API_KEY", null);
-        }
-    
-        // Get Trello token
-        public static String getTrelloToken() {
-            return getEnvProperty("TRELLO_TOKEN", null);
-        }
-    }
-    ```
+10. W pliku `Config.java` definiujemy następujące rzeczy:
+    - Obiekty:
+      - `properties` (do wczytywania zmiennych z `config.properties`)
+      - `dotenv` (do wczytywania zmiennych z `.env`)
+    - Inicjator, który wczytuje plik konfiguracyjny `config.properties`
+    - Metody pomocnicze:
+      - metoda pobierająca właściwość typu `String` z pliku `config.properties`
+      - metoda pobierająca właściwość typu `String` z pliku `.env`
+      - metoda pobierająca właściwość typu `boolean` z pliku `config.properties`
+      - metoda pobierająca właściwość typu `boolean` z pliku `.env`
+    - Metody pobierające dane z pliku `config.properties`
+      - bazowy URL w całości
+      - protokół
+      - subdomena
+      - domena
+      - TLD
+      - Numer
+    - Metody pobierające dane z pliku `.env`
+      - czy wyświetlać logi, kiedy test się wywali
+      - czy zawsze wyświetlać logi
+      - api key
+      - token
 11. W katalogu `src/main/java/configuration` tworzymy plik `BaseUrlBuilder`
-12. W pliku `BaseUrlBuilder` piszemy budowanie naszego URL ze zmiennych konfiguracyjnych projektu:  
-   ```java
-   package configuration;
-   
-   public class BaseUrlBuilder {
-   
-       public static String buildBaseUrl() {
-           return String.format("%s://%s.%s.%s/%s",
-                   Config.getBaseUrlProtocol(),
-                   Config.getBaseUrlSubdomain(),
-                   Config.getBaseUrlDomain(),
-                   Config.getBaseUrlTLD(),
-                   Config.getBaseUrlNumber()
-           );
-       }
-   }
-   ```
+12. W pliku `BaseUrlBuilder` piszemy budowanie naszego URL ze zmiennych konfiguracyjnych projektu
 13. W katalogu `src/test/java` tworzymy katalog package o nazwie `configuration`
 14. W katalogu `src/test/java/configuration` tworzymy plik `RequestSpecConfig`  
     Dlaczego tutaj, a nie w `main`?  
     Ponieważ `REST Assured` jest używane tylko do testów i jego specyfikacja tak zaleca.  
     Żeby obejść to ograniczenie można też w `pom.xml` usunąć wiersz z `<scope>test</scope>`.
-15. W pliku `RequestSpecConfig` piszemy naszą wspólną konfigurację dla wszystkich requestów:
-    ```java
-    package configuration;
-    
-    import io.restassured.builder.RequestSpecBuilder;
-    import io.restassured.http.ContentType;
-    import io.restassured.specification.RequestSpecification;
-    
-    public class RequestSpecConfig {
-    
-        private static final RequestSpecification requestSpecification = new RequestSpecBuilder()
-                .addQueryParam("key", Config.getTrelloApiKey())
-                .addQueryParam("token", Config.getTrelloToken())
-                .setBaseUri(BaseUrlBuilder.buildBaseUrl())
-                .setContentType(ContentType.JSON)
-                .build();
-    
-        public static RequestSpecification getRequestSpecification() {
-            return requestSpecification;
-        }
-    }
-    ```
+15. W pliku `RequestSpecConfig` piszemy naszą wspólną konfigurację dla wszystkich requestów oraz metodę ją zwracającą
 16. W katalogu `src/test/java` tworzymy katalog o nazwie `base`
-17. W katalogu `src/test/java/base` tworzymy plik o nazwie `TestBase.java`
-18. W pliku `TestBase.java` tworzymy wstępną konfigurację:  
-    ```java
-    package base;
-    
-    import configuration.Config;
-    import configuration.RequestSpecConfig;
-    import io.restassured.RestAssured;
-    import io.restassured.filter.log.RequestLoggingFilter;
-    import io.restassured.filter.log.ResponseLoggingFilter;
-    import io.restassured.specification.RequestSpecification;
-    import org.junit.jupiter.api.BeforeAll;
-    
-    public class TestBase {
-        // Object containing all request settings
-        protected static RequestSpecification requestSpecificationCommon;
-        protected static Response response;
-        protected static Faker faker = new Faker();
-    
-        @BeforeAll
-        public static void setUpAll() {
-    
-            // LOGS
-    
-            // Always print in console all request and response data
-            if (Config.getLogsAlways()) {
-                RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
-            }
-            // Only when test fail print in console all request and response data
-            if (Config.getLogsWhenFail()) {
-                RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-            }
-    
-            // OTHERS
-    
-            // Class that allows you to configure API requests in a readable and reusable way
-            requestSpecificationCommon = RequestSpecConfig.getRequestSpecification();
-        }
-    }
-    ```
+17. W katalogu `src/test/java/base` tworzymy plik o nazwie `TestBase`
+18. W pliku `TestBase` tworzymy wstępną konfigurację:
+    - Deklarujemy zmienne i obiekty:
+      - requestSpecificationCommon
+      - responsePost
+      - responsePut
+      - responseGet
+      - responseDelete
+      - faker
+    - Ustawiamy `setUpAll()` dla `@BeforeAll`:
+      - czy mają być wyświetlane logi zawsze
+      - czy mają być wyświetlane tylko, jeśli test się wywali
+      - pobieranie konfiguracji requestów i przypisywanie jej do naszej zmiennej  
+        (później klasy z endpointami będą dziedziczyły tą zmienną po klasie `TestBase`)
 19. W katalogu `src/test/java` tworzymy katalog o nazwie `utils`  
-    Dlaczego w test? Ponieważ AssertJ ma ustawiony <scope> na ten katalog w `pom.xml`.  
+    Dlaczego w test? Ponieważ `AssertJ` ma ustawiony <scope> na ten katalog w `pom.xml`.  
     Można by go usunąć, ale jak tak zalecają to lepiej nie ruszać.
-20. W katalogu `src/test/java/utils` tworzymy plik o nazwie `ObjectComparator.java`
-21. W pliku `ObjectComparator.java` tworzymy dwie metody statyczne:
-    - Jedna, w której możemy podawać jakie parametry mają być ignorowane podczas porównywania obiektów
-    - Druga, która pomija tylko parametr "id" podczas porównywania obiektów
-    ```java
-    package utils;
-    
-    import org.assertj.core.api.Assertions;
-    import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
-    
-    public class ObjectComparator {
-    
-        // Private constructor - prevents instance creation
-        private ObjectComparator() {
-            throw new UnsupportedOperationException("Utility class should not be instantiated");
-        }
-    
-        // Comparison of two objects with the option to specify fields to ignore
-        public static void compareObjectsWithIgnoredFields(Object actualObject, Object expectedObject, String... fieldsToIgnore) {
-            RecursiveComparisonConfiguration config = new RecursiveComparisonConfiguration();
-            config.ignoreFields(fieldsToIgnore);
-    
-            Assertions.assertThat(actualObject)
-                    .usingRecursiveComparison(config)
-                    .isEqualTo(expectedObject);
-        }
-    
-        // Comparing two objects ignoring only the "id" field
-        public static void compareObjectsWithoutId(Object actualObject, Object expectedObject) {
-            compareObjectsWithIgnoredFields(actualObject, expectedObject, "id");
-        }
-    }
-    ```
+20. W katalogu `src/test/java/utils` tworzymy plik o nazwie `UtilsCompare`
+21. W pliku `UtilsCompare` tworzymy metodę, która bazując na dependency `AssertJ` będzie:
+    - porównywać obiekty
+    - a jeśli podamy jako `String` parametry np. `"id"` to będą one pomijane przy porównywaniu
 22. W katalogu `src/test/java` tworzymy katalog o nazwie `endpoints`
 23. W katalogu `src/test/java/endpoints` tworzymy katalog o nazwie `boards` (na wzór dokumentacji)  
     **Wyjaśnienie:**  
@@ -347,14 +107,14 @@
     która będzie zgodna z nią np. jeśli w Swaggerze endpoint jest zgrupowany w jeden nieduży controller to wszystkie jego
     warianty (POST, PATCH/PUT, GET, DELETE) tworzymy w jednym pliku np. `Boards` od `/boards`.  
     W sytuacji, w której controller dla tego endpointa jest duży lub tak jak w dokumentacji Trello wiele endpointów jest
-    zgrupowane w jednej ogólnej sekcji `Boards` tworzymy wtedy pod każdą metodę HTTP danego endpointu osobny plik/klasę.  
+    zgrupowane w jednej ogólnej sekcji `Boards` tworzymy wtedy pod każdą metodę HTTP danego endpointa osobny plik/klasę.  
     Przykłady: `POST_CreateBoard`, `PUT_UpdateBoard`, `DELETE_DeleteBoard` itd.
-24. W katalogu tym tworzymy plik/klasę pod nasz pierwszy endpoint o nazwie `POST_CreateBoard`  
+24. W katalogu tym tworzymy plik pod nasz pierwszy endpoint o nazwie `POST_CreateBoard`  
     **Wyjaśnienie:**  
     Z reguły konwencja nazw klas w Java nie zaleca używania `_` natomiast w niczym to nie przeszkadza (potwierdzone
-    przez czatGPT), zwłaszcza w testach API, a w tym przypadku fajnie zwiększa to czytelność. Zgodnie z konwencją ten
+    przez czat GPT), zwłaszcza w testach API, a w tym przypadku fajnie zwiększa to czytelność. Zgodnie z konwencją ten
     plik nazywałby się wtedy `PostCreateBoard`.
-25. W pliku tym:
+25. W pliku `POST_CreateBoard`:
     - Dziedziczymy/Rozszerzamy tę klasę po `TestBase`, żeby nasz endpoint mógł używać wspólnej konfiguracji `requestSpecificationCommon`  
       Jeżeli byśmy tego nie zrobili, to musielibyśmy tutaj i w każdym kolejnym pliku wywoływać tę konfigurację:  
       ```java
