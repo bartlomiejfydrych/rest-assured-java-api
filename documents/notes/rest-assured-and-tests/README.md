@@ -120,47 +120,140 @@
       ```java
       RequestSpecification requestSpecificationCommon = RequestSpecConfig.getRequestSpecification();
       ```
-    - Tworzymy metodę lub metody wywołujące ten request i używające jako argumentów podawanych przez nas parametrów lub
+    - Deklarujemy zmienną `url`, która będzie zawierała nasz endpoint np. `/boards` 
+    - Tworzymy metodę lub metody wywołujące ten request i używające jako argumentów podawanych przez nas parametrów, lub
       payloadów
+26. W katalogu `src/test/java` tworzymy katalog o nazwie `payloads`  
+    **Wyjaśnienie:**  
+    - Nie każdy endpoint będzie miał osobny plik na payload/parametry.  
+    - W przypadku małej ilości parametrów dane te będą podawane jako argumenty na bieżąco w testach.
+27. W katalogu `src/test/java/payloads` tworzymy katalog o nazwie `boards`
+28. W katalogu `src/test/java/payloads/boards` tworzymy plik o nazwie `POST_CreateBoardPayload`
+29. W pliku `POST_CreateBoardPayload` piszemy:
+    - Zmienne/Parametry, jakie posiada
+    - Metodę pomocniczą, która konwertuje nasze dane na `queryParams`
+    - Konstruktor dla Buildera
+    - Gettery
+    - Builder
+    - Settery do ustawiania zmiennych w Builderze
+    - Przykład użycia
+      ```java
+      POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+          .setName("Tablica API")
+          .setDesc("Testowa tablica")
+          .setDefaultLabels(false)
+          .setPrefs_background("blue")
+          .build();
+    
+      Map<String, Object> queryParams = payload.toQueryParams();
+      ```
+30. W katalogu z `endpoints` tworzymy plik `GET_GetBoard`  
+    Aby sprawdzać, czy dane dodawane przez POST rzeczywiście są prawidłowe
+31. W katalogu z `endpoints` tworzymy plik `DELETE_DeleteBoard`  
+    Aby pod koniec testu usuwać zasób dodawany przez POST
+32. Mając przygotowanego naszego pierwszego mini CRUD'a w katalogu `src/test/java` tworzymy katalog o nazwie `tests`
+33. W nim tworzymy katalog o nazwie sekcji/kontrolera z dokumentacji. W tym przypadku `boards`
+34. Następnie tworzymy plik `POST_CreateBoardTest`
+35. (Opcjonalne) W pliku `POST_CreateBoardTest` piszemy najprostszy, byle jaki test-request, aby móc skopiować zwracany
+    response (jeśli nie ma takiego w dokumentacji)
     ```java
-    package endpoints.boards;
+    public class POST_CreateBoardTest extends TestBase {
     
-    import base.TestBase;
-    import io.restassured.response.Response;
-    import io.restassured.specification.RequestSpecification;
+        private static String boardId;
     
-    import java.util.Map;
+        @Test
+        public void shouldCreateBoard() {
     
-    import static io.restassured.RestAssured.given;
-    
-    public class POST_CreateBoard extends TestBase {
-    
-        private static final String url = "/boards";
-    
-        public static Response postCreateBoard(String name, Map<String, Object> queryParams) {
-    
-            RequestSpecification spec = given().
-                    spec(requestSpecificationCommon)
-                    .queryParam("name", name);
-    
-            if (queryParams != null && !queryParams.isEmpty()) {
-                spec.queryParams(queryParams);
-            }
-    
-            return spec.
-                    when().
-                        post(url).
-                    then().
-                        extract().
-                        response();
+            // POST
+            response = POST_CreateBoard.postCreateBoard("Nazwa tablicy 1", null);
+            boardId = response.jsonPath().getString("id");
+            // GET
+            response = GET_GetBoard.getGetBoard(boardId);
+            // DELETE
+            response = DELETE_DeleteBoard.deleteDeleteBoard(boardId);
         }
     }
     ```
-26. W katalogu `src/test` tworzymy katalog o nazwie `documentation`
-27. W katalogu `src/test/documentation` tworzymy katalog o nazwie `endpoints`
-28. W katalogu `src/test/documentation/endpoints` tworzymy katalog o nazwie `boards` (zgodnie ze strukturą dokumentacji API)
-29. W katalogu `src/test/documentation/endpoints/boards` tworzymy plik o nazwie `POST_CreateBoard.md`
-30. W przypadku słabego prowadzenia lub nawet braku głównej dokumentacji API w projekcie testerzy mogą w takich plikach
+36. W katalogu `src/test/java` tworzymy katalog o nazwie `expected_responses`
+37. W katalogu tym tworzymy pod-katalog zgodny z układem w dokumentacji API, w tym przypadku `boards`
+38. W katalogu tym tworzymy klasę z nazwą zgodną z endpointem, dla którego będziemy trzymać w niej oczekiwane respons'y,
+    w tym przypadku `POST_CreateBoardExpected`
+39. W klasie tej tworzymy zmienną typu String, w której umieszczamy nasz oczekiwany JSON pomiędzy takimi znakami `"""{json}"""`
+40. W katalogu `src/test/java/utils` tworzymy plik `UtilsResponse`
+41. W pliku `UtilsResponse` definiujemy:
+    - Ustawienia deserializacji:
+      - obiekt `objectMapper` z biblioteki `Jackson`
+      - ustawienia tego obiektu:
+        - żeby deserializacja wywalała się, gdy pojawią się jakieś nadmiarowe pola
+        - żeby deserializacja wywalała się, gdy brakuje jakichś oczekiwanych pól (wymaga @JsonCreator w DTO)
+        - żeby deserializacja wywalała się, gdy w prymitywnych parametrach wystąpi `null`:
+          - W Javie prymitywy (np. int, boolean, double) nie mogą przyjmować wartości `null`
+          - Gdy nie ma włączonego tego ustawienia, to `null` dla takiego `int` jest zamieniane na `0`
+          - Gdy chcemy, aby taki prymityw mógł być `null'em` należy zrobić tak:
+            - Zamiast: `int id;`
+            - Wpisać: `Integer id`
+            - Pozostałe klasy opakowujące: `Integer, Boolean, Double` itp.
+    - Metody deserializujące i walidujące obiekty:
+      - deserializacja i walidacja obiektu typu `Response`
+      - deserializacja i walidacja obiektu typu `String`
+      - metoda do samej deserializacji JSON (String)
+    - Metody deserializujące i walidujące listy obiektów:
+      - deserializacja i walidacja listy obiektów typu `Response`
+      - deserializacja i walidacja listy obiektów typu `String`
+      - metoda do samej deserializacji JSON, który jest listą obiektów (String)
+    - Metodę do walidacji obiektów DTO z biblioteki `Jakarta`
+42. W katalogu `src/test/java` tworzymy katalog o nazwie `dto`
+43. W katalogu `src/test/java/dto` tworzymy katalog zgodny z nazwą grupy endpointów w dokumentacji np. `boards`
+44. W katalogu `src/test/java/dto/boards` jeśli zwracane odpowiedzi z naszego CRUD'a różnią się ilością parametrów,
+    ale mają większość elementów wspólnych, to tworzymy plik, który będzie najpierw przechowywał te elementy wspólne
+    np. `BoardBaseDto`
+45. Wklejamy w `Czat GPT` nasz wcześniej skopiowany respons'e oraz dopisujemy, jakie są warunki dla pól, jeśli takie znamy
+    i prosimy go o przerobienie tego na DTO.  
+    Podajemy:
+    - informację, że chcemy to na DTO
+    - response
+    - warunki dla pól
+    - wszystkie pola mają być wymagane
+    - ma być wykrywany brak jakiegoś pola
+    - ma być wykrywane, jeśli pojawią się jakieś nadmiarowe pola
+46. Takie DTO składa się z:
+    - Adnotacji walidujących z biblioteki Jakarta
+      - `@NotNull`
+      - `@Pattern(regexp = "^[0-9a-fA-F]{24}$")`
+      - `@Size(min = 1, max = 16384, message = "'name' must be between {min} and {max} characters long")`
+    - Zmiennych/Parametrów
+    - Konstruktora, który jest opakowany w `@JsonCreator` służącego do sprawdzania, czy nie brakuje jakiegoś pola np.:
+      ```java
+          @JsonCreator
+          public BoardBaseDto(
+                  @JsonProperty(value = "id", required = true) String id,
+      ```
+    - Pusty konstruktor, który jest potrzebny do przypisywania wartości ręcznie np.  
+      `obiekt1.name = obiekt2.name;`
+47. Jeśli response ma w sobie inne klasy/obiekty to na nie też zakładamy osobne DTO.  
+    Najlepiej w jakimś wspólnym katalogu np. `board`
+48. Jeśli jakiś obiekt/klasa ma w sobie kolejny obiekt/klasę to wewnątrz tego zakładamy kolejny katalog np. `prefs`
+49. Mając bazowe DTO, robimy teraz DTO dla respons'ów konkretnych endpointów:
+    - `POST_CreateBoardDto`
+    - `GET_GetBoardDto`
+50. Response `GET` nie ma żadnych dodatkowych pól, więc po prostu dziedziczy po bazowym DTO, ALE musimy do konstruktora
+    kopiować wartości związane z `@JsonCreator`
+51. Response `POST` ma jedno dodatkowe pole `limits`, więc musimy je dopisać ORAZ do konstruktora skopiować wartości
+    związane z `@JsonCreator`
+🔴OPISAĆ TEST
+🔴OPISAĆ OPCJONALNĄ DOKUMENTACJĘ
+
+
+
+
+
+
+40. 🔴JsonUtils <dokończyć>
+41. W katalogu `src/test` tworzymy katalog o nazwie `documentation`
+42. W katalogu `src/test/documentation` tworzymy katalog o nazwie `endpoints`
+43. W katalogu `src/test/documentation/endpoints` tworzymy katalog o nazwie `boards` (zgodnie ze strukturą dokumentacji API)
+44. W katalogu `src/test/documentation/endpoints/boards` tworzymy plik o nazwie `POST_CreateBoard.md`
+45. W przypadku słabego prowadzenia lub nawet braku głównej dokumentacji API w projekcie testerzy mogą w takich plikach
     prowadzić własne "notatki" np.:
     - Opis działania
     - Uwagi i informacje
@@ -168,135 +261,6 @@
     - Obsługiwane parametry
     - Przykładowy payload
     - Przykładowy response
-31. W katalogu `src/test/java` tworzymy katalog o nazwie `payloads`  
-    **Wyjaśnienie:**  
-    Nie każdy endpoint będzie miał osobny plik na payload/parametry.  
-    W przypadku małej ilości parametrów dane te będą podawane jako argumenty na bieżąco w testach.
-32. W katalogu `src/test/java/payloads` tworzymy katalog o nazwie `boards`
-33. W katalogu `src/test/java/payloads/boards` tworzymy plik o nazwie `POST_CreateBoardPayload`
-34. W pliku `POST_CreateBoardPayload` piszemy:
-    - Zmienne/Parametry jakie posiada
-    - Metodę pomocniczą, która konwertuje nasze dane na queryParams
-    - Konstruktor dla Buildera
-    - Gettery
-    - Builder
-    - Settery do ustawiania zmiennych w Builderze
-    - Poniżej powycinane fragmenty kodu:
-    ```java
-    // Zmienne
-    private final String name;
-    
-    // Helper przerabiający zmienne na queryParams
-    public Map<String, Object> toQueryParams() {
-        Map<String, Object> params = new HashMap<>();
-    
-        if (name != null) params.put("name", name);
-        // CDN
-    
-        return params;
-    }
-    
-    // Konstruktor
-    private POST_CreateBoardPayload(Builder builder) {
-        this.name = builder.name;
-        // CDN
-    }
-    
-    // Gettery
-    public String getName() {
-        return name;
-    }
-    // CDN
-    
-    // Builder
-    public static class Builder {
-        // Jego zmienne
-        private String name;
-        // CDN
-    
-        // Settery
-        public Builder setName(String name) {
-            this.name = name;
-            return this;
-        }
-        // CDN
-    
-        // Build
-        public POST_CreateBoardPayload build() {
-            return new POST_CreateBoardPayload(this);
-        }
-    }
-    ```
-    - Przykład użycia
-    ```java
-    POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
-        .setName("Tablica API")
-        .setDesc("Testowa tablica")
-        .setDefaultLabels(false)
-        .setPrefs_background("blue")
-        .build();
-    
-    Map<String, Object> queryParams = payload.toQueryParams();
-    ```
-35. W katalogu z `endpoints` tworzymy plik `GET_GetBoard`:
-    ```java
-    package endpoints.boards;
-    
-    import base.TestBase;
-    import io.restassured.response.Response;
-    
-    import static io.restassured.RestAssured.given;
-    
-    public class GET_GetBoard extends TestBase {
-    
-        private static final String url = "/boards";
-    
-        public static Response getGetBoard(String id) {
-            return given().
-                        spec(requestSpecificationCommon).
-                    when().
-                        get(url + "/" + id).
-                    then().
-                        extract().
-                        response();
-        }
-    }
-    ```
-36. W katalogu z `endpoints` tworzymy plik `DELETE_DeleteBoard`:
-    ```java
-    package endpoints.boards;
-    
-    import base.TestBase;
-    import io.restassured.response.Response;
-    
-    import static io.restassured.RestAssured.given;
-    
-    public class DELETE_DeleteBoard extends TestBase {
-    
-        private static final String url = "/boards";
-    
-        public static Response deleteDeleteBoard(String id) {
-            return given().
-                        spec(requestSpecificationCommon).
-                    when().
-                        delete(url + "/" + id).
-                    then().
-                        extract().
-                        response();
-        }
-    }
-    ```
-37. Mając przygotowanego naszego pierwszego mini CRUD'a w katalogu `src/test/java` tworzymy katalog o nazwie `tests`
-38. W nim tworzymy katalog o nazwie sekcji/kontrolera z dokumentacji. W tym przypadku `boards`
-39. Następnie tworzymy plik `POST_CreateBoardTest`
-40. W pliku `POST_CreateBoardTest` piszemy nasz pierwszy test:
-   <🔴dokończyć>
-41. W katalogu `src/test/java` tworzymy katalog o nazwie `expected_responses`
-42. W katalogu tym tworzymy pod-katalog zgodny z układem w dokumentacji API, w tym przypadku `boards`
-43. W katalogu tym tworzymy klasę z nazwą zgodną z endpointem, dla którego będziemy trzymać w niej oczekiwane respons'y,
-    w tym przypadku `POST_CreateBoardExpected`
-44. W klasie tej tworzymy zmienną typu String, w której umieszczamy nasz oczekiwany JSON pomiędzy takimi znakami `"""{json}"""` 
-45. 🔴JsonUtils <dokończyć>
 
 ---
 
