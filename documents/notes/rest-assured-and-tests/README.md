@@ -239,8 +239,15 @@
 50. Response `GET` nie ma żadnych dodatkowych pól, więc po prostu dziedziczy po bazowym DTO, ALE musimy do konstruktora
     kopiować wartości związane z `@JsonCreator`
 51. Response `POST` ma jedno dodatkowe pole `limits`, więc musimy je dopisać ORAZ do konstruktora skopiować wartości
-    związane z `@JsonCreator`
-🔴OPISAĆ TEST
+    związane z `@JsonCreator`.  
+    Dodatkowo, jeśli przy porównywaniu responsów będziemy chcieli pomijać jakieś pola, to żeby uniknąć podawania ich
+    jako `String` (wtedy trzeba będzie ręcznie dokonywać jego aktualizacji w każdym miejscu występowania) warto je
+    w tym DTO zapisywać jako zmienne np. `public static final String FIELD_LIMITS = "limits";` dzięki czemu jak je tak
+    wywołamy `compareObjects(responsePostDto, responseGetDto, POST_CreateBoardDto.FIELD_LIMITS);` to jak coś się tu zmieni,
+    wtedy IDE dokona tej zmiany wszędzie.
+
+🔴OPISAĆ DTO UTILS  
+🔴OPISAĆ TEST  
 🔴OPISAĆ OPCJONALNĄ DOKUMENTACJĘ
 
 
