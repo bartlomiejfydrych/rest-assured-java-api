@@ -245,8 +245,23 @@
     w tym DTO zapisywać jako zmienne np. `public static final String FIELD_LIMITS = "limits";` dzięki czemu jak je tak
     wywołamy `compareObjects(responsePostDto, responseGetDto, POST_CreateBoardDto.FIELD_LIMITS);` to jak coś się tu zmieni,
     wtedy IDE dokona tej zmiany wszędzie.
+52. W `src/test/java` tworzymy katalog `utils_tests`  
+    Katalog ten będzie służył do zbierania metod pomocniczych dla konkretnych klas z testami.
+53. W `scr/test/java/utils_tests` tworzymy plik `POST_CreateBoardUtils`
+54. W pliku `POST_CreateBoardUtils` dodajemy takie metody jak:
+    - Metoda przygotowująca oczekiwany response POST
+      - Przerabia (tylko deserializacja, bez walidacji) nasz oczekiwany String z responsem na obiekt DTO
+      - Zrównuje różniące się zazwyczaj pola np.:
+        - `expectedResponsePostDto.name = boardName;`
+        - `expectedResponsePostDto.id = responsePostDto.id;`
+      - I tak przygotowany obiekt jest zwracany i gotowy do porównywania w asercji
+    - Metodę do weryfikacji zgodności naszego POST z requestem GET:
+      - Wysyłany jest request GET
+      - Sprawdzany jest status code
+      - Response jest deserializowane i walidowane na obiekt DTO
+      - Porównywany jest obiekt response POST z obiektem response GET oraz pomijane są pola, których nie chcemy porównywać
+55. Tekst
 
-🔴OPISAĆ DTO UTILS  
 🔴OPISAĆ TEST  
 🔴OPISAĆ OPCJONALNĄ DOKUMENTACJĘ
 
@@ -255,7 +270,7 @@
 
 
 
-40. 🔴JsonUtils <dokończyć>
+
 41. W katalogu `src/test` tworzymy katalog o nazwie `documentation`
 42. W katalogu `src/test/documentation` tworzymy katalog o nazwie `endpoints`
 43. W katalogu `src/test/documentation/endpoints` tworzymy katalog o nazwie `boards` (zgodnie ze strukturą dokumentacji API)
