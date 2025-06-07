@@ -16,8 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.*;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
-import static utils_tests.boards.POST_CreateBoardUtils.prepareExpectedResponsePost;
-import static utils_tests.boards.POST_CreateBoardUtils.validateGetAgainstPost;
+import static utils_tests.boards.POST_CreateBoardUtils.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class POST_CreateBoardTest extends TestBase {
@@ -97,7 +96,7 @@ public class POST_CreateBoardTest extends TestBase {
     @Test
     public void P1_shouldCreateBoardWithOnlyRequiredParameters() {
 
-        String boardName = faker.company().name() + " board" + " " + faker.number().randomNumber();
+        String boardName = generateRandomBoardName();
 
         // POST
         responsePost = postCreateBoard(boardName, null);

@@ -260,7 +260,22 @@
       - Sprawdzany jest status code
       - Response jest deserializowane i walidowane na obiekt DTO
       - Porównywany jest obiekt response POST z obiektem response GET oraz pomijane są pola, których nie chcemy porównywać
-55. Tekst
+    - Metodę generującą losową nazwę tablicy
+      - Dzięki `nanoTime()` jest mniejsza szansa na duplikację niż przy użyciu `number().randomNumber()`
+55. W katalogu `src/test/java/tests/boards` otwieramy nasz plik z pierwszymi testami o nazwie `POST_CreateBoardTest`
+56. Nad nazwą klasy piszemy `@TestInstance(TestInstance.Lifecycle.PER_METHOD)`  
+    Oznacza, że JUnit 5 będzie tworzył nową instancję klasy testowej dla każdego testu (metody testowej).
+57. Na całą klasę deklarujemy zmienne, jakich będziemy re-używać np. ID. W tym przypadku `private String boardId;`
+58. Piszemy metodę `tearDown()` z adnotacją `@AfterEach`
+    - Zawsze, po każdym teście będzie wywoływana i odpowiedzialna za sprzątanie/usuwanie zasobu (tablicy)
+    - Sprawdza, czy `boardId` jest różna `null`
+    - Jeśli tak, to wysyłany jest request DELETE pod to ID
+    - Sprawdzane jest, czy status code = 200
+59. Dodajemy pierwszy test o nazwie `P1_shouldCreateBoardWithOnlyRequiredParameters()` z adnotacją `@Test`
+    - Stwierdziłem, że fajnie będzie oznaczać jakoś testy np. w przypadku mierzenia pokrycia, wiedzieć który test co pokrywa
+    - `P1, P2, P3` itd. oznaczenie dla testów pozytywnych
+    - `N1, N2, N3` itd. oznaczenie dla testów negatywnych
+60. 
 
 🔴OPISAĆ TEST  
 🔴OPISAĆ OPCJONALNĄ DOKUMENTACJĘ

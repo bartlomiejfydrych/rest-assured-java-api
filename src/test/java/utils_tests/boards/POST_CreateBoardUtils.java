@@ -28,4 +28,8 @@ public class POST_CreateBoardUtils extends TestBase {
         GET_GetBoardDto responseGetDto = deserializeAndValidate(responseGet, GET_GetBoardDto.class);
         compareObjects(responsePostDto, responseGetDto, POST_CreateBoardDto.FIELD_LIMITS);
     }
+
+    public static String generateRandomBoardName() {
+        return faker.company().name() + " borad " + System.nanoTime(); // Before: faker.number().randomNumber();
+    }
 }
