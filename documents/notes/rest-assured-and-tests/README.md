@@ -275,16 +275,23 @@
     - Stwierdziłem, że fajnie będzie oznaczać jakoś testy np. w przypadku mierzenia pokrycia, wiedzieć który test co pokrywa
     - `P1, P2, P3` itd. oznaczenie dla testów pozytywnych
     - `N1, N2, N3` itd. oznaczenie dla testów negatywnych
-60. 
+60. W teście `P1_shouldCreateBoardWithOnlyRequiredParameters()` piszemy następujące rzeczy:
+    - Na samej górze deklarujemy zmienne np. losową nazwę tablicy
+    - Wysyłamy request POST wraz z parametrami/body i zapisujemy do zmiennej typu `response`
+    - Sprawdzamy `status code`
+    - Zapisujemy `ID` zasobu do zmiennej
+    - Deserializujemy i walidujemy ten response na obiekt DTO `POST_CreateBoardDto`
+    - Przygotowujemy oczekiwany response POST:
+      - Importujemy go jako String
+      - Deserializujemy do DTO `POST_CreateBoardDto`
+      - Dla pól, które zawsze się różnią przypisujemy tutaj te z response POST np. `expectedResponsePostDto.id = responsePostDto.id;`
+    - Porównujemy oba obiekty
+    - Wysyłamy request GET, który jako metoda pomocnicza sprawdza zgodność z responsem POST
+    - Metoda `tearDown()` z adnotacją `@AfterEach` automatycznie usuwa stworzony zasób wysyłając request DELETE
+61. Przygotowujemy sobie dokumentację testową dla danego requesta/ednpointa
+62. 
 
-🔴OPISAĆ TEST  
 🔴OPISAĆ OPCJONALNĄ DOKUMENTACJĘ
-
-
-
-
-
-
 
 41. W katalogu `src/test` tworzymy katalog o nazwie `documentation`
 42. W katalogu `src/test/documentation` tworzymy katalog o nazwie `endpoints`
