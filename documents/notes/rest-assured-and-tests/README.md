@@ -2,7 +2,26 @@
 
 # 📑Spis treści
 
+- [START – rozpoczęcie pisania testów (short)](#start_writing_tests_short)
 - [START – rozpoczęcie pisania testów](#start_writing_tests)
+  - [Dostępy](#start_wt_accesses)
+  - [config.properties](#start_wt_config_p)
+  - [.env](#start_wt_env)
+  - [Config](#start_wt_config)
+  - [BaseUrlBuilder](#start_wt_base_url)
+  - [RequestSpecConfig](#start_wt_request_spec)
+  - [TestBase](#start_wt_test_base)
+  - [UtilsCompare (compare objects)](#start_wt_utils_compare)
+  - [Endpoints](#start_wt_endpoints)
+  - [Payloads](#start_wt_payloads)
+  - [Endpoints – pozostałe](#start_wt_endpoints_others)
+  - [Test – mały](#start_wt_test_small)
+  - [Expected responses](#start_wt_expected_responses)
+  - [UtilsResponse (DTO)](#start_wt_utils_response)
+  - [DTO](#start_wt_dto)
+  - [Utils Tests](#start_wt_utils_tests)
+  - [Test – ostateczny](#start_wt_test_final)
+  - [Dokumentacja](#start_wt_documentation)
 - [RequestSpecification](#request_specification)
 - [RestAssured.filters()](#rest_assured_filters)
 - [RequestSpecBuilder](#request_spec_builder)
@@ -17,6 +36,10 @@
 ---
 
 # 📝Opis
+
+## 📄START – rozpoczęcie pisania testów (short) <a name="start_writing_tests_short"></a>
+
+1. 🔴DOKOŃCZYĆ
 
 ## 📄START – rozpoczęcie pisania testów <a name="start_writing_tests"></a>
 
@@ -289,21 +312,23 @@
     - Wysyłamy request GET, który jako metoda pomocnicza sprawdza zgodność z responsem POST
     - Metoda `tearDown()` z adnotacją `@AfterEach` automatycznie usuwa stworzony zasób wysyłając request DELETE
 61. Przygotowujemy sobie dokumentację testową dla danego requesta/ednpointa
-62. 
-
-🔴OPISAĆ OPCJONALNĄ DOKUMENTACJĘ
-
-41. W katalogu `src/test` tworzymy katalog o nazwie `documentation`
-42. W katalogu `src/test/documentation` tworzymy katalog o nazwie `endpoints`
-43. W katalogu `src/test/documentation/endpoints` tworzymy katalog o nazwie `boards` (zgodnie ze strukturą dokumentacji API)
-44. W katalogu `src/test/documentation/endpoints/boards` tworzymy plik o nazwie `POST_CreateBoard.md`
-45. W przypadku słabego prowadzenia lub nawet braku głównej dokumentacji API w projekcie testerzy mogą w takich plikach
-    prowadzić własne "notatki" np.:
+62. W katalogu `src/test` tworzymy katalog o nazwie `documentation`
+63. W katalogu `src/test/documentation` tworzymy katalog o nazwie `endpoints`
+64. W katalogu `src/test/documentation/endpoints` tworzymy katalog o nazwie `boards` (zgodnie ze strukturą dokumentacji API)
+65. W katalogu `src/test/documentation/endpoints/boards` tworzymy plik o nazwie `POST_CreateBoard.md`
+66. W przypadku słabego prowadzenia lub nawet braku głównej dokumentacji API w projekcie testerzy mogą w takich plikach
+    prowadzić własne notatki np.:
+    - Pokrycie testami:
+      - Wklejamy cały payload lub listę wszystkich możliwych parametrów, jakie możemy podać w body
+      - Pod każdym parametrem tworzymy sekcję na przypadki pozytywne i negatywne
+      - Rozpisujemy wszystkie możliwe przypadki, jakie możemy podać w ramach testów
+      - Przed każdym z nich wpisujemy oznaczenie testu, który pokrywa dany przypadek np. `[P1] Podanie tylko tego, wymaganego parametru`
+      - Dla GET'ów, na które mogą mieć wpływ różne kombinacje endpointów/danych wklejamy response
+      - I tu również pod każdym parametrem rozpisujemy przypadki testowe, czyli możliwe dane, jakie mogą/powinny wpadać
+    - Uwagi i ważne informacje
     - Opis działania
-    - Uwagi i informacje
-    - URL
-    - Obsługiwane parametry
-    - Przykładowy payload
+    - URL (endpoint)
+    - Przykładowy payload / Obsługiwane parametry
     - Przykładowy response
 
 ---
