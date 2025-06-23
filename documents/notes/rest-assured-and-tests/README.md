@@ -26,6 +26,8 @@
 - [RequestSpecBuilder](#request_spec_builder)
 - [RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()](#enable_log_fail)
 - [RecursiveComparisonConfiguration()](#assertj_recursive_comparison_configuration)
+- [UtilsCompare.java – opis kodu](#utils_compare_java)
+- [UtilsResponse.java – opis kodu](#utils_response_java)
 - [Struktura JSON – JsonSchema vs. DTO/POJO](#json_schema_dto_pojo)
 - [Porównywanie JSON'ów – wyzwania, podejścia, praktyki](#json_compare_intro)
 - [Porównywanie JSON'ów – ObjectMapper](#json_compare_object_mapper)
@@ -823,6 +825,270 @@ void shouldCompareUsersIgnoringId() {
 
 Dzięki `RecursiveComparisonConfiguration` możesz **uniknąć problemów z `equals()`**, dostosować sposób porównywania
 i **uniknąć niepotrzebnych failów** w testach. 🚀🔥
+
+---
+
+## 📄UtilsCompare.java – opis kodu <a name="utils_compare_java"></a>
+
+Poniżej znajduje się **szczegółowe omówienie** działania klasy `UtilsCompare` linia po linii:
+
+### `package utils;`
+
+```java
+package utils;
+```
+
+* Definiuje pakiet, w którym znajduje się ta klasa.
+* Oznacza, że klasa `UtilsCompare` należy do przestrzeni nazw `utils`, co ułatwia organizację kodu.
+
+### Importy
+
+```java
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
+```
+
+* **`Assertions`**: udostępnia statyczne metody do asercji, m.in. `.assertThat()`, używane przez AssertJ do porównań obiektów.
+* **`RecursiveComparisonConfiguration`**: służy do konfiguracji sposobu porównywania obiektów w sposób rekurencyjny
+(czyli porównywane są wszystkie pola i podpola).
+
+### Deklaracja klasy
+
+```java
+public class UtilsCompare {
+```
+
+* Definiuje publiczną klasę narzędziową (utility class) o nazwie `UtilsCompare`.
+* Można z niej korzystać z innych klas, jeśli są w tym samym projekcie lub mają dostęp do pakietu `utils`.
+
+### Metoda `compareObjects`
+
+```java
+public static void compareObjects(Object actualObject, Object expectedObject, String... fieldsToIgnore) {
+```
+
+* **`public`**: metoda dostępna z innych klas.
+* **`static`**: można ją wywołać bez tworzenia instancji `UtilsCompare`.
+* **`Object actualObject` / `expectedObject`**: dwa obiekty dowolnego typu, które chcesz porównać.
+* **`String... fieldsToIgnore`**: zmienna liczba argumentów — pola, które mają zostać pominięte w porównaniu.
+Jeśli nic nie podasz, `fieldsToIgnore.length == 0`.
+
+### Blok warunkowy: czy ignorować jakieś pola?
+
+```java
+if (fieldsToIgnore != null && fieldsToIgnore.length > 0) {
+```
+
+* Sprawdza, czy użytkownik przekazał jakiekolwiek pola do zignorowania.
+* Zabezpieczenie przed `NullPointerException` oraz niepotrzebnym tworzeniem konfiguracji.
+
+### Jeśli przekazano pola do pominięcia
+
+```java
+RecursiveComparisonConfiguration config = new RecursiveComparisonConfiguration();
+config.ignoreFields(fieldsToIgnore);
+```
+
+* Tworzy nową konfigurację porównywania rekurencyjnego.
+* **`ignoreFields(fieldsToIgnore)`**: dodaje pola, które mają być ignorowane podczas porównania (np. pola techniczne
+typu `id`, `createdAt`, `limits` itp.).
+
+```java
+Assertions.assertThat(actualObject)
+        .usingRecursiveComparison(config)
+        .isEqualTo(expectedObject);
+```
+
+* Porównuje obiekt `actualObject` z `expectedObject`, **ignorując wskazane pola**.
+* AssertJ porównuje wszystkie pola w sposób rekurencyjny (w tym zagnieżdżone obiekty).
+
+### Jeśli **nie przekazano** pól do zignorowania
+
+```java
+} else {
+    Assertions.assertThat(actualObject)
+            .usingRecursiveComparison()
+            .isEqualTo(expectedObject);
+}
+```
+
+* W przypadku braku przekazanych pól do pominięcia:
+
+    * Tworzy domyślną konfigurację (czyli: **porównuje wszystko**).
+    * Wykonuje rekurencyjne porównanie każdego pola, bez wyjątków.
+
+### Podsumowanie — co robi ta metoda?
+
+* Porównuje dwa obiekty dowolnego typu, pole po polu (rekurencyjnie).
+* Jeśli przekażesz nazwę pola (np. `"id"` lub `"limits"`), to je pominie.
+* Idealne do porównywania DTO, gdzie niektóre pola (np. generowane przez serwer) mogą się różnić.
+
+### Przykład użycia:
+
+```java
+UtilsCompare.compareObjects(actualDto, expectedDto, "id", "createdAt");
+```
+
+➡️ Porównuje wszystkie pola z wyjątkiem `"id"` i `"createdAt"`.
+
+---
+
+## 📄UtilsResponse.java – opis kodu <a name="utils_response_java"></a>
+
+Poniżej znajduje się **szczegółowe omówienie działania klasy `UtilsResponse` linia po linii**. Klasa ta służy jako
+narzędzie pomocnicze do deserializacji odpowiedzi REST (np. z biblioteki RestAssured) oraz do ich walidacji przy użyciu
+JSR 380 (Bean Validation API – `jakarta.validation`).
+
+### 📦 Pakiet i Importy
+
+```java
+package utils;
+```
+
+* Określa, że klasa należy do pakietu `utils`.
+
+```java
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.response.Response;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+
+import java.util.List;
+import java.util.Set;
+```
+
+* **`ObjectMapper`**: biblioteka Jackson do serializacji i deserializacji JSON.
+* **`DeserializationFeature`**: umożliwia konfigurację deserializacji.
+* **`TypeReference`**: pozwala na typy generyczne (np. `List<MyDto>`).
+* **`Response`**: obiekt odpowiedzi z RestAssured.
+* **`ConstraintViolation`**, **`Validation`**, **`Validator`**: służą do walidacji obiektów zgodnie z adnotacjami (np. `@NotNull`).
+* **`Set`**, **`List`**: kolekcje Java.
+
+### 🔧 Konfiguracja `ObjectMapper`
+
+```java
+private static final ObjectMapper objectMapper = new ObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
+        .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true)
+        .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true);
+```
+
+* Tworzy statyczny `ObjectMapper` używany do deserializacji.
+* **`FAIL_ON_UNKNOWN_PROPERTIES` = true**: rzuć wyjątek, jeśli JSON zawiera pola, których nie ma w DTO.
+* **`FAIL_ON_MISSING_CREATOR_PROPERTIES` = true**: rzuć wyjątek, jeśli DTO z `@JsonCreator` ma nieprzypisane pola.
+* **`FAIL_ON_NULL_FOR_PRIMITIVES` = true**: rzuć wyjątek, jeśli pole typu prymitywnego (`int`, `boolean`, itd.) ma wartość `null`.
+
+### 🔄 Deserializacja obiektów (JSON → DTO)
+
+```java
+public static <T> T deserializeAndValidate(Response response, Class<T> clazz) {
+    return deserializeAndValidate(response.asString(), clazz);
+}
+```
+
+* Wersja przyjmująca obiekt `Response`.
+* Wyciąga JSON jako `String` i przekazuje dalej.
+
+```java
+public static <T> T deserializeAndValidate(String json, Class<T> clazz) {
+    T dto = deserializeJson(json, clazz);
+    validateDto(dto);
+    return dto;
+}
+```
+
+* Deserializuje JSON do obiektu typu `T`.
+* Waliduje wynikowy obiekt DTO.
+* Zwraca poprawny obiekt.
+
+```java
+public static <T> T deserializeJson(String json, Class<T> clazz) {
+    try {
+        return objectMapper.readValue(json, clazz);
+    } catch (Exception e) {
+        throw new RuntimeException("Error deserializing JSON to " + clazz.getSimpleName() + ": " + e.getMessage(), e);
+    }
+}
+```
+
+* Obsługuje deserializację z `String` do konkretnej klasy (`clazz`).
+* W przypadku błędu deserializacji, rzuca `RuntimeException` z komunikatem.
+
+### 🔁 Deserializacja list (JSON → List<DTO>)
+
+```java
+public static <T> List<T> deserializeAndValidateList(Response response, TypeReference<List<T>> typeRef) {
+    return deserializeAndValidateList(response.asString(), typeRef);
+}
+```
+
+* Przyjmuje `Response` zawierający JSON z listą obiektów.
+* Przekazuje dalej jako `String`.
+
+```java
+public static <T> List<T> deserializeAndValidateList(String json, TypeReference<List<T>> typeRef) {
+    List<T> list = deserializeJson(json, typeRef);
+    for (T dto : list) {
+        validateDto(dto);
+    }
+    return list;
+}
+```
+
+* Deserializuje JSON do listy obiektów.
+* Każdy element listy przechodzi walidację.
+* Jeśli jakikolwiek DTO jest niepoprawny, zostanie rzucony wyjątek.
+
+```java
+public static <T> T deserializeJson(String json, TypeReference<T> typeRef) {
+    try {
+        return objectMapper.readValue(json, typeRef);
+    } catch (Exception e) {
+        throw new RuntimeException("Error deserializing JSON to generic type: " + e.getMessage(), e);
+    }
+}
+```
+
+* Umożliwia deserializację generyczną np. `List<MyDto>`.
+* Obsługuje typy złożone (np. `Map<String, List<MyDto>>`).
+
+### ✅ Walidacja DTO
+
+```java
+public static <T> void validateDto(T dto) {
+    try (var factory = Validation.buildDefaultValidatorFactory()) {
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<T>> violations = validator.validate(dto);
+
+        if (!violations.isEmpty()) {
+            StringBuilder message = new StringBuilder("Validation failed:\n");
+            for (ConstraintViolation<T> v : violations) {
+                message.append(" - ").append(v.getPropertyPath()).append(": ").append(v.getMessage()).append("\n");
+            }
+            throw new RuntimeException(message.toString());
+        }
+    }
+}
+```
+
+* Tworzy instancję walidatora (implementacja JSR 380 / Bean Validation).
+* **`validator.validate(dto)`**: sprawdza, czy DTO spełnia wszystkie adnotacje walidacyjne (`@NotNull`, `@Size`, itd.).
+* Jeśli są błędy:
+
+    * Tworzy komunikat zbiorczy zawierający listę pól i błędów.
+    * Rzuca `RuntimeException` z czytelnym opisem problemów.
+
+### 🧠 Podsumowanie
+
+#### Co robi `UtilsResponse`?
+
+* ✅ Deserializuje odpowiedzi HTTP z JSON do obiektów i list DTO.
+* ✅ Waliduje je za pomocą adnotacji (np. `@NotNull`).
+* ✅ Wyrzuca szczegółowy błąd, jeśli JSON jest niepoprawny lub obiekt nie przechodzi walidacji.
+* ✅ Obsługuje zarówno pojedyncze obiekty, jak i listy.
 
 ---
 
