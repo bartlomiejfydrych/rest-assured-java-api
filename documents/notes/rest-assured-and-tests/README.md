@@ -2,7 +2,6 @@
 
 # 📑Spis treści
 
-- [START – rozpoczęcie pisania testów (short)](#start_writing_tests_short)
 - [START – rozpoczęcie pisania testów](#start_writing_tests)
   - [Dostępy](#start_wt_accesses)
   - [config.properties](#start_wt_config_p)
@@ -37,15 +36,16 @@
 
 # 📝Opis
 
-## 📄START – rozpoczęcie pisania testów (short) <a name="start_writing_tests_short"></a>
-
-1. 🔴DOKOŃCZYĆ
-
 ## 📄START – rozpoczęcie pisania testów <a name="start_writing_tests"></a>
+
+### Dostępy <a name="start_wt_accesses"></a>
 
 1. Zakładamy `konta` i inne `dostępy`
     - W przypadku tego projektu zakładamy `konto` oraz zdobywamy `API key` oraz `token` na stronie **Trello**
     - Szczegóły w `README` katalogu `📂trello-configuration`
+
+### config.properties <a name="start_wt_config_p"></a>
+
 2. W katalogu `src/main/resources` tworzymy katalog `configs`, a w nim plik o nazwie `config.properties`  
    Wszelkie ustawienia projektu warto trzymać i odczytywać z osobnego pliku, aby nie musieć nic zmieniać w samym kodzie.  
    Zapisujemy w nim takie rzeczy jak:
@@ -56,6 +56,9 @@
       - domena
       - TLD
       - Numer
+
+### .env <a name="start_wt_env"></a>
+
 3. Sprawdzamy, czy mamy w `pom.xml` dodane dependecy o nazwie `Dotenv Java`
 4. Otwieramy plik `.gitignore` i dopisujemy w nim: `environment/.env`
 5. W głównym katalogu projektu tworzymy katalog o nazwie `environment`
@@ -69,6 +72,9 @@
     - Sekcję na klucz API oraz token:
       - api key
       - token
+
+### Config <a name="start_wt_config"></a>
+
 8. W katalogu `src/main/java` tworzymy katalog o nazwie `configuration`
 9. W katalogu `configuration` tworzymy plik java class o nazwie `Config.java`
 10. W pliku `Config.java` definiujemy następujące rzeczy:
@@ -93,14 +99,23 @@
       - czy zawsze wyświetlać logi
       - api key
       - token
+
+### BaseUrlBuilder <a name="start_wt_base_url"></a>
+
 11. W katalogu `src/main/java/configuration` tworzymy plik `BaseUrlBuilder`
 12. W pliku `BaseUrlBuilder` piszemy budowanie naszego URL ze zmiennych konfiguracyjnych projektu
+
+### RequestSpecConfig <a name="start_wt_request_spec"></a>
+
 13. W katalogu `src/test/java` tworzymy katalog package o nazwie `configuration`
 14. W katalogu `src/test/java/configuration` tworzymy plik `RequestSpecConfig`  
     Dlaczego tutaj, a nie w `main`?  
     Ponieważ `REST Assured` jest używane tylko do testów i jego specyfikacja tak zaleca.  
     Żeby obejść to ograniczenie można też w `pom.xml` usunąć wiersz z `<scope>test</scope>`.
 15. W pliku `RequestSpecConfig` piszemy naszą wspólną konfigurację dla wszystkich requestów oraz metodę ją zwracającą
+
+### TestBase <a name="start_wt_test_base"></a>
+
 16. W katalogu `src/test/java` tworzymy katalog o nazwie `base`
 17. W katalogu `src/test/java/base` tworzymy plik o nazwie `TestBase`
 18. W pliku `TestBase` tworzymy wstępną konfigurację:
@@ -116,6 +131,9 @@
       - czy mają być wyświetlane tylko, jeśli test się wywali
       - pobieranie konfiguracji requestów i przypisywanie jej do naszej zmiennej  
         (później klasy z endpointami będą dziedziczyły tą zmienną po klasie `TestBase`)
+
+### UtilsCompare (compare objects) <a name="start_wt_utils_compare"></a>
+
 19. W katalogu `src/test/java` tworzymy katalog o nazwie `utils`  
     Dlaczego w test? Ponieważ `AssertJ` ma ustawiony <scope> na ten katalog w `pom.xml`.  
     Można by go usunąć, ale jak tak zalecają to lepiej nie ruszać.
@@ -123,6 +141,9 @@
 21. W pliku `UtilsCompare` tworzymy metodę, która bazując na dependency `AssertJ` będzie:
     - porównywać obiekty
     - a jeśli podamy jako `String` parametry np. `"id"` to będą one pomijane przy porównywaniu
+
+### Endpoints <a name="start_wt_endpoints"></a>
+
 22. W katalogu `src/test/java` tworzymy katalog o nazwie `endpoints`
 23. W katalogu `src/test/java/endpoints` tworzymy katalog o nazwie `boards` (na wzór dokumentacji)  
     **Wyjaśnienie:**  
@@ -146,6 +167,9 @@
     - Deklarujemy zmienną `url`, która będzie zawierała nasz endpoint np. `/boards` 
     - Tworzymy metodę lub metody wywołujące ten request i używające jako argumentów podawanych przez nas parametrów, lub
       payloadów
+
+### Payloads <a name="start_wt_payloads"></a>
+
 26. W katalogu `src/test/java` tworzymy katalog o nazwie `payloads`  
     **Wyjaśnienie:**  
     - Nie każdy endpoint będzie miał osobny plik na payload/parametry.  
@@ -170,10 +194,16 @@
     
       Map<String, Object> queryParams = payload.toQueryParams();
       ```
+
+### Endpoints – pozostałe <a name="start_wt_endpoints_others"></a>
+
 30. W katalogu z `endpoints` tworzymy plik `GET_GetBoard`  
     Aby sprawdzać, czy dane dodawane przez POST rzeczywiście są prawidłowe
 31. W katalogu z `endpoints` tworzymy plik `DELETE_DeleteBoard`  
     Aby pod koniec testu usuwać zasób dodawany przez POST
+
+### Test – mały <a name="start_wt_test_small"></a>
+
 32. Mając przygotowanego naszego pierwszego mini CRUD'a w katalogu `src/test/java` tworzymy katalog o nazwie `tests`
 33. W nim tworzymy katalog o nazwie sekcji/kontrolera z dokumentacji. W tym przypadku `boards`
 34. Następnie tworzymy plik `POST_CreateBoardTest`
@@ -197,11 +227,17 @@
         }
     }
     ```
+
+### Expected responses <a name="start_wt_expected_responses"></a>
+
 36. W katalogu `src/test/java` tworzymy katalog o nazwie `expected_responses`
 37. W katalogu tym tworzymy pod-katalog zgodny z układem w dokumentacji API, w tym przypadku `boards`
 38. W katalogu tym tworzymy klasę z nazwą zgodną z endpointem, dla którego będziemy trzymać w niej oczekiwane respons'y,
     w tym przypadku `POST_CreateBoardExpected`
 39. W klasie tej tworzymy zmienną typu String, w której umieszczamy nasz oczekiwany JSON pomiędzy takimi znakami `"""{json}"""`
+
+### UtilsResponse (DTO) <a name="start_wt_utils_response"></a>
+
 40. W katalogu `src/test/java/utils` tworzymy plik `UtilsResponse`
 41. W pliku `UtilsResponse` definiujemy:
     - Ustawienia deserializacji:
@@ -225,6 +261,9 @@
       - deserializacja i walidacja listy obiektów typu `String`
       - metoda do samej deserializacji JSON, który jest listą obiektów (String)
     - Metodę do walidacji obiektów DTO z biblioteki `Jakarta`
+
+### DTO <a name="start_wt_dto"></a>
+
 42. W katalogu `src/test/java` tworzymy katalog o nazwie `dto`
 43. W katalogu `src/test/java/dto` tworzymy katalog zgodny z nazwą grupy endpointów w dokumentacji np. `boards`
 44. W katalogu `src/test/java/dto/boards` jeśli zwracane odpowiedzi z naszego CRUD'a różnią się ilością parametrów,
@@ -268,6 +307,9 @@
     w tym DTO zapisywać jako zmienne np. `public static final String FIELD_LIMITS = "limits";` dzięki czemu jak je tak
     wywołamy `compareObjects(responsePostDto, responseGetDto, POST_CreateBoardDto.FIELD_LIMITS);` to jak coś się tu zmieni,
     wtedy IDE dokona tej zmiany wszędzie.
+
+### Utils Tests <a name="start_wt_utils_tests"></a>
+
 52. W `src/test/java` tworzymy katalog `utils_tests`  
     Katalog ten będzie służył do zbierania metod pomocniczych dla konkretnych klas z testami.
 53. W `scr/test/java/utils_tests` tworzymy plik `POST_CreateBoardUtils`
@@ -285,6 +327,9 @@
       - Porównywany jest obiekt response POST z obiektem response GET oraz pomijane są pola, których nie chcemy porównywać
     - Metodę generującą losową nazwę tablicy
       - Dzięki `nanoTime()` jest mniejsza szansa na duplikację niż przy użyciu `number().randomNumber()`
+
+### Test – ostateczny <a name="start_wt_test_final"></a>
+
 55. W katalogu `src/test/java/tests/boards` otwieramy nasz plik z pierwszymi testami o nazwie `POST_CreateBoardTest`
 56. Nad nazwą klasy piszemy `@TestInstance(TestInstance.Lifecycle.PER_METHOD)`  
     Oznacza, że JUnit 5 będzie tworzył nową instancję klasy testowej dla każdego testu (metody testowej).
@@ -311,6 +356,9 @@
     - Porównujemy oba obiekty
     - Wysyłamy request GET, który jako metoda pomocnicza sprawdza zgodność z responsem POST
     - Metoda `tearDown()` z adnotacją `@AfterEach` automatycznie usuwa stworzony zasób wysyłając request DELETE
+
+### Dokumentacja <a name="start_wt_documentation"></a>
+
 61. Przygotowujemy sobie dokumentację testową dla danego requesta/ednpointa
 62. W katalogu `src/test` tworzymy katalog o nazwie `documentation`
 63. W katalogu `src/test/documentation` tworzymy katalog o nazwie `endpoints`
