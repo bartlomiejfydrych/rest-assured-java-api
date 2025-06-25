@@ -368,6 +368,10 @@
 65. W katalogu `src/test/documentation/endpoints/boards` tworzymy plik o nazwie `POST_CreateBoard.md`
 66. W przypadku słabego prowadzenia lub nawet braku głównej dokumentacji API w projekcie testerzy mogą w takich plikach
     prowadzić własne notatki np.:
+    - Metoda – nazwa endpointu
+    - Endpoint (URL)
+    - Opis
+    - Ważne notatki i uwagi
     - Pokrycie testami:
       - Wklejamy cały payload lub listę wszystkich możliwych parametrów, jakie możemy podać w body
       - Pod każdym parametrem tworzymy sekcję na przypadki pozytywne i negatywne
@@ -375,11 +379,8 @@
       - Przed każdym z nich wpisujemy oznaczenie testu, który pokrywa dany przypadek np. `[P1] Podanie tylko tego, wymaganego parametru`
       - Dla GET'ów, na które mogą mieć wpływ różne kombinacje endpointów/danych wklejamy response
       - I tu również pod każdym parametrem rozpisujemy przypadki testowe, czyli możliwe dane, jakie mogą/powinny wpadać
-    - Uwagi i ważne informacje
-    - Opis działania
-    - URL (endpoint)
-    - Przykładowy payload / Obsługiwane parametry
-    - Przykładowy response
+    - Query params / Payload
+    - Response
 
 ---
 
