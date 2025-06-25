@@ -1,20 +1,30 @@
 # 🟣POST – Create a Board
 
+---
+
 ## 🌐Endpoint
 
 /boards
+
+---
 
 ## 📄Description
 
 Create a new board.
 
+---
+
 ## 📌Important notes
 
 None.
 
+---
+
 ## ✅Test coverage
 
 SOON
+
+---
 
 ## 📦Query parameters / Payload
 
@@ -122,6 +132,8 @@ Determines the type of card aging that should take place on the board if card ag
 
 Default: `regular`  
 Valid values: `pirate`, `regular`
+
+---
 
 ## 📩Response
 
