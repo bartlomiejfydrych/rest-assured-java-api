@@ -1,25 +1,34 @@
 # 🟣POST – {endpoint name}
 
----
+# 📑Contents
 
-## 🌐Endpoint
-
----
-
-## 📄Description
-
----
-
-## 📌Important notes
+- [🌐Endpoint](#endpoint)
+- [📄Description](#description)
+- [📌Important notes](#important_notes)
+- [☑Test coverage](#test_coverage)
+- [📦Query parameters / Payload](#query_parameters_payload)
+- [📩Response](#response)
 
 ---
 
-## ✅Test coverage
+## 🌐Endpoint <a name="endpoint"></a>
 
 ---
 
-## 📦Query parameters / Payload
+## 📄Description <a name="description"></a>
 
 ---
 
-## 📩Response
+## 📌Important notes <a name="important_notes"></a>
+
+---
+
+## ☑Test coverage <a name="test_coverage"></a>
+
+---
+
+## 📦Query parameters / Payload <a name="query_parameters_payload"></a>
+
+---
+
+## 📩Response <a name="response"></a>

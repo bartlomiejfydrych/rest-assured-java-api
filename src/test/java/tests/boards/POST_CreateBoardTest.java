@@ -96,6 +96,7 @@ public class POST_CreateBoardTest extends TestBase {
     @Test
     public void P1_shouldCreateBoardWithOnlyRequiredParameters() {
 
+        // TODO: Zmienić na znaki specjalne, liczby, spacje, a do pozostałych testów używać metody
         String boardName = generateRandomBoardName();
 
         // POST

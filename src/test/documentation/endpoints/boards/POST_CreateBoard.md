@@ -1,32 +1,167 @@
 # 🟣POST – Create a Board
 
+# 📑Contents
+
+- [🌐Endpoint](#endpoint)
+- [📄Description](#description)
+- [📌Important notes](#important_notes)
+- [☑Test coverage](#test_coverage)
+- [📦Query parameters / Payload](#query_parameters_payload)
+- [📩Response](#response)
+
 ---
 
-## 🌐Endpoint
+## 🌐Endpoint <a name="endpoint"></a>
 
 /boards
 
 ---
 
-## 📄Description
+## 📄Description <a name="description"></a>
 
 Create a new board.
 
 ---
 
-## 📌Important notes
+## 📌Important notes <a name="important_notes"></a>
 
 None.
 
 ---
 
-## ✅Test coverage
+## ☑Test coverage <a name="test_coverage"></a>
 
-SOON
+- 💠name `string`
+  - ✅Positive:
+    - [P1] Special characters and numbers
+    - [P] 1 character
+    - [P] 16384 characters
+  - ❌Negative:
+    - [N] None (0 characters)
+    - [N] 16385 characters
+- 💠defaultLabels `boolean`
+  - ✅Positive:
+    - [P] None (will there be a default value of `true`)
+    - [P] true
+    - [P] false
+    - [P] null
+- 💠defaultLists `boolean`
+  - ✅Positive:
+    - [P] None (will there be a default value of `true`)
+    - [P] true
+    - [P] false
+    - [P] null
+    - [P] Is it ignored when `idBoardSource` is given?
+- 💠desc `string`
+  - ✅Positive:
+    - [P] Special characters and numbers
+    - [P] None
+    - [P] 16384 characters
+  - ❌Negative:
+    - [N] 16385 characters
+- 💠idOrganization `TrelloID` | `^[0-9a-fA-F]{24}$`
+  - ✅Positive:
+    - [P] None
+    - [P] Valid
+  - ❌Negative:
+    - [N] Non-existent
+    - [N] Incompatible with `^[0-9a-fA-F]{24}$`
+- 💠idBoardSource `TrelloID` | `^[0-9a-fA-F]{24}$`
+  - ✅Positive:
+    - [P] None
+    - [P] Correct
+  - ❌Negative:
+    - [N] Non-existent
+    - [N] Incompatible with `^[0-9a-fA-F]{24}$`
+- 💠keepFromSource `string`
+  - ✅Positive:
+    - [P] None (will there be a default value of `none`)
+    - [P] none
+    - [P] cards
+  - ❌Negative:
+    - [N] Other string
+- 💠powerUps `string`
+  - ✅Positive:
+    - [P] None
+    - [P] all
+    - [P] calendar
+    - [P] cardAging
+    - [P] recap
+    - [P] voting
+  - ❌Negative:
+    - [N] Other string
+- 💠prefs_permissionLevel `string`
+  - ✅Positive:
+    - [P] None (will there be a default value of `private`)
+    - [P] private
+    - [P] org
+    - [P] public
+  - ❌Negative:
+    - [N] Other string
+- 💠prefs_voting `string`
+  - ✅Positive:
+    - [P] None (will there be a default value of `disabled`)
+    - [P] disabled
+    - [P] members
+    - [P] observers
+    - [P] org
+    - [P] public
+  - ❌Negative:
+    - [N] Other string
+- 💠prefs_comments `string`
+  - ✅Positive:
+    - [P] None (will there be a default value of `members`)
+    - [P] disabled
+    - [P] members
+    - [P] observers
+    - [P] org
+    - [P] public
+  - ❌Negative:
+    - [N] Other string
+- 💠prefs_invitations `string`
+  - ✅Positive:
+    - [P] None (will there be a default value `member`)
+    - [P] members
+    - [P] admins
+  - ❌Negative:
+    - [N] Other string
+- 💠prefs_selfJoin `boolean`
+  - ✅Positive:
+    - [P] None (will there be a default value `true`)
+    - [P] true
+    - [P] false
+    - [P] null
+- 💠prefs_cardCovers `boolean`
+  - ✅Positive:
+    - [P] None (will there be a default value `true`)
+    - [P] true
+    - [P] false
+    - [P] null
+- 💠prefs_background `string`
+  - ✅Positive:
+    - [P] None (will there be a default value of `blue`)
+    - [P] blue
+    - [P] orange
+    - [P] green
+    - [P] red
+    - [P] purple
+    - [P] pink
+    - [P] lime
+    - [P] sky
+    - [P] grey
+  - ❌Negative:
+    - [N] Other string
+- 💠prefs_cardAging `string`
+  - ✅Positive:
+    - [P] None (will there be a default value of `regular`)
+    - [P] regular
+    - [P] pirate
+  - ❌Negative:
+    - [N] Other string
 
 ---
 
-## 📦Query parameters / Payload
+## 📦Query parameters / Payload <a name="query_parameters_payload"></a>
 
 ### 💠name `string` 🔴REQUIRED🔴
 
@@ -135,7 +270,7 @@ Valid values: `pirate`, `regular`
 
 ---
 
-## 📩Response
+## 📩Response <a name="response"></a>
 
 ```json
 {

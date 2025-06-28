@@ -21,6 +21,7 @@
   - [Utils Tests](#start_wt_utils_tests)
   - [Test – ostateczny](#start_wt_test_final)
   - [Dokumentacja](#start_wt_documentation)
+- [Boolean – testy](#boolean_tests)
 - [RequestSpecification](#request_specification)
 - [RestAssured.filters()](#rest_assured_filters)
 - [RequestSpecBuilder](#request_spec_builder)
@@ -381,6 +382,27 @@
       - I tu również pod każdym parametrem rozpisujemy przypadki testowe, czyli możliwe dane, jakie mogą/powinny wpadać
     - Query params / Payload
     - Response
+
+---
+
+## 📄Boolean – testy <a name="boolean_tests"></a>
+
+Jeżeli pole nie jest związane z czymś wrażliwym lub Security, to sprawdzamy wartości:
+- true
+- false
+- null
+- brak
+
+Jeżeli pole jest związane z czymś wrażliwym lub Security, to sprawdzamy wartości:
+- true
+- false
+- null
+- brak
+- 1
+- ""
+- "tekst"
+- []
+- {}
 
 ---
 
