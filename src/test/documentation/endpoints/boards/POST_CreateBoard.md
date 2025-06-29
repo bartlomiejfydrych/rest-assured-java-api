@@ -38,16 +38,17 @@ None.
     - [P] 16384 characters
   - ❌Negative:
     - [N] None (0 characters)
+    - [N] null
     - [N] 16385 characters
 - 💠defaultLabels `boolean`
   - ✅Positive:
-    - [P] None (will there be a default value of `true`)
+    - [P1] None (will there be a default value of `true`) -> Not in response at all
     - [P] true
     - [P] false
     - [P] null
 - 💠defaultLists `boolean`
   - ✅Positive:
-    - [P] None (will there be a default value of `true`)
+    - [P1] None (will there be a default value of `true`) -> Not in response at all
     - [P] true
     - [P] false
     - [P] null
@@ -55,34 +56,39 @@ None.
 - 💠desc `string`
   - ✅Positive:
     - [P] Special characters and numbers
-    - [P] None
+    - [P1] None (will there be a default value of `""`)
+    - [P] null
     - [P] 16384 characters
   - ❌Negative:
     - [N] 16385 characters
 - 💠idOrganization `TrelloID` | `^[0-9a-fA-F]{24}$`
   - ✅Positive:
-    - [P] None
+    - [P1] None -> Default ID
+    - [P] null
     - [P] Valid
   - ❌Negative:
     - [N] Non-existent
     - [N] Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠idBoardSource `TrelloID` | `^[0-9a-fA-F]{24}$`
   - ✅Positive:
-    - [P] None
+    - [P1] None -> Not in response at all
+    - [P] null
     - [P] Correct
   - ❌Negative:
     - [N] Non-existent
     - [N] Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠keepFromSource `string`
   - ✅Positive:
-    - [P] None (will there be a default value of `none`)
+    - [P1] None (will there be a default value of `none`) -> Not in response at all
+    - [P] null
     - [P] none
     - [P] cards
   - ❌Negative:
     - [N] Other string
 - 💠powerUps `string`
   - ✅Positive:
-    - [P] None
+    - [P1] None -> Not in response at all
+    - [P] null
     - [P] all
     - [P] calendar
     - [P] cardAging
@@ -92,7 +98,8 @@ None.
     - [N] Other string
 - 💠prefs_permissionLevel `string`
   - ✅Positive:
-    - [P] None (will there be a default value of `private`)
+    - [P1] None (will there be a default value of `private`)
+    - [P] null
     - [P] private
     - [P] org
     - [P] public
@@ -100,7 +107,8 @@ None.
     - [N] Other string
 - 💠prefs_voting `string`
   - ✅Positive:
-    - [P] None (will there be a default value of `disabled`)
+    - [P1] None (will there be a default value of `disabled`)
+    - [P] null
     - [P] disabled
     - [P] members
     - [P] observers
@@ -110,7 +118,8 @@ None.
     - [N] Other string
 - 💠prefs_comments `string`
   - ✅Positive:
-    - [P] None (will there be a default value of `members`)
+    - [P1] None (will there be a default value of `members`)
+    - [P] null
     - [P] disabled
     - [P] members
     - [P] observers
@@ -120,26 +129,28 @@ None.
     - [N] Other string
 - 💠prefs_invitations `string`
   - ✅Positive:
-    - [P] None (will there be a default value `member`)
+    - [P1] None (will there be a default value `members`)
+    - [P] null
     - [P] members
     - [P] admins
   - ❌Negative:
     - [N] Other string
 - 💠prefs_selfJoin `boolean`
   - ✅Positive:
-    - [P] None (will there be a default value `true`)
+    - [P1] None (will there be a default value `true`)
     - [P] true
     - [P] false
     - [P] null
 - 💠prefs_cardCovers `boolean`
   - ✅Positive:
-    - [P] None (will there be a default value `true`)
+    - [P1] None (will there be a default value `true`)
     - [P] true
     - [P] false
     - [P] null
 - 💠prefs_background `string`
   - ✅Positive:
-    - [P] None (will there be a default value of `blue`)
+    - [P1] None (will there be a default value of `blue`) -> Not in "prefs"
+    - [P] null
     - [P] blue
     - [P] orange
     - [P] green
@@ -153,11 +164,15 @@ None.
     - [N] Other string
 - 💠prefs_cardAging `string`
   - ✅Positive:
-    - [P] None (will there be a default value of `regular`)
+    - [P1] None (will there be a default value of `regular`)
+    - [P] null
     - [P] regular
     - [P] pirate
   - ❌Negative:
     - [N] Other string
+- 💠Others:
+  - ✅Positive:
+    - [P] Providing all or most parameters at once
 
 ---
 
