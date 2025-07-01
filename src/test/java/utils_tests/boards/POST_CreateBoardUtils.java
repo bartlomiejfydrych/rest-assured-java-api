@@ -32,4 +32,8 @@ public class POST_CreateBoardUtils extends TestBase {
     public static String generateRandomBoardName() {
         return faker.company().name() + " borad " + System.nanoTime(); // Before: faker.number().randomNumber();
     }
+
+    public static String generateRandomDesc() {
+        return faker.lorem().characters(1, 200, true, true);
+    }
 }

@@ -34,46 +34,46 @@ None.
 - 💠name `string`
   - ✅Positive:
     - [P1] Special characters and numbers
-    - [P] 1 character
-    - [P] 16384 characters
+    - [P2] 1 character
+    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - [N] None (0 characters)
     - [N] null
-    - [N] 16385 characters
+    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠defaultLabels `boolean`
   - ✅Positive:
     - [P1] None (will there be a default value of `true`) -> Not in response at all
-    - [P] true
-    - [P] false
+    - [P2] true
+    - [P3] false
     - [P] null
 - 💠defaultLists `boolean`
   - ✅Positive:
     - [P1] None (will there be a default value of `true`) -> Not in response at all
-    - [P] true
-    - [P] false
+    - [P2] true
+    - [P3] false
     - [P] null
     - [P] Is it ignored when `idBoardSource` is given?
 - 💠desc `string`
   - ✅Positive:
-    - [P] Special characters and numbers
+    - [P2] Special characters and numbers
     - [P1] None (will there be a default value of `""`)
     - [P] null
-    - [P] 16384 characters
+    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - [N] 16385 characters
+    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠idOrganization `TrelloID` | `^[0-9a-fA-F]{24}$`
   - ✅Positive:
     - [P1] None -> Default ID
-    - [P] null
-    - [P] Valid
+    - [P3] null
+    - [P2] Valid
   - ❌Negative:
     - [N] Non-existent
     - [N] Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠idBoardSource `TrelloID` | `^[0-9a-fA-F]{24}$`
   - ✅Positive:
     - [P1] None -> Not in response at all
-    - [P] null
-    - [P] Correct
+    - [P3] null
+    - [⏭] Correct
   - ❌Negative:
     - [N] Non-existent
     - [N] Incompatible with `^[0-9a-fA-F]{24}$`
@@ -81,16 +81,16 @@ None.
   - ✅Positive:
     - [P1] None (will there be a default value of `none`) -> Not in response at all
     - [P] null
-    - [P] none
-    - [P] cards
+    - [P2] none
+    - [P3] cards
   - ❌Negative:
     - [N] Other string
 - 💠powerUps `string`
   - ✅Positive:
     - [P1] None -> Not in response at all
     - [P] null
-    - [P] all
-    - [P] calendar
+    - [P2] all
+    - [P3] calendar
     - [P] cardAging
     - [P] recap
     - [P] voting
@@ -100,8 +100,8 @@ None.
   - ✅Positive:
     - [P1] None (will there be a default value of `private`)
     - [P] null
-    - [P] private
-    - [P] org
+    - [P2] private
+    - [P3] org
     - [P] public
   - ❌Negative:
     - [N] Other string
@@ -109,8 +109,8 @@ None.
   - ✅Positive:
     - [P1] None (will there be a default value of `disabled`)
     - [P] null
-    - [P] disabled
-    - [P] members
+    - [P2] disabled
+    - [P3] members
     - [P] observers
     - [P] org
     - [P] public
@@ -121,8 +121,8 @@ None.
     - [P1] None (will there be a default value of `members`)
     - [P] null
     - [P] disabled
-    - [P] members
-    - [P] observers
+    - [P2] members
+    - [P3] observers
     - [P] org
     - [P] public
   - ❌Negative:
@@ -131,28 +131,28 @@ None.
   - ✅Positive:
     - [P1] None (will there be a default value `members`)
     - [P] null
-    - [P] members
-    - [P] admins
+    - [P2] members
+    - [P3] admins
   - ❌Negative:
     - [N] Other string
 - 💠prefs_selfJoin `boolean`
   - ✅Positive:
     - [P1] None (will there be a default value `true`)
-    - [P] true
-    - [P] false
+    - [P2] true
+    - [P3] false
     - [P] null
 - 💠prefs_cardCovers `boolean`
   - ✅Positive:
     - [P1] None (will there be a default value `true`)
-    - [P] true
-    - [P] false
+    - [P2] true
+    - [P3] false
     - [P] null
 - 💠prefs_background `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `blue`) -> Not in "prefs"
     - [P] null
-    - [P] blue
-    - [P] orange
+    - [P2] blue
+    - [P3] orange
     - [P] green
     - [P] red
     - [P] purple
@@ -166,13 +166,14 @@ None.
   - ✅Positive:
     - [P1] None (will there be a default value of `regular`)
     - [P] null
-    - [P] regular
-    - [P] pirate
+    - [P2] regular
+    - [P3] pirate
   - ❌Negative:
     - [N] Other string
 - 💠Others:
   - ✅Positive:
-    - [P] Providing all or most parameters at once
+    - [P1] Providing only required parameters (`name`)
+    - [P2] Providing all or most parameters at once
 
 ---
 
