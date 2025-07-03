@@ -329,4 +329,222 @@ public class POST_CreateBoardExpected {
                 }
             }
             """;
+    public static final String P4ExpectedPostBoardResponse = """
+            {
+                "id": "6866ba9d271eaed318867ccb",
+                "name": "Collier, Labadie and Altenwerth borad 8620249384400",
+                "desc": "",
+                "descData": null,
+                "closed": false,
+                "idOrganization": "67d9d5e34d7b900257deed0e",
+                "idEnterprise": null,
+                "pinned": false,
+                "url": "https://trello.com/b/uCp5Fdx9/collier-labadie-and-altenwerth-borad-8620249384400",
+                "shortUrl": "https://trello.com/b/uCp5Fdx9",
+                "prefs": {
+                    "permissionLevel": "private",
+                    "hideVotes": false,
+                    "voting": "disabled",
+                    "comments": "members",
+                    "invitations": "members",
+                    "selfJoin": true,
+                    "cardCovers": true,
+                    "showCompleteStatus": true,
+                    "cardCounts": false,
+                    "isTemplate": false,
+                    "cardAging": "regular",
+                    "calendarFeedEnabled": false,
+                    "hiddenPluginBoardButtons": [
+            
+                    ],
+                    "switcherViews": [
+                        {
+                            "viewType": "Board",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Table",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Calendar",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Dashboard",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Timeline",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Map",
+                            "enabled": false
+                        }
+                    ],
+                    "autoArchive": null,
+                    "background": "blue",
+                    "backgroundColor": "#0079BF",
+                    "backgroundDarkColor": null,
+                    "backgroundImage": null,
+                    "backgroundDarkImage": null,
+                    "backgroundImageScaled": null,
+                    "backgroundTile": false,
+                    "backgroundBrightness": "dark",
+                    "sharedSourceUrl": null,
+                    "backgroundBottomColor": "#0079BF",
+                    "backgroundTopColor": "#0079BF",
+                    "canBePublic": true,
+                    "canBeEnterprise": true,
+                    "canBeOrg": true,
+                    "canBePrivate": true,
+                    "canInvite": true
+                },
+                "labelNames": {
+                    "green": "",
+                    "yellow": "",
+                    "orange": "",
+                    "red": "",
+                    "purple": "",
+                    "blue": "",
+                    "sky": "",
+                    "lime": "",
+                    "pink": "",
+                    "black": "",
+                    "green_dark": "",
+                    "yellow_dark": "",
+                    "orange_dark": "",
+                    "red_dark": "",
+                    "purple_dark": "",
+                    "blue_dark": "",
+                    "sky_dark": "",
+                    "lime_dark": "",
+                    "pink_dark": "",
+                    "black_dark": "",
+                    "green_light": "",
+                    "yellow_light": "",
+                    "orange_light": "",
+                    "red_light": "",
+                    "purple_light": "",
+                    "blue_light": "",
+                    "sky_light": "",
+                    "lime_light": "",
+                    "pink_light": "",
+                    "black_light": ""
+                },
+                "limits": {
+            
+                }
+            }
+            """;
+    public static final String P5ExpectedPostBoardResponse = """
+            {
+                "id": "6866d2b38384376342e75b10",
+                "name": "Purdy, Boyer and Reinger borad 14786101123900",
+                "desc": "",
+                "descData": null,
+                "closed": false,
+                "idOrganization": "67d9d5e34d7b900257deed0e",
+                "idEnterprise": null,
+                "pinned": false,
+                "url": "https://trello.com/b/YEGt0s5t/purdy-boyer-and-reinger-borad-14786101123900",
+                "shortUrl": "https://trello.com/b/YEGt0s5t",
+                "prefs": {
+                    "permissionLevel": "public",
+                    "hideVotes": false,
+                    "voting": "public",
+                    "comments": "org",
+                    "invitations": "members",
+                    "selfJoin": true,
+                    "cardCovers": true,
+                    "showCompleteStatus": true,
+                    "cardCounts": false,
+                    "isTemplate": false,
+                    "cardAging": "regular",
+                    "calendarFeedEnabled": false,
+                    "hiddenPluginBoardButtons": [
+            
+                    ],
+                    "switcherViews": [
+                        {
+                            "viewType": "Board",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Table",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Calendar",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Dashboard",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Timeline",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Map",
+                            "enabled": false
+                        }
+                    ],
+                    "autoArchive": null,
+                    "background": "sky",
+                    "backgroundColor": "#00AECC",
+                    "backgroundDarkColor": null,
+                    "backgroundImage": null,
+                    "backgroundDarkImage": null,
+                    "backgroundImageScaled": null,
+                    "backgroundTile": false,
+                    "backgroundBrightness": "dark",
+                    "sharedSourceUrl": null,
+                    "backgroundBottomColor": "#00AECC",
+                    "backgroundTopColor": "#00AECC",
+                    "canBePublic": true,
+                    "canBeEnterprise": true,
+                    "canBeOrg": true,
+                    "canBePrivate": true,
+                    "canInvite": true
+                },
+                "labelNames": {
+                    "green": "",
+                    "yellow": "",
+                    "orange": "",
+                    "red": "",
+                    "purple": "",
+                    "blue": "",
+                    "sky": "",
+                    "lime": "",
+                    "pink": "",
+                    "black": "",
+                    "green_dark": "",
+                    "yellow_dark": "",
+                    "orange_dark": "",
+                    "red_dark": "",
+                    "purple_dark": "",
+                    "blue_dark": "",
+                    "sky_dark": "",
+                    "lime_dark": "",
+                    "pink_dark": "",
+                    "black_dark": "",
+                    "green_light": "",
+                    "yellow_light": "",
+                    "orange_light": "",
+                    "red_light": "",
+                    "purple_light": "",
+                    "blue_light": "",
+                    "sky_light": "",
+                    "lime_light": "",
+                    "pink_light": "",
+                    "black_light": ""
+                },
+                "limits": {
+            
+                }
+            }
+            """;
 }

@@ -10,6 +10,8 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeAll;
 
+import java.util.Random;
+
 public class TestBase {
     // Object containing all request settings
     protected static RequestSpecification requestSpecificationCommon;
@@ -20,6 +22,8 @@ public class TestBase {
     protected static Response responseDelete;
     // Faker object to generate fake random data
     protected static Faker faker = new Faker();
+    // Random object to used to select a random element
+    protected static Random random = new Random();
 
     @BeforeAll
     public static void setUpAll() {

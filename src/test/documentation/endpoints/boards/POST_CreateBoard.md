@@ -45,19 +45,19 @@ None.
     - [P1] None (will there be a default value of `true`) -> Not in response at all
     - [P2] true
     - [P3] false
-    - [P] null
+    - [P4] null
 - 💠defaultLists `boolean`
   - ✅Positive:
     - [P1] None (will there be a default value of `true`) -> Not in response at all
     - [P2] true
     - [P3] false
-    - [P] null
-    - [P] Is it ignored when `idBoardSource` is given?
+    - [P4] null
+    - [⏭] Is it ignored when `idBoardSource` is given?
 - 💠desc `string`
   - ✅Positive:
     - [P2] Special characters and numbers
     - [P1] None (will there be a default value of `""`)
-    - [P] null
+    - [P4] null
     - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
@@ -80,7 +80,7 @@ None.
 - 💠keepFromSource `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `none`) -> Not in response at all
-    - [P] null
+    - [P4] null
     - [P2] none
     - [P3] cards
   - ❌Negative:
@@ -88,49 +88,49 @@ None.
 - 💠powerUps `string`
   - ✅Positive:
     - [P1] None -> Not in response at all
-    - [P] null
+    - [P4] null
     - [P2] all
     - [P3] calendar
-    - [P] cardAging
-    - [P] recap
-    - [P] voting
+    - [P5r] cardAging
+    - [P5r] recap
+    - [P5r] voting
   - ❌Negative:
     - [N] Other string
 - 💠prefs_permissionLevel `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `private`)
-    - [P] null
+    - [P4] null
     - [P2] private
     - [P3] org
-    - [P] public
+    - [P5] public
   - ❌Negative:
     - [N] Other string
 - 💠prefs_voting `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `disabled`)
-    - [P] null
+    - [P4] null
     - [P2] disabled
     - [P3] members
-    - [P] observers
-    - [P] org
-    - [P] public
+    - [P5r] observers
+    - [P5r] org
+    - [P5r] public
   - ❌Negative:
     - [N] Other string
 - 💠prefs_comments `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `members`)
-    - [P] null
-    - [P] disabled
+    - [P4] null
+    - [P5r] disabled
     - [P2] members
     - [P3] observers
-    - [P] org
-    - [P] public
+    - [P5r] org
+    - [P5r] public
   - ❌Negative:
     - [N] Other string
 - 💠prefs_invitations `string`
   - ✅Positive:
     - [P1] None (will there be a default value `members`)
-    - [P] null
+    - [P4] null
     - [P2] members
     - [P3] admins
   - ❌Negative:
@@ -140,32 +140,32 @@ None.
     - [P1] None (will there be a default value `true`)
     - [P2] true
     - [P3] false
-    - [P] null
+    - [P4] null
 - 💠prefs_cardCovers `boolean`
   - ✅Positive:
     - [P1] None (will there be a default value `true`)
     - [P2] true
     - [P3] false
-    - [P] null
+    - [P4] null
 - 💠prefs_background `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `blue`) -> Not in "prefs"
-    - [P] null
+    - [P4] null
     - [P2] blue
     - [P3] orange
-    - [P] green
-    - [P] red
-    - [P] purple
-    - [P] pink
-    - [P] lime
-    - [P] sky
-    - [P] grey
+    - [P5r] green
+    - [P5r] red
+    - [P5r] purple
+    - [P5r] pink
+    - [P5r] lime
+    - [P5r] sky
+    - [P5r] grey
   - ❌Negative:
     - [N] Other string
 - 💠prefs_cardAging `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `regular`)
-    - [P] null
+    - [P4] null
     - [P2] regular
     - [P3] pirate
   - ❌Negative:
