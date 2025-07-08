@@ -1,6 +1,8 @@
 package tests.boards;
 
 import base.TestBase;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import dto.boards.POST_CreateBoardDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -164,6 +166,16 @@ public class POST_CreateBoardTest extends TestBase {
         String prefsVoting = pickRandom("observers", "org", "public");
         String prefsComments = pickRandom("disabled", "org", "public");
         String prefsBackground = pickRandom("green", "red", "purple", "pink", "lime", "sky", "grey");
+        String prefsBackgroundHex = switch (prefsBackground) {
+            case "green" -> "#519839";
+            case "red" -> "#B04632";
+            case "purple" -> "#89609E";
+            case "pink" -> "#CD5A91";
+            case "lime" -> "#4BBF6B";
+            case "sky" -> "#00AECC";
+            case "grey" -> "#838C91";
+            default -> "#0079BF"; // "blue" if not matched
+        };
 
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setPowerUps(powerUps)
@@ -183,6 +195,10 @@ public class POST_CreateBoardTest extends TestBase {
         expectedResponsePostDto.prefs.voting = prefsVoting;
         expectedResponsePostDto.prefs.comments = prefsComments;
         expectedResponsePostDto.prefs.background = prefsBackground;
+        expectedResponsePostDto.prefs.backgroundColor = prefsBackgroundHex;
+        expectedResponsePostDto.prefs.backgroundBottomColor = prefsBackgroundHex;
+        expectedResponsePostDto.prefs.backgroundTopColor = prefsBackgroundHex;
+        compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
     }
@@ -190,6 +206,19 @@ public class POST_CreateBoardTest extends TestBase {
     // --------------
     // NEGATIVE TESTS
     // --------------
+
+    @Test
+    public void N1_shouldNotCreateBoardWhenNameWasNotGiven() {
+        // responsePost = postCreateBoard();
+        // TODO: Stworzyć osobną metodę na request bez "name" oraz dopisać test do pokrycia
+    }
+
+    @Test
+    public void N2_shouldNotCreateBoardWhenNameIsNull() throws JsonProcessingException {
+        responsePost = postCreateBoard(null, null);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePost, ExpectedPostBoardResponseInvalidName);
+    }
 
     // -----
     // DEBUG

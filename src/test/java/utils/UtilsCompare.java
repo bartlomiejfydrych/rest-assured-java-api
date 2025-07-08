@@ -1,7 +1,12 @@
 package utils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static utils.UtilsResponse.parseStringToJsonNode;
 
 public class UtilsCompare {
 
@@ -10,13 +15,20 @@ public class UtilsCompare {
             RecursiveComparisonConfiguration config = new RecursiveComparisonConfiguration();
             config.ignoreFields(fieldsToIgnore);
 
-            Assertions.assertThat(actualObject)
+            assertThat(actualObject)
                     .usingRecursiveComparison(config)
                     .isEqualTo(expectedObject);
         } else {
-            Assertions.assertThat(actualObject)
+            assertThat(actualObject)
                     .usingRecursiveComparison()
                     .isEqualTo(expectedObject);
         }
+    }
+
+    public static void compareObjectsJsonNode(Response response, String expectedResponseString) {
+        String responseString = response.getBody().asString();
+        JsonNode actualResponse = parseStringToJsonNode(responseString);
+        JsonNode expectedResponse = parseStringToJsonNode(expectedResponseString);
+        assertThat(actualResponse).isEqualTo(expectedResponse);
     }
 }

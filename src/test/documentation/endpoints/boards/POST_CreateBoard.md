@@ -38,7 +38,8 @@ None.
     - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - [N] None (0 characters)
-    - [N] null
+    - [N2] null
+    - [N] Empty string ("")
     - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠defaultLabels `boolean`
   - ✅Positive:

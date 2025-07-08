@@ -2,6 +2,10 @@ package expected_responses.boards;
 
 public class POST_CreateBoardExpected {
 
+    // --------------
+    // POSITIVE TESTS
+    // --------------
+
     public static final String P1ExpectedPostBoardResponse = """
             {
                 "id": "68063bdc4bdbd152d658851a",
@@ -545,6 +549,17 @@ public class POST_CreateBoardExpected {
                 "limits": {
             
                 }
+            }
+            """;
+
+    // --------------
+    // NEGATIVE TESTS
+    // --------------
+
+    public static final String ExpectedPostBoardResponseInvalidName = """
+            {
+                "message": "invalid value for name",
+                "error": "ERROR"
             }
             """;
 }

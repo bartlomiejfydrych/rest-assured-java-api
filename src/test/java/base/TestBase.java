@@ -1,5 +1,6 @@
 package base;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import configuration.Config;
 import configuration.RequestSpecConfig;
@@ -24,6 +25,8 @@ public class TestBase {
     protected static Faker faker = new Faker();
     // Random object to used to select a random element
     protected static Random random = new Random();
+    // Mapper object to transform response String into JsonNode object
+    protected static ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeAll
     public static void setUpAll() {

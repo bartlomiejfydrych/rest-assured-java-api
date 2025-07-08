@@ -2,6 +2,7 @@ package utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.Response;
 import jakarta.validation.ConstraintViolation;
@@ -13,18 +14,18 @@ import java.util.Set;
 
 public class UtilsResponse {
 
-    // ------------------------
+    // ---------------------
+    // DTO - Deserialization
+    // ---------------------
+
     // Deserialization settings
-    // ------------------------
 
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
             .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true) // require @JsonCreator inside DTO
             .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true);
 
-    // ----------------------
     // OBJECT deserialization
-    // ----------------------
 
     public static <T> T deserializeAndValidate(Response response, Class<T> clazz) {
         return deserializeAndValidate(response.asString(), clazz);
@@ -44,9 +45,7 @@ public class UtilsResponse {
         }
     }
 
-    // --------------------
     // LIST deserialization
-    // --------------------
 
     public static <T> List<T> deserializeAndValidateList(Response response, TypeReference<List<T>> typeRef) {
         return deserializeAndValidateList(response.asString(), typeRef);
@@ -84,6 +83,19 @@ public class UtilsResponse {
                 }
                 throw new RuntimeException(message.toString());
             }
+        }
+    }
+
+    // --------
+    // JsonNode
+    // --------
+
+    public static JsonNode parseStringToJsonNode(String jsonString) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readTree(jsonString);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse String into object JsonNode", e);
         }
     }
 }
