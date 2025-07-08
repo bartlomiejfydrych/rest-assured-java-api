@@ -1,8 +1,6 @@
 package tests.boards;
 
 import base.TestBase;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import dto.boards.POST_CreateBoardDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -214,7 +212,7 @@ public class POST_CreateBoardTest extends TestBase {
     }
 
     @Test
-    public void N2_shouldNotCreateBoardWhenNameIsNull() throws JsonProcessingException {
+    public void N2_shouldNotCreateBoardWhenNameIsNull() {
         responsePost = postCreateBoard(null, null);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, ExpectedPostBoardResponseInvalidName);
