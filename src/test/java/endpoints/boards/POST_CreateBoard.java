@@ -15,14 +15,24 @@ public class POST_CreateBoard extends TestBase {
     public static Response postCreateBoard(String name, Map<String, Object> queryParams) {
 
         RequestSpecification spec = given().
-                spec(requestSpecificationCommon)
-                .queryParam("name", name);
+                spec(requestSpecificationCommon).
+                queryParam("name", name);
 
         if (queryParams != null && !queryParams.isEmpty()) {
             spec.queryParams(queryParams);
         }
 
         return spec.
+                when().
+                    post(url).
+                then().
+                    extract().
+                    response();
+    }
+
+    public static Response postCreateBoard() {
+        return given().
+                    spec(requestSpecificationCommon).
                 when().
                     post(url).
                 then().

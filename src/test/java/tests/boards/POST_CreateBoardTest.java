@@ -205,10 +205,13 @@ public class POST_CreateBoardTest extends TestBase {
     // NEGATIVE TESTS
     // --------------
 
+    // name
+
     @Test
     public void N1_shouldNotCreateBoardWhenNameWasNotGiven() {
-        // responsePost = postCreateBoard();
-        // TODO: Stworzyć osobną metodę na request bez "name" oraz dopisać test do pokrycia
+        responsePost = postCreateBoard();
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePost, ExpectedPostBoardResponseInvalidName);
     }
 
     @Test
@@ -218,13 +221,158 @@ public class POST_CreateBoardTest extends TestBase {
         compareObjectsJsonNode(responsePost, ExpectedPostBoardResponseInvalidName);
     }
 
+    @Test
+    public void N3_shouldNotCreateBoardWhenNameIsEmptyString() {
+        responsePost = postCreateBoard("", null);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePost, ExpectedPostBoardResponseInvalidName);
+    }
+
+    // idOrganization
+
+    @Test
+    public void N4_shouldNotCreateBoardWhenIdOrganizationNonExist() {
+
+        POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+                .setIdOrganization("123456789098765432123456")
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        responsePost = postCreateBoard(generateRandomBoardName(), queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(401);
+        assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized org access");
+    }
+
+    @Test
+    public void N5_shouldNotCreateBoardWhenIdOrganizationIsIncompatibleWithRegEx() {
+
+        POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+                .setIdOrganization("123abc")
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        responsePost = postCreateBoard(generateRandomBoardName(), queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(401);
+        assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized organization.");
+    }
+
+    // idBoardSource
+
+    @Test
+    public void N6_shouldNotCreateBoardWhenIdBoardSourceNonExist() {
+
+        POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+                .setIdBoardSource("123456789098765432123456")
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        responsePost = postCreateBoard(generateRandomBoardName(), queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(404);
+        assertThat(responsePost.getBody().asString()).isEqualTo("source board not found");
+    }
+
+    @Test
+    public void N7_shouldNotCreateBoardWhenIdBoardSourceIsIncompatibleWithRegEx() {
+
+        String exceptedResponse = """
+                {
+                    "message": "Invalid objectId",
+                    "error": "ERROR"
+                }
+                """;
+
+        POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+                .setIdBoardSource("123abc")
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        responsePost = postCreateBoard(generateRandomBoardName(), queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePost, exceptedResponse);
+    }
+
+    // prefs_permissionLevel
+
+    @Test
+    public void N8_shouldNotCreateBoardWhenPrefsPermissionLevelIsOtherString() {
+
+        POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+                .setPrefsPermissionLevel("other")
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        responsePost = postCreateBoard(generateRandomBoardName(), queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_permissionLevel");
+    }
+
+    // prefs_voting
+
+    @Test
+    public void N9_shouldNotCreateBoardWhenPrefsVotingIsOtherString() {
+
+        POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+                .setPrefsVoting("other")
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        responsePost = postCreateBoard(generateRandomBoardName(), queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_voting");
+    }
+
+    // prefs_comments
+
+    @Test
+    public void N10_shouldNotCreateBoardWhenPrefsCommentsIsOtherString() {
+
+        POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+                .setPrefsComments("other")
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        responsePost = postCreateBoard(generateRandomBoardName(), queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_comments");
+    }
+
+    // prefs_invitations
+
+    @Test
+    public void N11_shouldNotCreateBoardWhenPrefsInvitationsIsOtherString() {
+
+        POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+                .setPrefsInvitations("other")
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        responsePost = postCreateBoard(generateRandomBoardName(), queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_invitations");
+    }
+
+    // prefs_cardAging
+
+    @Test
+    public void N12_shouldNotCreateBoardWhenPrefsCardAgingIsOtherString() {
+
+        POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+                .setPrefsCardAging("other")
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        responsePost = postCreateBoard(generateRandomBoardName(), queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_cardAging");
+    }
+
     // -----
     // DEBUG
     // -----
 
-//    @Test
-//    public void deleteBoard() {
-//        responseDelete = deleteDeleteBoard("6828686326ecb74053638a5e");
-//        assertThat(responseDelete.statusCode()).isEqualTo(200);
-//    }
+    //@Test
+    public void deleteBoard() {
+        responseDelete = deleteDeleteBoard("68724f5bfffa6577a4dc0dbb");
+        assertThat(responseDelete.statusCode()).isEqualTo(200);
+    }
 }

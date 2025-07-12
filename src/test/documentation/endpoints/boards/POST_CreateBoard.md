@@ -37,9 +37,9 @@ None.
     - [P2] 1 character
     - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - [N] None (0 characters)
+    - [N1] None (0 characters)
     - [N2] null
-    - [N] Empty string ("")
+    - [N3] Empty string ("")
     - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠defaultLabels `boolean`
   - ✅Positive:
@@ -68,16 +68,16 @@ None.
     - [P3] null
     - [P2] Valid
   - ❌Negative:
-    - [N] Non-existent
-    - [N] Incompatible with `^[0-9a-fA-F]{24}$`
+    - [N4] Non-existent
+    - [N5] Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠idBoardSource `TrelloID` | `^[0-9a-fA-F]{24}$`
   - ✅Positive:
     - [P1] None -> Not in response at all
     - [P3] null
     - [⏭] Correct
   - ❌Negative:
-    - [N] Non-existent
-    - [N] Incompatible with `^[0-9a-fA-F]{24}$`
+    - [N6] Non-existent
+    - [N7] Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠keepFromSource `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `none`) -> Not in response at all
@@ -85,7 +85,7 @@ None.
     - [P2] none
     - [P3] cards
   - ❌Negative:
-    - [N] Other string
+    - [💥] Other string -> It was ignored and board was created
 - 💠powerUps `string`
   - ✅Positive:
     - [P1] None -> Not in response at all
@@ -96,7 +96,7 @@ None.
     - [P5r] recap
     - [P5r] voting
   - ❌Negative:
-    - [N] Other string
+    - [💥] Other string -> It was ignored and board was created
 - 💠prefs_permissionLevel `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `private`)
@@ -105,7 +105,7 @@ None.
     - [P3] org
     - [P5] public
   - ❌Negative:
-    - [N] Other string
+    - [N8] Other string
 - 💠prefs_voting `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `disabled`)
@@ -116,7 +116,7 @@ None.
     - [P5r] org
     - [P5r] public
   - ❌Negative:
-    - [N] Other string
+    - [N9] Other string
 - 💠prefs_comments `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `members`)
@@ -127,7 +127,7 @@ None.
     - [P5r] org
     - [P5r] public
   - ❌Negative:
-    - [N] Other string
+    - [N10] Other string
 - 💠prefs_invitations `string`
   - ✅Positive:
     - [P1] None (will there be a default value `members`)
@@ -135,7 +135,7 @@ None.
     - [P2] members
     - [P3] admins
   - ❌Negative:
-    - [N] Other string
+    - [N11] Other string
 - 💠prefs_selfJoin `boolean`
   - ✅Positive:
     - [P1] None (will there be a default value `true`)
@@ -162,7 +162,7 @@ None.
     - [P5r] sky
     - [P5r] grey
   - ❌Negative:
-    - [N] Other string
+    - [💥] Other string -> It was ignored and board was created
 - 💠prefs_cardAging `string`
   - ✅Positive:
     - [P1] None (will there be a default value of `regular`)
@@ -170,7 +170,7 @@ None.
     - [P2] regular
     - [P3] pirate
   - ❌Negative:
-    - [N] Other string
+    - [N12] Other string
 - 💠Others:
   - ✅Positive:
     - [P1] Providing only required parameters (`name`)
