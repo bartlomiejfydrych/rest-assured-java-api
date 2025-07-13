@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoard.postCreateBoard;
+import static endpoints.boards.POST_CreateBoard.postCreateBoardMissingRequiredParameters;
 import static expected_responses.boards.POST_CreateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.pickRandom;
@@ -22,6 +23,7 @@ import static utils_tests.boards.POST_CreateBoardUtils.*;
 public class POST_CreateBoardTest extends TestBase {
 
     private String boardId;
+    // TODO: Przenieść 'trelloId' do jakiegoś pliku konfiguracyjnego
     private String trelloId = "67d9d5e34d7b900257deed0e";
 
     @AfterEach
@@ -209,7 +211,7 @@ public class POST_CreateBoardTest extends TestBase {
 
     @Test
     public void N1_shouldNotCreateBoardWhenNameWasNotGiven() {
-        responsePost = postCreateBoard();
+        responsePost = postCreateBoardMissingRequiredParameters();
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, ExpectedPostBoardResponseInvalidName);
     }
