@@ -37,19 +37,19 @@ None.
     - [P2] 1 character
     - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - [N1] None (0 characters)
+    - [N1] Missing (0 characters)
     - [N2] null
     - [N3] Empty string ("")
     - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠defaultLabels `boolean`
   - ✅Positive:
-    - [P1] None (will there be a default value of `true`) -> Not in response at all
+    - [P1] Missing (will there be a default value of `true`) -> Not in response at all
     - [P2] true
     - [P3] false
     - [P4] null
 - 💠defaultLists `boolean`
   - ✅Positive:
-    - [P1] None (will there be a default value of `true`) -> Not in response at all
+    - [P1] Missing (will there be a default value of `true`) -> Not in response at all
     - [P2] true
     - [P3] false
     - [P4] null
@@ -57,14 +57,14 @@ None.
 - 💠desc `string`
   - ✅Positive:
     - [P2] Special characters and numbers
-    - [P1] None (will there be a default value of `""`)
+    - [P1] Missing (will there be a default value of `""`)
     - [P4] null
     - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠idOrganization `TrelloID` | `^[0-9a-fA-F]{24}$`
   - ✅Positive:
-    - [P1] None -> Default ID
+    - [P1] Missing -> Default ID
     - [P3] null
     - [P2] Valid
   - ❌Negative:
@@ -72,7 +72,7 @@ None.
     - [N5] Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠idBoardSource `TrelloID` | `^[0-9a-fA-F]{24}$`
   - ✅Positive:
-    - [P1] None -> Not in response at all
+    - [P1] Missing -> Not in response at all
     - [P3] null
     - [⏭] Correct
   - ❌Negative:
@@ -80,7 +80,7 @@ None.
     - [N7] Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠keepFromSource `string`
   - ✅Positive:
-    - [P1] None (will there be a default value of `none`) -> Not in response at all
+    - [P1] Missing (will there be a default value of `none`) -> Not in response at all
     - [P4] null
     - [P2] none
     - [P3] cards
@@ -88,7 +88,7 @@ None.
     - [💥] Other string -> It was ignored and board was created
 - 💠powerUps `string`
   - ✅Positive:
-    - [P1] None -> Not in response at all
+    - [P1] Missing -> Not in response at all
     - [P4] null
     - [P2] all
     - [P3] calendar
@@ -99,7 +99,7 @@ None.
     - [💥] Other string -> It was ignored and board was created
 - 💠prefs_permissionLevel `string`
   - ✅Positive:
-    - [P1] None (will there be a default value of `private`)
+    - [P1] Missing (will there be a default value of `private`)
     - [P4] null
     - [P2] private
     - [P3] org
@@ -108,7 +108,7 @@ None.
     - [N8] Other string
 - 💠prefs_voting `string`
   - ✅Positive:
-    - [P1] None (will there be a default value of `disabled`)
+    - [P1] Missing (will there be a default value of `disabled`)
     - [P4] null
     - [P2] disabled
     - [P3] members
@@ -119,7 +119,7 @@ None.
     - [N9] Other string
 - 💠prefs_comments `string`
   - ✅Positive:
-    - [P1] None (will there be a default value of `members`)
+    - [P1] Missing (will there be a default value of `members`)
     - [P4] null
     - [P5r] disabled
     - [P2] members
@@ -130,7 +130,7 @@ None.
     - [N10] Other string
 - 💠prefs_invitations `string`
   - ✅Positive:
-    - [P1] None (will there be a default value `members`)
+    - [P1] Missing (will there be a default value `members`)
     - [P4] null
     - [P2] members
     - [P3] admins
@@ -138,19 +138,19 @@ None.
     - [N11] Other string
 - 💠prefs_selfJoin `boolean`
   - ✅Positive:
-    - [P1] None (will there be a default value `true`)
+    - [P1] Missing (will there be a default value `true`)
     - [P2] true
     - [P3] false
     - [P4] null
 - 💠prefs_cardCovers `boolean`
   - ✅Positive:
-    - [P1] None (will there be a default value `true`)
+    - [P1] Missing (will there be a default value `true`)
     - [P2] true
     - [P3] false
     - [P4] null
 - 💠prefs_background `string`
   - ✅Positive:
-    - [P1] None (will there be a default value of `blue`) -> Not in "prefs"
+    - [P1] Missing (will there be a default value of `blue`) -> Not in "prefs"
     - [P4] null
     - [P2] blue
     - [P3] orange
@@ -165,7 +165,7 @@ None.
     - [💥] Other string -> It was ignored and board was created
 - 💠prefs_cardAging `string`
   - ✅Positive:
-    - [P1] None (will there be a default value of `regular`)
+    - [P1] Missing (will there be a default value of `regular`)
     - [P4] null
     - [P2] regular
     - [P3] pirate
