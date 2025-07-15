@@ -120,6 +120,13 @@ public class Config {
         return getConfigProperty("baseUrlNumber", "1");
     }
 
+    // OTHER VARIABLES
+
+    // Get Trello ID
+    public static String getTrelloId() {
+        return getConfigProperty("trelloId", "67d9d5e34d7b900257deed0e");
+    }
+
     // -------------------------------------------
     // .env – Methods that retrieve data from file
     // -------------------------------------------

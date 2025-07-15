@@ -1,6 +1,7 @@
 package tests.boards;
 
 import base.TestBase;
+import configuration.Config;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,18 +17,17 @@ import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 public class PUT_UpdateBoardTest extends TestBase {
 
     private String boardId;
-    // TODO: Przenieść 'trelloId' do jakiegoś pliku konfiguracyjnego
-    private String trelloId = "67d9d5e34d7b900257deed0e";
+    private String trelloId = Config.getTrelloId();
 
     @BeforeEach
-    public void setUp() {
+    public void setUpCreateBoard() {
         responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
     }
 
     @AfterEach
-    public void tearDown() {
+    public void tearDownDeleteBoard() {
         if (boardId != null) {
             responseDelete = deleteDeleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
