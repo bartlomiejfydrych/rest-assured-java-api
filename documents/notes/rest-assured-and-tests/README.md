@@ -27,6 +27,7 @@
 - [RequestSpecBuilder](#request_spec_builder)
 - [RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()](#enable_log_fail)
 - [RecursiveComparisonConfiguration()](#assertj_recursive_comparison_configuration)
+- [ID – czyszczenie zmiennej po wysłaniu DELETE](#id_clean_after_delete)
 - [UtilsCompare.java – opis kodu](#utils_compare_java)
 - [UtilsResponse.java – opis kodu](#utils_response_java)
 - [Struktura JSON – JsonSchema vs. DTO/POJO](#json_schema_dto_pojo)
@@ -848,6 +849,66 @@ void shouldCompareUsersIgnoringId() {
 
 Dzięki `RecursiveComparisonConfiguration` możesz **uniknąć problemów z `equals()`**, dostosować sposób porównywania
 i **uniknąć niepotrzebnych failów** w testach. 🚀🔥
+
+---
+
+## 📄ID – czyszczenie zmiennej po wysłaniu DELETE <a name="id_clean_after_delete"></a>
+
+**Miałem taki kod:**
+
+```java
+private String boardId;
+private String trelloId = Config.getTrelloId();
+
+@BeforeEach
+public void setUpCreateBoard() {
+    responsePost = postCreateBoard(generateRandomBoardName(), null);
+    assertThat(responsePost.statusCode()).isEqualTo(200);
+    boardId = responsePost.jsonPath().getString("id");
+}
+
+@AfterEach
+public void tearDownDeleteBoard() {
+    if (boardId != null) {
+        responseDelete = deleteDeleteBoard(boardId);
+        assertThat(responseDelete.statusCode()).isEqualTo(200);
+    }
+}
+```
+
+**Zapytałem czat GPT:**  
+*Czy po wysłaniu requesta `DELETE` zmienna `boardId` nie powinna być jakoś "czyszczona" lub zmieniana na `null`?*
+
+**Otrzymałem taką odpowiedź:**
+
+Tak, masz rację — **dobrą praktyką** po wykonaniu `@AfterEach` (czyli `tearDownDeleteBoard`) byłoby **wyzerowanie
+(`null`) zmiennej `boardId`**, szczególnie jeśli klasa testowa jest współdzielona między testami (np. w testach
+parametryzowanych lub z różnymi instancjami).
+
+Chociaż większość frameworków testowych (np. JUnit 5) **tworzy nową instancję klasy testowej dla każdego testu**, co
+powoduje, że pola instancyjne jak `boardId` są odświeżane automatycznie — to:
+
+🔹 **Jeśli kiedykolwiek zmienisz cykl życia klasy (`@TestInstance(Lifecycle.PER_CLASS)`) lub zaczniesz współdzielić
+stan między testami** – wtedy brak czyszczenia `boardId` może powodować trudne do znalezienia błędy.
+
+### ✅ Poprawiona wersja `tearDownDeleteBoard()`:
+
+```java
+@AfterEach
+public void tearDownDeleteBoard() {
+    if (boardId != null) {
+        responseDelete = deleteDeleteBoard(boardId);
+        assertThat(responseDelete.statusCode()).isEqualTo(200);
+        boardId = null; // czyszczenie zmiennej
+    }
+}
+```
+
+### 🔎 Podsumowanie
+
+* ✔ **Nie jest to konieczne w większości przypadków z JUnit 5**, ale:
+* ✅ **Jest to dobra praktyka defensywna**, zwłaszcza jeśli testy będą rozwijane, refaktoryzowane lub cykl życia klasy zmieniony.
+* 🧼 Pomaga też w utrzymaniu testów "czystych" i odpornych na przyszłe błędy.
 
 ---
 

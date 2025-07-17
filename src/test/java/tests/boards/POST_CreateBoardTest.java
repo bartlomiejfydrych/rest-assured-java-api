@@ -41,7 +41,7 @@ public class POST_CreateBoardTest extends TestBase {
     @Test
     public void P1_shouldCreateBoardWhoseNameContainsSpecialCharactersAndNumbers() {
 
-        String boardName = "ŻÓŁĆżółć 1234567890 ~`!@#$%^&*()_+{}[];':\",./<>?-=\\" + " " + faker.number().randomNumber();
+        String boardName = "!\"#$%&\\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ęĘóÓąĄśŚłŁżŻźŹćĆńŃ" + faker.number().randomNumber();
 
         // POST
         responsePost = postCreateBoard(boardName, null);
@@ -62,7 +62,7 @@ public class POST_CreateBoardTest extends TestBase {
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setDefaultLabels(true)
                 .setDefaultLists(true)
-                .setDesc("ŻÓŁĆżółć 1234567890 ~`!@#$%^&*()_+{}[];':\",./<>?-=\\")
+                .setDesc("!\"#$%&\\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ęĘóÓąĄśŚłŁżŻźŹćĆńŃ")
                 .setIdOrganization(trelloId)
                 .setKeepFromSource("none")
                 .setPowerUps("all")

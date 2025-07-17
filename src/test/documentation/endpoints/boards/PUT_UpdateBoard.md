@@ -146,51 +146,78 @@ None.
     - [SPRAWDZIĆ💥] Other string -> It was ignored and board was created
 - 💠prefs/cardAging `string`
   - ✅Positive:
+    - [] Missing (will there be a default value of `regular`)
+    - [] null
+    - [] regular
+    - [] pirate
   - ❌Negative:
-
-One of: `pirate`, `regular`
-
+    - [] Other string
 - 💠prefs/calendarFeedEnabled `boolean`
   - ✅Positive:
-  - ❌Negative:
-
-Determines whether the calendar feed is enabled or not.
-
+    - [] Missing
+    - [] true
+    - [] false
+    - [] null
 - 💠labelNames/green `string`
   - ✅Positive:
+    - [] Special characters and numbers
+    - [] 1 character
+    - [] Missing (0 characters)
+    - [] null
+    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-
-Name for the green label. `1` to `16384` characters long
-
+    - [] Empty string ("")
+    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/yellow `string`
   - ✅Positive:
+    - [] Special characters and numbers
+    - [] 1 character
+    - [] Missing (0 characters)
+    - [] null
+    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-
-Name for the yellow label. `1` to `16384` characters long
-
+    - [] Empty string ("")
+    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/orange `string`
   - ✅Positive:
+    - [] Special characters and numbers
+    - [] 1 character
+    - [] Missing (0 characters)
+    - [] null
+    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-
-Name for the orange label. `1` to `16384` characters long
-
+    - [] Empty string ("")
+    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/red `string`
   - ✅Positive:
+    - [] Special characters and numbers
+    - [] 1 character
+    - [] Missing (0 characters)
+    - [] null
+    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-
-Name for the red label. `1` to `16384` characters long
-
+    - [] Empty string ("")
+    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/purple `string`
   - ✅Positive:
+    - [] Special characters and numbers
+    - [] 1 character
+    - [] Missing (0 characters)
+    - [] null
+    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-
-Name for the purple label. `1` to `16384` characters long
-
+    - [] Empty string ("")
+    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/blue `string`
   - ✅Positive:
+    - [] Special characters and numbers
+    - [] 1 character
+    - [] Missing (0 characters)
+    - [] null
+    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-
-Name for the blue label. `1` to `16384` characters long
+    - [] Empty string ("")
+    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
 
 ---
 

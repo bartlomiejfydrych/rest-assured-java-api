@@ -119,7 +119,7 @@ public class POST_CreateBoardExpected {
             {
                 "id": "686407a52f06c5b579affe98",
                 "name": "Stracke, Mayert and Goyette borad 8886485083800",
-                "desc": "ŻÓŁĆżółć 1234567890 ~`!@#$%^&*()_+{}[];':\\",./<>?-=\\\\",
+                "desc": "!\\"#$%&\\\\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\\\\\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ęĘóÓąĄśŚłŁżŻźŹćĆńŃ",
                 "descData": null,
                 "closed": false,
                 "idOrganization": "67d9d5e34d7b900257deed0e",
