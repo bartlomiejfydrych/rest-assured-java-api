@@ -16,8 +16,8 @@ public class POST_CreateBoardUtils extends TestBase {
         POST_CreateBoardDto expectedResponsePostDto = deserializeJson(expectedResponse, POST_CreateBoardDto.class);
         expectedResponsePostDto.name = boardName;
         expectedResponsePostDto.id = responsePostDto.id;
-        expectedResponsePostDto.shortUrl = responsePostDto.shortUrl;
         expectedResponsePostDto.url = responsePostDto.url;
+        expectedResponsePostDto.shortUrl = responsePostDto.shortUrl;
         return expectedResponsePostDto;
     }
 

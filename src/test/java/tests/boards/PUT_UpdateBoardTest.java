@@ -9,26 +9,39 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import payloads.boards.PUT_UpdateBoardPayload;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Map;
 
 import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoard.postCreateBoard;
 import static endpoints.boards.PUT_UpdateBoard.putUpdateBoard;
+import static expected_responses.boards.PUT_UpdateBoardExpected.P1ExpectedPutBoardResponse;
 import static org.assertj.core.api.Assertions.assertThat;
+import static utils.UtilsCommon.getAllCharactersSetInRandomOrder;
 import static utils.UtilsResponse.deserializeAndValidate;
+import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class PUT_UpdateBoardTest extends TestBase {
 
-    private String boardId;
     private String trelloId = Config.getTrelloId();
+    // POST changing variables
+    private String boardId;
+    private String boardName;
+    private URL boardUrl;
+    private URL boardShortUrl;
 
     @BeforeEach
-    public void setUpCreateBoard() {
+    public void setUpCreateBoard() throws MalformedURLException {
         responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
+        boardName = responsePost.jsonPath().getString("name");
+        boardUrl = URI.create(responsePost.jsonPath().getString("url")).toURL();
+        boardShortUrl = URI.create(responsePost.jsonPath().getString("shortUrl")).toURL();
     }
 
     @AfterEach
@@ -45,33 +58,38 @@ public class PUT_UpdateBoardTest extends TestBase {
     // --------------
 
     @Test
-    public void P1_shouldUpdateBoardWhenMostStringParametersHaveSpecialCharacters() {
+    public void P1_shouldUpdateBoardWhenMostStringParametersHaveSpecialCharactersAndBooleansAreTrue() {
 
-        String allCharacters = "!\"#$%&\\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ęĘóÓąĄśŚłŁżŻźŹćĆńŃ";
-        // TODO: Na czacie metoda pomocnicza do losowego tasowania tych znaków
+        String allCharactersName = getAllCharactersSetInRandomOrder();
+        String allCharactersDesc = getAllCharactersSetInRandomOrder();
+        String allCharactersLabelNamesGreen = getAllCharactersSetInRandomOrder();
+        String allCharactersLabelNamesYellow = getAllCharactersSetInRandomOrder();
+        String allCharactersLabelNamesOrange = getAllCharactersSetInRandomOrder();
+        String allCharactersLabelNamesRed = getAllCharactersSetInRandomOrder();
+        String allCharactersLabelNamesPurple = getAllCharactersSetInRandomOrder();
+        String allCharactersLabelNamesBlue = getAllCharactersSetInRandomOrder();
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setName()
-                .setDesc()
-                .setClosed()
-                .setSubscribed()
-                .setIdOrganization()
-                .setPrefsPermissionLevel()
-                .setPrefsSelfJoin()
-                .setPrefsCardCovers()
-                .setPrefsHideVotes()
-                .setPrefsInvitations()
-                .setPrefsVoting()
-                .setPrefsComments()
-                .setPrefsBackground()
-                .setPrefsCardAging()
-                .setPrefsCalendarFeedEnabled()
-                .setLabelNamesGreen()
-                .setLabelNamesYellow()
-                .setLabelNamesOrange()
-                .setLabelNamesRed()
-                .setLabelNamesPurple()
-                .setLabelNamesBlue()
+                .setName(allCharactersName)
+                .setDesc(allCharactersDesc)
+                .setClosed(true)
+                .setIdOrganization(trelloId)
+                .setPrefsPermissionLevel("org")
+                .setPrefsSelfJoin(true)
+                .setPrefsCardCovers(true)
+                .setPrefsHideVotes(true)
+                .setPrefsInvitations("admins")
+                .setPrefsVoting("disabled")
+                .setPrefsComments("disabled")
+                .setPrefsBackground("blue")
+                .setPrefsCardAging("regular")
+                .setPrefsCalendarFeedEnabled(true)
+                .setLabelNamesGreen(allCharactersLabelNamesGreen)
+                .setLabelNamesYellow(allCharactersLabelNamesYellow)
+                .setLabelNamesOrange(allCharactersLabelNamesOrange)
+                .setLabelNamesRed(allCharactersLabelNamesRed)
+                .setLabelNamesPurple(allCharactersLabelNamesPurple)
+                .setLabelNamesBlue(allCharactersLabelNamesBlue)
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -80,6 +98,10 @@ public class PUT_UpdateBoardTest extends TestBase {
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         // TODO: Prepare expected response
+        PUT_UpdateBoardDto expectedResponsePutDto = deserializeJson(P1ExpectedPutBoardResponse, PUT_UpdateBoardDto.class);
+        expectedResponsePutDto.id = boardId;
+        expectedResponsePutDto.url = boardUrl;
+        expectedResponsePutDto.shortUrl = boardShortUrl;
         // TODO: Compare objects
         // GET
         // TODO: Validate Get against Put
