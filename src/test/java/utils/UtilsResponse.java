@@ -37,6 +37,10 @@ public class UtilsResponse {
         return dto;
     }
 
+    public static <T> T deserializeJson(Response response, Class<T> clazz) {
+        return deserializeJson(response.asString(), clazz);
+    }
+
     public static <T> T deserializeJson(String json, Class<T> clazz) {
         try {
             return objectMapper.readValue(json, clazz);
@@ -57,6 +61,10 @@ public class UtilsResponse {
             validateDto(dto);
         }
         return list;
+    }
+
+    public static <T> T deserializeJson(Response response, TypeReference<T> typeRef) {
+        return deserializeJson(response.asString(), typeRef);
     }
 
     public static <T> T deserializeJson(String json, TypeReference<T> typeRef) {

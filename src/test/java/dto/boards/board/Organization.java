@@ -3,7 +3,7 @@ package dto.boards.board;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import dto.boards.board.organization.OrganizationMembership;
+import dto.boards.board.organization.OrganizationMemberships;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -23,14 +23,14 @@ public class Organization {
 
     @NotNull
     @NotEmpty
-    public List<OrganizationMembership> memberships;
+    public List<OrganizationMemberships> memberships;
 
     @JsonCreator
     public Organization(
             @JsonProperty(value = "id", required = true) String id,
             @JsonProperty(value = "name", required = true) String name,
             @JsonProperty(value = "displayName", required = true) String displayName,
-            @JsonProperty(value = "memberships", required = true) List<OrganizationMembership> memberships
+            @JsonProperty(value = "memberships", required = true) List<OrganizationMemberships> memberships
     ) {
         this.id = id;
         this.name = name;

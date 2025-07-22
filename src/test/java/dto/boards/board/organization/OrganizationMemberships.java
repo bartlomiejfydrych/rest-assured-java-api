@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
-public class OrganizationMembership {
+public class OrganizationMemberships {
 
     @NotNull
     public String id;
@@ -24,10 +25,14 @@ public class OrganizationMembership {
     public Boolean deactivated;
 
     @NotNull
+    @Pattern(
+            regexp = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$",
+            message = "lastActive must match ISO 8601 format with milliseconds and 'Z', e.g., 2025-07-22T17:04:41.428Z"
+    )
     public String lastActive;
 
     @JsonCreator
-    public OrganizationMembership(
+    public OrganizationMemberships(
             @JsonProperty(value = "id", required = true) String id,
             @JsonProperty(value = "idMember", required = true) String idMember,
             @JsonProperty(value = "memberType", required = true) String memberType,
@@ -43,6 +48,6 @@ public class OrganizationMembership {
         this.lastActive = lastActive;
     }
 
-    public OrganizationMembership() {
+    public OrganizationMemberships() {
     }
 }
