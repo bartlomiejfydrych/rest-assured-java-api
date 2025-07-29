@@ -14,6 +14,8 @@ import java.net.URL;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class PUT_UpdateBoardDto extends BoardBaseDto {
 
+    public static final String FIELD_ORGANIZATION = "organization";
+
     @Valid // <-- validates nested fields if object exists
     public Organization organization;
 
@@ -31,7 +33,7 @@ public class PUT_UpdateBoardDto extends BoardBaseDto {
             @JsonProperty(value = "shortUrl", required = true) URL shortUrl,
             @JsonProperty(value = "prefs", required = true) Prefs prefs,
             @JsonProperty(value = "labelNames", required = true) LabelNames labelNames,
-            @JsonProperty(value = "organization", required = false) Organization organization
+            @JsonProperty(value = FIELD_ORGANIZATION, required = false) Organization organization
     ) {
         super(id, name, desc, descData, closed, idOrganization, idEnterprise, pinned, url, shortUrl, prefs, labelNames);
         this.organization = organization;

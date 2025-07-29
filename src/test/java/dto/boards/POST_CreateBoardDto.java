@@ -32,7 +32,7 @@ public class POST_CreateBoardDto extends BoardBaseDto {
             @JsonProperty(value = "shortUrl", required = true) URL shortUrl,
             @JsonProperty(value = "prefs", required = true) Prefs prefs,
             @JsonProperty(value = "labelNames", required = true) LabelNames labelNames,
-            @JsonProperty(value = "limits", required = true) Object limits
+            @JsonProperty(value = FIELD_LIMITS, required = true) Object limits
     ) {
         super(id, name, desc, descData, closed, idOrganization, idEnterprise, pinned, url, shortUrl, prefs, labelNames);
         this.limits = limits;

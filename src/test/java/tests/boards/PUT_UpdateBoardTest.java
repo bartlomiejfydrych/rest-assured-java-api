@@ -23,8 +23,7 @@ import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
-import static utils_tests.boards.PUT_UpdateBoardUtils.prepareExpectedResponsePut;
-import static utils_tests.boards.PUT_UpdateBoardUtils.validateGetAgainstPut;
+import static utils_tests.boards.PUT_UpdateBoardUtils.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class PUT_UpdateBoardTest extends TestBase {
@@ -63,7 +62,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void P1_shouldUpdateBoardWhenMostStringParametersHaveSpecialCharactersAndBooleansAreTrue() {
 
-        String name = getAllCharactersSetInRandomOrder();
+        boardName = getAllCharactersSetInRandomOrder();
         String desc = getAllCharactersSetInRandomOrder();
         String labelNamesGreen = getAllCharactersSetInRandomOrder();
         String labelNamesYellow = getAllCharactersSetInRandomOrder();
@@ -73,7 +72,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         String labelNamesBlue = getAllCharactersSetInRandomOrder();
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setName(name)
+                .setName(boardName)
                 .setDesc(desc)
                 .setClosed(true)
                 .setIdOrganization(trelloId)
@@ -100,8 +99,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         responsePut = putUpdateBoard(boardId, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
-        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P1ExpectedPutBoardResponse, boardId, boardUrl, boardShortUrl);
-        expectedResponsePutDto.name = name;
+        assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
+        assertThat(stripBoardNameFromUrl(responsePutDto.url)).isEqualTo(stripBoardNameFromUrl(boardUrl));
+        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P1ExpectedPutBoardResponse, boardId, boardName, responsePutDto.url, boardShortUrl);
         expectedResponsePutDto.desc = desc;
         expectedResponsePutDto.labelNames.green = labelNamesGreen;
         expectedResponsePutDto.labelNames.yellow = labelNamesYellow;
@@ -110,16 +110,6 @@ public class PUT_UpdateBoardTest extends TestBase {
         expectedResponsePutDto.labelNames.purple = labelNamesPurple;
         expectedResponsePutDto.labelNames.blue = labelNamesBlue;
         expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
-
-        /*
-        TODO: Rozkminić to
-        POST ma jakieś kodowanie tego URL, a PUT nie...
-        field/property 'url' differ:
-        - actual value  : https://trello.com/b/7QndIaWE/5%C4%99x%C4%85%C3%B3vbxpu%C5%9Bk%C5%BA1jojhiglo-%C5%84%C4%857ya%C5%BCq%C5%BAmegh8q%C4%87ywmw2rccs%C4%87-p-%C5%84-z-b0%C3%B3sfinkretd%C5%9Bt6-za4u%C5%BCnl3v9%C4%99f%C5%82%C5%82d
-        - expected value: https://trello.com/b/7QndIaWE/swift-flatley-and-langworth-borad-8883938767800
-        Compared objects have java types and were thus compared with equals method
-        */
-
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
