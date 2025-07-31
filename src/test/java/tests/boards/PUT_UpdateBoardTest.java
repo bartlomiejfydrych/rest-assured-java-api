@@ -114,4 +114,63 @@ public class PUT_UpdateBoardTest extends TestBase {
         // GET
         validateGetAgainstPut(responsePutDto);
     }
+
+    @Test
+    public void P2_shouldUpdateBoardWhenMostParametersAreNull() {
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setName(null)
+                .setDesc(null)
+                .setClosed(null)
+                .setSubscribed(null)
+                .setIdOrganization(null)
+                .setPrefsPermissionLevel(null)
+                .setPrefsSelfJoin(null)
+                .setPrefsCardCovers(null)
+                .setPrefsHideVotes(null)
+                .setPrefsInvitations(null)
+                .setPrefsVoting(null)
+                .setPrefsComments(null)
+                .setPrefsBackground(null)
+                .setPrefsCardAging(null)
+                .setPrefsCalendarFeedEnabled(null)
+                .setLabelNamesGreen(null)
+                .setLabelNamesYellow(null)
+                .setLabelNamesOrange(null)
+                .setLabelNamesRed(null)
+                .setLabelNamesPurple(null)
+                .setLabelNamesBlue(null)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(200);
+        PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
+//        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut()
+//
+//
+//
+//        // PUT
+//        responsePut = putUpdateBoard(boardId, queryParams);
+//        assertThat(responsePut.statusCode()).isEqualTo(200);
+//        PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
+//        assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
+//        assertThat(stripBoardNameFromUrl(responsePutDto.url)).isEqualTo(stripBoardNameFromUrl(boardUrl));
+//        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P1ExpectedPutBoardResponse, boardId, boardName, responsePutDto.url, boardShortUrl);
+//        expectedResponsePutDto.desc = desc;
+//        expectedResponsePutDto.labelNames.green = labelNamesGreen;
+//        expectedResponsePutDto.labelNames.yellow = labelNamesYellow;
+//        expectedResponsePutDto.labelNames.orange = labelNamesOrange;
+//        expectedResponsePutDto.labelNames.red = labelNamesRed;
+//        expectedResponsePutDto.labelNames.purple = labelNamesPurple;
+//        expectedResponsePutDto.labelNames.blue = labelNamesBlue;
+//        expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
+//        compareObjects(responsePutDto, expectedResponsePutDto);
+//        // GET
+//        validateGetAgainstPut(responsePutDto);
+
+    }
+
+    //         boardName = String.valueOf(faker.regexify("[A-Za-z0-9]").charAt(0));
 }

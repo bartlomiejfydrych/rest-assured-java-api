@@ -37,7 +37,7 @@ None.
     - **[P1]** Special characters and numbers
     - **[]** 1 character
     - **[]** Missing (0 characters)
-    - **[]** null
+    - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[]** Empty string ("")
@@ -46,7 +46,7 @@ None.
   - ✅Positive:
     - **[P1]** Special characters and numbers
     - **[]** Missing (0 characters)
-    - **[]** null
+    - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
@@ -55,11 +55,11 @@ None.
     - **[]** Missing
     - **[P1]** true
     - **[]** false
-    - **[]** null
+    - **[P2]** null
 - 💠subscribed `TrelloID` | Style: `form` | `^[0-9a-fA-F]{24}$`
   - ✅Positive:
     - **[]** Missing
-    - **[]** null
+    - **[P2]** null
     - **[💥]** Correct -> I was unable to determine the correct TrelloID
   - ❌Negative:
     - **[]** Non-existent
@@ -67,7 +67,7 @@ None.
 - 💠idOrganization `string` (📌It is possible that instead of String there is `TrelloID` | `^[0-9a-fA-F]{24}$`)
   - ✅Positive:
     - **[]** Missing
-    - **[]** null
+    - **[P2]** null
     - **[P1]** Valid
   - ❌Negative:
     - **[]** Non-existent
@@ -75,7 +75,7 @@ None.
 - 💠prefs/permissionLevel `string`
   - ✅Positive:
     - **[]** Missing
-    - **[]** null
+    - **[P2]** null
     - **[P1]** org
     - **[]** private
     - **[]** public
@@ -86,23 +86,23 @@ None.
     - **[]** Missing
     - **[P1]** true
     - **[]** false
-    - **[]** null
+    - **[P2]** null
 - 💠prefs/cardCovers `boolean`
   - ✅Positive:
     - **[]** Missing
     - **[P1]** true
     - **[]** false
-    - **[]** null
+    - **[P2]** null
 - 💠prefs/hideVotes `boolean`
   - ✅Positive:
     - **[]** Missing
     - **[P1]** true
     - **[]** false
-    - **[]** null
+    - **[P2]** null
 - 💠prefs/invitations `string`
   - ✅Positive:
     - **[]** Missing
-    - **[]** null
+    - **[P2]** null
     - **[P1]** admins
     - **[]** members
   - ❌Negative:
@@ -110,7 +110,7 @@ None.
 - 💠prefs/voting `string`
   - ✅Positive:
     - **[]** Missing
-    - **[]** null
+    - **[P2]** null
     - **[P1]** disabled
     - **[]** members
     - **[]** observers
@@ -121,7 +121,7 @@ None.
 - 💠prefs/comments `string`
   - ✅Positive:
     - **[]** Missing
-    - **[]** null
+    - **[P2]** null
     - **[P1]** disabled
     - **[]** members
     - **[]** observers
@@ -132,7 +132,7 @@ None.
 - 💠prefs/background `string`
   - ✅Positive:
     - **[]** Missing
-    - **[]** null
+    - **[P2]** null
     - **[P1]** blue
     - **[]** orange
     - **[]** green
@@ -147,7 +147,7 @@ None.
 - 💠prefs/cardAging `string`
   - ✅Positive:
     - **[]** Missing (will there be a default value of `regular`)
-    - **[]** null
+    - **[P2]** null
     - **[P1]** regular
     - **[]** pirate
   - ❌Negative:
@@ -157,13 +157,13 @@ None.
     - **[]** Missing
     - **[P1]** true
     - **[]** false
-    - **[]** null
+    - **[P2]** null
 - 💠labelNames/green `string`
   - ✅Positive:
     - **[P1]** Special characters and numbers
     - **[]** 1 character
     - **[]** Missing (0 characters)
-    - **[]** null
+    - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[]** Empty string ("")
@@ -173,7 +173,7 @@ None.
     - **[P1]** Special characters and numbers
     - **[]** 1 character
     - **[]** Missing (0 characters)
-    - **[]** null
+    - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[]** Empty string ("")
@@ -183,7 +183,7 @@ None.
     - **[P1]** Special characters and numbers
     - **[]** 1 character
     - **[]** Missing (0 characters)
-    - **[]** null
+    - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[]** Empty string ("")
@@ -193,7 +193,7 @@ None.
     - **[P1]** Special characters and numbers
     - **[]** 1 character
     - **[]** Missing (0 characters)
-    - **[]** null
+    - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[]** Empty string ("")
@@ -203,7 +203,7 @@ None.
     - **[P1]** Special characters and numbers
     - **[]** 1 character
     - **[]** Missing (0 characters)
-    - **[]** null
+    - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[]** Empty string ("")
@@ -213,7 +213,7 @@ None.
     - **[P1]** Special characters and numbers
     - **[]** 1 character
     - **[]** Missing (0 characters)
-    - **[]** null
+    - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[]** Empty string ("")

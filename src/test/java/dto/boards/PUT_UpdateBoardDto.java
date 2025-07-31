@@ -10,6 +10,7 @@ import dto.boards.board.Prefs;
 import jakarta.validation.Valid;
 
 import java.net.URL;
+import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class PUT_UpdateBoardDto extends BoardBaseDto {
@@ -33,10 +34,10 @@ public class PUT_UpdateBoardDto extends BoardBaseDto {
             @JsonProperty(value = "shortUrl", required = true) URL shortUrl,
             @JsonProperty(value = "prefs", required = true) Prefs prefs,
             @JsonProperty(value = "labelNames", required = true) LabelNames labelNames,
-            @JsonProperty(value = FIELD_ORGANIZATION, required = false) Organization organization
+            @JsonProperty(value = FIELD_ORGANIZATION, required = false) Optional<Organization> organization
     ) {
         super(id, name, desc, descData, closed, idOrganization, idEnterprise, pinned, url, shortUrl, prefs, labelNames);
-        this.organization = organization;
+        this.organization = organization.orElse(null);
     }
 
     public PUT_UpdateBoardDto() {
