@@ -34,190 +34,194 @@ None.
 
 - 💠name `string`
   - ✅Positive:
-    - [] Special characters and numbers
-    - [] 1 character
-    - [] Missing (0 characters)
-    - [] null
-    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
+    - **[P1]** Special characters and numbers
+    - **[]** 1 character
+    - **[]** Missing (0 characters)
+    - **[]** null
+    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - [] Empty string ("")
-    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
+    - **[]** Empty string ("")
+    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠desc `string`
   - ✅Positive:
-    - [] Special characters and numbers
-    - [] Missing (0 characters)
-    - [] null
-    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
+    - **[P1]** Special characters and numbers
+    - **[]** Missing (0 characters)
+    - **[]** null
+    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
+    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠closed `boolean`
   - ✅Positive:
-    - [] Missing
-    - [] true
-    - [] false
-    - [] null
+    - **[]** Missing
+    - **[P1]** true
+    - **[]** false
+    - **[]** null
 - 💠subscribed `TrelloID` | Style: `form` | `^[0-9a-fA-F]{24}$`
   - ✅Positive:
-    - [] Missing
-    - [] null
-    - [] Correct
+    - **[]** Missing
+    - **[]** null
+    - **[💥]** Correct -> I was unable to determine the correct TrelloID
   - ❌Negative:
-    - [] Non-existent
-    - [] Incompatible with `^[0-9a-fA-F]{24}$`
+    - **[]** Non-existent
+    - **[]** Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠idOrganization `string` (📌It is possible that instead of String there is `TrelloID` | `^[0-9a-fA-F]{24}$`)
   - ✅Positive:
-    - [] Missing
-    - [] null
-    - [] Valid
+    - **[]** Missing
+    - **[]** null
+    - **[P1]** Valid
   - ❌Negative:
-    - [] Non-existent
-    - [] Incompatible with `^[0-9a-fA-F]{24}$`
+    - **[]** Non-existent
+    - **[]** Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠prefs/permissionLevel `string`
   - ✅Positive:
-    - [] Missing
-    - [] null
-    - [] org
-    - [] private
-    - [] public
+    - **[]** Missing
+    - **[]** null
+    - **[P1]** org
+    - **[]** private
+    - **[]** public
   - ❌Negative:
-    - [] Other string
+    - **[]** Other string
 - 💠prefs/selfJoin `boolean`
   - ✅Positive:
-    - [] Missing
-    - [] true
-    - [] false
-    - [] null
+    - **[]** Missing
+    - **[P1]** true
+    - **[]** false
+    - **[]** null
 - 💠prefs/cardCovers `boolean`
   - ✅Positive:
-    - [] Missing
-    - [] true
-    - [] false
-    - [] null
+    - **[]** Missing
+    - **[P1]** true
+    - **[]** false
+    - **[]** null
 - 💠prefs/hideVotes `boolean`
   - ✅Positive:
-    - [] Missing
-    - [] true
-    - [] false
-    - [] null
+    - **[]** Missing
+    - **[P1]** true
+    - **[]** false
+    - **[]** null
 - 💠prefs/invitations `string`
   - ✅Positive:
-    - [] Missing
-    - [] null
-    - [] admins
-    - [] members
+    - **[]** Missing
+    - **[]** null
+    - **[P1]** admins
+    - **[]** members
   - ❌Negative:
-    - [] Other string
+    - **[]** Other string
 - 💠prefs/voting `string`
   - ✅Positive:
-    - [] Missing
-    - [] null
-    - [] disabled
-    - [] members
-    - [] observers
-    - [] org
-    - [] public
+    - **[]** Missing
+    - **[]** null
+    - **[P1]** disabled
+    - **[]** members
+    - **[]** observers
+    - **[]** org
+    - **[]** public
   - ❌Negative:
-    - [] Other string
+    - **[]** Other string
 - 💠prefs/comments `string`
   - ✅Positive:
-    - [] Missing
-    - [] null
-    - [] disabled
-    - [] members
-    - [] observers
-    - [] org
-    - [] public
+    - **[]** Missing
+    - **[]** null
+    - **[P1]** disabled
+    - **[]** members
+    - **[]** observers
+    - **[]** org
+    - **[]** public
   - ❌Negative:
-    - [] Other string
+    - **[]** Other string
 - 💠prefs/background `string`
   - ✅Positive:
-    - [] Missing
-    - [] null
-    - [] blue
-    - [] orange
-    - [] green
-    - [] red
-    - [] purple
-    - [] pink
-    - [] lime
-    - [] sky
-    - [] grey
+    - **[]** Missing
+    - **[]** null
+    - **[P1]** blue
+    - **[]** orange
+    - **[]** green
+    - **[]** red
+    - **[]** purple
+    - **[]** pink
+    - **[]** lime
+    - **[]** sky
+    - **[]** grey
   - ❌Negative:
-    - [SPRAWDZIĆ💥] Other string -> It was ignored and board was created
+    - **[SPRAWDZIĆ💥]** Other string -> It was ignored and board was created
 - 💠prefs/cardAging `string`
   - ✅Positive:
-    - [] Missing (will there be a default value of `regular`)
-    - [] null
-    - [] regular
-    - [] pirate
+    - **[]** Missing (will there be a default value of `regular`)
+    - **[]** null
+    - **[P1]** regular
+    - **[]** pirate
   - ❌Negative:
-    - [] Other string
+    - **[]** Other string
 - 💠prefs/calendarFeedEnabled `boolean`
   - ✅Positive:
-    - [] Missing
-    - [] true
-    - [] false
-    - [] null
+    - **[]** Missing
+    - **[P1]** true
+    - **[]** false
+    - **[]** null
 - 💠labelNames/green `string`
   - ✅Positive:
-    - [] Special characters and numbers
-    - [] 1 character
-    - [] Missing (0 characters)
-    - [] null
-    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
+    - **[P1]** Special characters and numbers
+    - **[]** 1 character
+    - **[]** Missing (0 characters)
+    - **[]** null
+    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - [] Empty string ("")
-    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
+    - **[]** Empty string ("")
+    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/yellow `string`
   - ✅Positive:
-    - [] Special characters and numbers
-    - [] 1 character
-    - [] Missing (0 characters)
-    - [] null
-    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
+    - **[P1]** Special characters and numbers
+    - **[]** 1 character
+    - **[]** Missing (0 characters)
+    - **[]** null
+    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - [] Empty string ("")
-    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
+    - **[]** Empty string ("")
+    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/orange `string`
   - ✅Positive:
-    - [] Special characters and numbers
-    - [] 1 character
-    - [] Missing (0 characters)
-    - [] null
-    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
+    - **[P1]** Special characters and numbers
+    - **[]** 1 character
+    - **[]** Missing (0 characters)
+    - **[]** null
+    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - [] Empty string ("")
-    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
+    - **[]** Empty string ("")
+    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/red `string`
   - ✅Positive:
-    - [] Special characters and numbers
-    - [] 1 character
-    - [] Missing (0 characters)
-    - [] null
-    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
+    - **[P1]** Special characters and numbers
+    - **[]** 1 character
+    - **[]** Missing (0 characters)
+    - **[]** null
+    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - [] Empty string ("")
-    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
+    - **[]** Empty string ("")
+    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/purple `string`
   - ✅Positive:
-    - [] Special characters and numbers
-    - [] 1 character
-    - [] Missing (0 characters)
-    - [] null
-    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
+    - **[P1]** Special characters and numbers
+    - **[]** 1 character
+    - **[]** Missing (0 characters)
+    - **[]** null
+    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - [] Empty string ("")
-    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
+    - **[]** Empty string ("")
+    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/blue `string`
   - ✅Positive:
-    - [] Special characters and numbers
-    - [] 1 character
-    - [] Missing (0 characters)
-    - [] null
-    - [💥] 16384 characters -> Can't test it because max URI size is ~2000 characters
+    - **[P1]** Special characters and numbers
+    - **[]** 1 character
+    - **[]** Missing (0 characters)
+    - **[]** null
+    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - [] Empty string ("")
-    - [💥] 16385 characters -> Can't test it because max URI size is ~2000 characters
+    - **[]** Empty string ("")
+    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
+- 💠Others:
+  - ✅Positive:
+    - **[P1]** Providing all or most parameters at once
+    - **[P1]** Checking if (POST_url != PUT_url) when table name is changed
 
 ---
 
