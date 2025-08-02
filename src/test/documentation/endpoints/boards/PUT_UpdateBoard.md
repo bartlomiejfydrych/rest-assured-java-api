@@ -26,7 +26,7 @@ Forge and OAuth2 apps cannot access this REST resource.
 
 ## 📌Important notes <a name="important_notes"></a>
 
-None.
+When we change the `"name"` of the board, the value of the `"url"` parameter also changes
 
 ---
 

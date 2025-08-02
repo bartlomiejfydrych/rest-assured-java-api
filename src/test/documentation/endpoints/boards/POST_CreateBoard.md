@@ -25,7 +25,10 @@ Create a new board.
 
 ## 📌Important notes <a name="important_notes"></a>
 
-None.
+Each time the `"name"` changes, the `"url"` also changes.
+
+Depending on the `"background"` color, the HEX color value for `"backgroundColor"`, `"backgroundBottomColor"`
+and `"backgroundTopColor"` changes.
 
 ---
 

@@ -131,6 +131,112 @@ public class PUT_UpdateBoardExpected {
                 }
             }
             """;
+    public static final String P2ExpectedPutBoardResponse = """
+            {
+                "id": "688e0507b4c75e85946d47b8",
+                "name": "Mosciski, Ritchie and Luettgen borad 17280445124000",
+                "desc": "",
+                "descData": null,
+                "closed": false,
+                "idOrganization": "67d9d5e34d7b900257deed0e",
+                "idEnterprise": null,
+                "pinned": false,
+                "url": "https://trello.com/b/PzIs2qX1/mosciski-ritchie-and-luettgen-borad-17280445124000",
+                "shortUrl": "https://trello.com/b/PzIs2qX1",
+                "prefs": {
+                    "permissionLevel": "private",
+                    "hideVotes": false,
+                    "voting": "disabled",
+                    "comments": "members",
+                    "invitations": "members",
+                    "selfJoin": true,
+                    "cardCovers": true,
+                    "showCompleteStatus": true,
+                    "cardCounts": false,
+                    "isTemplate": false,
+                    "cardAging": "regular",
+                    "calendarFeedEnabled": false,
+                    "hiddenPluginBoardButtons": [
+            
+                    ],
+                    "switcherViews": [
+                        {
+                            "viewType": "Board",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Table",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Calendar",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Dashboard",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Timeline",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Map",
+                            "enabled": false
+                        }
+                    ],
+                    "autoArchive": null,
+                    "background": "blue",
+                    "backgroundColor": "#0079BF",
+                    "backgroundDarkColor": null,
+                    "backgroundImage": null,
+                    "backgroundDarkImage": null,
+                    "backgroundImageScaled": null,
+                    "backgroundTile": false,
+                    "backgroundBrightness": "dark",
+                    "sharedSourceUrl": null,
+                    "backgroundBottomColor": "#0079BF",
+                    "backgroundTopColor": "#0079BF",
+                    "canBePublic": true,
+                    "canBeEnterprise": true,
+                    "canBeOrg": true,
+                    "canBePrivate": true,
+                    "canInvite": true
+                },
+                "labelNames": {
+                    "green": "",
+                    "yellow": "",
+                    "orange": "",
+                    "red": "",
+                    "purple": "",
+                    "blue": "",
+                    "sky": "",
+                    "lime": "",
+                    "pink": "",
+                    "black": "",
+                    "green_dark": "",
+                    "yellow_dark": "",
+                    "orange_dark": "",
+                    "red_dark": "",
+                    "purple_dark": "",
+                    "blue_dark": "",
+                    "sky_dark": "",
+                    "lime_dark": "",
+                    "pink_dark": "",
+                    "black_dark": "",
+                    "green_light": "",
+                    "yellow_light": "",
+                    "orange_light": "",
+                    "red_light": "",
+                    "purple_light": "",
+                    "blue_light": "",
+                    "sky_light": "",
+                    "lime_light": "",
+                    "pink_light": "",
+                    "black_light": ""
+                }
+            }
+            """;
 
     // --------------
     // NEGATIVE TESTS

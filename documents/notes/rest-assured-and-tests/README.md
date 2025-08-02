@@ -30,6 +30,7 @@
 - [ID – czyszczenie zmiennej po wysłaniu DELETE](#id_clean_after_delete)
 - [UtilsCompare.java – opis kodu](#utils_compare_java)
 - [UtilsResponse.java – opis kodu](#utils_response_java)
+- [DTO – opcjonalne parametry](#dto_optional_parameters)
 - [Struktura JSON – JsonSchema vs. DTO/POJO](#json_schema_dto_pojo)
 - [Porównywanie JSON'ów – wyzwania, podejścia, praktyki](#json_compare_intro)
 - [Porównywanie JSON'ów – ObjectMapper](#json_compare_object_mapper)
@@ -1173,6 +1174,108 @@ public static <T> void validateDto(T dto) {
 * ✅ Waliduje je za pomocą adnotacji (np. `@NotNull`).
 * ✅ Wyrzuca szczegółowy błąd, jeśli JSON jest niepoprawny lub obiekt nie przechodzi walidacji.
 * ✅ Obsługuje zarówno pojedyncze obiekty, jak i listy.
+
+---
+
+## 📄DTO – opcjonalne parametry <a name="dto_optional_parameters"></a>
+
+### Kontekst
+
+Czasami zdarza się tak, że response raz zwraca jakiś parametr, a raz nie.  
+W takiej sytuacji trzeba go zapisać nieco inaczej, aby walidator go nie wymagał.
+
+### Kroki
+
+1. Zmieniamy zapis deklaracji tej zmiennej:
+   ```java
+   // PRZED:
+   @Valid // <-- validates nested fields if object exists
+   public Organization organization;
+   
+   // PO:
+   @Valid // <-- validates nested fields if object exists
+   public Optional<Organization> organization = Optional.empty();
+   ```
+2. Usuwamy ją z konstruktora `@JsonCreator`:
+   ```java
+   // PRZED:
+   @JsonCreator
+   public PUT_UpdateBoardDto(
+           @JsonProperty(value = "id", required = true) String id,
+           @JsonProperty(value = "name", required = true) String name,
+           @JsonProperty(value = "desc", required = true) String desc,
+           @JsonProperty(value = "descData", required = true) DescData descData,
+           @JsonProperty(value = "closed", required = true) Boolean closed,
+           @JsonProperty(value = "idOrganization", required = true) String idOrganization,
+           @JsonProperty(value = "idEnterprise", required = true) Object idEnterprise,
+           @JsonProperty(value = "pinned", required = true) Boolean pinned,
+           @JsonProperty(value = "url", required = true) URL url,
+           @JsonProperty(value = "shortUrl", required = true) URL shortUrl,
+           @JsonProperty(value = "prefs", required = true) Prefs prefs,
+           @JsonProperty(value = "labelNames", required = true) LabelNames labelNames,
+           @JsonProperty(value = FIELD_ORGANIZATION, required = false) Organization organization
+   ) {
+       super(id, name, desc, descData, closed, idOrganization, idEnterprise, pinned, url, shortUrl, prefs, labelNames);
+       this.organization = organization;
+   }
+   
+   // PO:
+   @JsonCreator
+   public PUT_UpdateBoardDto(
+           @JsonProperty(value = "id", required = true) String id,
+           @JsonProperty(value = "name", required = true) String name,
+           @JsonProperty(value = "desc", required = true) String desc,
+           @JsonProperty(value = "descData", required = true) DescData descData,
+           @JsonProperty(value = "closed", required = true) Boolean closed,
+           @JsonProperty(value = "idOrganization", required = true) String idOrganization,
+           @JsonProperty(value = "idEnterprise", required = true) Object idEnterprise,
+           @JsonProperty(value = "pinned", required = true) Boolean pinned,
+           @JsonProperty(value = "url", required = true) URL url,
+           @JsonProperty(value = "shortUrl", required = true) URL shortUrl,
+           @JsonProperty(value = "prefs", required = true) Prefs prefs,
+           @JsonProperty(value = "labelNames", required = true) LabelNames labelNames
+   ) {
+       super(id, name, desc, descData, closed, idOrganization, idEnterprise, pinned, url, shortUrl, prefs, labelNames);
+   }
+   ```
+3. I przenosimy ją do pola:
+   ```java
+   @JsonProperty(FIELD_ORGANIZATION)
+   public void setOrganization(Organization organization) {
+       this.organization = Optional.ofNullable(organization);
+   }
+
+   public Optional<Organization> getOrganization() {
+       return organization;
+   }
+   ```
+   ✅**Co zyskujesz:**
+    
+   * `FAIL_ON_MISSING_CREATOR_PROPERTIES = true` działa — bo wszystkie wymagane pola są w konstruktorze;
+   * `organization` jest bezpiecznie opcjonalne;
+   * możesz je walidować tylko jeśli istnieje (`@Valid` + `Optional`).
+
+   📌**Dlaczego to działa?**
+    
+   * Jackson wymaga, by *wszystkie pola konstruktora były dostępne w JSONie*, jeśli masz `FAIL_ON_MISSING_CREATOR_PROPERTIES = true`.
+   * Jeśli pominiesz pole z konstruktora i dasz setter — Jackson uzna to za opcjonalne (zgodnie z Twoją intencją).
+4. Po tej zmianie używanie tego parametru będzie wyglądało inaczej:
+   ```java
+   // ZAMIAST:
+   expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
+   
+   // BĘDZIE:
+   expectedResponsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive = responsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive;
+   ```
+   **Ponieważ:**  
+   Pole `organization` jest teraz typu `Optional<Organization>`, a nie bezpośrednio `Organization`. Dlatego nie możesz już
+   tak po prostu pisać, bo `organization` to teraz `Optional`, więc nie ma bezpośredniego dostępu do `.memberships`.
+5. Dlatego najlepszym rozwiązaniem dla najlepszej czytelności testów będzie utworzenie w tym DTO metody pomocniczej:
+   ```java
+   public Organization getOrganizationOrThrow() {
+       return organization.orElseThrow(() -> new IllegalStateException("Organization is missing"));
+   }
+   ```
 
 ---
 

@@ -17,6 +17,7 @@ import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoard.postCreateBoard;
 import static endpoints.boards.PUT_UpdateBoard.putUpdateBoard;
 import static expected_responses.boards.PUT_UpdateBoardExpected.P1ExpectedPutBoardResponse;
+import static expected_responses.boards.PUT_UpdateBoardExpected.P2ExpectedPutBoardResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.getAllCharactersSetInRandomOrder;
 import static utils.UtilsCompare.compareObjects;
@@ -109,7 +110,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         expectedResponsePutDto.labelNames.red = labelNamesRed;
         expectedResponsePutDto.labelNames.purple = labelNamesPurple;
         expectedResponsePutDto.labelNames.blue = labelNamesBlue;
-        expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
+        expectedResponsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive = responsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive;
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -147,7 +148,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         responsePut = putUpdateBoard(boardId, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
-//        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut()
+        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P2ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
 //
 //
 //
