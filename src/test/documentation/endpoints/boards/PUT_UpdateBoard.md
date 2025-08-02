@@ -26,7 +26,10 @@ Forge and OAuth2 apps cannot access this REST resource.
 
 ## 📌Important notes <a name="important_notes"></a>
 
-When we change the `"name"` of the board, the value of the `"url"` parameter also changes
+Each time the `"name"` changes, the `"url"` also changes.
+
+Depending on the `"background"` color, the HEX color value for `"backgroundColor"`, `"backgroundBottomColor"`
+and `"backgroundTopColor"` changes.
 
 ---
 
