@@ -237,6 +237,339 @@ public class PUT_UpdateBoardExpected {
                 }
             }
             """;
+    public static final String P3ExpectedPutBoardResponse = """
+            {
+                "id": "688f48b122485f06707f8682",
+                "name": "Pfeffer-Metz borad 16559194763799",
+                "desc": "",
+                "descData": null,
+                "closed": false,
+                "idOrganization": "67d9d5e34d7b900257deed0e",
+                "idEnterprise": null,
+                "pinned": false,
+                "url": "https://trello.com/b/e6xk8Khz/pfeffer-metz-borad-16559194763799",
+                "shortUrl": "https://trello.com/b/e6xk8Khz",
+                "prefs": {
+                    "permissionLevel": "private",
+                    "hideVotes": false,
+                    "voting": "disabled",
+                    "comments": "members",
+                    "invitations": "members",
+                    "selfJoin": true,
+                    "cardCovers": true,
+                    "showCompleteStatus": true,
+                    "cardCounts": false,
+                    "isTemplate": false,
+                    "cardAging": "regular",
+                    "calendarFeedEnabled": false,
+                    "hiddenPluginBoardButtons": [
+            
+                    ],
+                    "switcherViews": [
+                        {
+                            "viewType": "Board",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Table",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Calendar",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Dashboard",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Timeline",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Map",
+                            "enabled": false
+                        }
+                    ],
+                    "autoArchive": null,
+                    "background": "blue",
+                    "backgroundColor": "#0079BF",
+                    "backgroundDarkColor": null,
+                    "backgroundImage": null,
+                    "backgroundDarkImage": null,
+                    "backgroundImageScaled": null,
+                    "backgroundTile": false,
+                    "backgroundBrightness": "dark",
+                    "sharedSourceUrl": null,
+                    "backgroundBottomColor": "#0079BF",
+                    "backgroundTopColor": "#0079BF",
+                    "canBePublic": true,
+                    "canBeEnterprise": true,
+                    "canBeOrg": true,
+                    "canBePrivate": true,
+                    "canInvite": true
+                },
+                "labelNames": {
+                    "green": "",
+                    "yellow": "",
+                    "orange": "",
+                    "red": "",
+                    "purple": "",
+                    "blue": "",
+                    "sky": "",
+                    "lime": "",
+                    "pink": "",
+                    "black": "",
+                    "green_dark": "",
+                    "yellow_dark": "",
+                    "orange_dark": "",
+                    "red_dark": "",
+                    "purple_dark": "",
+                    "blue_dark": "",
+                    "sky_dark": "",
+                    "lime_dark": "",
+                    "pink_dark": "",
+                    "black_dark": "",
+                    "green_light": "",
+                    "yellow_light": "",
+                    "orange_light": "",
+                    "red_light": "",
+                    "purple_light": "",
+                    "blue_light": "",
+                    "sky_light": "",
+                    "lime_light": "",
+                    "pink_light": "",
+                    "black_light": ""
+                }
+            }
+            """;
+    public static final String P4ExpectedPutBoardResponse = """
+            {
+                "id": "688f5105a1fc25568e5b750e",
+                "name": "s",
+                "desc": "",
+                "descData": null,
+                "closed": false,
+                "idOrganization": "67d9d5e34d7b900257deed0e",
+                "idEnterprise": null,
+                "pinned": false,
+                "url": "https://trello.com/b/cjrmYigv/s",
+                "shortUrl": "https://trello.com/b/cjrmYigv",
+                "prefs": {
+                    "permissionLevel": "private",
+                    "hideVotes": false,
+                    "voting": "members",
+                    "comments": "members",
+                    "invitations": "members",
+                    "selfJoin": false,
+                    "cardCovers": false,
+                    "showCompleteStatus": true,
+                    "cardCounts": false,
+                    "isTemplate": false,
+                    "cardAging": "pirate",
+                    "calendarFeedEnabled": false,
+                    "hiddenPluginBoardButtons": [
+            
+                    ],
+                    "switcherViews": [
+                        {
+                            "viewType": "Board",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Table",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Calendar",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Dashboard",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Timeline",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Map",
+                            "enabled": false
+                        }
+                    ],
+                    "autoArchive": null,
+                    "background": "orange",
+                    "backgroundColor": "#D29034",
+                    "backgroundDarkColor": null,
+                    "backgroundImage": null,
+                    "backgroundDarkImage": null,
+                    "backgroundImageScaled": null,
+                    "backgroundTile": false,
+                    "backgroundBrightness": "dark",
+                    "sharedSourceUrl": null,
+                    "backgroundBottomColor": "#D29034",
+                    "backgroundTopColor": "#D29034",
+                    "canBePublic": true,
+                    "canBeEnterprise": true,
+                    "canBeOrg": true,
+                    "canBePrivate": true,
+                    "canInvite": true
+                },
+                "labelNames": {
+                    "green": "2",
+                    "yellow": "v",
+                    "orange": "D",
+                    "red": "c",
+                    "purple": "M",
+                    "blue": "1",
+                    "sky": "",
+                    "lime": "",
+                    "pink": "",
+                    "black": "",
+                    "green_dark": "",
+                    "yellow_dark": "",
+                    "orange_dark": "",
+                    "red_dark": "",
+                    "purple_dark": "",
+                    "blue_dark": "",
+                    "sky_dark": "",
+                    "lime_dark": "",
+                    "pink_dark": "",
+                    "black_dark": "",
+                    "green_light": "",
+                    "yellow_light": "",
+                    "orange_light": "",
+                    "red_light": "",
+                    "purple_light": "",
+                    "blue_light": "",
+                    "sky_light": "",
+                    "lime_light": "",
+                    "pink_light": "",
+                    "black_light": ""
+                },
+                "organization": {
+                    "id": "67d9d5e34d7b900257deed0e",
+                    "name": "restassuredjava",
+                    "displayName": "REST Assured + JAVA",
+                    "memberships": [
+                        {
+                            "id": "67d9d5e34d7b900257deed14",
+                            "idMember": "5ebe94ac959a7d61f6061c0d",
+                            "memberType": "admin",
+                            "unconfirmed": false,
+                            "deactivated": false,
+                            "lastActive": "2025-08-03T12:07:35.048Z"
+                        }
+                    ]
+                }
+            }
+            """;
+    public static final String P5ExpectedPutBoardResponse = """
+            {
+                "id": "688f579390de24d4fa23467d",
+                "name": "Grimes, Schuppe and Kling borad 20369539356000",
+                "desc": "",
+                "descData": null,
+                "closed": false,
+                "idOrganization": "67d9d5e34d7b900257deed0e",
+                "idEnterprise": null,
+                "pinned": false,
+                "url": "https://trello.com/b/Td3RVT5D/grimes-schuppe-and-kling-borad-20369539356000",
+                "shortUrl": "https://trello.com/b/Td3RVT5D",
+                "prefs": {
+                    "permissionLevel": "public",
+                    "hideVotes": false,
+                    "voting": "org",
+                    "comments": "public",
+                    "invitations": "members",
+                    "selfJoin": true,
+                    "cardCovers": true,
+                    "showCompleteStatus": true,
+                    "cardCounts": false,
+                    "isTemplate": false,
+                    "cardAging": "regular",
+                    "calendarFeedEnabled": false,
+                    "hiddenPluginBoardButtons": [
+            
+                    ],
+                    "switcherViews": [
+                        {
+                            "viewType": "Board",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Table",
+                            "enabled": true
+                        },
+                        {
+                            "viewType": "Calendar",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Dashboard",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Timeline",
+                            "enabled": false
+                        },
+                        {
+                            "viewType": "Map",
+                            "enabled": false
+                        }
+                    ],
+                    "autoArchive": null,
+                    "background": "purple",
+                    "backgroundColor": "#89609E",
+                    "backgroundDarkColor": null,
+                    "backgroundImage": null,
+                    "backgroundDarkImage": null,
+                    "backgroundImageScaled": null,
+                    "backgroundTile": false,
+                    "backgroundBrightness": "dark",
+                    "sharedSourceUrl": null,
+                    "backgroundBottomColor": "#89609E",
+                    "backgroundTopColor": "#89609E",
+                    "canBePublic": true,
+                    "canBeEnterprise": true,
+                    "canBeOrg": true,
+                    "canBePrivate": true,
+                    "canInvite": true
+                },
+                "labelNames": {
+                    "green": "",
+                    "yellow": "",
+                    "orange": "",
+                    "red": "",
+                    "purple": "",
+                    "blue": "",
+                    "sky": "",
+                    "lime": "",
+                    "pink": "",
+                    "black": "",
+                    "green_dark": "",
+                    "yellow_dark": "",
+                    "orange_dark": "",
+                    "red_dark": "",
+                    "purple_dark": "",
+                    "blue_dark": "",
+                    "sky_dark": "",
+                    "lime_dark": "",
+                    "pink_dark": "",
+                    "black_dark": "",
+                    "green_light": "",
+                    "yellow_light": "",
+                    "orange_light": "",
+                    "red_light": "",
+                    "purple_light": "",
+                    "blue_light": "",
+                    "sky_light": "",
+                    "lime_light": "",
+                    "pink_light": "",
+                    "black_light": ""
+                }
+            }
+            """;
 
     // --------------
     // NEGATIVE TESTS

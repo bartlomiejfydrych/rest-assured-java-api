@@ -16,10 +16,9 @@ import java.util.Map;
 import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoard.postCreateBoard;
 import static endpoints.boards.PUT_UpdateBoard.putUpdateBoard;
-import static expected_responses.boards.PUT_UpdateBoardExpected.P1ExpectedPutBoardResponse;
-import static expected_responses.boards.PUT_UpdateBoardExpected.P2ExpectedPutBoardResponse;
+import static expected_responses.boards.PUT_UpdateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.UtilsCommon.getAllCharactersSetInRandomOrder;
+import static utils.UtilsCommon.*;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
@@ -149,29 +148,120 @@ public class PUT_UpdateBoardTest extends TestBase {
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P2ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
-//
-//
-//
-//        // PUT
-//        responsePut = putUpdateBoard(boardId, queryParams);
-//        assertThat(responsePut.statusCode()).isEqualTo(200);
-//        PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
-//        assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
-//        assertThat(stripBoardNameFromUrl(responsePutDto.url)).isEqualTo(stripBoardNameFromUrl(boardUrl));
-//        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P1ExpectedPutBoardResponse, boardId, boardName, responsePutDto.url, boardShortUrl);
-//        expectedResponsePutDto.desc = desc;
-//        expectedResponsePutDto.labelNames.green = labelNamesGreen;
-//        expectedResponsePutDto.labelNames.yellow = labelNamesYellow;
-//        expectedResponsePutDto.labelNames.orange = labelNamesOrange;
-//        expectedResponsePutDto.labelNames.red = labelNamesRed;
-//        expectedResponsePutDto.labelNames.purple = labelNamesPurple;
-//        expectedResponsePutDto.labelNames.blue = labelNamesBlue;
-//        expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
-//        compareObjects(responsePutDto, expectedResponsePutDto);
-//        // GET
-//        validateGetAgainstPut(responsePutDto);
-
+        compareObjects(responsePutDto, expectedResponsePutDto);
+        // GET
+        validateGetAgainstPut(responsePutDto);
     }
 
-    //         boardName = String.valueOf(faker.regexify("[A-Za-z0-9]").charAt(0));
+    @Test
+    public void P3_shouldUpdateBoardWhenAllParametersAreMissing() {
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, null);
+        assertThat(responsePut.statusCode()).isEqualTo(200);
+        PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
+        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P3ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
+        compareObjects(responsePutDto, expectedResponsePutDto);
+        // GET
+        validateGetAgainstPut(responsePutDto);
+    }
+
+    @Test
+    public void P4_shouldUpdateBoardWhenMostStringParametersHaveOnlyOneCharacterAndBooleansAreFalse() {
+
+        boardName = getRandomSingleChar();
+        String labelNamesGreen = getRandomSingleChar();
+        String labelNamesYellow = getRandomSingleChar();
+        String labelNamesOrange = getRandomSingleChar();
+        String labelNamesRed = getRandomSingleChar();
+        String labelNamesPurple = getRandomSingleChar();
+        String labelNamesBlue = getRandomSingleChar();
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setName(boardName)
+                .setClosed(false)
+                .setPrefsPermissionLevel("private")
+                .setPrefsSelfJoin(false)
+                .setPrefsCardCovers(false)
+                .setPrefsHideVotes(false)
+                .setPrefsInvitations("members")
+                .setPrefsVoting("members")
+                .setPrefsComments("members")
+                .setPrefsBackground("orange")
+                .setPrefsCardAging("pirate")
+                .setPrefsCalendarFeedEnabled(false)
+                .setLabelNamesGreen(labelNamesGreen)
+                .setLabelNamesYellow(labelNamesYellow)
+                .setLabelNamesOrange(labelNamesOrange)
+                .setLabelNamesRed(labelNamesRed)
+                .setLabelNamesPurple(labelNamesPurple)
+                .setLabelNamesBlue(labelNamesBlue)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(200);
+        PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
+        assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
+        assertThat(stripBoardNameFromUrl(responsePutDto.url)).isEqualTo(stripBoardNameFromUrl(boardUrl));
+        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P4ExpectedPutBoardResponse, boardId, boardName, responsePutDto.url, boardShortUrl);
+        expectedResponsePutDto.labelNames.green = labelNamesGreen;
+        expectedResponsePutDto.labelNames.yellow = labelNamesYellow;
+        expectedResponsePutDto.labelNames.orange = labelNamesOrange;
+        expectedResponsePutDto.labelNames.red = labelNamesRed;
+        expectedResponsePutDto.labelNames.purple = labelNamesPurple;
+        expectedResponsePutDto.labelNames.blue = labelNamesBlue;
+        expectedResponsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive = responsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive;
+        compareObjects(responsePutDto, expectedResponsePutDto);
+        // GET
+        validateGetAgainstPut(responsePutDto);
+    }
+
+    @Test
+    public void P5_shouldUpdateBoardWhenRemainingParametersAreProvidedRandomly() {
+
+        String prefsVoting = pickRandom("org", "public");
+        String prefsComments = pickRandom("org", "public");
+        String prefsBackground = pickRandom("green", "red", "purple", "pink", "lime", "sky", "grey");
+        String prefsBackgroundHex = switch (prefsBackground) {
+            case "green" -> "#519839";
+            case "red" -> "#B04632";
+            case "purple" -> "#89609E";
+            case "pink" -> "#CD5A91";
+            case "lime" -> "#4BBF6B";
+            case "sky" -> "#00AECC";
+            case "grey" -> "#838C91";
+            default -> "#0079BF"; // "blue" if not matched
+        };
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setPrefsPermissionLevel("public")
+                .setPrefsVoting(prefsVoting)
+                .setPrefsComments(prefsComments)
+                .setPrefsBackground(prefsBackground)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(200);
+        PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
+        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P5ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
+        expectedResponsePutDto.prefs.voting = prefsVoting;
+        expectedResponsePutDto.prefs.comments = prefsComments;
+        expectedResponsePutDto.prefs.background = prefsBackground;
+        expectedResponsePutDto.prefs.backgroundColor = prefsBackgroundHex;
+        expectedResponsePutDto.prefs.backgroundBottomColor = prefsBackgroundHex;
+        expectedResponsePutDto.prefs.backgroundTopColor = prefsBackgroundHex;
+        compareObjects(responsePutDto, expectedResponsePutDto);
+        // GET
+        validateGetAgainstPut(responsePutDto);
+    }
+
+    // --------------
+    // NEGATIVE TESTS
+    // --------------
+
+
 }

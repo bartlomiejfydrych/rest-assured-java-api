@@ -38,8 +38,8 @@ and `"backgroundTopColor"` changes.
 - 💠name `string`
   - ✅Positive:
     - **[P1]** Special characters and numbers
-    - **[]** 1 character
-    - **[]** Missing (0 characters)
+    - **[P4]** 1 character
+    - **[P3]** Missing (0 characters)
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
@@ -48,20 +48,20 @@ and `"backgroundTopColor"` changes.
 - 💠desc `string`
   - ✅Positive:
     - **[P1]** Special characters and numbers
-    - **[]** Missing (0 characters)
+    - **[P3]** Missing (0 characters)
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠closed `boolean`
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P1]** true
-    - **[]** false
+    - **[P4]** false
     - **[P2]** null
 - 💠subscribed `TrelloID` | Style: `form` | `^[0-9a-fA-F]{24}$`
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P2]** null
     - **[💥]** Correct -> I was unable to determine the correct TrelloID
   - ❌Negative:
@@ -69,7 +69,7 @@ and `"backgroundTopColor"` changes.
     - **[]** Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠idOrganization `string` (📌It is possible that instead of String there is `TrelloID` | `^[0-9a-fA-F]{24}$`)
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P2]** null
     - **[P1]** Valid
   - ❌Negative:
@@ -77,95 +77,95 @@ and `"backgroundTopColor"` changes.
     - **[]** Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠prefs/permissionLevel `string`
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P2]** null
     - **[P1]** org
-    - **[]** private
-    - **[]** public
+    - **[P4]** private
+    - **[P5]** public
   - ❌Negative:
     - **[]** Other string
 - 💠prefs/selfJoin `boolean`
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P1]** true
-    - **[]** false
+    - **[P4]** false
     - **[P2]** null
 - 💠prefs/cardCovers `boolean`
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P1]** true
-    - **[]** false
+    - **[P4]** false
     - **[P2]** null
 - 💠prefs/hideVotes `boolean`
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P1]** true
-    - **[]** false
+    - **[P4]** false
     - **[P2]** null
 - 💠prefs/invitations `string`
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P2]** null
     - **[P1]** admins
-    - **[]** members
+    - **[P4]** members
   - ❌Negative:
     - **[]** Other string
 - 💠prefs/voting `string`
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P2]** null
     - **[P1]** disabled
-    - **[]** members
-    - **[]** observers
-    - **[]** org
-    - **[]** public
+    - **[P4]** members
+    - **[💥]** observers -> Can't test it because "board is not in an organization with observers enabled" and I don't want to change it
+    - **[P5r]** org
+    - **[P5r]** public
   - ❌Negative:
     - **[]** Other string
 - 💠prefs/comments `string`
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P2]** null
     - **[P1]** disabled
-    - **[]** members
-    - **[]** observers
-    - **[]** org
-    - **[]** public
+    - **[P4]** members
+    - **[💥]** observers -> Can't test it because "board is not in an organization with observers enabled" and I don't want to change it
+    - **[P5r]** org
+    - **[P5r]** public
   - ❌Negative:
     - **[]** Other string
 - 💠prefs/background `string`
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P2]** null
     - **[P1]** blue
-    - **[]** orange
-    - **[]** green
-    - **[]** red
-    - **[]** purple
-    - **[]** pink
-    - **[]** lime
-    - **[]** sky
-    - **[]** grey
+    - **[P4]** orange
+    - **[P5r]** green
+    - **[P5r]** red
+    - **[P5r]** purple
+    - **[P5r]** pink
+    - **[P5r]** lime
+    - **[P5r]** sky
+    - **[P5r]** grey
   - ❌Negative:
     - **[SPRAWDZIĆ💥]** Other string -> It was ignored and board was created
 - 💠prefs/cardAging `string`
   - ✅Positive:
-    - **[]** Missing (will there be a default value of `regular`)
+    - **[P3]** Missing (will there be a default value of `regular`)
     - **[P2]** null
     - **[P1]** regular
-    - **[]** pirate
+    - **[P4]** pirate
   - ❌Negative:
     - **[]** Other string
 - 💠prefs/calendarFeedEnabled `boolean`
   - ✅Positive:
-    - **[]** Missing
+    - **[P3]** Missing
     - **[P1]** true
-    - **[]** false
+    - **[P4]** false
     - **[P2]** null
 - 💠labelNames/green `string`
   - ✅Positive:
     - **[P1]** Special characters and numbers
-    - **[]** 1 character
-    - **[]** Missing (0 characters)
+    - **[P4]** 1 character
+    - **[P3]** Missing (0 characters)
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
@@ -174,8 +174,8 @@ and `"backgroundTopColor"` changes.
 - 💠labelNames/yellow `string`
   - ✅Positive:
     - **[P1]** Special characters and numbers
-    - **[]** 1 character
-    - **[]** Missing (0 characters)
+    - **[P4]** 1 character
+    - **[P3]** Missing (0 characters)
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
@@ -184,8 +184,8 @@ and `"backgroundTopColor"` changes.
 - 💠labelNames/orange `string`
   - ✅Positive:
     - **[P1]** Special characters and numbers
-    - **[]** 1 character
-    - **[]** Missing (0 characters)
+    - **[P4]** 1 character
+    - **[P3]** Missing (0 characters)
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
@@ -194,8 +194,8 @@ and `"backgroundTopColor"` changes.
 - 💠labelNames/red `string`
   - ✅Positive:
     - **[P1]** Special characters and numbers
-    - **[]** 1 character
-    - **[]** Missing (0 characters)
+    - **[P4]** 1 character
+    - **[P3]** Missing (0 characters)
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
@@ -204,8 +204,8 @@ and `"backgroundTopColor"` changes.
 - 💠labelNames/purple `string`
   - ✅Positive:
     - **[P1]** Special characters and numbers
-    - **[]** 1 character
-    - **[]** Missing (0 characters)
+    - **[P4]** 1 character
+    - **[P3]** Missing (0 characters)
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
@@ -214,8 +214,8 @@ and `"backgroundTopColor"` changes.
 - 💠labelNames/blue `string`
   - ✅Positive:
     - **[P1]** Special characters and numbers
-    - **[]** 1 character
-    - **[]** Missing (0 characters)
+    - **[P4]** 1 character
+    - **[P3]** Missing (0 characters)
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
@@ -224,7 +224,8 @@ and `"backgroundTopColor"` changes.
 - 💠Others:
   - ✅Positive:
     - **[P1]** Providing all or most parameters at once
-    - **[P1]** Checking if (POST_url != PUT_url) when table name is changed
+    - **[P1|P4]** Checking if (POST_url != PUT_url) when table name is changed
+    - **[P1|P4]** Checking if the beginning of the URL response PUT and POST remains the same
 
 ---
 

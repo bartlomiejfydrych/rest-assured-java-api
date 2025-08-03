@@ -1,5 +1,7 @@
 package utils;
 
+import com.github.javafaker.Faker;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.Random;
 public class UtilsCommon {
 
     private static final Random RANDOM = new Random();
+    private static final Faker faker = new Faker();
 
     @SafeVarargs
     public static <T> T pickRandom(T... options) {
@@ -35,5 +38,9 @@ public class UtilsCommon {
         }
 
         return shuffled.toString();
+    }
+
+    public static String getRandomSingleChar() {
+        return String.valueOf(faker.regexify("[A-Za-z0-9]").charAt(0));
     }
 }
