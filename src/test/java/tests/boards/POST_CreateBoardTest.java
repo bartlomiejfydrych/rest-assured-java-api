@@ -213,21 +213,21 @@ public class POST_CreateBoardTest extends TestBase {
     public void N1_shouldNotCreateBoardWhenNameWasNotGiven() {
         responsePost = postCreateBoardMissingRequiredParameters();
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, ExpectedPostBoardResponseInvalidName);
+        compareObjectsJsonNode(responsePost, expectedPostBoardResponseInvalidName);
     }
 
     @Test
     public void N2_shouldNotCreateBoardWhenNameIsNull() {
         responsePost = postCreateBoard(null, null);
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, ExpectedPostBoardResponseInvalidName);
+        compareObjectsJsonNode(responsePost, expectedPostBoardResponseInvalidName);
     }
 
     @Test
     public void N3_shouldNotCreateBoardWhenNameIsEmptyString() {
         responsePost = postCreateBoard("", null);
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, ExpectedPostBoardResponseInvalidName);
+        compareObjectsJsonNode(responsePost, expectedPostBoardResponseInvalidName);
     }
 
     // idOrganization
@@ -276,7 +276,7 @@ public class POST_CreateBoardTest extends TestBase {
     @Test
     public void N7_shouldNotCreateBoardWhenIdBoardSourceIsIncompatibleWithRegEx() {
 
-        String exceptedResponse = """
+        String expectedResponse = """
                 {
                     "message": "Invalid objectId",
                     "error": "ERROR"
@@ -290,7 +290,7 @@ public class POST_CreateBoardTest extends TestBase {
 
         responsePost = postCreateBoard(generateRandomBoardName(), queryParams);
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, exceptedResponse);
+        compareObjectsJsonNode(responsePost, expectedResponse);
     }
 
     // prefs_permissionLevel

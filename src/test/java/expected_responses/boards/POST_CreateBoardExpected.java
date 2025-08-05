@@ -556,7 +556,7 @@ public class POST_CreateBoardExpected {
     // NEGATIVE TESTS
     // --------------
 
-    public static final String ExpectedPostBoardResponseInvalidName = """
+    public static final String expectedPostBoardResponseInvalidName = """
             {
                 "message": "invalid value for name",
                 "error": "ERROR"

@@ -20,6 +20,7 @@ import static expected_responses.boards.PUT_UpdateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.*;
 import static utils.UtilsCompare.compareObjects;
+import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
@@ -263,5 +264,201 @@ public class PUT_UpdateBoardTest extends TestBase {
     // NEGATIVE TESTS
     // --------------
 
+    // name
 
+    @Test
+    public void N1_shouldNotUpdateBoardWhenNameIsEmptyString() {
+
+        boardName = "";
+        String expectedResponse = """
+                {
+                    "message": "invalid value for name",
+                    "error": "ERROR"
+                }
+                """;
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setName(boardName)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePut, expectedResponse);
+    }
+
+    // subscribed
+
+    @Test
+    public void N2_shouldNotUpdateBoardWhenSubscribedNotExist() {
+
+        String subscribed = "123456789098765432123456";
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setSubscribed(subscribed)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
+    }
+
+    @Test
+    public void N3_shouldNotUpdateBoardWhenSubscribedIsIncompatibleWithRegEx() {
+
+        String subscribed = "123abc";
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setSubscribed(subscribed)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
+    }
+
+    // idOrganization
+
+    @Test
+    public void N4_shouldNotUpdateBoardWhenIdOrganizationNotExist() {
+
+        String idOrganization = "123456789098765432123456";
+        String expectedResponse = """
+                {
+                    "message": "unauthorized organization access"
+                }
+                """;
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setIdOrganization(idOrganization)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(401);
+        compareObjectsJsonNode(responsePut, expectedResponse);
+    }
+
+    @Test
+    public void N5_shouldNotUpdateBoardWhenIdOrganizationIsIncompatibleWithRegEx() {
+
+        String idOrganization = "123abc";
+        String expectedResponse = """
+                {
+                    "message": "unauthorized organization."
+                }
+                """;
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setIdOrganization(idOrganization)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(401);
+        compareObjectsJsonNode(responsePut, expectedResponse);
+    }
+
+    // prefs/permissionLevel
+
+    @Test
+    public void N6_shouldNotUpdateBoardWhenPrefsPermissionLevelIsOtherString() {
+
+        String prefsPermissionLevel = "KeK";
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setPrefsPermissionLevel(prefsPermissionLevel)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/permissionLevel");
+    }
+
+    // prefs/invitations
+
+    @Test
+    public void N7_shouldNotUpdateBoardWhenPrefsInvitationsIsOtherString() {
+
+        String prefsInvitations = "KeK";
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setPrefsInvitations(prefsInvitations)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/invitations");
+    }
+
+    // prefs/voting
+
+    @Test
+    public void N8_shouldNotUpdateBoardWhenPrefsVotingIsOtherString() {
+
+        String prefsVoting = "KeK";
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setPrefsVoting(prefsVoting)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/voting");
+    }
+
+    // prefs/comments
+
+    @Test
+    public void N9_shouldNotUpdateBoardWhenPrefsCommentsIsOtherString() {
+
+        String prefsComments = "KeK";
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setPrefsComments(prefsComments)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/comments");
+    }
+
+    // prefs/background
+
+    @Test
+    public void N10_shouldNotUpdateBoardWhenPrefsBackgroundIsOtherString() {
+
+        String prefsBackground = "KeK";
+        String expectedResponse = """
+                {
+                    "message": "Invalid background",
+                    "error": "ERROR"
+                }
+                """;
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setPrefsBackground(prefsBackground)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePut, expectedResponse);
+    }
 }

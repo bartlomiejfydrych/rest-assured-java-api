@@ -43,7 +43,7 @@ and `"backgroundTopColor"` changes.
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** Empty string ("")
+    - **[N1]** Empty string ("")
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠desc `string`
   - ✅Positive:
@@ -65,16 +65,16 @@ and `"backgroundTopColor"` changes.
     - **[P2]** null
     - **[💥]** Correct -> I was unable to determine the correct TrelloID
   - ❌Negative:
-    - **[]** Non-existent
-    - **[]** Incompatible with `^[0-9a-fA-F]{24}$`
+    - **[N2]** Non-existent
+    - **[N3]** Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠idOrganization `string` (📌It is possible that instead of String there is `TrelloID` | `^[0-9a-fA-F]{24}$`)
   - ✅Positive:
     - **[P3]** Missing
     - **[P2]** null
     - **[P1]** Valid
   - ❌Negative:
-    - **[]** Non-existent
-    - **[]** Incompatible with `^[0-9a-fA-F]{24}$`
+    - **[N4]** Non-existent
+    - **[N5]** Incompatible with `^[0-9a-fA-F]{24}$`
 - 💠prefs/permissionLevel `string`
   - ✅Positive:
     - **[P3]** Missing
@@ -83,7 +83,7 @@ and `"backgroundTopColor"` changes.
     - **[P4]** private
     - **[P5]** public
   - ❌Negative:
-    - **[]** Other string
+    - **[N6]** Other string
 - 💠prefs/selfJoin `boolean`
   - ✅Positive:
     - **[P3]** Missing
@@ -109,7 +109,7 @@ and `"backgroundTopColor"` changes.
     - **[P1]** admins
     - **[P4]** members
   - ❌Negative:
-    - **[]** Other string
+    - **[N7]** Other string
 - 💠prefs/voting `string`
   - ✅Positive:
     - **[P3]** Missing
@@ -120,7 +120,7 @@ and `"backgroundTopColor"` changes.
     - **[P5r]** org
     - **[P5r]** public
   - ❌Negative:
-    - **[]** Other string
+    - **[N8]** Other string
 - 💠prefs/comments `string`
   - ✅Positive:
     - **[P3]** Missing
@@ -131,7 +131,7 @@ and `"backgroundTopColor"` changes.
     - **[P5r]** org
     - **[P5r]** public
   - ❌Negative:
-    - **[]** Other string
+    - **[N9]** Other string
 - 💠prefs/background `string`
   - ✅Positive:
     - **[P3]** Missing
@@ -146,7 +146,7 @@ and `"backgroundTopColor"` changes.
     - **[P5r]** sky
     - **[P5r]** grey
   - ❌Negative:
-    - **[SPRAWDZIĆ💥]** Other string -> It was ignored and board was created
+    - **[N10]** Other string
 - 💠prefs/cardAging `string`
   - ✅Positive:
     - **[P3]** Missing (will there be a default value of `regular`)
