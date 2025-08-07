@@ -1253,7 +1253,7 @@ W takiej sytuacji trzeba go zapisać nieco inaczej, aby walidator go nie wymaga�
     
    * `FAIL_ON_MISSING_CREATOR_PROPERTIES = true` działa — bo wszystkie wymagane pola są w konstruktorze;
    * `organization` jest bezpiecznie opcjonalne;
-   * możesz je walidować tylko jeśli istnieje (`@Valid` + `Optional`).
+   * możesz je walidować, tylko jeśli istnieje (`@Valid` + `Optional`).
 
    📌**Dlaczego to działa?**
     

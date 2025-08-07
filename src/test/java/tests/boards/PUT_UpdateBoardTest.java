@@ -269,7 +269,6 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void N1_shouldNotUpdateBoardWhenNameIsEmptyString() {
 
-        boardName = "";
         String expectedResponse = """
                 {
                     "message": "invalid value for name",
@@ -278,7 +277,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 """;
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setName(boardName)
+                .setName("")
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -293,10 +292,8 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void N2_shouldNotUpdateBoardWhenSubscribedNotExist() {
 
-        String subscribed = "123456789098765432123456";
-
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setSubscribed(subscribed)
+                .setSubscribed("123456789098765432123456")
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -309,10 +306,8 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void N3_shouldNotUpdateBoardWhenSubscribedIsIncompatibleWithRegEx() {
 
-        String subscribed = "123abc";
-
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setSubscribed(subscribed)
+                .setSubscribed("123abc")
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -327,7 +322,6 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void N4_shouldNotUpdateBoardWhenIdOrganizationNotExist() {
 
-        String idOrganization = "123456789098765432123456";
         String expectedResponse = """
                 {
                     "message": "unauthorized organization access"
@@ -335,7 +329,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 """;
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setIdOrganization(idOrganization)
+                .setIdOrganization("123456789098765432123456")
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -348,7 +342,6 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void N5_shouldNotUpdateBoardWhenIdOrganizationIsIncompatibleWithRegEx() {
 
-        String idOrganization = "123abc";
         String expectedResponse = """
                 {
                     "message": "unauthorized organization."
@@ -356,7 +349,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 """;
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setIdOrganization(idOrganization)
+                .setIdOrganization("123abc")
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -371,10 +364,8 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void N6_shouldNotUpdateBoardWhenPrefsPermissionLevelIsOtherString() {
 
-        String prefsPermissionLevel = "KeK";
-
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setPrefsPermissionLevel(prefsPermissionLevel)
+                .setPrefsPermissionLevel("KeK")
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -389,10 +380,8 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void N7_shouldNotUpdateBoardWhenPrefsInvitationsIsOtherString() {
 
-        String prefsInvitations = "KeK";
-
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setPrefsInvitations(prefsInvitations)
+                .setPrefsInvitations("KeK")
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -407,10 +396,8 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void N8_shouldNotUpdateBoardWhenPrefsVotingIsOtherString() {
 
-        String prefsVoting = "KeK";
-
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setPrefsVoting(prefsVoting)
+                .setPrefsVoting("KeK")
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -425,10 +412,8 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void N9_shouldNotUpdateBoardWhenPrefsCommentsIsOtherString() {
 
-        String prefsComments = "KeK";
-
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setPrefsComments(prefsComments)
+                .setPrefsComments("KeK")
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -443,7 +428,6 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void N10_shouldNotUpdateBoardWhenPrefsBackgroundIsOtherString() {
 
-        String prefsBackground = "KeK";
         String expectedResponse = """
                 {
                     "message": "Invalid background",
@@ -452,7 +436,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 """;
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setPrefsBackground(prefsBackground)
+                .setPrefsBackground("KeK")
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -460,5 +444,21 @@ public class PUT_UpdateBoardTest extends TestBase {
         responsePut = putUpdateBoard(boardId, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePut, expectedResponse);
+    }
+
+    // prefs/cardAging
+
+    @Test
+    public void N11_shouldNotUpdateBoardWhenPrefsCardAgingIsOtherString() {
+
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setPrefsCardAging("KeK")
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // PUT
+        responsePut = putUpdateBoard(boardId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/cardAging");
     }
 }

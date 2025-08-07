@@ -154,7 +154,7 @@ and `"backgroundTopColor"` changes.
     - **[P1]** regular
     - **[P4]** pirate
   - ❌Negative:
-    - **[]** Other string
+    - **[N11]** Other string
 - 💠prefs/calendarFeedEnabled `boolean`
   - ✅Positive:
     - **[P3]** Missing
@@ -169,7 +169,7 @@ and `"backgroundTopColor"` changes.
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** Empty string ("")
+    - **[💥]** Empty string ("") -> According to the documentation, it must be at least 1 character, but it is possible to send an empty string
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/yellow `string`
   - ✅Positive:
@@ -179,7 +179,7 @@ and `"backgroundTopColor"` changes.
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** Empty string ("")
+    - **[💥]** Empty string ("") -> According to the documentation, it must be at least 1 character, but it is possible to send an empty string
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/orange `string`
   - ✅Positive:
@@ -189,7 +189,7 @@ and `"backgroundTopColor"` changes.
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** Empty string ("")
+    - **[💥]** Empty string ("") -> According to the documentation, it must be at least 1 character, but it is possible to send an empty string
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/red `string`
   - ✅Positive:
@@ -199,7 +199,7 @@ and `"backgroundTopColor"` changes.
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** Empty string ("")
+    - **[💥]** Empty string ("") -> According to the documentation, it must be at least 1 character, but it is possible to send an empty string
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/purple `string`
   - ✅Positive:
@@ -209,7 +209,7 @@ and `"backgroundTopColor"` changes.
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** Empty string ("")
+    - **[💥]** Empty string ("") -> According to the documentation, it must be at least 1 character, but it is possible to send an empty string
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠labelNames/blue `string`
   - ✅Positive:
@@ -219,7 +219,7 @@ and `"backgroundTopColor"` changes.
     - **[P2]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** Empty string ("")
+    - **[💥]** Empty string ("") -> According to the documentation, it must be at least 1 character, but it is possible to send an empty string
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠Others:
   - ✅Positive:
