@@ -1,12 +1,16 @@
-package dto.emoji.trello;
+package dto.emoji.list_available_emoji;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dto.emoji.list_available_emoji.trello.SkinVariations;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Trello {
@@ -43,6 +47,11 @@ public class Trello {
     @NotNull
     public Integer sheetY;
 
+    public String skinVariation;
+
+    @Valid
+    public Optional<Map<String, SkinVariations>> skinVariations = Optional.empty();
+
     @NotNull
     public String tts;
 
@@ -61,6 +70,7 @@ public class Trello {
             @JsonProperty(value = "category", required = true) String category,
             @JsonProperty(value = "sheetX", required = true) Integer sheetX,
             @JsonProperty(value = "sheetY", required = true) Integer sheetY,
+            @JsonProperty(value = "skinVariation", required = true) String skinVariation,
             @JsonProperty(value = "tts", required = true) String tts,
             @JsonProperty(value = "keywords", required = true) List<String> keywords
     ) {
@@ -74,8 +84,18 @@ public class Trello {
         this.category = category;
         this.sheetX = sheetX;
         this.sheetY = sheetY;
+        this.skinVariation = skinVariation;
         this.tts = tts;
         this.keywords = keywords;
+    }
+
+    @JsonProperty("skinVariations")
+    public void setSkinVariations(Map<String, SkinVariations> skinVariations) {
+        this.skinVariations = Optional.ofNullable(skinVariations);
+    }
+
+    public Optional<Map<String, SkinVariations>> getSkinVariations() {
+        return skinVariations;
     }
 
     public Trello() {
