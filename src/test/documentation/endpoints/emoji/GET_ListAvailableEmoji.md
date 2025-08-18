@@ -56,7 +56,7 @@ The locale to return emoji descriptions and names in. Defaults to the logged in 
 
 ### 💠spritesheets `boolean`
 
-`tru`e to return spritesheet URLs in the response  
+`true` to return spritesheet URLs in the response  
 Default: `false`
 
 ---
@@ -79,6 +79,7 @@ Default: `false`
       "category": "Smileys & People",
       "sheetX": 30,
       "sheetY": 24,
+      "skinVariation": null,
       "tts": "szeroko uśmiechnięta twarz",
       "keywords": [
         "roześmiana buźka",
@@ -98,6 +99,7 @@ Default: `false`
       "category": "Smileys & People",
       "sheetX": 30,
       "sheetY": 25,
+      "skinVariation": null,
       "tts": "szeroko uśmiechnięta twarz o roześmianych oczach",
       "keywords": [
         "śmiech",

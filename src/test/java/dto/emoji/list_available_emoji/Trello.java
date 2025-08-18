@@ -20,7 +20,6 @@ public class Trello {
             message = "Unified must be a valid emoji Unicode code point sequence in hex format")
     public String unified;
 
-    @NotNull
     public String name;
 
     @NotNull
@@ -33,7 +32,6 @@ public class Trello {
     @NotNull
     public List<String> shortNames;
 
-    @NotNull
     public String text;
 
     public List<String> texts; // Can be null
@@ -50,13 +48,13 @@ public class Trello {
     public String skinVariation;
 
     @Valid
-    public Optional<Map<String, SkinVariations>> skinVariations = Optional.empty();
+    public Optional<SkinVariations> skinVariations = Optional.empty();
 
-    @NotNull
-    public String tts;
+    @Valid
+    public Optional<String> tts = Optional.empty();
 
-    @NotNull
-    public List<String> keywords;
+    @Valid
+    public Optional<List<String>> keywords = Optional.empty();
 
     @JsonCreator
     public Trello(
@@ -70,9 +68,7 @@ public class Trello {
             @JsonProperty(value = "category", required = true) String category,
             @JsonProperty(value = "sheetX", required = true) Integer sheetX,
             @JsonProperty(value = "sheetY", required = true) Integer sheetY,
-            @JsonProperty(value = "skinVariation", required = true) String skinVariation,
-            @JsonProperty(value = "tts", required = true) String tts,
-            @JsonProperty(value = "keywords", required = true) List<String> keywords
+            @JsonProperty(value = "skinVariation", required = true) String skinVariation
     ) {
         this.unified = unified;
         this.name = name;
@@ -85,17 +81,33 @@ public class Trello {
         this.sheetX = sheetX;
         this.sheetY = sheetY;
         this.skinVariation = skinVariation;
-        this.tts = tts;
-        this.keywords = keywords;
     }
 
     @JsonProperty("skinVariations")
-    public void setSkinVariations(Map<String, SkinVariations> skinVariations) {
+    public void setSkinVariations(SkinVariations skinVariations) {
         this.skinVariations = Optional.ofNullable(skinVariations);
     }
 
-    public Optional<Map<String, SkinVariations>> getSkinVariations() {
+    @JsonProperty("tts")
+    public void setTts(String tts) {
+        this.tts = Optional.ofNullable(tts);
+    }
+
+    @JsonProperty("keywords")
+    public void setKeywords(List<String> keywords) {
+        this.keywords = Optional.ofNullable(keywords);
+    }
+
+    public Optional<SkinVariations> getSkinVariations() {
         return skinVariations;
+    }
+
+    public Optional<String> getTts() {
+        return tts;
+    }
+
+    public Optional<List<String>> getKeywords() {
+        return keywords;
     }
 
     public Trello() {
