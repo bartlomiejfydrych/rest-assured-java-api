@@ -28,7 +28,8 @@ Forge and OAuth2 apps cannot access this REST resource.
 
 ### 💠locale `string`
 
-There is no information in the documentation about what else could be correct.
+There is no information in the documentation about what else could be correct.  
+I found out on my own that this parameter can take values such as `"en-US"`.
 
 ---
 
@@ -40,7 +41,7 @@ There is no information in the documentation about what else could be correct.
     - **[P2]** null
     - **[P3]** Other (en-US) than default (PL)
   - ❌Negative:
-    - **[]** Incorrect
+    - **[N1]** Incorrect
 - 💠spritesheets `boolean`
   - ✅Positive:
     - **[P1]** Missing

@@ -100,5 +100,17 @@ public class GET_ListAvailableEmojiTest extends TestBase {
     // NEGATIVE TESTS
     // --------------
 
+    @Test
+    public void N1_shouldNotGetListAvailableEmojiWhenLocaleHasIncorrectValue() {
 
+        GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
+                .setLocale("ABCDabcdĄŚąś1234!@#$")
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // GET
+        responseGet = getListAvailableEmoji(queryParams);
+        assertThat(responseGet.statusCode()).isEqualTo(400);
+        assertThat(responseGet.getBody().asString()).isEqualTo("invalid value for locale");
+    }
 }
