@@ -37,14 +37,16 @@ There is no information in the documentation about what else could be correct.
 - 💠locale `string`
   - ✅Positive:
     - **[P1]** Missing
-    - **[]** Other than default
-    - **[]** null
+    - **[P2]** null
+    - **[P3]** Other (en-US) than default (PL)
+  - ❌Negative:
+    - **[]** Incorrect
 - 💠spritesheets `boolean`
   - ✅Positive:
     - **[P1]** Missing
-    - **[]** true
-    - **[]** false
-    - **[]** null
+    - **[P2]** null
+    - **[P3]** false
+    - **[P4]** true
 
 ---
 
