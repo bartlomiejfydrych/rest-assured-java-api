@@ -110,7 +110,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         expectedResponsePutDto.labelNames.red = labelNamesRed;
         expectedResponsePutDto.labelNames.purple = labelNamesPurple;
         expectedResponsePutDto.labelNames.blue = labelNamesBlue;
-        expectedResponsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive = responsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive;
+        expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -213,7 +213,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         expectedResponsePutDto.labelNames.red = labelNamesRed;
         expectedResponsePutDto.labelNames.purple = labelNamesPurple;
         expectedResponsePutDto.labelNames.blue = labelNamesBlue;
-        expectedResponsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive = responsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive;
+        expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);

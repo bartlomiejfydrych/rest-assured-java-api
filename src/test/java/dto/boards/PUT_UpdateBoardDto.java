@@ -10,7 +10,6 @@ import dto.boards.board.Prefs;
 import jakarta.validation.Valid;
 
 import java.net.URL;
-import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class PUT_UpdateBoardDto extends BoardBaseDto {
@@ -18,7 +17,8 @@ public class PUT_UpdateBoardDto extends BoardBaseDto {
     public static final String FIELD_ORGANIZATION = "organization";
 
     @Valid // <-- validates nested fields if object exists
-    public Optional<Organization> organization = Optional.empty();
+    @JsonProperty(FIELD_ORGANIZATION)
+    public Organization organization;
 
     @JsonCreator
     public PUT_UpdateBoardDto(
@@ -36,19 +36,6 @@ public class PUT_UpdateBoardDto extends BoardBaseDto {
             @JsonProperty(value = "labelNames", required = true) LabelNames labelNames
     ) {
         super(id, name, desc, descData, closed, idOrganization, idEnterprise, pinned, url, shortUrl, prefs, labelNames);
-    }
-
-    @JsonProperty(FIELD_ORGANIZATION)
-    public void setOrganization(Organization organization) {
-        this.organization = Optional.ofNullable(organization);
-    }
-
-    public Optional<Organization> getOrganization() {
-        return organization;
-    }
-
-    public Organization getOrganizationOrThrow() {
-        return organization.orElseThrow(() -> new IllegalStateException("Organization is missing"));
     }
 
     public PUT_UpdateBoardDto() {

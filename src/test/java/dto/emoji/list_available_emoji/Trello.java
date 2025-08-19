@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 import java.util.List;
-import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Trello {
@@ -33,7 +32,7 @@ public class Trello {
 
     public String text;
 
-    public List<String> texts; // Can be null
+    public List<String> texts;
 
     @NotNull
     public String category;
@@ -47,13 +46,16 @@ public class Trello {
     public String skinVariation;
 
     @Valid
-    public Optional<SkinVariations> skinVariations = Optional.empty();
+    @JsonProperty("skinVariations")
+    public SkinVariations skinVariations;
 
     @Valid
-    public Optional<String> tts = Optional.empty();
+    @JsonProperty("tts")
+    public String tts;
 
     @Valid
-    public Optional<List<String>> keywords = Optional.empty();
+    @JsonProperty("keywords")
+    public List<String> keywords;
 
     @JsonCreator
     public Trello(
@@ -80,33 +82,6 @@ public class Trello {
         this.sheetX = sheetX;
         this.sheetY = sheetY;
         this.skinVariation = skinVariation;
-    }
-
-    @JsonProperty("skinVariations")
-    public void setSkinVariations(SkinVariations skinVariations) {
-        this.skinVariations = Optional.ofNullable(skinVariations);
-    }
-
-    @JsonProperty("tts")
-    public void setTts(String tts) {
-        this.tts = Optional.ofNullable(tts);
-    }
-
-    @JsonProperty("keywords")
-    public void setKeywords(List<String> keywords) {
-        this.keywords = Optional.ofNullable(keywords);
-    }
-
-    public Optional<SkinVariations> getSkinVariations() {
-        return skinVariations;
-    }
-
-    public Optional<String> getTts() {
-        return tts;
-    }
-
-    public Optional<List<String>> getKeywords() {
-        return keywords;
     }
 
     public Trello() {
