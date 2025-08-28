@@ -1186,96 +1186,181 @@ W takiej sytuacji trzeba go zapisać nieco inaczej, aby walidator go nie wymaga�
 
 ### Kroki
 
-1. Zmieniamy zapis deklaracji tej zmiennej:
-   ```java
-   // PRZED:
-   @Valid // <-- validates nested fields if object exists
-   public Organization organization;
-   
-   // PO:
-   @Valid // <-- validates nested fields if object exists
-   public Optional<Organization> organization = Optional.empty();
-   ```
-2. Usuwamy ją z konstruktora `@JsonCreator`:
-   ```java
-   // PRZED:
-   @JsonCreator
-   public PUT_UpdateBoardDto(
-           @JsonProperty(value = "id", required = true) String id,
-           @JsonProperty(value = "name", required = true) String name,
-           @JsonProperty(value = "desc", required = true) String desc,
-           @JsonProperty(value = "descData", required = true) DescData descData,
-           @JsonProperty(value = "closed", required = true) Boolean closed,
-           @JsonProperty(value = "idOrganization", required = true) String idOrganization,
-           @JsonProperty(value = "idEnterprise", required = true) Object idEnterprise,
-           @JsonProperty(value = "pinned", required = true) Boolean pinned,
-           @JsonProperty(value = "url", required = true) URL url,
-           @JsonProperty(value = "shortUrl", required = true) URL shortUrl,
-           @JsonProperty(value = "prefs", required = true) Prefs prefs,
-           @JsonProperty(value = "labelNames", required = true) LabelNames labelNames,
-           @JsonProperty(value = FIELD_ORGANIZATION, required = false) Organization organization
-   ) {
-       super(id, name, desc, descData, closed, idOrganization, idEnterprise, pinned, url, shortUrl, prefs, labelNames);
-       this.organization = organization;
-   }
-   
-   // PO:
-   @JsonCreator
-   public PUT_UpdateBoardDto(
-           @JsonProperty(value = "id", required = true) String id,
-           @JsonProperty(value = "name", required = true) String name,
-           @JsonProperty(value = "desc", required = true) String desc,
-           @JsonProperty(value = "descData", required = true) DescData descData,
-           @JsonProperty(value = "closed", required = true) Boolean closed,
-           @JsonProperty(value = "idOrganization", required = true) String idOrganization,
-           @JsonProperty(value = "idEnterprise", required = true) Object idEnterprise,
-           @JsonProperty(value = "pinned", required = true) Boolean pinned,
-           @JsonProperty(value = "url", required = true) URL url,
-           @JsonProperty(value = "shortUrl", required = true) URL shortUrl,
-           @JsonProperty(value = "prefs", required = true) Prefs prefs,
-           @JsonProperty(value = "labelNames", required = true) LabelNames labelNames
-   ) {
-       super(id, name, desc, descData, closed, idOrganization, idEnterprise, pinned, url, shortUrl, prefs, labelNames);
-   }
-   ```
-3. I przenosimy ją do pola:
-   ```java
-   @JsonProperty(FIELD_ORGANIZATION)
-   public void setOrganization(Organization organization) {
-       this.organization = Optional.ofNullable(organization);
-   }
+#### 1️⃣Zmieniamy zapis deklaracji tej zmiennej:
 
-   public Optional<Organization> getOrganization() {
-       return organization;
-   }
-   ```
-   ✅**Co zyskujesz:**
-    
-   * `FAIL_ON_MISSING_CREATOR_PROPERTIES = true` działa — bo wszystkie wymagane pola są w konstruktorze;
-   * `organization` jest bezpiecznie opcjonalne;
-   * możesz je walidować, tylko jeśli istnieje (`@Valid` + `Optional`).
+```java
+// PRZED:
+@NotNull
+public SkinVariations skinVariations;
 
-   📌**Dlaczego to działa?**
-    
-   * Jackson wymaga, by *wszystkie pola konstruktora były dostępne w JSONie*, jeśli masz `FAIL_ON_MISSING_CREATOR_PROPERTIES = true`.
-   * Jeśli pominiesz pole z konstruktora i dasz setter — Jackson uzna to za opcjonalne (zgodnie z Twoją intencją).
-4. Po tej zmianie używanie tego parametru będzie wyglądało inaczej:
-   ```java
-   // ZAMIAST:
-   expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
-   
-   // BĘDZIE:
-   expectedResponsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive = responsePutDto.getOrganizationOrThrow().memberships.getFirst().lastActive;
-   ```
-   **Ponieważ:**  
-   Pole `organization` jest teraz typu `Optional<Organization>`, a nie bezpośrednio `Organization`. Dlatego nie możesz już
-   tak po prostu pisać, bo `organization` to teraz `Optional`, więc nie ma bezpośredniego dostępu do `.memberships`.
-5. Dlatego najlepszym rozwiązaniem dla najlepszej czytelności testów będzie utworzenie w tym DTO metody pomocniczej:
-   ```java
-   public Organization getOrganizationOrThrow() {
-       return organization.orElseThrow(() -> new IllegalStateException("Organization is missing"));
-   }
-   ```
+// PO:
+@Valid
+@JsonProperty("skinVariations")
+public SkinVariations skinVariations;
+```
+
+**Wyjaśnienie:**
+
+🔹 `@JsonProperty` zapisujemy tutaj, ponieważ w następnym kroku będziemy to usuwać z `@JsonCreator`.
+
+🔹 `@NotNull` (np. `import jakarta.validation.constraints.NotNull;`)
+
+* To **constraint** (ograniczenie) z pakietu Bean Validation.
+* Służy do **walidacji prostej wartości** — sprawdza, czy dane pole **nie jest `null`**.
+* Dotyczy:
+
+    * prostych typów (`String`, `Integer`, `Boolean`, itp.),
+    * obiektów (`Organization`, `Prefs` itp.).
+* Jeśli adnotacja jest obecna, a pole = `null` → walidator rzuci błąd.
+
+👉 Przykład:
+
+```java
+public class UserDto {
+    @NotNull
+    public String username;
+}
+```
+
+JSON bez `username` → błąd walidacji: *"username must not be null"*.
+
+🔹 `@Valid` (np. `import jakarta.validation.Valid;`)
+
+* To **instrukcja dla walidatora**, że ma wejść **rekurencyjnie** do wnętrza tego obiektu i sprawdzić jego pola (jeśli obiekt nie jest nullem).
+* Nie waliduje **samej wartości** — jeśli pole jest `null`, to walidator po prostu pomija sprawdzanie.
+* Działa **tylko na obiektach zagnieżdżonych** (DTO w DTO, listy DTO itp.).
+
+👉 Przykład:
+
+```java
+public class UserDto {
+    @Valid
+    public AddressDto address;
+}
+
+public class AddressDto {
+    @NotNull
+    public String city;
+}
+```
+
+* Jeśli `address = null` → OK (brak błędu, bo `@Valid` nie wymusza istnienia obiektu).
+* Jeśli `address` istnieje, ale `city = null` → błąd walidacji: *"city must not be null"*.
+
+🔑 Podsumowanie
+
+* `@NotNull` → **pole samo w sobie nie może być nullem**.
+* `@Valid` → **waliduj pola w środku obiektu**, jeśli obiekt istnieje.
+
+Często łączy się je razem:
+
+```java
+@NotNull
+@Valid
+public Organization organization;
+```
+
+➡️ wtedy wymagamy, żeby `organization` **było obecne** i żeby jego **pola też były poprawne**.
+
+#### 2️⃣Usuwamy parametr z konstruktora `@JsonCreator`:
+
+```java
+// PRZED:
+@JsonCreator
+public Trello(
+        @JsonProperty(value = "unified", required = true) String unified,
+        @JsonProperty(value = "name", required = true) String name,
+        @JsonProperty(value = "native", required = true) String nativeChar,
+        @JsonProperty(value = "shortName", required = true) String shortName,
+        @JsonProperty(value = "shortNames", required = true) List<String> shortNames,
+        @JsonProperty(value = "text", required = true) String text,
+        @JsonProperty(value = "texts") List<String> texts,
+        @JsonProperty(value = "category", required = true) String category,
+        @JsonProperty(value = "sheetX", required = true) Integer sheetX,
+        @JsonProperty(value = "sheetY", required = true) Integer sheetY,
+        @JsonProperty(value = "skinVariation", required = true) String skinVariation,
+        @JsonProperty(value = "skinVariations", required = true) String skinVariations
+) {
+    this.unified = unified;
+    this.name = name;
+    this.nativeChar = nativeChar;
+    this.shortName = shortName;
+    this.shortNames = shortNames;
+    this.text = text;
+    this.texts = texts;
+    this.category = category;
+    this.sheetX = sheetX;
+    this.sheetY = sheetY;
+    this.skinVariation = skinVariation;
+    this.skinVariations = skinVariations;
+}
+
+// PO:
+@JsonCreator
+public Trello(
+        @JsonProperty(value = "unified", required = true) String unified,
+        @JsonProperty(value = "name", required = true) String name,
+        @JsonProperty(value = "native", required = true) String nativeChar,
+        @JsonProperty(value = "shortName", required = true) String shortName,
+        @JsonProperty(value = "shortNames", required = true) List<String> shortNames,
+        @JsonProperty(value = "text", required = true) String text,
+        @JsonProperty(value = "texts") List<String> texts,
+        @JsonProperty(value = "category", required = true) String category,
+        @JsonProperty(value = "sheetX", required = true) Integer sheetX,
+        @JsonProperty(value = "sheetY", required = true) Integer sheetY,
+        @JsonProperty(value = "skinVariation", required = true) String skinVariation
+) {
+    this.unified = unified;
+    this.name = name;
+    this.nativeChar = nativeChar;
+    this.shortName = shortName;
+    this.shortNames = shortNames;
+    this.text = text;
+    this.texts = texts;
+    this.category = category;
+    this.sheetX = sheetX;
+    this.sheetY = sheetY;
+    this.skinVariation = skinVariation;
+}
+```
+
+#### 3️⃣Musimy pamiętać, aby wszystkie parametry należące do opcjonalnego parametru/klasy/obiektu też nie były wymagane:
+
+```java
+package dto.emoji.list_available_emoji.trello;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import dto.emoji.list_available_emoji.trello.skin_variations.SkinVariationEntry;
+import jakarta.validation.Valid;
+
+@JsonIgnoreProperties(ignoreUnknown = false)
+public class SkinVariations {
+
+    @Valid
+    @JsonProperty("1F3FB")
+    public SkinVariationEntry oneF3FB;
+
+    @Valid
+    @JsonProperty("1F3FC")
+    public SkinVariationEntry oneF3FC;
+
+    @Valid
+    @JsonProperty("1F3FD")
+    public SkinVariationEntry oneF3FD;
+
+    @Valid
+    @JsonProperty("1F3FE")
+    public SkinVariationEntry oneF3FE;
+
+    @Valid
+    @JsonProperty("1F3FF")
+    public SkinVariationEntry oneF3FF;
+
+    public SkinVariations() {
+    }
+}
+```
 
 ---
 
