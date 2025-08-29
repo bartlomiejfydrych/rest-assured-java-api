@@ -27,6 +27,7 @@
 - [RequestSpecBuilder](#request_spec_builder)
 - [RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()](#enable_log_fail)
 - [RecursiveComparisonConfiguration()](#assertj_recursive_comparison_configuration)
+- [Rest Assured – przykłady pisania testów z kursu Sii](#rest_assured_test_examples_from_course)
 - [ID – czyszczenie zmiennej po wysłaniu DELETE](#id_clean_after_delete)
 - [UtilsCompare.java – opis kodu](#utils_compare_java)
 - [UtilsResponse.java – opis kodu](#utils_response_java)
@@ -850,6 +851,293 @@ void shouldCompareUsersIgnoringId() {
 
 Dzięki `RecursiveComparisonConfiguration` możesz **uniknąć problemów z `equals()`**, dostosować sposób porównywania
 i **uniknąć niepotrzebnych failów** w testach. 🚀🔥
+
+---
+
+## 📄Rest Assured – przykłady pisania testów z kursu Sii <a name="rest_assured_test_examples_from_course"></a>
+
+### Przykład 1
+
+Przypisujemy cały JSON/body do zmiennej, a następnie wstawiamy ją w requeście i piszemy w nim asercje.
+
+```java
+private String body = """
+    {
+            "name": "Mateusz Tadla",
+            "username": "mtadla",
+            "email": "mtadl@april.biz",
+            "address": {
+                "street": "Kulas Light",
+                "suite": "Apt. 556",
+                "city": "Lublin",
+                "zipcode": "92998-3874",
+                "geo": {
+                    "lat": "-37.3159",
+                    "lng": "81.1496"
+                }
+            },
+            "phone": "1-770-736-8031 x56442",
+            "website": "hildegard.org",
+            "company": {
+                "name": "Romaguera-Crona",
+                "catchPhrase": "Multi-layered client-server neural-net",
+                "bs": "harness real-time e-markets"
+            }
+    }
+    """;
+
+@Test
+public void shouldCreateNewUser() {
+    given().
+        body(body).
+        contentType(ContentType.JSON).
+        baseUri(baseUrl).
+    when().
+        post(users).
+    then().
+        statusCode(201)
+        .body("id", equalTo(11))
+        .body("address.city", equalTo("Lublin"));
+}
+```
+
+### Przykład 2
+
+Tworzenie/Przygotowanie JSON'a za pomocą HashMap'y.  
+Wymagana biblioteka **Jackson**.
+
+Więcej tutaj:  
+https://github.com/rest-assured/rest-assured/wiki/Usage#content-type-based-serialization
+
+```java
+@Test
+public void shouldCreateNewUserV2() {
+
+    Map<String, Object> address = new HashMap<>();
+    address.put("street", "Warszawska");
+    address.put("city", "Lublin");
+    
+    Map<String, Object> user = new HashMap<>();
+    user.put("name", "Mateusz Tadla");
+    user.put("username", "mtadla");
+    user.put("email", "mtadl@april.biz");
+    user.put("address", address);
+    
+    given().
+            body(user).
+            contentType(ContentType.JSON).
+            baseUri(baseUrl).
+    when().
+            post(users).
+    then().
+            statusCode(201).
+            body("id", equalTo(11)).
+            body("username", equalTo("mtadla")).
+            body("address.city", equalTo("Lublin"));
+}
+```
+
+### Przykład 3
+
+Tworzenie JSON'a za pomocą przygotowanych wcześniej **Builder'ów**.
+
+#### Tworzymy Buildery
+
+Używanie **Lombok'a** nie jest zalecane, ponieważ generuje wiele rzeczy podczas kompilacji i zawsze jest ryzyko, że coś się zepsuje podczas tego.
+
+```java
+package models.user;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class Address {
+    private String street;
+    private String suite;
+    private String city;
+    private String zipcode;
+    private Geo geo;
+}
+```
+
+```java
+package models.user;
+
+import lombok.*;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class User {
+   private int id;
+   private String name;
+   private String username;
+   private String email;
+   private Address address;
+   private String phone;
+   private String website;
+   private Company company;
+}
+```
+
+#### Używamy ich do przygotowania naszego JSON'a
+
+```java
+@Test
+public void shouldCreateNewUserV3() {
+
+    Address address = Address.builder()
+            .city("Lublin")
+            .street("Warszawska")
+            .build();
+
+    User user = User.builder()
+            .name("Mateusz Tadla")
+            .email("mtadl@april.biz")
+            .username("mtadla")
+            .address(address)
+            .build();
+    
+    given().
+            body(user).
+            contentType(ContentType.JSON).
+            baseUri(baseUrl).
+    when().
+            post(users).
+    then().
+            statusCode(201).
+            body("id", equalTo(11)).
+            body("username", equalTo("mtadla")).
+            body("address.city", equalTo("Lublin"));
+}
+```
+
+### Przykład 4
+
+Tworzenie JSON'a za pomocą przygotowanych wcześniej **Builder'ów**, ale mamy z nich utworzone metody, które tworzą już gotowe obiekty.
+
+#### Tworzymy metody z builder'ów
+
+```java
+package provier;
+
+import models.user.Address;
+
+public class AddressProvider {
+    public static Address getFullAddress() {
+        return
+                Address.builder()
+                        .street("Main St")
+                        .suite("Apt. 1")
+                        .city("Example City")
+                        .zipcode("12345")
+                        .geo(GeoProvider.getFullGeo())
+                        .build();
+    }
+}
+```
+
+```java
+package provier;
+
+import models.user.Company;
+
+public class CompanyProvider {
+    public static Company getFullCompanyData() {
+        return
+                Company.builder()
+                        .name("Example Company")
+                        .catchPhrase("We lead, others follow.")
+                        .bs("innovative solutions")
+                        .build();
+    }
+}
+```
+
+```java
+package provier;
+
+import io.UserProperty;
+import models.user.User;
+
+public class UserProvider {
+    public static User getFullUserData() {
+        return
+                User.builder()
+                        .name(UserProperty.get("name"))
+                        .username(UserProperty.get("username"))
+                        .email(UserProperty.get("email"))
+                        .address(AddressProvider.getFullAddress())
+                        .phone(UserProperty.get("phone"))
+                        .website(UserProperty.get("website"))
+                        .company(CompanyProvider.getFullCompanyData())
+                        .build();
+    }
+}
+```
+
+#### Używamy ich do przygotowania naszego JSON'a
+
+```java
+@Test
+public void shouldCreateNewUserV6() {
+    
+    User expectedUser = UserProvider.getFullUserData();
+
+    User reponseUser =
+            given().
+                    body(expectedUser).
+                    contentType(ContentType.JSON).
+                    baseUri(baseUrl).
+            when().
+                    post(users).
+            then().
+                    statusCode(201)
+                    .extract()
+                    .as(User.class);
+
+    expectedUser.setId(reponseUser.getId());
+    assertThat(reponseUser, equalTo(expectedUser));
+}
+```
+
+### Przykład 5
+
+Przerabianie payloadu i response'a na DTO, by następnie móc porównywać oba obiekty i odnosić się do ich parametrów za
+pomocą getterów i setterów lub ich zmiennych/parametrów bezpośrednio.
+
+```java
+@Test
+public void shouldCreateNewUserV7() {
+    
+    User expectedUser = UserProvider.getFullUserData();
+
+    User reponseUser =
+            given().
+                    body(expectedUser).
+                    contentType(ContentType.JSON).
+                    baseUri(baseUrl).
+            when().
+                    post(users).
+            then().
+                    statusCode(201)
+                    .extract()
+                    .as(User.class);
+    
+    // Poniżej 3 linijki specjalnie edytują reponseUser, aby sfailować compare
+    reponseUser.getAddress().getGeo().setLat("123123123312123");
+    reponseUser.setName("qweqewqe");
+    reponseUser.getCompany().setName("qwe");
+    compareObjectWithoutId(reponseUser, expectedUser);
+}
+```
 
 ---
 
