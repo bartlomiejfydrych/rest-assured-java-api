@@ -34,7 +34,7 @@ and `"backgroundTopColor"` changes.
 
 ## ☑Test coverage <a name="test_coverage"></a>
 
-- 💠name `string`
+- 💠name `string` 🔴REQUIRED🔴
   - ✅Positive:
     - **[P1]** Special characters and numbers
     - **[P2]** 1 character

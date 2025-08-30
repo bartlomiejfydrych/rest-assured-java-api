@@ -29,6 +29,10 @@
 
 ## 📦Query parameters / Payload <a name="query_parameters_payload"></a>
 
+### 💠parameter `type` 🔴REQUIRED🔴
+
+Description.
+
 ---
 
 ## 📩Response <a name="response"></a>
