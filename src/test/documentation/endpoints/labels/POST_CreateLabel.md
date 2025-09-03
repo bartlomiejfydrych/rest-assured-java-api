@@ -34,7 +34,7 @@ To create a label, we first need to have a **board** created and have its `ID`.
 
 - 💠idBoard `string` 🔴REQUIRED🔴
   - ✅Positive:
-    - **[]** Correct
+    - **[P1]** Correct
   - ❌Negative:
     - **[]** Missing
     - **[]** Null
@@ -43,7 +43,7 @@ To create a label, we first need to have a **board** created and have its `ID`.
     - **[]** Incorrect
 - 💠name `string` 🔴REQUIRED🔴
   - ✅Positive:
-    - **[]** Special characters and numbers
+    - **[P1]** Special characters and numbers
     - **[]** 1 character
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
@@ -54,16 +54,16 @@ To create a label, we first need to have a **board** created and have its `ID`.
 - 💠color `Color` 🔴REQUIRED🔴
   - ✅Positive:
     - **[]** Null
-    - **[]** yellow
-    - **[]** purple
-    - **[]** blue
-    - **[]** red
-    - **[]** green
-    - **[]** orange
-    - **[]** black
-    - **[]** sky
-    - **[]** pink
-    - **[]** lime
+    - **[rP1]** yellow
+    - **[rP1]** purple
+    - **[rP1]** blue
+    - **[rP1]** red
+    - **[rP1]** green
+    - **[rP1]** orange
+    - **[rP1]** black
+    - **[rP1]** sky
+    - **[rP1]** pink
+    - **[rP1]** lime
   - ❌Negative:
     - **[]** Missing
     - **[]** Empty string
@@ -90,3 +90,16 @@ Valid values: `yellow`, `purple`, `blue`, `red`, `green`, `orange`, `black`, `sk
 ---
 
 ## 📩Response <a name="response"></a>
+
+```json
+{
+    "id": "68b8a290c4f66f01d06926d0",
+    "idBoard": "68b8a28f40001d27d813d29e",
+    "name": "}NmX\\W=Ma^ŃZżśS#źąGó I/$BjR\\ĆDŚbłV02ńÓ\\9PTAg'i?4sy.Ł*Kr>(Ż%&<QCp6q8oO@U[cFn{t]~YH:LvzĄ`;dJE!wkufćl31Ę,Ź-5)_h+eęx\"7|",
+    "color": "sky",
+    "uses": 0,
+    "limits": {
+        
+    }
+}
+```

@@ -9,7 +9,10 @@ import org.junit.jupiter.api.TestInstance;
 
 import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoard.postCreateBoard;
+import static endpoints.labels.POST_CreateLabel.postCreateLabel;
 import static org.assertj.core.api.Assertions.assertThat;
+import static utils.UtilsCommon.getAllCharactersSetInRandomOrder;
+import static utils.UtilsCommon.pickRandom;
 import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 
@@ -18,6 +21,8 @@ public class POST_CreateLabelTest extends TestBase {
 
     private String boardId;
     private String labelId;
+    private String labelName;
+    private String labelColor;
 
     @BeforeAll
     public void setUpCreateBoard() {
@@ -43,5 +48,13 @@ public class POST_CreateLabelTest extends TestBase {
     @Test
     public void P1_shouldCreateLabelWithCorrectValuesAndNameWithSpecialCharactersAndNumbers() {
 
+        labelName = getAllCharactersSetInRandomOrder();
+        labelColor = pickRandom("yellow", "purple", "blue", "red", "green", "orange", "black", "sky", "pink", "lime");
+
+        // POST
+        responsePost = postCreateLabel(boardId, labelName, labelColor);
+        assertThat(responsePost.statusCode()).isEqualTo(200);
+        labelId = responsePost.jsonPath().getString("id");
+        System.out.println("Label ID: " + labelId);
     }
 }
