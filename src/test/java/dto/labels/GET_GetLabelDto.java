@@ -3,30 +3,22 @@ package dto.labels;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.Valid;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
-public class POST_CreateLabelDto extends LabelBaseDto {
-
-    public static final String FIELD_LIMITS = "limits";
-
-    @Valid
-    public Object limits;
+public class GET_GetLabelDto extends LabelBaseDto {
 
     @JsonCreator
-    public POST_CreateLabelDto(
+    public GET_GetLabelDto(
             @JsonProperty(value = "id", required = true) String id,
             @JsonProperty(value = "idBoard", required = true) String idBoard,
             @JsonProperty(value = "name", required = true) String name,
             @JsonProperty(value = "color") String color,
-            @JsonProperty(value = "uses", required = true) Integer uses,
-            @JsonProperty(value = FIELD_LIMITS, required = true) Object limits
+            @JsonProperty(value = "uses", required = true) Integer uses
     ) {
         super(id, idBoard, name, color, uses);
-        this.limits = limits;
     }
 
-    public POST_CreateLabelDto() {
+    public GET_GetLabelDto() {
         super();
     }
 }

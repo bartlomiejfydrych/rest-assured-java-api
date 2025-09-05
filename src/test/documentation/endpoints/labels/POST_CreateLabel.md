@@ -34,7 +34,7 @@ To create a label, we first need to have a **board** created and have its `ID`.
 
 - 💠idBoard `string` 🔴REQUIRED🔴
   - ✅Positive:
-    - **[P1]** Correct
+    - **[P1|P2]** Correct
   - ❌Negative:
     - **[]** Missing
     - **[]** Null
@@ -44,7 +44,7 @@ To create a label, we first need to have a **board** created and have its `ID`.
 - 💠name `string` 🔴REQUIRED🔴
   - ✅Positive:
     - **[P1]** Special characters and numbers
-    - **[]** 1 character
+    - **[P2]** 1 character
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[]** Missing (0 characters)
@@ -53,7 +53,7 @@ To create a label, we first need to have a **board** created and have its `ID`.
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠color `Color` 🔴REQUIRED🔴
   - ✅Positive:
-    - **[]** Null
+    - **[P2]** Null
     - **[rP1]** yellow
     - **[rP1]** purple
     - **[rP1]** blue
