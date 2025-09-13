@@ -36,11 +36,11 @@ To create a label, we first need to have a **board** created and have its `ID`.
   - ✅Positive:
     - **[P1|P2]** Correct
   - ❌Negative:
-    - **[]** Missing
-    - **[]** Null
-    - **[]** Empty string ("")
-    - **[]** Non-existent
-    - **[]** Incorrect
+    - **[N1]** Missing
+    - **[N2]** Null
+    - **[N3]** Empty string ("")
+    - **[N4]** Non-existent
+    - **[N5]** Incorrect
 - 💠name `string` 🔴REQUIRED🔴
   - ✅Positive:
     - **[P1]** Special characters and numbers

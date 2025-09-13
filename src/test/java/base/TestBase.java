@@ -27,6 +27,9 @@ public class TestBase {
     protected static Random random = new Random();
     // Mapper object to transform response String into JsonNode object
     protected static ObjectMapper objectMapper = new ObjectMapper();
+    // Test tags
+    protected static final String testTagPositive = "positive";
+    protected static final String testTagNegative = "negative";
 
     @BeforeAll
     public static void setUpAll() {

@@ -30,4 +30,15 @@ public class POST_CreateLabelExpected {
                 }
             }
             """;
+
+    // --------------
+    // NEGATIVE TESTS
+    // --------------
+
+    public static final String expectedPostLabelResponseInvalidId = """
+            {
+                "message": "Invalid id",
+                "error": "ERROR"
+            }
+            """;
 }

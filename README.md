@@ -139,6 +139,7 @@ The course consisted of 3 parts:
 - Organize your file structure to be as consistent as possible with your organization's API documentation format
 - Test Documentation management
 - Creating classes/builders to manage payload/queryParameters
+- Declaring a common resource for negative tests and separate resources for positive tests using `@Tag(testTagPositive)`
 - 🔴SOON
 
 ### Solved problems
