@@ -47,9 +47,9 @@ To create a label, we first need to have a **board** created and have its `ID`.
     - **[P2]** 1 character
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** Missing (0 characters)
-    - **[]** null
-    - **[]** Empty string ("")
+    - **[N6]** Missing (0 characters)
+    - **[N7–🐞]** null -> Label is created when it shouldn't be
+    - **[N8–🐞]** Empty string ("") -> Label is created when it shouldn't be
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠color `Color` 🔴REQUIRED🔴
   - ✅Positive:
@@ -65,9 +65,9 @@ To create a label, we first need to have a **board** created and have its `ID`.
     - **[rP1]** pink
     - **[rP1]** lime
   - ❌Negative:
-    - **[]** Missing
-    - **[]** Empty string
-    - **[]** Incorrect (other value)
+    - **[N9–🐞]** Missing -> Label is created when it shouldn't be
+    - **[N10–🐞]** Empty string -> Label is created when it shouldn't be
+    - **[N11]** Incorrect (other value)
 
 ---
 

@@ -41,4 +41,10 @@ public class POST_CreateLabelExpected {
                 "error": "ERROR"
             }
             """;
+    public static final String expectedPostLabelResponseInvalidColor = """
+            {
+                "message": "invalid value for color",
+                "error": "ERROR"
+            }
+            """;
 }
