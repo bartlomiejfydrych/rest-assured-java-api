@@ -54,16 +54,18 @@ public class POST_CreateLabelTest extends TestBase {
     // FOR NEGATIVE TESTS
 
     @BeforeAll
-    public void setUpCreateBoardForNegativeTests() {
-        responsePost = postCreateBoard(generateRandomBoardName(), null);
-        assertThat(responsePost.statusCode()).isEqualTo(200);
-        POST_CreateBoardDto responsePostDto = deserializeJson(responsePost, POST_CreateBoardDto.class);
-        boardIdNegative = responsePostDto.id;
+    public void setUpCreateBoardForNegativeTests(TestInfo testInfo) {
+        if (testInfo.getTags().contains(testTagNegative)) {
+            responsePost = postCreateBoard(generateRandomBoardName(), null);
+            assertThat(responsePost.statusCode()).isEqualTo(200);
+            POST_CreateBoardDto responsePostDto = deserializeJson(responsePost, POST_CreateBoardDto.class);
+            boardIdNegative = responsePostDto.id;
+        }
     }
 
     @AfterAll
-    public void tearDownDeleteBoardForNegativeTests() {
-        if (boardIdNegative != null) {
+    public void tearDownDeleteBoardForNegativeTests(TestInfo testInfo) {
+        if (testInfo.getTags().contains(testTagNegative) && boardIdNegative != null) {
             responseDelete = deleteDeleteBoard(boardIdNegative);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardIdNegative = null;
@@ -127,6 +129,7 @@ public class POST_CreateLabelTest extends TestBase {
     // idBoard
 
     @Test
+    @Tag(testTagNegative)
     public void N1_shouldNotCreateLabelWhenBoardIdIsMissing() {
 
         POST_CreateLabelPayload payload = new POST_CreateLabelPayload.Builder()
@@ -141,6 +144,7 @@ public class POST_CreateLabelTest extends TestBase {
     }
 
     @Test
+    @Tag(testTagNegative)
     public void N2_shouldNotCreateLabelWhenBoardIdIsNull() {
         responsePost = postCreateLabel(null, "N2 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
@@ -148,6 +152,7 @@ public class POST_CreateLabelTest extends TestBase {
     }
 
     @Test
+    @Tag(testTagNegative)
     public void N3_shouldNotCreateLabelWhenBoardIdIsEmptyString() {
         responsePost = postCreateLabel("", "N3 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
@@ -155,6 +160,7 @@ public class POST_CreateLabelTest extends TestBase {
     }
 
     @Test
+    @Tag(testTagNegative)
     public void N4_shouldNotCreateLabelWhenBoardIdNonExistent() {
         responsePost = postCreateLabel("999999", "N4 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
@@ -162,6 +168,7 @@ public class POST_CreateLabelTest extends TestBase {
     }
 
     @Test
+    @Tag(testTagNegative)
     public void N5_shouldNotCreateLabelWhenBoardIdIsIncorrect() {
         responsePost = postCreateLabel("Text", "N5 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
@@ -171,6 +178,7 @@ public class POST_CreateLabelTest extends TestBase {
     // name
 
     @Test
+    @Tag(testTagNegative)
     public void N6_shouldNotCreateLabelWhenLabelNameIsMissing() {
 
         POST_CreateLabelPayload payload = new POST_CreateLabelPayload.Builder()
@@ -191,6 +199,7 @@ public class POST_CreateLabelTest extends TestBase {
     The label is created when it shouldn't.
 
     @Test
+    @Tag(testTagNegative)
     public void N7_shouldNotCreateLabelWhenLabelNameIsNull() {
         responsePost = postCreateLabel(boardIdNegative, null, "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
@@ -218,6 +227,7 @@ public class POST_CreateLabelTest extends TestBase {
     The label is created when it shouldn't.
 
     @Test
+    @Tag(testTagNegative)
     public void N8_shouldNotCreateLabelWhenLabelNameIsEmptyString() {
         responsePost = postCreateLabel(boardIdNegative, "", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
@@ -248,6 +258,7 @@ public class POST_CreateLabelTest extends TestBase {
     The label is created when it shouldn't.
 
     @Test
+    @Tag(testTagNegative)
     public void N9_shouldNotCreateLabelWhenLabelColorIsMissing() {
 
         POST_CreateLabelPayload payload = new POST_CreateLabelPayload.Builder()
@@ -282,6 +293,7 @@ public class POST_CreateLabelTest extends TestBase {
     The label is created when it shouldn't.
 
     @Test
+    @Tag(testTagNegative)
     public void N10_shouldNotCreateLabelWhenLabelColorIsEmptyString() {
         responsePost = postCreateLabel(boardIdNegative, "N10 Label Name", "");
         assertThat(responsePost.getStatusCode()).isEqualTo(400);
@@ -304,6 +316,7 @@ public class POST_CreateLabelTest extends TestBase {
     */
 
     @Test
+    @Tag(testTagNegative)
     public void N11_shouldNotCreateLabelWhenLabelColorIsIncorrect() {
         responsePost = postCreateLabel(boardIdNegative, "N11 Label Name", "KEK 123");
         assertThat(responsePost.getStatusCode()).isEqualTo(400);
