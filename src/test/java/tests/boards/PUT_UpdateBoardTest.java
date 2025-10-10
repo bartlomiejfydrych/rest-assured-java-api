@@ -4,10 +4,7 @@ import base.TestBase;
 import configuration.Config;
 import dto.boards.POST_CreateBoardDto;
 import dto.boards.PUT_UpdateBoardDto;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import payloads.boards.PUT_UpdateBoardPayload;
 
 import java.net.URL;
@@ -26,33 +23,59 @@ import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.boards.PUT_UpdateBoardUtils.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateBoardTest extends TestBase {
 
     private String trelloId = Config.getTrelloId();
     // POST changing variables
-    private String boardId;
+    private String boardIdPositive;
+    private String boardIdNegative;
     private String boardName;
     private URL boardUrl;
     private URL boardShortUrl;
 
+    // FOR POSITIVE TESTS
+
     @BeforeEach
-    public void setUpCreateBoard() {
-        responsePost = postCreateBoard(generateRandomBoardName(), null);
-        assertThat(responsePost.statusCode()).isEqualTo(200);
-        POST_CreateBoardDto responsePostDto = deserializeJson(responsePost, POST_CreateBoardDto.class);
-        boardId = responsePostDto.id;
-        boardName = responsePostDto.name;
-        boardUrl = responsePostDto.url;
-        boardShortUrl = responsePostDto.shortUrl;
+    public void setUpCreateBoardForPositiveTests(TestInfo testInfo) {
+        if (testInfo.getTags().contains(testTagPositive)) {
+            responsePost = postCreateBoard(generateRandomBoardName(), null);
+            assertThat(responsePost.statusCode()).isEqualTo(200);
+            POST_CreateBoardDto responsePostDto = deserializeJson(responsePost, POST_CreateBoardDto.class);
+            boardIdPositive = responsePostDto.id;
+            boardName = responsePostDto.name;
+            boardUrl = responsePostDto.url;
+            boardShortUrl = responsePostDto.shortUrl;
+        }
     }
 
     @AfterEach
-    public void tearDownDeleteBoard() {
-        if (boardId != null) {
-            responseDelete = deleteDeleteBoard(boardId);
+    public void tearDownDeleteBoardForPositiveTests(TestInfo testInfo) {
+        if (testInfo.getTags().contains(testTagPositive) && boardIdPositive != null) {
+            responseDelete = deleteDeleteBoard(boardIdPositive);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
-            boardId = null;
+            boardIdPositive = null;
+        }
+    }
+
+    // FOR NEGATIVE TESTS
+
+    @BeforeAll
+    public void setUpCreateBoardForNegativeTests(TestInfo testInfo) {
+        if (testInfo.getTags().contains(testTagNegative)) {
+            responsePost = postCreateBoard(generateRandomBoardName(), null);
+            assertThat(responsePost.statusCode()).isEqualTo(200);
+            POST_CreateBoardDto responsePostDto = deserializeJson(responsePost, POST_CreateBoardDto.class);
+            boardIdNegative = responsePostDto.id;
+        }
+    }
+
+    @AfterAll
+    public void tearDownDeleteBoardForNegativeTests(TestInfo testInfo) {
+        if (testInfo.getTags().contains(testTagNegative) && boardIdNegative != null) {
+            responseDelete = deleteDeleteBoard(boardIdNegative);
+            assertThat(responseDelete.statusCode()).isEqualTo(200);
+            boardIdNegative = null;
         }
     }
 
@@ -61,16 +84,11 @@ public class PUT_UpdateBoardTest extends TestBase {
     // --------------
 
     @Test
+    @Tag(testTagPositive)
     public void P1_shouldUpdateBoardWhenMostStringParametersHaveSpecialCharactersAndBooleansAreTrue() {
 
         boardName = getAllCharactersSetInRandomOrder();
         String desc = getAllCharactersSetInRandomOrder();
-        String labelNamesGreen = getAllCharactersSetInRandomOrder();
-        String labelNamesYellow = getAllCharactersSetInRandomOrder();
-        String labelNamesOrange = getAllCharactersSetInRandomOrder();
-        String labelNamesRed = getAllCharactersSetInRandomOrder();
-        String labelNamesPurple = getAllCharactersSetInRandomOrder();
-        String labelNamesBlue = getAllCharactersSetInRandomOrder();
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setName(boardName)
@@ -87,29 +105,17 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .setPrefsBackground("blue")
                 .setPrefsCardAging("regular")
                 .setPrefsCalendarFeedEnabled(true)
-                .setLabelNamesGreen(labelNamesGreen)
-                .setLabelNamesYellow(labelNamesYellow)
-                .setLabelNamesOrange(labelNamesOrange)
-                .setLabelNamesRed(labelNamesRed)
-                .setLabelNamesPurple(labelNamesPurple)
-                .setLabelNamesBlue(labelNamesBlue)
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdPositive, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
         assertThat(stripBoardNameFromUrl(responsePutDto.url)).isEqualTo(stripBoardNameFromUrl(boardUrl));
-        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P1ExpectedPutBoardResponse, boardId, boardName, responsePutDto.url, boardShortUrl);
+        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P1ExpectedPutBoardResponse, boardIdPositive, boardName, responsePutDto.url, boardShortUrl);
         expectedResponsePutDto.desc = desc;
-        expectedResponsePutDto.labelNames.green = labelNamesGreen;
-        expectedResponsePutDto.labelNames.yellow = labelNamesYellow;
-        expectedResponsePutDto.labelNames.orange = labelNamesOrange;
-        expectedResponsePutDto.labelNames.red = labelNamesRed;
-        expectedResponsePutDto.labelNames.purple = labelNamesPurple;
-        expectedResponsePutDto.labelNames.blue = labelNamesBlue;
         expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
@@ -117,6 +123,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     }
 
     @Test
+    @Tag(testTagPositive)
     public void P2_shouldUpdateBoardWhenMostParametersAreNull() {
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
@@ -135,48 +142,38 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .setPrefsBackground(null)
                 .setPrefsCardAging(null)
                 .setPrefsCalendarFeedEnabled(null)
-                .setLabelNamesGreen(null)
-                .setLabelNamesYellow(null)
-                .setLabelNamesOrange(null)
-                .setLabelNamesRed(null)
-                .setLabelNamesPurple(null)
-                .setLabelNamesBlue(null)
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdPositive, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
-        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P2ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
+        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P2ExpectedPutBoardResponse, boardIdPositive, boardName, boardUrl, boardShortUrl);
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
     }
 
     @Test
+    @Tag(testTagPositive)
     public void P3_shouldUpdateBoardWhenAllParametersAreMissing() {
 
         // PUT
-        responsePut = putUpdateBoard(boardId, null);
+        responsePut = putUpdateBoard(boardIdPositive, null);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
-        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P3ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
+        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P3ExpectedPutBoardResponse, boardIdPositive, boardName, boardUrl, boardShortUrl);
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
     }
 
     @Test
+    @Tag(testTagPositive)
     public void P4_shouldUpdateBoardWhenMostStringParametersHaveOnlyOneCharacterAndBooleansAreFalse() {
 
         boardName = getRandomSingleChar();
-        String labelNamesGreen = getRandomSingleChar();
-        String labelNamesYellow = getRandomSingleChar();
-        String labelNamesOrange = getRandomSingleChar();
-        String labelNamesRed = getRandomSingleChar();
-        String labelNamesPurple = getRandomSingleChar();
-        String labelNamesBlue = getRandomSingleChar();
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setName(boardName)
@@ -191,28 +188,16 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .setPrefsBackground("orange")
                 .setPrefsCardAging("pirate")
                 .setPrefsCalendarFeedEnabled(false)
-                .setLabelNamesGreen(labelNamesGreen)
-                .setLabelNamesYellow(labelNamesYellow)
-                .setLabelNamesOrange(labelNamesOrange)
-                .setLabelNamesRed(labelNamesRed)
-                .setLabelNamesPurple(labelNamesPurple)
-                .setLabelNamesBlue(labelNamesBlue)
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdPositive, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
         assertThat(stripBoardNameFromUrl(responsePutDto.url)).isEqualTo(stripBoardNameFromUrl(boardUrl));
-        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P4ExpectedPutBoardResponse, boardId, boardName, responsePutDto.url, boardShortUrl);
-        expectedResponsePutDto.labelNames.green = labelNamesGreen;
-        expectedResponsePutDto.labelNames.yellow = labelNamesYellow;
-        expectedResponsePutDto.labelNames.orange = labelNamesOrange;
-        expectedResponsePutDto.labelNames.red = labelNamesRed;
-        expectedResponsePutDto.labelNames.purple = labelNamesPurple;
-        expectedResponsePutDto.labelNames.blue = labelNamesBlue;
+        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P4ExpectedPutBoardResponse, boardIdPositive, boardName, responsePutDto.url, boardShortUrl);
         expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
@@ -220,6 +205,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     }
 
     @Test
+    @Tag(testTagPositive)
     public void P5_shouldUpdateBoardWhenRemainingParametersAreProvidedRandomly() {
 
         String prefsVoting = pickRandom("org", "public");
@@ -245,10 +231,10 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdPositive, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
-        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P5ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
+        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P5ExpectedPutBoardResponse, boardIdPositive, boardName, boardUrl, boardShortUrl);
         expectedResponsePutDto.prefs.voting = prefsVoting;
         expectedResponsePutDto.prefs.comments = prefsComments;
         expectedResponsePutDto.prefs.background = prefsBackground;
@@ -267,6 +253,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     // name
 
     @Test
+    @Tag(testTagNegative)
     public void N1_shouldNotUpdateBoardWhenNameIsEmptyString() {
 
         String expectedResponse = """
@@ -282,7 +269,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdNegative, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePut, expectedResponse);
     }
@@ -290,6 +277,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     // subscribed
 
     @Test
+    @Tag(testTagNegative)
     public void N2_shouldNotUpdateBoardWhenSubscribedNotExist() {
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
@@ -298,12 +286,13 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdNegative, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
     }
 
     @Test
+    @Tag(testTagNegative)
     public void N3_shouldNotUpdateBoardWhenSubscribedIsIncompatibleWithRegEx() {
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
@@ -312,7 +301,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdNegative, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
     }
@@ -320,13 +309,8 @@ public class PUT_UpdateBoardTest extends TestBase {
     // idOrganization
 
     @Test
+    @Tag(testTagNegative)
     public void N4_shouldNotUpdateBoardWhenIdOrganizationNotExist() {
-
-        String expectedResponse = """
-                {
-                    "message": "unauthorized organization access"
-                }
-                """;
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setIdOrganization("123456789098765432123456")
@@ -334,19 +318,14 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
-        assertThat(responsePut.statusCode()).isEqualTo(401);
-        compareObjectsJsonNode(responsePut, expectedResponse);
+        responsePut = putUpdateBoard(boardIdNegative, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid id");
     }
 
     @Test
+    @Tag(testTagNegative)
     public void N5_shouldNotUpdateBoardWhenIdOrganizationIsIncompatibleWithRegEx() {
-
-        String expectedResponse = """
-                {
-                    "message": "unauthorized organization."
-                }
-                """;
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setIdOrganization("123abc")
@@ -354,14 +333,15 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
-        assertThat(responsePut.statusCode()).isEqualTo(401);
-        compareObjectsJsonNode(responsePut, expectedResponse);
+        responsePut = putUpdateBoard(boardIdNegative, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid id");
     }
 
     // prefs/permissionLevel
 
     @Test
+    @Tag(testTagNegative)
     public void N6_shouldNotUpdateBoardWhenPrefsPermissionLevelIsOtherString() {
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
@@ -370,7 +350,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdNegative, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/permissionLevel");
     }
@@ -378,6 +358,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     // prefs/invitations
 
     @Test
+    @Tag(testTagNegative)
     public void N7_shouldNotUpdateBoardWhenPrefsInvitationsIsOtherString() {
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
@@ -386,7 +367,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdNegative, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/invitations");
     }
@@ -394,6 +375,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     // prefs/voting
 
     @Test
+    @Tag(testTagNegative)
     public void N8_shouldNotUpdateBoardWhenPrefsVotingIsOtherString() {
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
@@ -402,7 +384,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdNegative, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/voting");
     }
@@ -410,6 +392,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     // prefs/comments
 
     @Test
+    @Tag(testTagNegative)
     public void N9_shouldNotUpdateBoardWhenPrefsCommentsIsOtherString() {
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
@@ -418,7 +401,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdNegative, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/comments");
     }
@@ -426,6 +409,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     // prefs/background
 
     @Test
+    @Tag(testTagNegative)
     public void N10_shouldNotUpdateBoardWhenPrefsBackgroundIsOtherString() {
 
         String expectedResponse = """
@@ -441,7 +425,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdNegative, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePut, expectedResponse);
     }
@@ -449,6 +433,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     // prefs/cardAging
 
     @Test
+    @Tag(testTagNegative)
     public void N11_shouldNotUpdateBoardWhenPrefsCardAgingIsOtherString() {
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
@@ -457,7 +442,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateBoard(boardId, queryParams);
+        responsePut = putUpdateBoard(boardIdNegative, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/cardAging");
     }

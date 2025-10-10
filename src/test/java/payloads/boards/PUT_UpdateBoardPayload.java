@@ -24,12 +24,6 @@ public class PUT_UpdateBoardPayload {
     private final String prefsBackground;
     private final String prefsCardAging;
     private final Boolean prefsCalendarFeedEnabled;
-    private final String labelNamesGreen;
-    private final String labelNamesYellow;
-    private final String labelNamesOrange;
-    private final String labelNamesRed;
-    private final String labelNamesPurple;
-    private final String labelNamesBlue;
 
     // -----------------------------------------
     // Helper method – conversion to queryParams
@@ -53,12 +47,6 @@ public class PUT_UpdateBoardPayload {
         if (prefsBackground != null) params.put("prefs/background", prefsBackground);
         if (prefsCardAging != null) params.put("prefs/cardAging", prefsCardAging);
         if (prefsCalendarFeedEnabled != null) params.put("prefs/calendarFeedEnabled", prefsCalendarFeedEnabled);
-        if (labelNamesGreen != null) params.put("labelNames/green", labelNamesGreen);
-        if (labelNamesYellow != null) params.put("labelNames/yellow", labelNamesYellow);
-        if (labelNamesOrange != null) params.put("labelNames/orange", labelNamesOrange);
-        if (labelNamesRed != null) params.put("labelNames/red", labelNamesRed);
-        if (labelNamesPurple != null) params.put("labelNames/purple", labelNamesPurple);
-        if (labelNamesBlue != null) params.put("labelNames/blue", labelNamesBlue);
 
         return params;
     }
@@ -73,7 +61,7 @@ public class PUT_UpdateBoardPayload {
         .setName("Zmieniona tablica")
         .setPrefsBackground("lime")
         .setPrefsSelfJoin(true)
-        .setLabelNamesRed("Błąd krytyczny")
+        .setPrefsCardAging("Błąd krytyczny")
         .build();
 
     Map<String, Object> queryParams = payload.toQueryParams();
@@ -100,12 +88,6 @@ public class PUT_UpdateBoardPayload {
         this.prefsBackground = builder.prefsBackground;
         this.prefsCardAging = builder.prefsCardAging;
         this.prefsCalendarFeedEnabled = builder.prefsCalendarFeedEnabled;
-        this.labelNamesGreen = builder.labelNamesGreen;
-        this.labelNamesYellow = builder.labelNamesYellow;
-        this.labelNamesOrange = builder.labelNamesOrange;
-        this.labelNamesRed = builder.labelNamesRed;
-        this.labelNamesPurple = builder.labelNamesPurple;
-        this.labelNamesBlue = builder.labelNamesBlue;
     }
 
     // -------
@@ -128,12 +110,6 @@ public class PUT_UpdateBoardPayload {
         private String prefsBackground;
         private String prefsCardAging;
         private Boolean prefsCalendarFeedEnabled;
-        private String labelNamesGreen;
-        private String labelNamesYellow;
-        private String labelNamesOrange;
-        private String labelNamesRed;
-        private String labelNamesPurple;
-        private String labelNamesBlue;
 
         public Builder setName(String name) {
             this.name = name;
@@ -207,36 +183,6 @@ public class PUT_UpdateBoardPayload {
 
         public Builder setPrefsCalendarFeedEnabled(Boolean prefsCalendarFeedEnabled) {
             this.prefsCalendarFeedEnabled = prefsCalendarFeedEnabled;
-            return this;
-        }
-
-        public Builder setLabelNamesGreen(String labelNamesGreen) {
-            this.labelNamesGreen = labelNamesGreen;
-            return this;
-        }
-
-        public Builder setLabelNamesYellow(String labelNamesYellow) {
-            this.labelNamesYellow = labelNamesYellow;
-            return this;
-        }
-
-        public Builder setLabelNamesOrange(String labelNamesOrange) {
-            this.labelNamesOrange = labelNamesOrange;
-            return this;
-        }
-
-        public Builder setLabelNamesRed(String labelNamesRed) {
-            this.labelNamesRed = labelNamesRed;
-            return this;
-        }
-
-        public Builder setLabelNamesPurple(String labelNamesPurple) {
-            this.labelNamesPurple = labelNamesPurple;
-            return this;
-        }
-
-        public Builder setLabelNamesBlue(String labelNamesBlue) {
-            this.labelNamesBlue = labelNamesBlue;
             return this;
         }
 
