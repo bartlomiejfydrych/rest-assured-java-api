@@ -58,8 +58,7 @@ public class POST_CreateLabelTest extends TestBase {
         if (testInfo.getTags().contains(testTagNegative)) {
             responsePost = postCreateBoard(generateRandomBoardName(), null);
             assertThat(responsePost.statusCode()).isEqualTo(200);
-            POST_CreateBoardDto responsePostDto = deserializeJson(responsePost, POST_CreateBoardDto.class);
-            boardIdNegative = responsePostDto.id;
+            boardIdNegative = deserializeJson(responsePost, POST_CreateBoardDto.class).id;
         }
     }
 

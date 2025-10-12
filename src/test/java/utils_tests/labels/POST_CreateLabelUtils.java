@@ -6,6 +6,7 @@ import dto.labels.POST_CreateLabelDto;
 
 import static endpoints.labels.GET_GetLabel.getGetLabel;
 import static org.assertj.core.api.Assertions.assertThat;
+import static utils.UtilsCommon.pickRandom;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
@@ -33,5 +34,13 @@ public class POST_CreateLabelUtils extends TestBase {
 
         GET_GetLabelDto responseGetDto = deserializeAndValidate(responseGet, GET_GetLabelDto.class);
         compareObjects(responsePostDto, responseGetDto, POST_CreateLabelDto.FIELD_LIMITS);
+    }
+
+    public static String generateRandomLabelName() {
+        return faker.company().name() + " label " + System.nanoTime();
+    }
+
+    public static String generateRandomLabelColor() {
+        return pickRandom("yellow", "purple", "blue", "red", "green", "orange", "black", "sky", "pink", "lime");
     }
 }
