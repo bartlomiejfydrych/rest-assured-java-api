@@ -2,6 +2,7 @@ package tests.boards;
 
 import base.TestBase;
 import configuration.Config;
+import dto.boards.GET_GetBoardDto;
 import dto.boards.POST_CreateBoardDto;
 import dto.boards.PUT_UpdateBoardDto;
 import org.junit.jupiter.api.*;
@@ -11,6 +12,7 @@ import java.net.URL;
 import java.util.Map;
 
 import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
+import static endpoints.boards.GET_GetBoard.getGetBoard;
 import static endpoints.boards.POST_CreateBoard.postCreateBoard;
 import static endpoints.boards.PUT_UpdateBoard.putUpdateBoard;
 import static expected_responses.boards.PUT_UpdateBoardExpected.*;
@@ -23,7 +25,6 @@ import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.boards.PUT_UpdateBoardUtils.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateBoardTest extends TestBase {
 
@@ -129,14 +130,18 @@ public class PUT_UpdateBoardTest extends TestBase {
     }
 
     @Test
-    @Order(1)
     public void P3_shouldUpdateBoardWhenAllParametersAreMissing() {
+        // (We need to retrieve the current state of the previously created table to have something to compare it with,
+        // to ensure that nothing has changed in this test after editing.)
+        // GET
+        responseGet = getGetBoard(boardId);
+        assertThat(responseGet.statusCode()).isEqualTo(200);
+        GET_GetBoardDto responseGetDto = deserializeAndValidate(responseGet, GET_GetBoardDto.class);
         // PUT
         responsePut = putUpdateBoard(boardId, null);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
-        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P3ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
-        compareObjects(responsePutDto, expectedResponsePutDto);
+        compareObjects(responsePutDto, responseGetDto, PUT_UpdateBoardDto.FIELD_ORGANIZATION);
         // GET
         validateGetAgainstPut(responsePutDto);
     }
