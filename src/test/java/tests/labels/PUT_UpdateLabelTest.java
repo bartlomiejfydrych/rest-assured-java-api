@@ -17,58 +17,28 @@ import static utils_tests.labels.POST_CreateLabelUtils.generateRandomLabelName;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateLabelTest extends TestBase {
 
-    private String boardIdPositive;
-    private String boardIdNegative;
-    private String labelIdPositive;
-    private String labelIdNegative;
+    private String boardId;
+    private String labelId;
     private String labelName;
     private String labelColor;
 
-    // FOR POSITIVE TESTS
-
-    @BeforeEach
-    public void setUpCreateBoardAndLabelForPositiveTests(TestInfo testInfo) {
-        if (testInfo.getTags().contains(testTagPositive)) {
-            responsePost = postCreateBoard(generateRandomBoardName(), null);
-            assertThat(responsePost.statusCode()).isEqualTo(200);
-            boardIdPositive = deserializeJson(responsePost, POST_CreateBoardDto.class).id;
-            responsePost = postCreateLabel(boardIdPositive, generateRandomLabelName(), generateRandomLabelColor());
-            assertThat(responsePost.statusCode()).isEqualTo(200);
-            labelIdPositive = deserializeJson(responsePost, POST_CreateLabelDto.class).id;
-        }
-    }
-
-    @AfterEach
-    public void tearDownDeleteBoardAndLabelForPositiveTests(TestInfo testInfo) {
-        if (testInfo.getTags().contains(testTagPositive) && boardIdPositive != null) {
-            responseDelete = deleteDeleteBoard(boardIdPositive);
-            assertThat(responseDelete.statusCode()).isEqualTo(200);
-            boardIdPositive = null;
-            labelIdPositive = null;
-        }
-    }
-
-    // FOR NEGATIVE TESTS
-
     @BeforeAll
-    public void setUpCreateBoardAndLabelForNegativeTests(TestInfo testInfo) {
-        if (testInfo.getTags().contains(testTagNegative)) {
-            responsePost = postCreateBoard(generateRandomBoardName(), null);
-            assertThat(responsePost.statusCode()).isEqualTo(200);
-            boardIdNegative = deserializeJson(responsePost, POST_CreateBoardDto.class).id;
-            responsePost = postCreateLabel(boardIdNegative, generateRandomLabelName(), generateRandomLabelColor());
-            assertThat(responsePost.statusCode()).isEqualTo(200);
-            labelIdNegative = deserializeJson(responsePost, POST_CreateLabelDto.class).id;
-        }
+    public void setUpCreateBoardAndLabel() {
+        responsePost = postCreateBoard(generateRandomBoardName(), null);
+        assertThat(responsePost.statusCode()).isEqualTo(200);
+        boardId = deserializeJson(responsePost, POST_CreateBoardDto.class).id;
+        responsePost = postCreateLabel(boardId, generateRandomLabelName(), generateRandomLabelColor());
+        assertThat(responsePost.statusCode()).isEqualTo(200);
+        labelId = deserializeJson(responsePost, POST_CreateLabelDto.class).id;
     }
 
     @AfterAll
-    public void tearDownDeleteBoardAndLabelForNegativeTests(TestInfo testInfo) {
-        if (testInfo.getTags().contains(testTagNegative) && boardIdNegative != null) {
-            responseDelete = deleteDeleteBoard(boardIdNegative);
+    public void tearDownDeleteBoardAndLabel() {
+        if (boardId != null) {
+            responseDelete = deleteDeleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
-            boardIdNegative = null;
-            labelIdNegative = null;
+            boardId = null;
+            labelId = null;
         }
     }
 
