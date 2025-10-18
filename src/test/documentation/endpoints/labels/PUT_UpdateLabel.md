@@ -37,29 +37,29 @@ Next, we need to create for that board a label that we will edit.
   - ✅Positive:
     - **[P1]** Special characters and numbers
     - **[P2]** 1 character
-    - **[]** Missing (0 characters)
-    - **[]** null
-    - **[]** Empty string ("")
+    - **[P3]** Missing (0 characters)
+    - **[P4]** null
+    - **[P5]** Empty string ("")
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠color `Color`
   - ✅Positive:
-    - **[rP1]** yellow
-    - **[rP1]** purple
-    - **[rP1]** blue
-    - **[rP1]** red
-    - **[rP1]** green
-    - **[rP1]** orange
-    - **[rP1]** black
-    - **[rP1]** sky
-    - **[rP1]** pink
-    - **[rP1]** lime
-    - **[P2]** Null
-    - **[]** Missing (0 characters)
-    - **[]** Empty string ("")
+    - **[rP1|rP2]** yellow
+    - **[rP1|rP2]** purple
+    - **[rP1|rP2]** blue
+    - **[rP1|rP2]** red
+    - **[rP1|rP2]** green
+    - **[rP1|rP2]** orange
+    - **[rP1|rP2]** black
+    - **[rP1|rP2]** sky
+    - **[rP1|rP2]** pink
+    - **[rP1|rP2]** lime
+    - **[P3]** Missing (0 characters)
+    - **[P4]** Null
+    - **[P5]** Empty string ("")
   - ❌Negative:
-    - **[]** Incorrect (other value)
+    - **[N1]** Incorrect (other value)
 
 ---
 
@@ -80,5 +80,11 @@ Valid values: `yellow`, `purple`, `blue`, `red`, `green`, `orange`, `black`, `sk
 ## 📩Response <a name="response"></a>
 
 ```json
-
+{
+    "id": "68f3727ceca87e58e1db7f37",
+    "idBoard": "68f3727b519a2a57cdf7fec1",
+    "name": "QćJsŃY4źwEv<Wf;DĄ:VL )TF?!0OoŁaNĘ68Ic(iC\"hx\\śn+*u5K7ZŻUH1ÓŚ]Ćq^AlbSr{9\\|-',jŹ3ąg$%_>2}dmz@&X~łń#peę=P\\RóB[`Gkżty./M",
+    "color": "black",
+    "uses": 0
+}
 ```

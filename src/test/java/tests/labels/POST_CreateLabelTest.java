@@ -279,7 +279,7 @@ public class POST_CreateLabelTest extends TestBase {
 
     @Test
     public void N11_shouldNotCreateLabelWhenLabelColorIsIncorrect() {
-        responsePost = postCreateLabel(boardId, "N11 Label Name", "KEK 123");
+        responsePost = postCreateLabel(boardId, "N11 Label Name", "KEK123");
         assertThat(responsePost.getStatusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidColor);
     }

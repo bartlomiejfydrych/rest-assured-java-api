@@ -131,7 +131,7 @@ public class PUT_UpdateBoardTest extends TestBase {
 
     @Test
     public void P3_shouldUpdateBoardWhenAllParametersAreMissing() {
-        // (We need to retrieve the current state of the previously created table to have something to compare it with,
+        // (We need to retrieve the current state of the previously created board to have something to compare it with,
         // to ensure that nothing has changed in this test after editing.)
         // GET
         responseGet = getGetBoard(boardId);
