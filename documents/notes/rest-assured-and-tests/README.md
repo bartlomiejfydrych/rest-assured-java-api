@@ -26,6 +26,7 @@
 - [RestAssured.filters()](#rest_assured_filters)
 - [RequestSpecBuilder](#request_spec_builder)
 - [RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()](#enable_log_fail)
+- [REST Assured – przesyłanie pustych Stringów](#rest_assured_send_empty_string)
 - [RecursiveComparisonConfiguration()](#assertj_recursive_comparison_configuration)
 - [Rest Assured – przykłady pisania testów z kursu Sii](#rest_assured_test_examples_from_course)
 - [ID – czyszczenie zmiennej po wysłaniu DELETE](#id_clean_after_delete)
@@ -37,6 +38,7 @@
 - [Porównywanie JSON'ów – ObjectMapper](#json_compare_object_mapper)
 - [Porównywanie JSON'ów – JsonNode](#json_compare_json_node)
 - [REST Assured – asercja dla pustego obiektu](#rest_assured_assert_empty_object)
+- [JUnit – tagi dla testów](#junit_test_tags)
 
 ---
 
@@ -759,6 +761,31 @@ RestAssured.filters(new ResponseLoggingFilter());
 tylko w przypadku **niepowodzenia testu**.
 - Świetne rozwiązanie dla **czytelnych logów i efektywnego debugowania** testów API.
 - Jest **zalecaną praktyką** w testach automatycznych REST Assured. 🚀
+
+---
+
+## 📄REST Assured – przesyłanie pustych Stringów <a name="rest_assured_send_empty_string"></a>
+
+### Różnica
+
+Jak przekazujemy w query parameters puste Stringi bezpośrednio (`.setName(""); .setColor("");`), to są one ignorowane przez REST Assured.
+
+Jak przekazujemy w query parameters puste Stringi za pomocą zmiennych, to dopiero wtedy są one przesyłane:
+```java
+String name = "";
+String color = "";
+
+spec.queryParam("name", name);
+spec.queryParam("color", color);
+```
+
+### Wyjaśnienie
+
+RestAssured **domyślnie nie dodaje parametrów o pustej wartości ("") do requestu**.  
+Tzn. te parametry **nie trafią w ogóle do żądania HTTP**.
+
+Czyli finalny request, który idzie do API, **nie zawiera ani `name`, ani `color`** —  
+więc serwer nie ma czego zaktualizować i nie zmienia niczego w zasobie.
 
 ---
 
@@ -2017,3 +2044,36 @@ W JSON:
 To jest pusty obiekt → w Javie odwzorowuje się jako `Map<String, Object>`.
 
 Używając `equalTo("{}")`, porównujesz `Map` z `String`, co nigdy nie przejdzie (nawet jeśli zawartość wygląda na taką samą).
+
+---
+
+## 📄JUnit – tagi dla testów <a name="junit_test_tags"></a>
+
+Gdy chcemy, aby w zależności od okoliczności lub konfiguracji były uruchamiane różne testy, można je oznaczyć tagami.
+
+Najpierw dla testów ustawiamy tagi np. `@Tag("positive")`.
+```java
+@Test
+@Tag("positive")
+public void P1_shouldCreateLabelWithCorrectValues() {
+    String labelName = getAllCharactersSetInRandomOrder();
+    String labelColor = pickRandom("yellow", "purple", "blue", "red", "green", "orange", "black", "sky", "pink", "lime");
+
+    responsePost = postCreateLabel(tempBoardId, labelName, labelColor);
+    assertThat(responsePost.statusCode()).isEqualTo(200);
+    // dalsza logika...
+}
+```
+
+Następnie umieszczamy `IF'a` w jednym z `Before...`/`After...`, który będzie odnosił się dla testów z tym tagiem np.
+`if (testInfo.getTags().contains("positive")) { }`.
+```java
+@BeforeEach
+public void setUpTempBoardForPositiveTests(TestInfo testInfo) {
+    if (testInfo.getTags().contains("positive")) {
+        responsePost = postCreateBoard(generateRandomBoardName(), null);
+        assertThat(responsePost.statusCode()).isEqualTo(200);
+        tempBoardId = deserializeJson(responsePost, POST_CreateBoardDto.class).id;
+    }
+}
+```
