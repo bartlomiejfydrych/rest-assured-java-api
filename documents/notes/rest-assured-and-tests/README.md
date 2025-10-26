@@ -39,6 +39,7 @@
 - [Porównywanie JSON'ów – JsonNode](#json_compare_json_node)
 - [REST Assured – asercja dla pustego obiektu](#rest_assured_assert_empty_object)
 - [JUnit – tagi dla testów](#junit_test_tags)
+- [Junit – TestInstance.Lifecycle](#junit_testinstance_lifecycle)
 
 ---
 
@@ -2077,3 +2078,198 @@ public void setUpTempBoardForPositiveTests(TestInfo testInfo) {
     }
 }
 ```
+
+---
+
+## 📄Junit – TestInstance.Lifecycle <a name="junit_testinstance_lifecycle"></a>
+
+### 🧩 1️⃣ Co to jest `@TestInstance`
+
+`@TestInstance` to adnotacja w **JUnit 5 (Jupiter)**, która określa **cykl życia instancji klasy testowej**.
+
+Normalnie (domyślnie), JUnit **tworzy nową instancję klasy testowej dla każdego testu** — to zachowanie jest bardzo bezpieczne, bo testy nie mają wspólnego stanu (czyli nie wpływają na siebie nawzajem).
+
+Ale czasami (np. przy kosztownym setupie lub testach sekwencyjnych) chcemy **zachować stan pomiędzy testami** — wtedy możemy zmienić cykl życia instancji.
+
+### ⚙️ 2️⃣ Dostępne tryby cyklu życia (`Lifecycle`)
+
+Adnotacja `@TestInstance` ma parametr `Lifecycle`, który przyjmuje dwa warianty:
+
+| Tryb                      | Opis                                                                                                        |
+|---------------------------|-------------------------------------------------------------------------------------------------------------|
+| `PER_METHOD` *(domyślny)* | Dla każdego testu (`@Test`) JUnit tworzy **nowy obiekt** klasy testowej.                                    |
+| `PER_CLASS`               | Dla **wszystkich testów w klasie** tworzony jest **jeden wspólny obiekt** (jedna instancja klasy testowej). |
+
+### 🔍 3️⃣ Przykład — różnica między `PER_METHOD` i `PER_CLASS`
+
+#### 🧪 Domyślny tryb: `PER_METHOD`
+
+```java
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+class ExampleTest {
+
+    private int counter = 0;
+
+    @Test
+    void test1() {
+        counter++;
+        System.out.println("Test1 counter = " + counter);
+    }
+
+    @Test
+    void test2() {
+        counter++;
+        System.out.println("Test2 counter = " + counter);
+    }
+}
+```
+
+➡️ Wynik:
+
+```
+Test1 counter = 1
+Test2 counter = 1
+```
+
+Dlaczego?
+Bo **dla każdego testu tworzona jest nowa instancja klasy**, więc `counter` zawsze startuje od 0.
+
+#### 🧪 Tryb: `PER_CLASS`
+
+```java
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class ExampleTest {
+
+    private int counter = 0;
+
+    @Test
+    void test1() {
+        counter++;
+        System.out.println("Test1 counter = " + counter);
+    }
+
+    @Test
+    void test2() {
+        counter++;
+        System.out.println("Test2 counter = " + counter);
+    }
+}
+```
+
+➡️ Wynik:
+
+```
+Test1 counter = 1
+Test2 counter = 2
+```
+
+Dlaczego?
+Bo **wszystkie testy korzystają z tej samej instancji klasy**, więc `counter` zachowuje wartość pomiędzy testami.
+
+### 🧰 4️⃣ Kiedy JUnit wywołuje metody `@BeforeAll`, `@BeforeEach`, `@AfterEach`, `@AfterAll`
+
+| Adnotacja     | PER_METHOD                                        | PER_CLASS                      |
+|---------------|---------------------------------------------------|--------------------------------|
+| `@BeforeAll`  | musi być **static** (bo nie ma instancji jeszcze) | może być **nie-static**        |
+| `@BeforeEach` | wywoływana przed każdym testem                    | wywoływana przed każdym testem |
+| `@AfterEach`  | wywoływana po każdym teście                       | wywoływana po każdym teście    |
+| `@AfterAll`   | musi być **static**                               | może być **nie-static**        |
+
+Przykład:
+
+```java
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class ExampleTest {
+
+    @BeforeAll
+    void beforeAll() {
+        System.out.println("Before all tests");
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        System.out.println("Before each test");
+    }
+
+    @Test
+    void test1() {
+        System.out.println("Running test1");
+    }
+
+    @Test
+    void test2() {
+        System.out.println("Running test2");
+    }
+
+    @AfterEach
+    void afterEach() {
+        System.out.println("After each test");
+    }
+
+    @AfterAll
+    void afterAll() {
+        System.out.println("After all tests");
+    }
+}
+```
+
+➡️ Wynik:
+
+```
+Before all tests
+Before each test
+Running test1
+After each test
+Before each test
+Running test2
+After each test
+After all tests
+```
+
+### 📦 5️⃣ Podsumowanie różnic
+
+| Cecha                                 | PER_METHOD *(domyślny)*      | PER_CLASS                                           |
+|---------------------------------------|------------------------------|-----------------------------------------------------|
+| Liczba instancji testów               | Jedna instancja **na test**  | Jedna instancja **na klasę**                        |
+| Współdzielenie pól                    | ❌ Nie (każdy test ma własne) | ✅ Tak (pola zachowują stan między testami)          |
+| @BeforeAll/@AfterAll muszą być static | ✅ Tak                        | ❌ Nie                                               |
+| Izolacja testów                       | ✅ Pełna                      | ⚠️ Może być zaburzona                               |
+| Wydajność (np. drogi setup)           | ❌ wolniejszy                 | ✅ szybszy (jeden setup)                             |
+| Kiedy stosować                        | domyślnie — testy niezależne | gdy chcesz utrzymać stan (np. jeden board w Trello) |
+
+### 💡 6️⃣ Kiedy używać którego trybu
+
+#### ✅ `PER_METHOD` — najczęściej
+
+* Testy **niezależne od siebie**
+* Każdy test ma czysty stan
+* Unikasz efektu ubocznego
+* Bezpieczny dla testów równoległych
+
+#### ✅ `PER_CLASS` — czasami
+
+* Gdy chcesz **zachować stan** pomiędzy testami (np. jeden utworzony zasób)
+* Gdy **inicjalizacja jest kosztowna** (np. logowanie, setup środowiska)
+* Gdy chcesz, by `@BeforeAll` / `@AfterAll` mogły być niestatyczne (czyli mieć dostęp do pól klasy)
+
+### 🧠 7️⃣ Dodatkowe wskazówki
+
+* Możesz mieszać `PER_CLASS` z `@TestMethodOrder` (np. ustalić kolejność wykonywania testów, gdy zachowujesz stan).
+* Nie łącz `PER_CLASS` z równoległym uruchamianiem testów (`@Execution(CONCURRENT)`), jeśli testy modyfikują wspólny stan.
+* W dużych projektach REST API:
+
+    * **GET/POST/PUT/DELETE testy** często używają `PER_CLASS` — bo jeden obiekt testowy (np. board) może być tworzony raz i testowany różnymi metodami.
+    * Testy walidacji / błędów — zwykle `PER_METHOD` (żeby mieć czyste środowisko).
+
+### 📘 TL;DR — skrót notatkowy
+
+| Pojęcie                    | Znaczenie                                                      |
+|----------------------------|----------------------------------------------------------------|
+| `@TestInstance`            | Steruje cyklem życia instancji klasy testowej                  |
+| `Lifecycle.PER_METHOD`     | Domyślnie — nowa instancja dla każdego testu                   |
+| `Lifecycle.PER_CLASS`      | Jedna instancja dla całej klasy testowej                       |
+| `@BeforeAll` / `@AfterAll` | Muszą być static przy `PER_METHOD`, nie muszą przy `PER_CLASS` |
+| Użycie `PER_CLASS`         | Gdy testy mają współdzielony stan lub setup jest kosztowny     |
+| Użycie `PER_METHOD`        | Gdy testy mają być w pełni izolowane                           |
+
+---
