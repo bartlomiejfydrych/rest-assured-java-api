@@ -1,7 +1,6 @@
 package tests.labels;
 
 import base.TestBase;
-import dto.boards.POST_CreateBoardDto;
 import dto.labels.POST_CreateLabelDto;
 import org.junit.jupiter.api.*;
 import payloads.labels.POST_CreateLabelPayload;
@@ -18,7 +17,6 @@ import static utils.UtilsCommon.*;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils.UtilsResponse.deserializeAndValidate;
-import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.labels.POST_CreateLabelUtils.prepareExpectedResponsePost;
 import static utils_tests.labels.POST_CreateLabelUtils.validateGetAgainstPost;
@@ -34,7 +32,7 @@ public class POST_CreateLabelTest extends TestBase {
     public void setUpCreateBoard() {
         responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
-        boardId = deserializeJson(responsePost, POST_CreateBoardDto.class).id;
+        boardId = responsePost.getBody().jsonPath().getString("id");
     }
 
     @AfterAll
