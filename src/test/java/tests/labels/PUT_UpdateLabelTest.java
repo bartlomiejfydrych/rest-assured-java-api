@@ -19,7 +19,6 @@ import static utils.UtilsCommon.*;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils.UtilsResponse.deserializeAndValidate;
-import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.labels.POST_CreateLabelUtils.generateRandomLabelColor;
 import static utils_tests.labels.POST_CreateLabelUtils.generateRandomLabelName;

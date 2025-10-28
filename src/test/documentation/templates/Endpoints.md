@@ -6,6 +6,7 @@
 - [📄Description](#description)
 - [📌Important notes](#important_notes)
 - [☑Test coverage](#test_coverage)
+- [🔗Path parameters](#path_parameters)
 - [📦Query parameters / Payload](#query_parameters_payload)
 - [📩Response](#response)
 
@@ -24,6 +25,10 @@
 ---
 
 ## ☑Test coverage <a name="test_coverage"></a>
+
+---
+
+## 🔗Path parameters <a name="path_parameters"></a>
 
 ---
 

@@ -124,6 +124,9 @@ The course consisted of 3 parts:
 #### Tests
 
 - Generating random test data with `JavaFaker`
+- ✏Tagi testów
+- ✏Kolejność testów
+- ✏Enums
 - 🟡(check)Configuring `Allure Report` and generating a test report
 - 🟡(check)Setting tests to run in a specific order with `JUnit Suite`
 - 🟡(check)Using assertions from the `AssertJ` framework
