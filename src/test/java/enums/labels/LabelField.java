@@ -1,7 +1,16 @@
 package enums.labels;
 
 public enum LabelField {
-    name,
-    color
-    // TODO: Zrobić wersję z wielkimi literami i notatki
+    NAME("name"),
+    COLOR("color");
+
+    private final String value;
+
+    LabelField(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

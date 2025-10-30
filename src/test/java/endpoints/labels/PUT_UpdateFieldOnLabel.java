@@ -19,7 +19,7 @@ public class PUT_UpdateFieldOnLabel extends TestBase {
 
         return spec.
                 when().
-                    put(url + "/" + id + "/" + field.name()).
+                    put(url + "/" + id + "/" + field.getValue()).
                 then().
                     extract().
                     response();
