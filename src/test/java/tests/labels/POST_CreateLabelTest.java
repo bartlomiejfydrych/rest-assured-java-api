@@ -157,7 +157,6 @@ public class POST_CreateLabelTest extends TestBase {
     }
 
     /*
-
     NOTE:
     The test passes when it shouldn't.
     The label is created when it shouldn't.
@@ -181,10 +180,9 @@ public class POST_CreateLabelTest extends TestBase {
                 }
                 """;
     }
-
     */
-    /*
 
+    /*
     NOTE:
     The test passes when it shouldn't.
     The label is created when it shouldn't.
@@ -208,13 +206,11 @@ public class POST_CreateLabelTest extends TestBase {
                 }
                 """;
     }
-
     */
 
     // color
 
     /*
-
     NOTE:
     The test passes when it shouldn't.
     The label is created when it shouldn't.
@@ -245,10 +241,9 @@ public class POST_CreateLabelTest extends TestBase {
                 }
                 """;
     }
-
     */
-    /*
 
+    /*
     NOTE:
     The test passes when it shouldn't.
     The label is created when it shouldn't.
@@ -272,7 +267,6 @@ public class POST_CreateLabelTest extends TestBase {
                 }
                 """;
     }
-
     */
 
     @Test

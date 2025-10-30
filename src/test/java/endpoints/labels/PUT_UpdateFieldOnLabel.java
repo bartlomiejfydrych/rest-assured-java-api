@@ -24,4 +24,17 @@ public class PUT_UpdateFieldOnLabel extends TestBase {
                     extract().
                     response();
     }
+
+    public static Response putUpdateFieldOnLabelWithoutValue(String id, LabelField field) {
+
+        RequestSpecification spec = given().
+                spec(requestSpecificationCommon);
+
+        return spec.
+                when().
+                put(url + "/" + id + "/" + field.getValue()).
+                then().
+                extract().
+                response();
+    }
 }

@@ -38,29 +38,29 @@ Next, we need to create for that board a label that fields we will edit.
   - ✅Positive:
     - **[P1]** Special characters and numbers
     - **[P2]** 1 character
-    - **[P3]** Missing (0 characters)
-    - **[P4]** null
-    - **[💥]** Empty string ("") -> Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
+    - **[P3]** Empty string ("")
+    - **[💥]** null -> Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
+    - **[N1]** Missing (0 characters)
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠color `Color`
   - ✅Positive:
-    - **[rP1|rP2]** yellow
-    - **[rP1|rP2]** purple
-    - **[rP1|rP2]** blue
-    - **[rP1|rP2]** red
-    - **[rP1|rP2]** green
-    - **[rP1|rP2]** orange
-    - **[rP1|rP2]** black
-    - **[rP1|rP2]** sky
-    - **[rP1|rP2]** pink
-    - **[rP1|rP2]** lime
-    - **[P3]** Missing (0 characters)
-    - **[P4]** Null
-    - **[💥]** Empty string ("") -> Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
+    - **[rP4]** yellow
+    - **[rP4]** purple
+    - **[rP4]** blue
+    - **[rP4]** red
+    - **[rP4]** green
+    - **[rP4]** orange
+    - **[rP4]** black
+    - **[rP4]** sky
+    - **[rP4]** pink
+    - **[rP4]** lime
+    - **[P5]** null
+    - **[P6]** Empty string ("")
   - ❌Negative:
-    - **[N1]** Incorrect (other value)
+    - **[💥N2]** Missing (0 characters) -> Request passes without changing value
+    - **[N3]** Incorrect (other value)
 
 ---
 
@@ -87,3 +87,13 @@ Pattern: `^[0-9a-fA-F]{24}$`
 ---
 
 ## 📩Response <a name="response"></a>
+
+```json
+{
+    "id": "6903d407eb7881f9f767c36e",
+    "idBoard": "6903d4065c794519e0f67cc7",
+    "name": "Mayer, MacGyver and Muller label 21982431641000",
+    "color": null,
+    "uses": 0
+}
+```
