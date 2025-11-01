@@ -3,6 +3,7 @@
 # 📑Spis treści
 
 - [ENV — Zmienne środowiskowe](#env)
+- [Enum](#enum)
 
 ---
 
@@ -77,3 +78,54 @@ https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java
     ```
 
 ---
+
+## 📄Enum <a name="enum"></a>
+
+Stosowaną praktyką dla enumów jest zapisywanie ich wielkimi literami jako stałe.  
+Czasami jednak potrzebujemy je podawać z konkretną wielkością znaków.  
+Najlepiej wtedy zrobić tak, aby metoda używała wartości enuma, a nie jego nazwy z kodu.
+
+**Oto przykład:**
+
+ENUM:
+```java
+package enums.labels;
+
+public enum LabelField {
+    NAME("name"),
+    COLOR("color");
+
+    private final String value;
+
+    LabelField(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+}
+```
+
+PRZYPISANIE:
+```java
+public static Response putUpdateFieldOnLabel(String id, LabelField field, String value) {
+
+    RequestSpecification spec = given().
+            spec(requestSpecificationCommon).
+            queryParam("value", value);
+
+    return spec.
+            when().
+                put(url + "/" + id + "/" + field.getValue()).   <-----------------------
+            then().
+                extract().
+                response();
+}
+```
+
+WYWOŁANIE:
+```java
+responsePut = putUpdateFieldOnLabel(labelId, LabelField.NAME, labelFieldValue);
+responsePut = putUpdateFieldOnLabel(labelId, LabelField.COLOR, labelFieldValue);
+```

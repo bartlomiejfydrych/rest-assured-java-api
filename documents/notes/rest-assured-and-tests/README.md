@@ -40,6 +40,7 @@
 - [REST Assured – asercja dla pustego obiektu](#rest_assured_assert_empty_object)
 - [JUnit – tagi dla testów](#junit_test_tags)
 - [Junit – TestInstance.Lifecycle](#junit_testinstance_lifecycle)
+- [AssertJ – porównywanie obiektów](#assertj_object_compare)
 
 ---
 
@@ -2273,3 +2274,113 @@ After all tests
 | Użycie `PER_METHOD`        | Gdy testy mają być w pełni izolowane                           |
 
 ---
+
+## 📄AssertJ – porównywanie obiektów <a name="assertj_object_compare"></a>
+
+Mamy 2 prawie identyczne obiekty.  
+Różnią się tym, że jeden ma dodatkowe pole o nazwie `"limits"`.  
+
+Dziwne jest to, że **AssertJ** podczas ich porównywania nie zwraca błędu o tej różnicy.
+
+### 🧩 Co się dzieje dokładnie
+
+Metoda:
+
+```java
+assertThat(actualObject)
+    .usingRecursiveComparison()
+    .isEqualTo(expectedObject);
+```
+
+wykonuje **rekurencyjne porównanie pól dwóch obiektów** w stylu deep-equals.
+
+I teraz kluczowy szczegół:
+
+> AssertJ nie porównuje pól na podstawie **definicji klas**, tylko na podstawie **ich nazw i wartości wspólnych pól**.
+
+Czyli:
+
+* patrzy, jakie **pola występują w obu obiektach**,
+* porównuje **wartości tych pól**,
+* **ignoruje pola**, które są **tylko w jednej z klas**.
+
+### 🔍 Co to oznacza w Twoim przypadku
+
+Masz:
+
+```java
+POST_CreateLabelDto {
+    id,
+    idBoard,
+    name,
+    color,
+    uses,
+    limits   ← tylko tutaj
+}
+```
+
+i
+
+```java
+PUT_UpdateFieldOnLabelDto {
+    id,
+    idBoard,
+    name,
+    color,
+    uses
+}
+```
+
+Wspólne pola:
+`id`, `idBoard`, `name`, `color`, `uses`.
+
+AssertJ więc porówna tylko te pięć.
+Pole `limits` zostanie **pominięte**, bo `PUT_UpdateFieldOnLabelDto` go nie posiada.
+Dlatego **nie dostajesz żadnego błędu**.
+
+### 🧠 Jak to można zmienić (jeśli chcesz wymusić błąd)
+
+Jeśli chcesz, żeby porównanie **wymagało idealnego dopasowania pól (klas)**,
+musiałbyś użyć innego podejścia — np.:
+
+#### 🔸 1. Porównanie przez serializację do JSON-a
+
+```java
+ObjectMapper mapper = new ObjectMapper();
+String actualJson = mapper.writeValueAsString(responsePutDto);
+String expectedJson = mapper.writeValueAsString(responsePostDto);
+
+assertThat(actualJson).isEqualTo(expectedJson);
+```
+
+To wymusi identyczność struktury i wartości.
+Pole `limits` spowoduje błąd, bo nie istnieje w jednym z obiektów.
+
+#### 🔸 2. Lub włączyć ścisły tryb porównania w AssertJ (ręcznie)
+
+Niestety, AssertJ nie ma natywnej opcji typu „fail on missing fields”,
+ale możesz napisać mały helper, który sprawdzi listę pól klas:
+
+```java
+public static void assertSameFields(Class<?> class1, Class<?> class2) {
+    var fields1 = Arrays.stream(class1.getDeclaredFields())
+            .map(Field::getName)
+            .collect(Collectors.toSet());
+    var fields2 = Arrays.stream(class2.getDeclaredFields())
+            .map(Field::getName)
+            .collect(Collectors.toSet());
+
+    if (!fields1.equals(fields2)) {
+        throw new AssertionError("Classes have different fields: " +
+                Sets.symmetricDifference(fields1, fields2));
+    }
+}
+```
+
+### 🧩 Podsumowanie
+
+| Zjawisko                             | Dlaczego tak się dzieje                            |
+|--------------------------------------|----------------------------------------------------|
+| `compareObjects()` nie zgłasza błędu | AssertJ porównuje tylko wspólne pola               |
+| Pole `limits` jest ignorowane        | Bo nie istnieje w obu klasach                      |
+| Jak wymusić błąd                     | Porównaj JSON-y lub napisz dodatkowy walidator pól |
