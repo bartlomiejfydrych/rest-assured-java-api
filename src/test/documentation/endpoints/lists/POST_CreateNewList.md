@@ -33,7 +33,44 @@ None.
 
 ## ☑Test coverage <a name="test_coverage"></a>
 
-
+- 💠name `string` 🔴REQUIRED🔴
+  - ✅Positive:
+    - **[]** Special characters and numbers
+    - **[]** 1 character
+    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
+  - ❌Negative:
+    - **[]** Missing (0 characters)
+    - **[]** Null
+    - **[]** Empty string ("")
+    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
+- 💠idBoard `TrelloID (string)` 🔴REQUIRED🔴
+  - ✅Positive:
+    - **[]** Correct
+  - ❌Negative:
+    - **[]** Missing
+    - **[]** Null
+    - **[]** Empty string ("")
+    - **[]** Non-existent
+    - **[]** Incorrect
+- 💠idListSource `TrelloID`
+  - ✅Positive:
+    - **[]** Correct
+    - **[]** Missing
+    - **[]** Null
+    - **[]** Empty string ("")
+  - ❌Negative:
+    - **[]** Non-existent
+    - **[]** Incorrect
+- 💠pos `oneOf [number, string]`
+  - ✅Positive:
+    - **[]** top
+    - **[]** bottom
+    - **[]** number
+    - **[]** Missing
+    - **[]** Null
+    - **[]** Empty string ("")
+  - ❌Negative:
+    - **[]** Incorrect
 
 ---
 
