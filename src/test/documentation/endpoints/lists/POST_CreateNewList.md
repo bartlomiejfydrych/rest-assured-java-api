@@ -35,7 +35,7 @@ None.
 
 - 💠name `string` 🔴REQUIRED🔴
   - ✅Positive:
-    - **[]** Special characters and numbers
+    - **[P1]** Special characters and numbers
     - **[]** 1 character
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
@@ -45,7 +45,7 @@ None.
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠idBoard `TrelloID (string)` 🔴REQUIRED🔴
   - ✅Positive:
-    - **[]** Correct
+    - **[P1]** Correct
   - ❌Negative:
     - **[]** Missing
     - **[]** Null
@@ -55,7 +55,7 @@ None.
 - 💠idListSource `TrelloID`
   - ✅Positive:
     - **[]** Correct
-    - **[]** Missing
+    - **[P1]** Missing
     - **[]** Null
     - **[]** Empty string ("")
   - ❌Negative:
@@ -66,7 +66,7 @@ None.
     - **[]** top
     - **[]** bottom
     - **[]** number
-    - **[]** Missing
+    - **[P1]** Missing
     - **[]** Null
     - **[]** Empty string ("")
   - ❌Negative:
@@ -104,3 +104,21 @@ Position of the list.
 ---
 
 ## 📩Response <a name="response"></a>
+
+```json
+{
+    "id": "690f8836a26231502a0a1bed",
+    "name": "Vłh-N <tXR'7dGĘŚP,ŹFŻYńz&*52+ŃZ0W}/CO?(vUATkĆs9E3]\\)[fói;ębqeJ\\j$#up1@x:no8ÓśżĄS\\IćgM_Krą^`~mHcQ=\"|BDź6Ll!Ł4a%.{>wy",
+    "closed": false,
+    "color": null,
+    "idBoard": "690f88356a13c24b8dafaeb1",
+    "pos": 140737488322560,
+    "type": null,
+    "datasource": {
+        "filter": false
+    },
+    "limits": {
+        
+    }
+}
+```
