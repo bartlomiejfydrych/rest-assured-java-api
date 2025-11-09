@@ -12,7 +12,7 @@ public class POST_CreateNewListPayload {
     private final String idBoard;
     private final String name;
     private final String idListSource;
-    private final String pos;
+    private final Object pos;   // Can be String or Long (Number)
 
     // -----------------------------------------
     // Helper method – conversion to queryParams
@@ -65,7 +65,7 @@ public class POST_CreateNewListPayload {
         private String idBoard;
         private String name;
         private String idListSource;
-        private String pos;
+        private Object pos;
 
         public Builder setIdBoard(String idBoard) {
             this.idBoard = idBoard;
@@ -82,10 +82,19 @@ public class POST_CreateNewListPayload {
             return this;
         }
 
+        // Pos – START
+
         public Builder setPos(String pos) {
             this.pos = pos;
             return this;
         }
+
+        public Builder setPos(Long pos) {
+            this.pos = pos;
+            return this;
+        }
+
+        // Pos – END
 
         public POST_CreateNewListPayload build() {
             return new POST_CreateNewListPayload(this);

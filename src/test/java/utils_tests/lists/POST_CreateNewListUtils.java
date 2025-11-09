@@ -34,4 +34,8 @@ public class POST_CreateNewListUtils extends TestBase {
         GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
         compareObjects(responsePostDto, responseGetDto, POST_CreateNewListDto.FIELD_LIMITS);
     }
+
+    public static String generateRandomListName() {
+        return "List - " + faker.company().name() + " | Number: " + System.nanoTime();
+    }
 }

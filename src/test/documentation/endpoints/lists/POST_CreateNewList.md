@@ -36,7 +36,7 @@ None.
 - 💠name `string` 🔴REQUIRED🔴
   - ✅Positive:
     - **[P1]** Special characters and numbers
-    - **[]** 1 character
+    - **[P2]** 1 character
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[]** Missing (0 characters)
@@ -54,20 +54,20 @@ None.
     - **[]** Incorrect
 - 💠idListSource `TrelloID`
   - ✅Positive:
-    - **[]** Correct
+    - **[P3]** Correct
     - **[P1]** Missing
-    - **[]** Null
+    - **[P2]** Null
     - **[]** Empty string ("")
   - ❌Negative:
     - **[]** Non-existent
     - **[]** Incorrect
 - 💠pos `oneOf [number, string]`
   - ✅Positive:
-    - **[]** top
-    - **[]** bottom
-    - **[]** number
-    - **[P1]** Missing
-    - **[]** Null
+    - **[P4]** top
+    - **[P4]** bottom
+    - **[P4]** number
+    - **[P1|P3]** Missing
+    - **[P2]** Null
     - **[]** Empty string ("")
   - ❌Negative:
     - **[]** Incorrect
