@@ -57,6 +57,57 @@ public class POST_CreateNewListExpected {
                 }
             }
             """;
+    public static final String P4ExpectedPostNewListResponse2 = """
+            {
+                "id": "6911e9efa810a289134cc475",
+                "name": "List - Yost-Lueilwitz | Number: 10683416165900",
+                "closed": false,
+                "color": null,
+                "idBoard": "6911e9ecafaaf88ac20110e3",
+                "pos": 140737488322560,
+                "type": null,
+                "datasource": {
+                    "filter": false
+                },
+                "limits": {
+            
+                }
+            }
+            """;
+    public static final String P4ExpectedPostNewListResponse3 = """
+            {
+                "id": "6911e9efe126090464690389",
+                "name": "List - Hane, Connelly and Kassulke | Number: 10683416399700",
+                "closed": false,
+                "color": null,
+                "idBoard": "6911e9ecafaaf88ac20110e3",
+                "pos": 140737488404480,
+                "type": null,
+                "datasource": {
+                    "filter": false
+                },
+                "limits": {
+            
+                }
+            }
+            """;
+    public static final String P4ExpectedPostNewListResponse4 = """
+            {
+                "id": "6911e9f03dd88ace85387e0b",
+                "name": "List - Hodkiewicz and Sons | Number: 10683416554400",
+                "closed": false,
+                "color": null,
+                "idBoard": "6911e9ecafaaf88ac20110e3",
+                "pos": 140737488330752,
+                "type": null,
+                "datasource": {
+                    "filter": false
+                },
+                "limits": {
+            
+                }
+            }
+            """;
 
     // --------------
     // NEGATIVE TESTS

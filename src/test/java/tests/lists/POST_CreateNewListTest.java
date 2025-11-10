@@ -165,7 +165,65 @@ public class POST_CreateNewListTest extends TestBase {
         Map<String, Object> queryParams4 = payload4.toQueryParams();
 
         // POST (add list 1)
-
+        Response responsePost1 = postCreateNewList(boardId, listName1, null);
+        assertThat(responsePost1.statusCode()).isEqualTo(200);
+        POST_CreateNewListDto responsePostDto1 = deserializeAndValidate(responsePost1, POST_CreateNewListDto.class);
+        Long responsePostPos1 = responsePostDto1.pos;
+        // POST (add list 2)
+        Response responsePost2 = postCreateNewList(boardId, listName2, queryParams2);
+        assertThat(responsePost2.statusCode()).isEqualTo(200);
+        POST_CreateNewListDto responsePostDto2 = deserializeAndValidate(responsePost2, POST_CreateNewListDto.class);
+        Long responsePostPos2 = responsePostDto2.pos;
+        POST_CreateNewListDto expectedResponsePostDto2 = prepareExpectedResponsePost(
+                P4ExpectedPostNewListResponse2,
+                responsePostDto2,
+                listName2,
+                boardId,
+                responsePostDto2.pos
+        );
+        compareObjects(responsePostDto2, expectedResponsePostDto2);
+        // GET
+        validateGetAgainstPost(responsePostDto2);
+        // POST (add list 3)
+        Response responsePost3 = postCreateNewList(boardId, listName3, queryParams3);
+        assertThat(responsePost3.statusCode()).isEqualTo(200);
+        POST_CreateNewListDto responsePostDto3 = deserializeAndValidate(responsePost3, POST_CreateNewListDto.class);
+        Long responsePostPos3 = responsePostDto3.pos;
+        POST_CreateNewListDto expectedResponsePostDto3 = prepareExpectedResponsePost(
+                P4ExpectedPostNewListResponse3,
+                responsePostDto3,
+                listName3,
+                boardId,
+                responsePostDto3.pos
+        );
+        compareObjects(responsePostDto3, expectedResponsePostDto3);
+        // GET
+        validateGetAgainstPost(responsePostDto3);
+        // POST (add list 4)
+        Response responsePost4 = postCreateNewList(boardId, listName4, queryParams4);
+        assertThat(responsePost4.statusCode()).isEqualTo(200);
+        POST_CreateNewListDto responsePostDto4 = deserializeAndValidate(responsePost4, POST_CreateNewListDto.class);
+        Long responsePostPos4 = responsePostDto4.pos;
+        POST_CreateNewListDto expectedResponsePostDto4 = prepareExpectedResponsePost(
+                P4ExpectedPostNewListResponse4,
+                responsePostDto4,
+                listName4,
+                boardId,
+                responsePostDto4.pos
+        );
+        compareObjects(responsePostDto4, expectedResponsePostDto4);
+        // GET
+        validateGetAgainstPost(responsePostDto4);
+        // POSITION VALIDATION
+        assertThat(responsePostPos2)
+                .as("The list with the \"top\" position should be higher (i.e. have a lower numerical value) than the first list.")
+                .isLessThan(responsePostPos1);
+        assertThat(responsePostPos3)
+                .as("The list with the \"bottom\" position should be lower (i.e. have a higher numerical value) than the first list.")
+                .isGreaterThan(responsePostPos1);
+        assertThat(responsePostPos4)
+                .as("The list with the \"numeric\" item should be higher (i.e. have a lower numerical value) than the first list.")
+                .isLessThan(responsePostPos1);
     }
 
     // Other test cases
