@@ -14,11 +14,13 @@ import java.util.Map;
 import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoard.postCreateBoard;
 import static endpoints.lists.POST_CreateNewList.postCreateNewList;
+import static endpoints.lists.POST_CreateNewList.postCreateNewListAnyParams;
 import static expected_responses.lists.POST_CreateNewListExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.getAllCharactersSetInRandomOrder;
 import static utils.UtilsCommon.getRandomSingleChar;
 import static utils.UtilsCompare.compareObjects;
+import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.lists.POST_CreateNewListUtils.*;
@@ -228,6 +230,203 @@ public class POST_CreateNewListTest extends TestBase {
 
     // Other test cases
 
-    // Skopiować i przerobić P2
+    @Test
+    public void P5_shouldCreateNewListWhereOtherParametersAreEmptyStrings() {
 
+        listName = generateRandomListName();
+        listIdListSource = "";
+        listPos = "";
+        POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
+                .setIdListSource(listIdListSource)
+                .setPos(listPos)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // POST
+        responsePost = postCreateNewList(boardId, listName, queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(200);
+        POST_CreateNewListDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateNewListDto.class);
+        POST_CreateNewListDto expectedResponsePostDto = prepareExpectedResponsePost(
+                P5ExpectedPostNewListResponse,
+                responsePostDto,
+                listName,
+                boardId,
+                responsePostDto.pos
+        );
+        compareObjects(responsePostDto, expectedResponsePostDto);
+        // GET
+        validateGetAgainstPost(responsePostDto);
+    }
+
+    // --------------
+    // NEGATIVE TESTS
+    // --------------
+
+    // name
+
+    @Test
+    public void N1_shouldNotCreateNewListWhenNameIsMissing() {
+
+        POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
+                .setIdBoard(boardId)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        responsePost = postCreateNewListAnyParams(queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidName);
+    }
+
+    @Test
+    public void N2_shouldNotCreateNewListWhenNameIsNull() {
+
+        listName = null;
+
+        responsePost = postCreateNewList(boardId, listName, null);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidName);
+    }
+
+    @Test
+    public void N3_shouldNotCreateNewListWhenNameIsEmptyString() {
+
+        listName = "";
+
+        responsePost = postCreateNewList(boardId, listName, null);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidName);
+    }
+
+    // idBoard
+
+    @Test
+    public void N4_shouldNotCreateNewListWhenIdBoardIsMissing() {
+
+        POST_CreateNewListPayload paylod = new POST_CreateNewListPayload.Builder()
+                .setName(generateRandomListName())
+                .build();
+        Map<String, Object> queryParams = paylod.toQueryParams();
+
+        responsePost = postCreateNewListAnyParams(queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
+    }
+
+    @Test
+    public void N5_shouldNotCreateNewListWhenIdBoardIsNull() {
+
+        String idBoard = null;
+        listName = generateRandomListName();
+
+        responsePost = postCreateNewList(idBoard, listName, null);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
+    }
+
+    @Test
+    public void N6_shouldNotCreateNewListWhenIdBoardIsEmptyString() {
+
+        String idBoard = "";
+        listName = generateRandomListName();
+
+        responsePost = postCreateNewList(idBoard, listName, null);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
+    }
+
+    @Test
+    public void N7_shouldNotCreateNewListWhenIdBoardIsNonExistent() {
+
+        String idBoard = "999999999999999999999999";
+        listName = generateRandomListName();
+
+        responsePost = postCreateNewList(idBoard, listName, null);
+        assertThat(responsePost.statusCode()).isEqualTo(401);
+        assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized board list requested " + idBoard);
+    }
+
+    @Test
+    public void N8_shouldNotCreateNewListWhenIdBoardIsIncorrect() {
+
+        String idBoard = "KeK 123";
+        listName = generateRandomListName();
+
+        responsePost = postCreateNewList(idBoard, listName, null);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
+    }
+
+    // idListSource
+
+    @Test
+    public void N9_shouldNotCreateNewListWhenIdListSourceIsNonExistent() {
+
+        listName = generateRandomListName();
+        listIdListSource = "999999999999999999999999";
+
+        POST_CreateNewListPayload paylod = new POST_CreateNewListPayload.Builder()
+                .setIdListSource(listIdListSource)
+                .build();
+        Map<String, Object> queryParams = paylod.toQueryParams();
+
+        responsePost = postCreateNewList(boardId, listName, queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(404);
+        assertThat(responsePost.getBody().asString()).isEqualTo("List not found");
+    }
+
+    @Test
+    public void N10_shouldNotCreateNewListWhenIdListSourceIsIncorrect() {
+
+        listName = generateRandomListName();
+        listIdListSource = "KeK 123";
+
+        POST_CreateNewListPayload paylod = new POST_CreateNewListPayload.Builder()
+                .setIdListSource(listIdListSource)
+                .build();
+        Map<String, Object> queryParams = paylod.toQueryParams();
+
+        responsePost = postCreateNewList(boardId, listName, queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePost, N10ExpectedPostNewListResponse);
+    }
+
+    // pos
+
+    @Test
+    public void N11_shouldNotCreateNewListWhenPosIsIncorrect() {
+
+        listName = generateRandomListName();
+        listPos = "Kek 123";
+
+        POST_CreateNewListPayload paylod = new POST_CreateNewListPayload.Builder()
+                .setPos(listPos)
+                .build();
+        Map<String, Object> queryParams = paylod.toQueryParams();
+
+        responsePost = postCreateNewList(boardId, listName, queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePost, N11ExpectedPostNewListResponse);
+    }
+
+    /*
+    NOTE:
+    According to the documentation, the specific position of list should be of type Number.
+    A String value will also work.
+
+    @Test
+    public void N12_shouldNotCreateNewListWhenPosIsNumberAsString() {
+
+        listName = generateRandomListName();
+        listPos = "140737488322560";
+
+        POST_CreateNewListPayload paylod = new POST_CreateNewListPayload.Builder()
+                .setPos(listPos)
+                .build();
+        Map<String, Object> queryParams = paylod.toQueryParams();
+
+        responsePost = postCreateNewList(boardId, listName, queryParams);
+        assertThat(responsePost.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePost, N11ExpectedPostNewListResponse);
+    }
+    */
 }

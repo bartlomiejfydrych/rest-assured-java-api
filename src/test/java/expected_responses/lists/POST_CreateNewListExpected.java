@@ -108,9 +108,40 @@ public class POST_CreateNewListExpected {
                 }
             }
             """;
+    public static final String P5ExpectedPostNewListResponse = """
+            {
+                "id": "691226fd0e8ceb863ac474df",
+                "name": "List - Lehner, Schoen and Cummings | Number: 7229809635700",
+                "closed": false,
+                "color": null,
+                "idBoard": "691226fbd263f8b50b10040b",
+                "pos": 140737488338944,
+                "type": null,
+                "datasource": {
+                    "filter": false
+                },
+                "limits": {
+            
+                }
+            }
+            """;
 
     // --------------
     // NEGATIVE TESTS
     // --------------
 
+    public static final String expectedPostNewListResponseInvalidName = "invalid value for name";
+    public static final String expectedPostNewListResponseInvalidIdBoard = "invalid value for idBoard";
+    public static final String N10ExpectedPostNewListResponse = """
+            {
+                "message": "Invalid objectId",
+                "error": "ERROR"
+            }
+            """;
+    public static final String N11ExpectedPostNewListResponse = """
+            {
+                "message": "Invalid position.",
+                "error": "ERROR"
+            }
+            """;
 }

@@ -39,28 +39,28 @@ None.
     - **[P2]** 1 character
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** Missing (0 characters)
-    - **[]** Null
-    - **[]** Empty string ("")
+    - **[N1]** Missing (0 characters)
+    - **[N2]** Null
+    - **[N3]** Empty string ("")
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠idBoard `TrelloID (string)` 🔴REQUIRED🔴
   - ✅Positive:
     - **[P1]** Correct
   - ❌Negative:
-    - **[]** Missing
-    - **[]** Null
-    - **[]** Empty string ("")
-    - **[]** Non-existent
-    - **[]** Incorrect
+    - **[N4]** Missing
+    - **[N5]** Null
+    - **[N6]** Empty string ("")
+    - **[N7]** Non-existent
+    - **[N8]** Incorrect
 - 💠idListSource `TrelloID`
   - ✅Positive:
     - **[P3]** Correct
     - **[P1]** Missing
     - **[P2]** Null
-    - **[]** Empty string ("")
+    - **[P5]** Empty string ("")
   - ❌Negative:
-    - **[]** Non-existent
-    - **[]** Incorrect
+    - **[N9]** Non-existent
+    - **[N10]** Incorrect
 - 💠pos `oneOf [number, string]`
   - ✅Positive:
     - **[P4]** top
@@ -68,9 +68,10 @@ None.
     - **[P4]** number
     - **[P1|P3]** Missing
     - **[P2]** Null
-    - **[]** Empty string ("")
+    - **[P5]** Empty string ("")
   - ❌Negative:
-    - **[]** Incorrect
+    - **[N11]** Incorrect
+    - **[N12->💥]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.
 
 ---
 
