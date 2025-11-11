@@ -4,6 +4,7 @@
 
 - [ENV — Zmienne środowiskowe](#env)
 - [Enum](#enum)
+- [Typ zmiennej – Long](#long)
 
 ---
 
@@ -129,3 +130,49 @@ WYWOŁANIE:
 responsePut = putUpdateFieldOnLabel(labelId, LabelField.NAME, labelFieldValue);
 responsePut = putUpdateFieldOnLabel(labelId, LabelField.COLOR, labelFieldValue);
 ```
+
+---
+
+## 📄Typ zmiennej – Long <a name="long"></a>
+
+### Problem
+
+Nie dało się zadeklarować takiej zmiennej:
+```java
+Long listPos4 = 140737488322560;
+```
+
+IDE podkreślało wartość na czerwono z dopiskiem:  
+`Integer number too large`
+
+### Rozwiązanie
+
+Oznacza, że **Java domyślnie interpretuje liczby całkowite (bez sufiksu)** jako typ `int`, który ma zakres:
+➡️ od **-2 147 483 648** do **2 147 483 647**.
+
+Liczba:  
+`140737488322560`  
+jest **dużo większa** od maksymalnego `int`, więc kompilator zgłasza błąd.
+
+#### ✅ **Rozwiązanie: dodaj sufiks `L` lub `l`**
+
+Wystarczy dodać na końcu **literę `L` (dużą!)**, aby Java wiedziała, że chodzi o typ `long`:
+
+```java
+Long listPost4 = 140737488322560L;
+```
+
+#### 🧠 Dodatkowe uwagi:
+
+* Zawsze używaj **dużej litery `L`**, bo małe `l` wygląda jak `1`.
+* Możesz też użyć **podkreśleń** w liczbach dla czytelności:
+  ```java
+  Long listPost4 = 140_737_488_322_560L;
+  ```
+
+To nie zmienia wartości, ale poprawia czytelność.
+
+#### 📌 **Podsumowanie:**
+
+> ➜ Dodaj `L` na końcu dużych liczb, które mają być typu `long`.  
+> ➜ `Long listPost4 = 140737488322560L;` — to poprawna i zalecana wersja.
