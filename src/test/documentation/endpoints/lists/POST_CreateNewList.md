@@ -1,4 +1,4 @@
-# 🟣POST – {endpoint name}
+# 🟣POST – Create a new List
 
 # 📑Contents
 
@@ -40,7 +40,7 @@ None.
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[N1]** Missing (0 characters)
-    - **[N2]** Null
+    - **[N2]** null
     - **[N3]** Empty string ("")
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠idBoard `TrelloID (string)` 🔴REQUIRED🔴
@@ -48,7 +48,7 @@ None.
     - **[P1]** Correct
   - ❌Negative:
     - **[N4]** Missing
-    - **[N5]** Null
+    - **[N5]** null
     - **[N6]** Empty string ("")
     - **[N7]** Non-existent
     - **[N8]** Incorrect
@@ -56,7 +56,7 @@ None.
   - ✅Positive:
     - **[P3]** Correct
     - **[P1]** Missing
-    - **[P2]** Null
+    - **[P2]** null
     - **[P5]** Empty string ("")
   - ❌Negative:
     - **[N9]** Non-existent
@@ -67,7 +67,7 @@ None.
     - **[P4]** bottom
     - **[P4]** number
     - **[P1|P3]** Missing
-    - **[P2]** Null
+    - **[P2]** null
     - **[P5]** Empty string ("")
   - ❌Negative:
     - **[N11]** Incorrect
@@ -100,7 +100,7 @@ Pattern: `^[0-9a-fA-F]{24}$`
 ### 💠pos `oneOf [number, string]`
 
 Position of the list.  
-`top`, `bottom`, or a positive floating point number
+`top`, `bottom`, or a positive floating point `number`.
 
 ---
 
