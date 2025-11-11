@@ -120,6 +120,7 @@ The course consisted of 3 parts:
 - Using `Enum` variables
 - Managing file paths with `Paths.get()` methods
 - Directory and class naming convention
+- How to declare a variable of type `Long`
 
 #### Tests
 
@@ -130,6 +131,7 @@ The course consisted of 3 parts:
 - 🟡(check)Configuring `Allure Report` and generating a test report
 - 🟡(check)Setting tests to run in a specific order with `JUnit Suite`
 - 🟡(check)Using assertions from the `AssertJ` framework
+- 🟡(check)Adding comments/logs to assertions in `AssertJ` framework
 
 ### API tests (REST Assured)
 
