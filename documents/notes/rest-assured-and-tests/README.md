@@ -41,6 +41,7 @@
 - [JUnit – tagi dla testów](#junit_test_tags)
 - [Junit – TestInstance.Lifecycle](#junit_testinstance_lifecycle)
 - [AssertJ – porównywanie obiektów](#assertj_object_compare)
+- [AssertJ – dodawanie komentarzy/logów do testów](#assertj_comments_logs)
 
 ---
 
@@ -2384,3 +2385,63 @@ public static void assertSameFields(Class<?> class1, Class<?> class2) {
 | `compareObjects()` nie zgłasza błędu | AssertJ porównuje tylko wspólne pola               |
 | Pole `limits` jest ignorowane        | Bo nie istnieje w obu klasach                      |
 | Jak wymusić błąd                     | Porównaj JSON-y lub napisz dodatkowy walidator pól |
+
+---
+
+## 📄AssertJ – dodawanie komentarzy/logów do testów <a name="assertj_comments_logs"></a>
+
+W **AssertJ** da się dodawać **własny komunikat błędu**, który zostanie wyświetlony, gdy asercja się wywali 💡.
+
+### ✅ Poprawna składnia:
+
+W AssertJ możesz użyć metody:
+
+```java
+.as(String description)
+```
+
+lub
+
+```java
+.withFailMessage(String message)
+```
+
+### 📘 Przykłady:
+
+#### 🔹 1. `as()` — opis asercji (pojawia się jako część raportu):
+
+```java
+assertThat(responsePostPos2)
+    .as("Pozycja jest niżej, a nie wyżej")
+    .isLessThan(responsePostPos1);
+```
+
+➡️ Wyświetli w raporcie:
+`[Pozycja jest niżej, a nie wyżej]` jeśli test się nie powiedzie.
+
+#### 🔹 2. `withFailMessage()` — pełny komunikat błędu:
+
+```java
+assertThat(responsePostPos2)
+    .withFailMessage("Pozycja jest niżej, a nie wyżej — oczekiwano, że %s < %s", responsePostPos2, responsePostPos1)
+    .isLessThan(responsePostPos1);
+```
+
+➡️ Ten komunikat całkowicie zastępuje domyślny komunikat błędu AssertJ.
+
+### 💡 Różnica:
+
+| Metoda              | Kiedy używać                    | Co robi                            |
+|---------------------|---------------------------------|------------------------------------|
+| `as()`              | Do krótkiego opisu celu testu   | Dodaje opis do komunikatu błędu    |
+| `withFailMessage()` | Do pełnej kontroli treści błędu | Zastępuje domyślny komunikat błędu |
+
+### ✅ Najczęściej stosowana konwencja:
+
+W projektach używa się częściej `as()`, np.:
+
+```java
+assertThat(responsePostPos2)
+    .as("Pozycja elementu powinna być mniejsza niż poprzednia")
+    .isLessThan(responsePostPos1);
+```
