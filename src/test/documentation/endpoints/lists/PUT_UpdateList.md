@@ -35,13 +35,13 @@ None.
 
 - 💠id `string` 🔴REQUIRED🔴
   - ✅Positive:
-    - **[]** Correct
+    - **[P1]** Correct
   - ❌Negative:
     - **[]** Non-existent
     - **[]** Incorrect
 - 💠name `string`
   - ✅Positive:
-    - **[]** Special characters and numbers
+    - **[P1]** Special characters and numbers
     - **[]** 1 character
     - **[]** Missing (0 characters)
     - **[]** null
@@ -51,13 +51,13 @@ None.
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠closed `boolean`
   - ✅Positive:
-    - **[]** true
+    - **[P1]** true
     - **[]** false
     - **[]** Missing
     - **[]** null
 - 💠idBoard `TrelloID`
   - ✅Positive:
-    - **[]** Correct
+    - **[P1]** Correct
   - ❌Negative:
     - **[]** Missing
     - **[]** null
@@ -69,7 +69,7 @@ None.
     - **[]** top
     - **[]** bottom
     - **[]** number
-    - **[]** Missing
+    - **[P1]** Missing
     - **[]** null
     - **[]** Empty string ("")
   - ❌Negative:
@@ -77,7 +77,7 @@ None.
     - **[SPRAWDZIĆ!->💥]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.
 - 💠subscribed `boolean`
   - ✅Positive:
-    - **[]** true
+    - **[P1]** true
     - **[]** false
     - **[]** Missing
     - **[]** null
@@ -119,3 +119,15 @@ Whether the active member is subscribed to this list.
 ---
 
 ## 📩Response <a name="response"></a>
+
+```json
+{
+    "id": "6918c0e928328bf5ad423af0",
+    "name": "ZECŚ]bQźŻ.ĘV-żX8N$rPę7ś^R}v3OĄJ&ą#ił\\GYB|()xŁ_%>Ń{dFAyuIagŹńom5=S01U,TzK+k46/sLl<wć?W@~j;óMthDf9eq n'\\:H\"Ć`\\[cpÓ2!*",
+    "closed": true,
+    "color": null,
+    "idBoard": "6918c0e725eebf9505f994b3",
+    "pos": 140737488338944,
+    "subscribed": true
+}
+```
