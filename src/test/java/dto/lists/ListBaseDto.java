@@ -3,8 +3,6 @@ package dto.lists;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import dto.lists.list.DataSource;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
@@ -27,22 +25,14 @@ public class ListBaseDto {
     @NotNull
     public Long pos;
 
-    public String type;
-
-    @Valid
-    @NotNull
-    public DataSource datasource;
-
     @JsonCreator
     public ListBaseDto(
             @JsonProperty(value = "id", required = true) String id,
             @JsonProperty(value = "name", required = true) String name,
             @JsonProperty(value = "closed", required = true) Boolean closed,
-            @JsonProperty(value = "color") String color,
+            @JsonProperty(value = "color", required = true) String color,
             @JsonProperty(value = "idBoard", required = true) String idBoard,
-            @JsonProperty(value = "pos", required = true) Long pos,
-            @JsonProperty(value = "type") String type,
-            @JsonProperty(value = "datasource", required = true) DataSource datasource
+            @JsonProperty(value = "pos", required = true) Long pos
     ) {
         this.id = id;
         this.name = name;
@@ -50,8 +40,6 @@ public class ListBaseDto {
         this.color = color;
         this.idBoard = idBoard;
         this.pos = pos;
-        this.type = type;
-        this.datasource = datasource;
     }
 
     public ListBaseDto() {

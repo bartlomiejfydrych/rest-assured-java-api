@@ -3,36 +3,31 @@ package dto.lists;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import dto.lists.list.DataSource;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
-public class GET_GetListDto extends ListBaseDto {
+public class PUT_UpdateListDto extends ListBaseDto {
 
-    public String type;
+    public static final String FIELD_SUBSCRIBED = "subscribed";
 
-    @Valid
     @NotNull
-    public DataSource datasource;
+    public Boolean subscribed;
 
     @JsonCreator
-    public GET_GetListDto(
+    public PUT_UpdateListDto(
             @JsonProperty(value = "id", required = true) String id,
             @JsonProperty(value = "name", required = true) String name,
             @JsonProperty(value = "closed", required = true) Boolean closed,
             @JsonProperty(value = "color", required = true) String color,
             @JsonProperty(value = "idBoard", required = true) String idBoard,
             @JsonProperty(value = "pos", required = true) Long pos,
-            @JsonProperty(value = "type", required = true) String type,
-            @JsonProperty(value = "datasource", required = true) DataSource datasource
+            @JsonProperty(value = FIELD_SUBSCRIBED, required = true) Boolean subscribed
     ) {
         super(id, name, closed, color, idBoard, pos);
-        this.type = type;
-        this.datasource = datasource;
+        this.subscribed = subscribed;
     }
 
-    public GET_GetListDto() {
+    public PUT_UpdateListDto() {
         super();
     }
 }

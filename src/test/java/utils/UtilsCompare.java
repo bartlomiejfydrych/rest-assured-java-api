@@ -2,7 +2,6 @@ package utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
