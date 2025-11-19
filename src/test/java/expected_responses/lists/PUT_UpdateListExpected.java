@@ -33,6 +33,27 @@ public class PUT_UpdateListExpected {
                 "subscribed": true
             }
             """;
+    public static final String P2ExpectedPutUpdateListResponse = """
+            {
+                "id": "691db362c5d7fd2fb9c41945",
+                "name": "T",
+                "closed": false,
+                "color": null,
+                "idBoard": "691db35fd3304f386d3de1ee",
+                "pos": 140737488338944,
+                "subscribed": false
+            }
+            """;
+    public static final String P3ExpectedPutUpdateListResponse = """
+            {
+                "id": "691db99bde7565a4a2c0a593",
+                "name": "List - Hauck-Homenick | Number: 14697739891200",
+                "closed": false,
+                "color": null,
+                "idBoard": "691db99a4e5a030526097e99",
+                "pos": 140737488322560
+            }
+            """;
 
     // --------------
     // NEGATIVE TESTS

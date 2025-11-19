@@ -10,6 +10,9 @@ import jakarta.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class GET_GetListDto extends ListBaseDto {
 
+    public static final String FIELD_TYPE = "type";
+    public static final String FIELD_DATASOURCE = "datasource";
+
     public String type;
 
     @Valid
@@ -24,8 +27,8 @@ public class GET_GetListDto extends ListBaseDto {
             @JsonProperty(value = "color", required = true) String color,
             @JsonProperty(value = "idBoard", required = true) String idBoard,
             @JsonProperty(value = "pos", required = true) Long pos,
-            @JsonProperty(value = "type", required = true) String type,
-            @JsonProperty(value = "datasource", required = true) DataSource datasource
+            @JsonProperty(value = FIELD_TYPE, required = true) String type,
+            @JsonProperty(value = FIELD_DATASOURCE, required = true) DataSource datasource
     ) {
         super(id, name, closed, color, idBoard, pos);
         this.type = type;

@@ -1,8 +1,13 @@
 package utils_tests.lists;
 
 import base.TestBase;
+import dto.lists.GET_GetListDto;
 import dto.lists.PUT_UpdateListDto;
 
+import static endpoints.lists.GET_GetList.getGetList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static utils.UtilsCompare.compareObjects;
+import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
 
 public class PUT_UpdateListUtils extends TestBase {
@@ -20,5 +25,19 @@ public class PUT_UpdateListUtils extends TestBase {
         expectedResponsePutDto.idBoard = boardId;
         expectedResponsePutDto.pos = listPos;
         return expectedResponsePutDto;
+    }
+
+    public static void validateGetAgainstPut(PUT_UpdateListDto responsePutDto) {
+        responseGet = getGetList(responsePutDto.id);
+        assertThat(responseGet.statusCode()).isEqualTo(200);
+
+        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
+        compareObjects(
+                responsePutDto,
+                responseGetDto,
+                PUT_UpdateListDto.FIELD_SUBSCRIBED,
+                GET_GetListDto.FIELD_TYPE,
+                GET_GetListDto.FIELD_DATASOURCE
+        );
     }
 }

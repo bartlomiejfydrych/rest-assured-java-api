@@ -35,15 +35,15 @@ None.
 
 - 💠id `string` 🔴REQUIRED🔴
   - ✅Positive:
-    - **[P1]** Correct
+    - **[P1|P2|P3]** Correct
   - ❌Negative:
     - **[]** Non-existent
     - **[]** Incorrect
 - 💠name `string`
   - ✅Positive:
     - **[P1]** Special characters and numbers
-    - **[]** 1 character
-    - **[]** Missing (0 characters)
+    - **[P2]** 1 character
+    - **[P3]** Missing (0 characters)
     - **[]** null
     - **[]** Empty string ("")
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
@@ -52,12 +52,12 @@ None.
 - 💠closed `boolean`
   - ✅Positive:
     - **[P1]** true
-    - **[]** false
-    - **[]** Missing
+    - **[P2]** false
+    - **[P3]** Missing
     - **[]** null
 - 💠idBoard `TrelloID`
   - ✅Positive:
-    - **[P1]** Correct
+    - **[P1|P2|P3]** Correct
   - ❌Negative:
     - **[]** Missing
     - **[]** null
@@ -70,16 +70,16 @@ None.
     - **[]** bottom
     - **[]** number
     - **[P1]** Missing
-    - **[]** null
-    - **[]** Empty string ("")
+    - **[P2]** null
+    - **[P3💥]** Empty string ("") -> It seems this PUT request changes "Pos" to some other, fixed value. I'm hardcoding the expected value so the test doesn't fail.
   - ❌Negative:
     - **[]** Incorrect
     - **[SPRAWDZIĆ!->💥]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.
 - 💠subscribed `boolean`
   - ✅Positive:
     - **[P1]** true
-    - **[]** false
-    - **[]** Missing
+    - **[P2]** false
+    - **[P3]** Missing
     - **[]** null
 
 ---
