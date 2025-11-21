@@ -2512,8 +2512,8 @@ String expectedResponse = """
         .replace("{subscribed}", String.valueOf(subscribed));
 ```
 
-✔ działa
-✔ łatwe
+✔ działa  
+✔ łatwe  
 ✔ wspiera **text blocks**
 
 #### ✅ 2. Java `String.format()`
@@ -2536,7 +2536,7 @@ String expectedResponse = String.format("""
 );
 ```
 
-✔ czytelne
+✔ czytelne  
 ❗ musisz zachować kolejność parametrów
 
 #### ✅ 3. Najlepsze dla JSON: użyć DTO i ObjectMapper (polecane!)
@@ -2558,8 +2558,8 @@ dto.subscribed = subscribed;
 String json = mapper.writeValueAsString(dto);
 ```
 
-✔ bez błędów w JSON
-✔ automatyczna walidacja
+✔ bez błędów w JSON  
+✔ automatyczna walidacja  
 ✔ zero ręcznego formatowania stringów
 
 ### 🎯 Podsumowanie
@@ -2738,9 +2738,9 @@ public static PUT_UpdateListDto prepareUniversalExpectedResponsePut(
 
 #### 👍 Dlaczego to podejście jest najlepsze?
 
-✔ **Najbliżej realnego API**
-✔ **DTO odzwierciedla dokładny response**
-✔ **Jeden base JSON = prostsze testy**
-✔ **Opcjonalne pola pojawiają się tylko wtedy, gdy faktycznie istnieją**
-✔ **Brak fałszywych failów**
+✔ **Najbliżej realnego API**  
+✔ **DTO odzwierciedla dokładny response**  
+✔ **Jeden base JSON = prostsze testy**  
+✔ **Opcjonalne pola pojawiają się tylko wtedy, gdy faktycznie istnieją**  
+✔ **Brak fałszywych failów**  
 ✔ **Najbardziej przejrzysta logika**
