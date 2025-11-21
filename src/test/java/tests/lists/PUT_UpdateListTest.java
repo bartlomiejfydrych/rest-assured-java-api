@@ -25,8 +25,7 @@ import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.lists.POST_CreateNewListUtils.generateRandomListName;
-import static utils_tests.lists.PUT_UpdateListUtils.prepareExpectedResponsePut;
-import static utils_tests.lists.PUT_UpdateListUtils.validateGetAgainstPut;
+import static utils_tests.lists.PUT_UpdateListUtils.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateListTest extends TestBase {
@@ -137,13 +136,15 @@ public class PUT_UpdateListTest extends TestBase {
 
         /*
         NOTE:
-        The test detected a defect.
-        It seems that in this test, the PUT request changes "Pos" to some other, fixed value, which it probably shouldn't.
-        I'm hardcoding the expected value to prevent the test from crashing.
+        This test detected strange behavior.
+        If the first PUT request changes something in the list, but not its "Pos," or if we try to change "Pos" to
+        something that shouldn't change it, such as null or an empty String, the initial value of "Pos" still changes.
+        Because of this strange behavior:
+        If this test is run individually, it will fail because the value has changed.
+        If it is run with all tests, it will pass because the value has already been changed in another test.
         */
 
         String putListPos = "";
-        Long expectedPos = 140737488322560L;
 
         PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
                 .setPos(putListPos)
@@ -158,17 +159,17 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(boardId, listId, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
-        PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
-                P3ExpectedPutUpdateListResponse,
+        PUT_UpdateListDto expectedResponsePutDto = prepareUniversalExpectedResponsePut(
                 listId,
                 responseGetDto.name,
+                responseGetDto.closed,
+                null,
                 boardId,
-                expectedPos // SHOULD BE: responseGetDto.pos
+                responseGetDto.pos,
+                null
         );
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
-
-        // TODO: ^ Przerobić ten test tak, aby tworzył uniwersalny oczekiwany response. A może i wszystkie testy dla większej niezależności!
     }
 }

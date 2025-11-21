@@ -42,6 +42,8 @@
 - [Junit – TestInstance.Lifecycle](#junit_testinstance_lifecycle)
 - [AssertJ – porównywanie obiektów](#assertj_object_compare)
 - [AssertJ – dodawanie komentarzy/logów do testów](#assertj_comments_logs)
+- [Zmienne – podstawianie pod String/Text Block](#variables_string_text_block)
+- [Response (expected, universal) – opcjonalne parametry](#response_expected_universal_optional_parameters)
 
 ---
 
@@ -2445,3 +2447,300 @@ assertThat(responsePostPos2)
     .as("Pozycja elementu powinna być mniejsza niż poprzednia")
     .isLessThan(responsePostPos1);
 ```
+
+---
+
+## 📄Zmienne – podstawianie pod String/Text Block <a name="variables_string_text_block"></a>
+
+### Problem/Zagadnienie
+
+Czy jest możliwe zrobienie w JAVA czegoś takiego:
+
+```java
+public static PUT_UpdateListDto prepareUniversalExpectedResponsePut(
+        String id,
+        String name,
+        Boolean closed,
+        String color,
+        String idBoard,
+        String pos,
+        Boolean subscribed
+) {
+    String expectedResponse = """
+            {
+                "id": {id},
+                "name": {name},
+                "closed": {closed},
+                "color": {idBoard},
+                "idBoard": {idBoard},
+                "pos": {pos},
+                "subscribed": {subscribed}
+            }
+            """;
+    PUT_UpdateListDto expectedResponsePutDto = deserializeJson(expectedResponse, PUT_UpdateListDto.class);
+    return expectedResponsePutDto;
+}
+```
+
+Chodzi o bezpośrednie wstawianie zmiennych do Stringa/JSON'a.
+
+### Rozwiązanie/Wyjaśnienie
+
+Krótko: **NIE — Java nie pozwala bezpośrednio wstawiać zmiennych do tekstu tak jak np. JavaScript (`${var}`) albo Python (`f"{var}"`)**.  
+Ale **TAK — można to osiągnąć innymi sposobami**, np.:
+
+#### ✅ 1. Java Text Block + `replace()` (najprostszy sposób)
+
+```java
+String expectedResponse = """
+        {
+            "id": "{id}",
+            "name": "{name}",
+            "closed": {closed},
+            "color": "{color}",
+            "idBoard": "{idBoard}",
+            "pos": "{pos}",
+            "subscribed": {subscribed}
+        }
+        """
+        .replace("{id}", id)
+        .replace("{name}", name)
+        .replace("{closed}", String.valueOf(closed))
+        .replace("{color}", color)
+        .replace("{idBoard}", idBoard)
+        .replace("{pos}", pos)
+        .replace("{subscribed}", String.valueOf(subscribed));
+```
+
+✔ działa
+✔ łatwe
+✔ wspiera **text blocks**
+
+#### ✅ 2. Java `String.format()`
+
+Musisz zmienić JSON na format z `%s` :
+
+```java
+String expectedResponse = String.format("""
+        {
+            "id": "%s",
+            "name": "%s",
+            "closed": %s,
+            "color": "%s",
+            "idBoard": "%s",
+            "pos": "%s",
+            "subscribed": %s
+        }
+        """,
+        id, name, closed, color, idBoard, pos, subscribed
+);
+```
+
+✔ czytelne
+❗ musisz zachować kolejność parametrów
+
+#### ✅ 3. Najlepsze dla JSON: użyć DTO i ObjectMapper (polecane!)
+
+Po prostu tworzysz obiekt i serializujesz:
+
+```java
+ObjectMapper mapper = new ObjectMapper();
+
+PUT_UpdateListDto dto = new PUT_UpdateListDto();
+dto.id = id;
+dto.name = name;
+dto.closed = closed;
+dto.color = color;
+dto.idBoard = idBoard;
+dto.pos = pos;
+dto.subscribed = subscribed;
+
+String json = mapper.writeValueAsString(dto);
+```
+
+✔ bez błędów w JSON
+✔ automatyczna walidacja
+✔ zero ręcznego formatowania stringów
+
+### 🎯 Podsumowanie
+
+#### Czy można zrobić „magiczne wstawianie zmiennych jak w Twoim przykładzie”?
+
+➡ **Nie bezpośrednio**, Java tego nie wspiera.
+
+#### Czy można to osiągnąć?
+
+➡ **Tak — trzema sposobami:**
+
+1. `replace()`
+2. `String.format()`
+3. (najlepsze) budowa DTO i serializacja JSON
+
+---
+
+## 📄Response (expected, universal) – opcjonalne parametry <a name="response_expected_universal_optional_parameters"></a>
+
+### Problem/Zagadnienie
+
+Mam taki "uniwersalny" oczekiwany response:
+
+```java
+public static final String BaseExpectedPutUpdateListResponse = """
+        {
+            "id": "6918c0e928328bf5ad423af0",
+            "name": "Updated list name",
+            "closed": true,
+            "color": null,
+            "idBoard": "6918c0e725eebf9505f994b3",
+            "pos": 140737488338944,
+            "subscribed": true
+        }
+        """;
+```
+
+Jak requestem podajemy/zmieniamy parametr "subscribed", to on pojawia się w response.
+Jak nic z nim nie robimy, to go nie ma.
+
+Mam taką metodę:
+```java
+public static PUT_UpdateListDto prepareUniversalExpectedResponsePut(
+        String id,
+        String name,
+        Boolean closed,
+        String color,
+        String idBoard,
+        Long pos,
+        Boolean subscribed
+) {
+    PUT_UpdateListDto expectedResponsePutDto = deserializeJson(BaseExpectedPutUpdateListResponse, PUT_UpdateListDto.class);
+    expectedResponsePutDto.id = id;
+    expectedResponsePutDto.name = name;
+    expectedResponsePutDto.closed = closed;
+    expectedResponsePutDto.color = color;
+    expectedResponsePutDto.idBoard = idBoard;
+    expectedResponsePutDto.pos = pos;
+    expectedResponsePutDto.subscribed = subscribed;
+    return expectedResponsePutDto;
+}
+```
+
+Czy lepiej usunąć to "subscribed" z oczekiwanego response'a i później w razie potrzeby dodawać go jakoś w metodzie,
+czy może zostawić go w oczekiwanym response, ale np. jak w metodzie podamy go jako `null`, to zostanie on jakoś usunięty?
+Które rozwiązanie będzie lepsze? A może jest jeszcze jakieś inne?
+
+### Rozwiązanie/Wyjaśnienie
+
+Twoje pytanie jest **bardzo dobre**, bo dotyczy **strategii budowania oczekiwanych response’ów** w testach — zwłaszcza przy API,
+gdzie pewne pola pojawiają się *tylko wtedy, gdy je wysyłasz*.
+
+W Twoim przypadku:
+
+* `subscribed` **występuje w response tylko wtedy**, gdy był wysłany jako query param.
+* jeśli nie został wysłany → pole **nie pojawia się w response**.
+
+To oznacza, że **Twoje oczekiwane DTO musi dynamicznie odzwierciedlać strukturę prawdziwego response**.
+
+#### ✅ Najlepsze rozwiązanie
+
+##### **Usuń pole `subscribed` z `BaseExpectedPutUpdateListResponse`**
+
+I w metodzie *dodawaj je tylko wtedy*, gdy test rzeczywiście go wysłał.
+
+Dlaczego?
+
+##### ✔ Opcjonalne pola NIE powinny znajdować się w bazowym (uniwersalnym) expected JSON
+
+Oczekiwany response bazowy powinien zawierać **tylko pola obowiązkowe**, które na pewno będą w każdym response.
+
+`subscribed` *nie jest obowiązkowe*, więc **nie powinno znajdować się w base JSON-ie**.
+
+##### ✔ Jeśli pole się pojawia → dokładasz je manualnie
+
+I to jest najlepsze, najczytelniejsze, najbardziej kontrolowane rozwiązanie.
+
+#### ❌ Dlaczego nie zostawiać `subscribed` w base response i ustawiać `null`?
+
+##### Bo to **nie działa**:
+
+* Jeśli zostawisz `"subscribed": null` w JSON → Jackson **zawsze wczyta to pole**, więc Twoje DTO będzie je mieć.
+* API jednak **nie zwraca pola `subscribed` z wartością null**, tylko NIE zwraca go wcale.
+* To spowoduje różnicę między expected a actual → testy będą fałszywie czerwone.
+
+Czyli:
+
+```csharp
+API response:
+{
+   "id": "...",
+   "name": "...",
+   ...
+}
+
+Expected (z null):
+{
+   "id": "...",
+   "name": "...",
+   ...
+   "subscribed": null   ← tego pole wcale nie ma w API
+}
+```
+
+Porównanie = ❌ fail.
+
+#### 🚀 Najlepsza wersja Twojej metody
+
+##### 1️⃣ Usuń `"subscribed"` z base JSON-a
+
+Czyli pozostaw:
+
+```java
+public static final String BaseExpectedPutUpdateListResponse = """
+        {
+            "id": "6918c0e928328bf5ad423af0",
+            "name": "Updated list name",
+            "closed": true,
+            "color": null,
+            "idBoard": "6918c0e725eebf9505f994b3",
+            "pos": 140737488338944
+        }
+        """;
+```
+
+##### 2️⃣ W metodzie dokładaj `subscribed` tylko gdy nie jest null:
+
+```java
+public static PUT_UpdateListDto prepareUniversalExpectedResponsePut(
+        String id,
+        String name,
+        Boolean closed,
+        String color,
+        String idBoard,
+        Long pos,
+        Boolean subscribed
+) {
+    PUT_UpdateListDto expectedResponsePutDto =
+            deserializeJson(BaseExpectedPutUpdateListResponse, PUT_UpdateListDto.class);
+
+    expectedResponsePutDto.id = id;
+    expectedResponsePutDto.name = name;
+    expectedResponsePutDto.closed = closed;
+    expectedResponsePutDto.color = color;
+    expectedResponsePutDto.idBoard = idBoard;
+    expectedResponsePutDto.pos = pos;
+
+    if (subscribed != null) {
+        expectedResponsePutDto.subscribed = subscribed;
+    }
+
+    return expectedResponsePutDto;
+}
+```
+
+#### 👍 Dlaczego to podejście jest najlepsze?
+
+✔ **Najbliżej realnego API**
+✔ **DTO odzwierciedla dokładny response**
+✔ **Jeden base JSON = prostsze testy**
+✔ **Opcjonalne pola pojawiają się tylko wtedy, gdy faktycznie istnieją**
+✔ **Brak fałszywych failów**
+✔ **Najbardziej przejrzysta logika**

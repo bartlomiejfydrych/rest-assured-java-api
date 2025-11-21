@@ -71,7 +71,13 @@ None.
     - **[]** number
     - **[P1]** Missing
     - **[P2]** null
-    - **[P3💥]** Empty string ("") -> It seems this PUT request changes "Pos" to some other, fixed value. I'm hardcoding the expected value so the test doesn't fail.
+    - **[P3💥]** Empty string (""):
+      - This test detected strange behavior
+      - If the first PUT request changes something in the list, but not its "Pos," or if we try to change "Pos" to
+        something that shouldn't change it, such as null or an empty String, the initial value of "Pos" still changes
+      - Because of this strange behavior:
+        - If this test is run individually, it will fail because the value has changed
+        - If it is run with all tests, it will pass because the value has already been changed in another test
   - ❌Negative:
     - **[]** Incorrect
     - **[SPRAWDZIĆ!->💥]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.

@@ -13,8 +13,7 @@ public class PUT_UpdateListExpected {
                 "closed": true,
                 "color": null,
                 "idBoard": "6918c0e725eebf9505f994b3",
-                "pos": 140737488338944,
-                "subscribed": true
+                "pos": 140737488338944
             }
             """;
 
