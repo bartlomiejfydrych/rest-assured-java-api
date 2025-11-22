@@ -143,6 +143,10 @@ public class POST_CreateNewListTest extends TestBase {
     @Test
     public void P4_shouldCreateThreeNewListsWithPosTopBottomAndNumber() {
 
+        // -------
+        // ARRANGE
+        // -------
+
         String listName1 = generateRandomListName(); // Base list against which the position of the remaining lists will be checked
         String listName2 = generateRandomListName();
         String listName3 = generateRandomListName();
@@ -165,6 +169,10 @@ public class POST_CreateNewListTest extends TestBase {
                 .setPos(listPos4)
                 .build();
         Map<String, Object> queryParams4 = payload4.toQueryParams();
+
+        // ---
+        // ACT
+        // ---
 
         // POST (add list 1)
         Response responsePost1 = postCreateNewList(boardId, listName1, null);
@@ -216,6 +224,11 @@ public class POST_CreateNewListTest extends TestBase {
         compareObjects(responsePostDto4, expectedResponsePostDto4);
         // GET
         validateGetAgainstPost(responsePostDto4);
+
+        // ------
+        // ASSERT
+        // ------
+
         // POSITION VALIDATION
         assertThat(responsePostPos2)
                 .as("The list with the \"top\" position should be higher (i.e. have a lower numerical value) than the first list.")

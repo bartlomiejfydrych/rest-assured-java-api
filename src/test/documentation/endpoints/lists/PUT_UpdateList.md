@@ -35,7 +35,7 @@ None.
 
 - 💠id `string` 🔴REQUIRED🔴
   - ✅Positive:
-    - **[P1|P2|P3]** Correct
+    - **[PX]** Correct
   - ❌Negative:
     - **[]** Non-existent
     - **[]** Incorrect
@@ -44,20 +44,20 @@ None.
     - **[P1]** Special characters and numbers
     - **[P2]** 1 character
     - **[P3]** Missing (0 characters)
-    - **[]** null
-    - **[]** Empty string ("")
+    - **[P4]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
+    - **[]** Empty string ("")
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠closed `boolean`
   - ✅Positive:
     - **[P1]** true
     - **[P2]** false
     - **[P3]** Missing
-    - **[]** null
+    - **[P4]** null
 - 💠idBoard `TrelloID`
   - ✅Positive:
-    - **[P1|P2|P3]** Correct
+    - **[PX]** Correct
   - ❌Negative:
     - **[]** Missing
     - **[]** null
@@ -66,9 +66,9 @@ None.
     - **[]** Incorrect
 - 💠pos `oneOf [number, string]`
   - ✅Positive:
-    - **[]** top
-    - **[]** bottom
-    - **[]** number
+    - **[P5]** top
+    - **[P5]** bottom
+    - **[P5]** number
     - **[P1]** Missing
     - **[P2]** null
     - **[P3💥]** Empty string (""):
@@ -86,7 +86,7 @@ None.
     - **[P1]** true
     - **[P2]** false
     - **[P3]** Missing
-    - **[]** null
+    - **[P4]** null
 
 ---
 

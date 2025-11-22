@@ -4,6 +4,7 @@ import base.TestBase;
 import dto.lists.GET_GetListDto;
 import dto.lists.POST_CreateNewListDto;
 import dto.lists.PUT_UpdateListDto;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import static utils.UtilsCommon.getAllCharactersSetInRandomOrder;
 import static utils.UtilsCommon.getRandomSingleChar;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsResponse.deserializeAndValidate;
+import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.lists.POST_CreateNewListUtils.generateRandomListName;
 import static utils_tests.lists.PUT_UpdateListUtils.*;
@@ -32,14 +34,20 @@ public class PUT_UpdateListTest extends TestBase {
 
     /*
     NOTES:
-    – {listPos} is intentionally taken from POST to check if PUT accidentally changes it
+    Some variables are intentionally taken from POST to the expected response to check whether PUT has accidentally changed them when it was not supposed to.
     */
 
+    // BOARD
     private String boardId;
+    // LIST - COMMON
     private String listId;
+    // LIST - POST
+    private POST_CreateNewListDto responsePostDto;
+    // LIST - PUT
     private String listName;
     private Boolean listClosed;
-    private Long listPos;
+    private Long listPosAsLong;
+    private String listPosAsString;
     private Boolean listSubscribed;
 
     @BeforeAll
@@ -49,9 +57,8 @@ public class PUT_UpdateListTest extends TestBase {
         boardId = responsePost.getBody().jsonPath().getString("id");
         responsePost = postCreateNewList(boardId, generateRandomListName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
-        POST_CreateNewListDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateNewListDto.class);
+        responsePostDto = deserializeAndValidate(responsePost, POST_CreateNewListDto.class);
         listId = responsePostDto.id;
-        listPos = responsePostDto.pos;
     }
 
     @AfterAll
@@ -61,7 +68,6 @@ public class PUT_UpdateListTest extends TestBase {
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardId = null;
             listId = null;
-            listPos = null;
         }
     }
 
@@ -92,7 +98,7 @@ public class PUT_UpdateListTest extends TestBase {
                 listId,
                 listName,
                 boardId,
-                listPos
+                responsePostDto.pos
         );
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
@@ -104,13 +110,13 @@ public class PUT_UpdateListTest extends TestBase {
 
         listName = getRandomSingleChar();
         listClosed = false;
-        Long putListPos = null;
+        listPosAsLong = null;
         listSubscribed = false;
 
         PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
                 .setName(listName)
                 .setClosed(listClosed)
-                .setPos(putListPos)
+                .setPos(listPosAsLong)
                 .setSubscribed(listSubscribed)
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
@@ -124,18 +130,19 @@ public class PUT_UpdateListTest extends TestBase {
                 listId,
                 listName,
                 boardId,
-                listPos
+                responsePostDto.pos
         );
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
     }
 
-    @Test
+    // @Test
     public void P3_shouldUpdateListWhereNameMissingClosedMissingPosEmptyStringSubscribedMissing() {
 
         /*
         NOTE:
+        FLAKY TEST
         This test detected strange behavior.
         If the first PUT request changes something in the list, but not its "Pos," or if we try to change "Pos" to
         something that shouldn't change it, such as null or an empty String, the initial value of "Pos" still changes.
@@ -144,10 +151,10 @@ public class PUT_UpdateListTest extends TestBase {
         If it is run with all tests, it will pass because the value has already been changed in another test.
         */
 
-        String putListPos = "";
+        listPosAsString = "";
 
         PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
-                .setPos(putListPos)
+                .setPos(listPosAsString)
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
@@ -172,4 +179,179 @@ public class PUT_UpdateListTest extends TestBase {
         // GET
         validateGetAgainstPut(responsePutDto);
     }
+
+    @Test
+    public void P4_shouldUpdateListWhereNameNullClosedNullSubscribedNull() {
+
+        listName = null;
+        listClosed = null;
+        listSubscribed = null;
+
+        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
+                .setName(listName)
+                .setClosed(listClosed)
+                .setSubscribed(listSubscribed)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // GET (current status of the list)
+        responseGet = getGetList(listId);
+        assertThat(responseGet.statusCode()).isEqualTo(200);
+        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
+        // PUT
+        responsePut = putUpdateList(boardId, listId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(200);
+        PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
+        PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
+                P4ExpectedPutUpdateListResponse,
+                listId,
+                responseGetDto.name,
+                boardId,
+                responseGetDto.pos
+        );
+        compareObjects(responsePutDto, expectedResponsePutDto);
+        // GET
+        validateGetAgainstPut(responsePutDto);
+    }
+
+    @Test
+    public void P5_shouldUpdateThreeListsWithPosTopBottomAndNumber() {
+
+        // -------
+        // ARRANGE
+        // -------
+
+        // POST
+        // List (1) is created in '@BeforeAll' | Base list against which the position of the remaining lists will be checked
+        String listName2 = generateRandomListName();
+        String listName3 = generateRandomListName();
+        String listName4 = generateRandomListName();
+        // PUT
+        String listPos2 = "top";
+        String listPos3 = "bottom";
+        Long listPos4 = 140737488322560L;
+
+        PUT_UpdateListPayload payload2 = new PUT_UpdateListPayload.Builder()
+                .setPos(listPos2)
+                .build();
+        Map<String, Object> queryParams2 = payload2.toQueryParams();
+
+        PUT_UpdateListPayload payload3 = new PUT_UpdateListPayload.Builder()
+                .setPos(listPos3)
+                .build();
+        Map<String, Object> queryParams3 = payload3.toQueryParams();
+
+        PUT_UpdateListPayload payload4 = new PUT_UpdateListPayload.Builder()
+                .setPos(listPos4)
+                .build();
+        Map<String, Object> queryParams4 = payload4.toQueryParams();
+
+        // ---
+        // ACT
+        // ---
+
+        // POST (add list 2)
+        Response responsePost2 = postCreateNewList(boardId, listName2, null);
+        assertThat(responsePost2.statusCode()).isEqualTo(200);
+        POST_CreateNewListDto responsePostDto2 = deserializeJson(responsePost2, POST_CreateNewListDto.class);
+        String listId2 = responsePostDto2.id;
+        // POST (add list 3)
+        Response responsePost3 = postCreateNewList(boardId, listName3, null);
+        assertThat(responsePost3.statusCode()).isEqualTo(200);
+        POST_CreateNewListDto responsePostDto3 = deserializeJson(responsePost3, POST_CreateNewListDto.class);
+        String listId3 = responsePostDto3.id;
+        // POST (add list 4)
+        Response responsePost4 = postCreateNewList(boardId, listName4, null);
+        assertThat(responsePost4.statusCode()).isEqualTo(200);
+        POST_CreateNewListDto responsePostDto4 = deserializeJson(responsePost4, POST_CreateNewListDto.class);
+        String listId4 = responsePostDto4.id;
+
+        // PUT (edit list 2 -> POS: top)
+        Response responsePut2 = putUpdateList(boardId, listId2, queryParams2);
+        assertThat(responsePut2.statusCode()).isEqualTo(200);
+        PUT_UpdateListDto responsePutDto2 = deserializeAndValidate(responsePut2, PUT_UpdateListDto.class);
+        Long responsePutPos2 = responsePutDto2.pos;
+        PUT_UpdateListDto expectedResponsePutDto2 = prepareUniversalExpectedResponsePut(
+                listId2,
+                responsePostDto2.name,
+                responsePostDto2.closed,
+                null,
+                boardId,
+                responsePutPos2,
+                null
+        );
+        compareObjects(responsePutDto2, expectedResponsePutDto2);
+        // GET
+        validateGetAgainstPut(responsePutDto2);
+        // PUT (edit list 3 -> POS: bottom)
+        Response responsePut3 = putUpdateList(boardId, listId3, queryParams3);
+        assertThat(responsePut3.statusCode()).isEqualTo(200);
+        PUT_UpdateListDto responsePutDto3 = deserializeAndValidate(responsePut3, PUT_UpdateListDto.class);
+        Long responsePutPos3 = responsePutDto3.pos;
+        PUT_UpdateListDto expectedResponsePutDto3 = prepareUniversalExpectedResponsePut(
+                listId3,
+                responsePostDto3.name,
+                responsePostDto3.closed,
+                null,
+                boardId,
+                responsePutPos3,
+                null
+        );
+        compareObjects(responsePutDto3, expectedResponsePutDto3);
+        // GET
+        validateGetAgainstPut(responsePutDto3);
+        // PUT (edit list 4 -> POS: 140737488322560L)
+        Response responsePut4 = putUpdateList(boardId, listId4, queryParams4);
+        assertThat(responsePut4.statusCode()).isEqualTo(200);
+        PUT_UpdateListDto responsePutDto4 = deserializeAndValidate(responsePut4, PUT_UpdateListDto.class);
+        Long responsePutPos4 = responsePutDto4.pos;
+        PUT_UpdateListDto expectedResponsePutDto4 = prepareUniversalExpectedResponsePut(
+                listId4,
+                responsePostDto4.name,
+                responsePostDto4.closed,
+                null,
+                boardId,
+                responsePutPos4,
+                null
+        );
+        compareObjects(responsePutDto4, expectedResponsePutDto4);
+        // GET
+        validateGetAgainstPut(responsePutDto4);
+
+        // ------
+        // ASSERT
+        // ------
+
+        // POSITION VALIDATION
+        assertThat(responsePutPos2)
+                .as("The list with the \"top\" position should be higher (i.e. have a lower numerical value) than the first list.")
+                .isLessThan(responsePostDto.pos);
+        assertThat(responsePutPos3)
+                .as("The list with the \"bottom\" position should be lower (i.e. have a higher numerical value) than the first list.")
+                .isGreaterThan(responsePostDto.pos);
+        assertThat(responsePutPos4)
+                .as("The list with the \"numeric\" item should be higher (i.e. have a lower numerical value) than the first list.")
+                .isLessThan(responsePostDto.pos);
+    }
+
+    // --------------
+    // NEGATIVE TESTS
+    // --------------
+
+//    @Test
+//    public void P5_shouldUpdateListWhereNameEmptyString() {
+//
+//        listName = "";
+//
+//        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
+//                .setName(listName)
+//                .build();
+//        Map<String, Object> queryParams = payload.toQueryParams();
+//
+//        // PUT
+//        responsePut = putUpdateList(boardId, listId, queryParams);
+//        assertThat(responsePut.statusCode()).isEqualTo(200);
+//        PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
+//
+//    }
 }

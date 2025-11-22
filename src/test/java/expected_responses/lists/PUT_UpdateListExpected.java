@@ -53,6 +53,16 @@ public class PUT_UpdateListExpected {
                 "pos": 140737488322560
             }
             """;
+    public static final String P4ExpectedPutUpdateListResponse = """
+            {
+                "id": "69219dd492700ac6492df0d7",
+                "name": "List - Nitzsche-Conn | Number: 4552335270400",
+                "closed": false,
+                "color": null,
+                "idBoard": "69219dd2b9e5614adfdfb4ff",
+                "pos": 140737488338944
+            }
+            """;
 
     // --------------
     // NEGATIVE TESTS
