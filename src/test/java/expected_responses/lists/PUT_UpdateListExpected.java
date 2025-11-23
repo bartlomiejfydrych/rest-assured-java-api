@@ -68,5 +68,23 @@ public class PUT_UpdateListExpected {
     // NEGATIVE TESTS
     // --------------
 
-
+    public static final String expectedPutUpdateListResponseInvalidId = "invalid id";
+    public static final String expectedPutUpdateListResponseInvalidBoardId = """
+            {
+                "message": "invalid id",
+                "error": "BAD_REQUEST_ERROR"
+            }
+            """;
+    public static final String expectedPutUpdateListResponseBoardNotFound = """
+            {
+                "message": "Board not found.",
+                "error": "BOARD_NOT_FOUND"
+            }
+            """;
+    public static final String expectedPutUpdateListResponseInvalidPosition = """
+            {
+                "message": "Invalid position.",
+                "error": "ERROR"
+            }
+            """;
 }

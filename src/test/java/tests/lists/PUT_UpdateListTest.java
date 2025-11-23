@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.getAllCharactersSetInRandomOrder;
 import static utils.UtilsCommon.getRandomSingleChar;
 import static utils.UtilsCompare.compareObjects;
+import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
@@ -39,6 +40,7 @@ public class PUT_UpdateListTest extends TestBase {
 
     // BOARD
     private String boardId;
+    private String boardIdN;
     // LIST - COMMON
     private String listId;
     // LIST - POST
@@ -90,7 +92,7 @@ public class PUT_UpdateListTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateList(boardId, listId, queryParams);
+        responsePut = putUpdateList(listId, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
@@ -122,7 +124,7 @@ public class PUT_UpdateListTest extends TestBase {
         Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateList(boardId, listId, queryParams);
+        responsePut = putUpdateList(listId, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
@@ -163,7 +165,7 @@ public class PUT_UpdateListTest extends TestBase {
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
         // PUT
-        responsePut = putUpdateList(boardId, listId, queryParams);
+        responsePut = putUpdateList(listId, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareUniversalExpectedResponsePut(
@@ -199,7 +201,7 @@ public class PUT_UpdateListTest extends TestBase {
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
         // PUT
-        responsePut = putUpdateList(boardId, listId, queryParams);
+        responsePut = putUpdateList(listId, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
@@ -267,7 +269,7 @@ public class PUT_UpdateListTest extends TestBase {
         String listId4 = responsePostDto4.id;
 
         // PUT (edit list 2 -> POS: top)
-        Response responsePut2 = putUpdateList(boardId, listId2, queryParams2);
+        Response responsePut2 = putUpdateList(listId2, queryParams2);
         assertThat(responsePut2.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto2 = deserializeAndValidate(responsePut2, PUT_UpdateListDto.class);
         Long responsePutPos2 = responsePutDto2.pos;
@@ -284,7 +286,7 @@ public class PUT_UpdateListTest extends TestBase {
         // GET
         validateGetAgainstPut(responsePutDto2);
         // PUT (edit list 3 -> POS: bottom)
-        Response responsePut3 = putUpdateList(boardId, listId3, queryParams3);
+        Response responsePut3 = putUpdateList(listId3, queryParams3);
         assertThat(responsePut3.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto3 = deserializeAndValidate(responsePut3, PUT_UpdateListDto.class);
         Long responsePutPos3 = responsePutDto3.pos;
@@ -301,7 +303,7 @@ public class PUT_UpdateListTest extends TestBase {
         // GET
         validateGetAgainstPut(responsePutDto3);
         // PUT (edit list 4 -> POS: 140737488322560L)
-        Response responsePut4 = putUpdateList(boardId, listId4, queryParams4);
+        Response responsePut4 = putUpdateList(listId4, queryParams4);
         assertThat(responsePut4.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto4 = deserializeAndValidate(responsePut4, PUT_UpdateListDto.class);
         Long responsePutPos4 = responsePutDto4.pos;
@@ -334,24 +336,131 @@ public class PUT_UpdateListTest extends TestBase {
                 .isLessThan(responsePostDto.pos);
     }
 
+
+
     // --------------
     // NEGATIVE TESTS
     // --------------
 
-//    @Test
-//    public void P5_shouldUpdateListWhereNameEmptyString() {
-//
-//        listName = "";
-//
-//        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
-//                .setName(listName)
-//                .build();
-//        Map<String, Object> queryParams = payload.toQueryParams();
-//
-//        // PUT
-//        responsePut = putUpdateList(boardId, listId, queryParams);
-//        assertThat(responsePut.statusCode()).isEqualTo(200);
-//        PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
-//
-//    }
+    // {id}
+
+    @Test
+    public void N1_shouldNotUpdateListWhenIdNonExistent() {
+        responsePut = putUpdateList("99", null);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo(expectedPutUpdateListResponseInvalidId);
+    }
+
+    @Test
+    public void N2_shouldNotUpdateListWhenIdIncorrect() {
+        responsePut = putUpdateList("KeK", null);
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo(expectedPutUpdateListResponseInvalidId);
+    }
+
+    // {name}
+
+    @Test
+    public void N3_shouldNotUpdateListWhenNameEmptyString() {
+        // ARRANGE
+        listName = "";
+        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
+                .setName(listName)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+        // ACT
+        responsePut = putUpdateList(listId, queryParams);
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for name");
+    }
+
+    // {idBoard}
+
+    @Test
+    public void N4_shouldNotUpdateListWhenIdBoardEmptyString() {
+        // ARRANGE
+        boardIdN = "";
+        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
+                .setName(generateRandomListName())
+                .setIdBoard(boardIdN)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+        // ACT
+        responsePut = putUpdateList(listId, queryParams);
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePut,expectedPutUpdateListResponseInvalidBoardId);
+    }
+
+    @Test
+    public void N5_shouldNotUpdateListWhenIdBoardNonExistent() {
+        // ARRANGE
+        boardIdN = "691db99a4e5a030526097e00";
+        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
+                .setName(generateRandomListName())
+                .setIdBoard(boardIdN)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+        // ACT
+        responsePut = putUpdateList(listId, queryParams);
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(404);
+        compareObjectsJsonNode(responsePut,expectedPutUpdateListResponseBoardNotFound);
+    }
+
+    @Test
+    public void N6_shouldNotUpdateListWhenIdBoardIncorrect() {
+        // ARRANGE
+        boardIdN = "KeK";
+        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
+                .setName(generateRandomListName())
+                .setIdBoard(boardIdN)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+        // ACT
+        responsePut = putUpdateList(listId, queryParams);
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePut,expectedPutUpdateListResponseInvalidBoardId);
+    }
+
+    // {pos}
+
+    @Test
+    public void N7_shouldNotUpdateListWhenPosIncorrect() {
+        // ARRANGE
+        listPosAsString = "KeK 123";
+        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
+                .setName(generateRandomListName())
+                .setPos(listPosAsString)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+        // ACT
+        responsePut = putUpdateList(listId, queryParams);
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePut, expectedPutUpdateListResponseInvalidPosition);
+    }
+
+    // @Test
+    public void N8_shouldNotUpdateListWhenPosIsNumberAsString() {
+        /*
+        NOTE:
+        According to the documentation, the specific position of list should be of type Number.
+        A String value will also work.
+        */
+        // ARRANGE
+        listPosAsString = "140737488322560";
+        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
+                .setName(generateRandomListName())
+                .setPos(listPosAsString)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+        // ACT
+        responsePut = putUpdateList(listId, queryParams);
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        compareObjectsJsonNode(responsePut, expectedPutUpdateListResponseInvalidPosition);
+    }
 }

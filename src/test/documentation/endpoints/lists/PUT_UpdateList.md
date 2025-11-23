@@ -37,8 +37,8 @@ None.
   - ✅Positive:
     - **[PX]** Correct
   - ❌Negative:
-    - **[]** Non-existent
-    - **[]** Incorrect
+    - **[N1]** Non-existent
+    - **[N2]** Incorrect
 - 💠name `string`
   - ✅Positive:
     - **[P1]** Special characters and numbers
@@ -47,7 +47,7 @@ None.
     - **[P4]** null
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** Empty string ("")
+    - **[N3]** Empty string ("")
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠closed `boolean`
   - ✅Positive:
@@ -57,13 +57,13 @@ None.
     - **[P4]** null
 - 💠idBoard `TrelloID`
   - ✅Positive:
-    - **[PX]** Correct
-  - ❌Negative:
-    - **[]** Missing
+    - **[PX]** Missing
+    - **[]** Correct
     - **[]** null
-    - **[]** Empty string ("")
-    - **[]** Non-existent
-    - **[]** Incorrect
+  - ❌Negative:
+    - **[N4]** Empty string ("")
+    - **[N5]** Non-existent
+    - **[N6]** Incorrect
 - 💠pos `oneOf [number, string]`
   - ✅Positive:
     - **[P5]** top
@@ -79,8 +79,8 @@ None.
         - If this test is run individually, it will fail because the value has changed
         - If it is run with all tests, it will pass because the value has already been changed in another test
   - ❌Negative:
-    - **[]** Incorrect
-    - **[SPRAWDZIĆ!->💥]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.
+    - **[N7]** Incorrect
+    - **[N8->💥]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.
 - 💠subscribed `boolean`
   - ✅Positive:
     - **[P1]** true
