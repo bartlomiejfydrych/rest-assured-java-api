@@ -58,7 +58,7 @@ None.
 - 💠idBoard `TrelloID`
   - ✅Positive:
     - **[PX]** Missing
-    - **[]** Correct
+    - **[P6]** Correct
     - **[]** null
   - ❌Negative:
     - **[N4]** Empty string ("")

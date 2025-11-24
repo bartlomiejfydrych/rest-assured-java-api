@@ -336,7 +336,40 @@ public class PUT_UpdateListTest extends TestBase {
                 .isLessThan(responsePostDto.pos);
     }
 
-
+    @Test
+    public void P6_shouldUpdateListByMovingItToAnotherBoard() {
+        // POST (add {board 2})
+        responsePost = postCreateBoard(generateRandomBoardName(), null);
+        assertThat(responsePost.statusCode()).isEqualTo(200);
+        String boardId2 = responsePost.getBody().jsonPath().getString("id");
+        // POST (add second list into {board 1} | so that the list used in other tests is not transferred)
+        responsePost = postCreateNewList(boardId, generateRandomListName(), null);
+        assertThat(responsePost.statusCode()).isEqualTo(200);
+        POST_CreateNewListDto responsePostDto = deserializeJson(responsePost, POST_CreateNewListDto.class);
+        String listId2 = responsePostDto.id;
+        // PUT (move {list 2} from {board 1} to {board 2})
+        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
+                .setIdBoard(boardId2)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+        responsePut = putUpdateList(listId2, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(200);
+        PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
+        PUT_UpdateListDto expectedResponsePutDto = prepareUniversalExpectedResponsePut(
+                listId2,
+                responsePostDto.name,
+                responsePostDto.closed,
+                responsePostDto.color,
+                boardId2,
+                responsePostDto.pos,
+                null
+        );
+        compareObjects(responsePutDto, expectedResponsePutDto);
+        // GET
+        validateGetAgainstPut(responsePutDto);
+        // DELETE (delete {board 2})
+        // TODO: Dokończyć (try-catch)
+    }
 
     // --------------
     // NEGATIVE TESTS

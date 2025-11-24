@@ -44,6 +44,7 @@
 - [AssertJ – dodawanie komentarzy/logów do testów](#assertj_comments_logs)
 - [Zmienne – podstawianie pod String/Text Block](#variables_string_text_block)
 - [Response (expected, universal) – opcjonalne parametry](#response_expected_universal_optional_parameters)
+- [Number/Liczba jako String – czy powinna przechodzić (Query Params vs. JSON body)](#number_as_string)
 
 ---
 
@@ -2744,3 +2745,179 @@ public static PUT_UpdateListDto prepareUniversalExpectedResponsePut(
 ✔ **Opcjonalne pola pojawiają się tylko wtedy, gdy faktycznie istnieją**  
 ✔ **Brak fałszywych failów**  
 ✔ **Najbardziej przejrzysta logika**
+
+---
+
+## 📄Number/Liczba jako String – czy powinna przechodzić (Query Params vs. JSON body) <a name="number_as_string"></a>
+
+### ❓ Pytanie
+
+Czy podczas pisania/tworzenia API programiści często robią tak, że zarówno wartość liczbowa typu Number np. 1234,
+jak i liczba typu String "1234" są obie prawidłowe naprzemiennie czy jednak po to stosuje się konkretne typy, aby się
+ich trzymać?
+
+Według dokumentacji parametr "pos" przyjmuje takie wartości:
+```
+pos | oneOf [number, string]
+New position for the list: top, bottom, or a positive floating point number
+```
+
+Po podaniu liczby jako typ String, a nie Number request i tak przechodzi.
+
+Czy to jest prawidłowe zachowanie, czy jednak nie powinno być to możliwe?
+
+### ❗ Odpowiedź
+
+Świetne pytanie — **dotyczy praktyk projektowania API**, których jako tester API absolutnie warto być świadomym.
+Wyjaśnię Ci to **krótko, praktycznie, i w oparciu o to, co faktycznie spotyka się w prawdziwych API** (REST, GraphQL,
+publiczne API takich firm jak Google, Stripe, Trello, GitHub itp.).
+
+#### 🔍 **Czy API często pozwalają na:**
+
+* `pos = 1234` (number)
+  **i jednocześnie**
+* `pos = "1234"` (string)?
+
+👉 **TAK — częściej, niż mogłoby się wydawać.**
+
+Ale *dlaczego*?
+
+#### 🧠 Dlaczego API często akceptują *zarówno number, jak i string?*
+
+##### 1️⃣ **HTTP query parameters są ZAWSZE tekstem**
+
+`?pos=1234`  
+`?pos=top`
+
+W URL-u *nie istnieją typy liczbowe*.  
+Wszystko jest stringiem. Bez wyjątku.
+
+To serwer musi, później zdecyduje:
+
+* czy `"1234"` traktować jako liczbę,
+* czy `"top"` traktować jako słowo,
+* czy `"1.25"` traktować jako float.
+
+Dlatego API, które przyjmuje:
+
+```
+pos: number | string
+```
+
+robi to **świadomie**, ponieważ:
+
+🔹 liczba przyjdzie jako `"1234"`  
+🔹 wartość specjalna (`top`, `bottom`) też przyjdzie jako `"top"`
+
+Technicznie *nie da się* odróżnić „liczba wysłana jako liczba” od „liczba wysłana jako string”, bo w query param
+wszystko jest tekstem.
+
+##### 2️⃣ **Leniwa konwersja typów (Type Coercion)**
+
+Wiele API stosuje podejście:
+
+> Jeśli wygląda jak liczba i da się sparsować → traktujemy jako liczbę.  
+> Jeśli wygląda jak string → traktujemy jako komendę typu top/bottom.
+
+To jest bardzo powszechne m.in. w:
+
+* Node.js (Express + body/query parsers)
+* Python Flask / FastAPI
+* Ruby on Rails
+* Java Spring (konwersja typów w ParamResolver)
+* Go Gin/Gonic (string → float64 jeśli trzeba)
+* API Trello / Atlassian
+
+##### 3️⃣ **Backward compatibility**
+
+Załóżmy, że stara wersja API pozwalała tylko na:
+
+```
+pos = "top"
+pos = "bottom"
+pos = "1.234"
+```
+
+Czyli *zawsze string*.
+
+Nowa wersja API chce przyjmować:
+
+```
+pos = 5.2
+```
+
+Gdyby nagle API *wymagało numeru*, to zepsułoby aplikacje klientów, które wysyłały `"5.2"` jako tekst.
+
+Dlatego API często wspierają dwa typy:
+
+👉 **string**  
+👉 **number**
+
+Po to, żeby nie psuć zgodności wstecznej.
+
+##### 4️⃣ **JSON body a query params to dwie różne rzeczy**
+
+W **JSON body** temat byłby inny — tam typy są jednoznaczne:
+
+```json
+"pos": "1234"   ❌
+"pos": 1234     ✔️
+```
+
+Ale Ty mówisz o:  
+`PUT /lists/{id}?pos=1234`
+
+A wszystkie query-paramy są stringami.
+
+#### 🎯 Czy takie zachowanie jest prawidłowe?
+
+##### ✔️ Tak — **jest bardzo typowe i często wręcz konieczne.**
+
+##### ❌ Nie — jeśli dokumentacja obiecuje ścisłe typowanie dla query paramów (co jest rzadkością).
+
+#### 🧪 Jako tester API — jak powinieneś to traktować?
+
+Jeśli dokumentacja mówi:
+
+```
+pos: oneOf [number, string]
+```
+
+to oznacza:
+
+* API świadomie akceptuje oba typy
+* i jest to zachowanie **zamierzone**, nie błąd.
+
+Twoje testy powinny to uwzględnić jako:
+
+##### ✔️ Test pozytywny:
+
+* `pos = "top"`
+* `pos = "bottom"`
+* `pos = "12345"`
+* `pos = 12345` (jeśli używasz JSON body)
+* `pos = "1.25"`
+* `pos = 1.25`
+
+##### ❌ Test negatywny:
+
+* `pos = "abc"`
+* `pos = "-12"` (jeśli API nie dopuszcza)
+* `pos = ""`
+* brak parametru (jeśli jest wymagany)
+
+#### 🤔 Czy API powinno odrzucać liczbę wysłaną jako string?
+
+W **query paramach** — nie.
+
+W **JSON body** — tak.
+
+### 📌 Podsumowanie
+
+#### ✔ API akceptujące `pos` jako number **i** string to normalne, poprawne i częste.
+
+#### ✔ Wynika to z natury query-paramów (które *zawsze są stringami*).
+
+#### ✔ Wynika to też z backward compatibility.
+
+#### ✔ Twoje testy powinny traktować to jako expected behavior.
