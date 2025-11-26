@@ -59,7 +59,7 @@ None.
   - ✅Positive:
     - **[PX]** Missing
     - **[P6]** Correct
-    - **[]** null
+    - **[P7]** null
   - ❌Negative:
     - **[N4]** Empty string ("")
     - **[N5]** Non-existent
@@ -78,9 +78,9 @@ None.
       - Because of this strange behavior:
         - If this test is run individually, it will fail because the value has changed
         - If it is run with all tests, it will pass because the value has already been changed in another test
+    - **[P8]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.
   - ❌Negative:
     - **[N7]** Incorrect
-    - **[N8->💥]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.
 - 💠subscribed `boolean`
   - ✅Positive:
     - **[P1]** true

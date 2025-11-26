@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class ListBaseDto {
 
+    public static final String FIELD_POS = "pos";
+
     @NotNull
     public String id;
 
@@ -32,7 +34,7 @@ public class ListBaseDto {
             @JsonProperty(value = "closed", required = true) Boolean closed,
             @JsonProperty(value = "color", required = true) String color,
             @JsonProperty(value = "idBoard", required = true) String idBoard,
-            @JsonProperty(value = "pos", required = true) Long pos
+            @JsonProperty(value = FIELD_POS, required = true) Long pos
     ) {
         this.id = id;
         this.name = name;

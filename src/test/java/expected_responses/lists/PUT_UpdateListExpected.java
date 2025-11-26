@@ -73,6 +73,16 @@ public class PUT_UpdateListExpected {
                 "pos": 140737488338944
             }
             """;
+    public static final String P7ExpectedPutUpdateListResponse = """
+            {
+                "id": "6927625ef7931f7df1313da3",
+                "name": "List - Oberbrunner, VonRueden and Steuber | Number: 15265030532500",
+                "closed": false,
+                "color": null,
+                "idBoard": "6927625cc73d3c914a1a24e8",
+                "pos": 140737488338944
+            }
+            """;
 
     // --------------
     // NEGATIVE TESTS
