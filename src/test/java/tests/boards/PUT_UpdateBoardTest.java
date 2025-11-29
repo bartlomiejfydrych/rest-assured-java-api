@@ -77,7 +77,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .setPrefsInvitations("admins")
                 .setPrefsVoting("disabled")
                 .setPrefsComments("disabled")
-                .setPrefsBackground("blue")
+                //.setPrefsBackground("blue") // NOTE: The value "blue" stopped working (500) | Reported: https://ecosystem.atlassian.net/servicedesk/customer/portal/34/ECOHELP-99809?created=true
                 .setPrefsCardAging("regular")
                 .setPrefsCalendarFeedEnabled(true)
                 .build();
