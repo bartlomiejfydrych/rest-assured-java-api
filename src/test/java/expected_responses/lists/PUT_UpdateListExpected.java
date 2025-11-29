@@ -83,6 +83,16 @@ public class PUT_UpdateListExpected {
                 "pos": 140737488338944
             }
             """;
+    public static final String P8ExpectedPutUpdateListResponse = """
+            {
+                "id": "692ae4dc742d02cf373a5c28",
+                "name": "List - Bednar-Russel | Number: 9665276693600",
+                "closed": false,
+                "color": null,
+                "idBoard": "692ae4db022068085ee83d6e",
+                "pos": 140737488322560
+            }
+            """;
 
     // --------------
     // NEGATIVE TESTS

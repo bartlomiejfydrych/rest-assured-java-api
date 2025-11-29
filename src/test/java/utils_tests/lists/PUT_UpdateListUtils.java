@@ -52,6 +52,23 @@ public class PUT_UpdateListUtils extends TestBase {
         return expectedResponsePutDto;
     }
 
+    public static PUT_UpdateListDto prepareExpectedResponsePut(
+            String expectedResponse,
+            String listId,
+            String listName,
+            String boardId,
+            String listPos
+    ) {
+        long listPosParsed = Long.parseLong(listPos);
+
+        PUT_UpdateListDto expectedResponsePutDto = deserializeJson(expectedResponse, PUT_UpdateListDto.class);
+        expectedResponsePutDto.id = listId;
+        expectedResponsePutDto.name = listName;
+        expectedResponsePutDto.idBoard = boardId;
+        expectedResponsePutDto.pos = listPosParsed;
+        return expectedResponsePutDto;
+    }
+
     public static void validateGetAgainstPut(PUT_UpdateListDto responsePutDto) {
         responseGet = getGetList(responsePutDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);

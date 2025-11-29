@@ -92,6 +92,10 @@ public class PUT_UpdateListTest extends TestBase {
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
+        // GET (current status of the list)
+        responseGet = getGetList(listId);
+        assertThat(responseGet.statusCode()).isEqualTo(200);
+        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
         // PUT
         responsePut = putUpdateList(listId, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
@@ -101,7 +105,7 @@ public class PUT_UpdateListTest extends TestBase {
                 listId,
                 listName,
                 boardId,
-                responsePostDto.pos
+                responseGetDto.pos
         );
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
@@ -124,6 +128,10 @@ public class PUT_UpdateListTest extends TestBase {
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
+        // GET (current status of the list)
+        responseGet = getGetList(listId);
+        assertThat(responseGet.statusCode()).isEqualTo(200);
+        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
         // PUT
         responsePut = putUpdateList(listId, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
@@ -133,7 +141,7 @@ public class PUT_UpdateListTest extends TestBase {
                 listId,
                 listName,
                 boardId,
-                responsePostDto.pos
+                responseGetDto.pos
         );
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
@@ -427,6 +435,30 @@ public class PUT_UpdateListTest extends TestBase {
     public void P8_shouldUpdateListWhenPosNumberAsString() {
 
         listPosAsString = "140737488322560";
+
+        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
+                .setPos(listPosAsString)
+                .build();
+        Map<String, Object> queryParams = payload.toQueryParams();
+
+        // GET (current status of the list)
+        responseGet = getGetList(listId);
+        assertThat(responseGet.statusCode()).isEqualTo(200);
+        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
+        // PUT
+        responsePut = putUpdateList(listId, queryParams);
+        assertThat(responsePut.statusCode()).isEqualTo(200);
+        PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
+        PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
+                P8ExpectedPutUpdateListResponse,
+                listId,
+                responseGetDto.name,
+                boardId,
+                listPosAsString
+        );
+        compareObjects(responsePutDto, expectedResponsePutDto);
+        // GET
+        validateGetAgainstPut(responsePutDto);
     }
 
     // --------------
