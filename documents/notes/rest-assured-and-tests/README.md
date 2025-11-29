@@ -45,6 +45,7 @@
 - [Zmienne – podstawianie pod String/Text Block](#variables_string_text_block)
 - [Response (expected, universal) – opcjonalne parametry](#response_expected_universal_optional_parameters)
 - [Number/Liczba jako String – czy powinna przechodzić (Query Params vs. JSON body)](#number_as_string)
+- [Long vs. long (prymitywy) – autoboxing, czyli automatyczne pakowanie prymitywu w obiekt](primitives_long)
 
 ---
 
@@ -2921,3 +2922,125 @@ W **JSON body** — tak.
 #### ✔ Wynika to też z backward compatibility.
 
 #### ✔ Twoje testy powinny traktować to jako expected behavior.
+
+---
+
+## 📄Long vs. long (prymitywy) – autoboxing, czyli automatyczne pakowanie prymitywu w obiekt <a name="primitives_long"></a>
+
+Piszę to w notatkach z testów, a nie w JAVIE, ponieważ ma to kluczowe znaczenie przy ewentualnym sprawdzaniu wartości `null`.
+
+### ❓ Pytanie
+
+W tej linii:
+```java
+Long posParsed = Long.parseLong(listPosAsString);
+```
+
+IDE podkreśla na żółto `Long` przed `posParsed` z informacją:  
+`Type may be primitive`
+
+Z opcją do kliknięcia:  
+`Convert wrapper type to primitive`  
+I zamienia to na `long`.
+
+Dlaczego tak?  
+Użyć tej podpowiedzi?
+
+### ❗ Odpowiedź
+
+To ostrzeżenie jest **całkowicie normalne** — i **możesz bezpiecznie użyć podpowiedzi**, ale tylko jeśli rozumiesz, co się zmieni.
+
+Wyjaśniam:
+
+#### 🔍 **Dlaczego IDE sugeruje zmianę `Long` → `long`?**
+
+Masz:
+
+```java
+Long posParsed = Long.parseLong(listPosAsString);
+```
+
+Metoda:
+
+```java
+Long.parseLong(...) 
+```
+
+zwraca **prymityw typu long**.
+
+Czyli:
+
+* prawej stronie masz `long`
+* lewej stronie masz referencję `Long`
+
+Czyli zachodzi **autoboxing** (automatyczne pakowanie prymitywu w obiekt):
+
+```
+long → Long
+```
+
+IDE mówi:
+
+> *Hej, skoro i tak dostajesz `long`, i nie masz powodu trzymać opakowanego obiektu `Long`, możesz uprościć typ do prymitywu `long`.*
+
+#### 🔍 **Czy warto skorzystać z sugestii?**
+
+##### ✔ Tak — jeśli:
+
+* **nie potrzebujesz możliwości trzymania wartości null**
+* typ `posParsed` zawsze ma być liczbą
+
+Czyli:
+
+```java
+long posParsed = Long.parseLong(listPosAsString);
+```
+
+To jest całkowicie poprawne i nawet *minimalnie bardziej wydajne*.
+
+#### ❗ Kiedy NIE używać sugestii?
+
+Jeśli później chciałbyś zrobić coś takiego:
+
+```java
+expectedResponsePutDto.pos = posParsed; // gdzie pos jest typu Long
+```
+
+To nadal działa (autoboxing w drugą stronę), ale:
+
+Jeśli *kiedykolwiek* zechcesz:
+
+* przypisać `null`
+* sprawdzić `pos == null`
+* używać typu obiektowego (np. w kolekcjach, mapach, frameworkach)
+
+— to wtedy **typ `long` byłby błędny**, bo prymityw nie może być `null`.
+
+#### ✔ W twoim przypadku — można zmienić na `long`
+
+Tutaj `posParsed` powstaje wyłącznie przez `Long.parseLong(string)` → więc **nie może być null**.
+
+Dalej przekazujesz go do:
+
+```java
+expectedResponsePutDto.pos = posParsed;
+```
+
+A to pole ma typ `Long`, więc:
+
+```
+long → Long
+```
+
+i autoboxing działa automatycznie.
+
+##### ✔ Wniosek:
+
+**Możesz bezpiecznie kliknąć "Convert wrapper type to primitive".**
+
+#### 🔎 Krótkie podsumowanie
+
+| Typ    | Może być null? | Kiedy używać                                    |
+|--------|----------------|-------------------------------------------------|
+| `long` | ❌ nie          | proste liczby, performance, brak null           |
+| `Long` | ✔ tak          | DTO, JSON, bazy danych, null jako brak wartości |
