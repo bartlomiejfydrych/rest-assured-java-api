@@ -35,24 +35,45 @@ None.
 
 - 💠idList `TrelloID` 🔴REQUIRED🔴
   - ✅Positive:
-    - **[]** text
+    - **[]** Correct (string)
+    - **[]** Correct (integer/number)
   - ❌Negative:
-    - **[]** text
+    - **[]** Non-existent
+    - **[]** Incorrect
+    - **[]** Missing
+    - **[]** Null
+    - **[]** Empty string ("")
 - 💠name `string`
   - ✅Positive:
-    - **[]** text
+    - **[]** Special characters and numbers
+    - **[]** 1 character
+    - **[]** Missing
+    - **[]** Null
+    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** text
+    - **[]** Empty string ("")
+    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠desc `string`
   - ✅Positive:
-    - **[]** text
+    - **[]** Special characters and numbers
+    - **[]** 1 character
+    - **[]** Missing
+    - **[]** Null
+    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
-    - **[]** text
+    - **[]** Empty string ("")
+    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
 - 💠pos `oneOf [string, number]`
   - ✅Positive:
-    - **[]** text
+    - **[]** top
+    - **[]** bottom
+    - **[]** number
+    - **[]** Missing
+    - **[]** null
+    - **[sprawwdzić]** Empty string ("")
+    - **[sprawdzić]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.
   - ❌Negative:
-    - **[]** text
+    - **[]** Incorrect
 - 💠due `string`
   - ✅Positive:
     - **[]** text
