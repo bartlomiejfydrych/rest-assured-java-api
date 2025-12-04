@@ -46,6 +46,7 @@
 - [Response (expected, universal) – opcjonalne parametry](#response_expected_universal_optional_parameters)
 - [Number/Liczba jako String – czy powinna przechodzić (Query Params vs. JSON body)](#number_as_string)
 - [Long vs. long (prymitywy) – autoboxing, czyli automatyczne pakowanie prymitywu w obiekt](primitives_long)
+- [Dokumentacja testów – możliwe formy](#test_documentation_forms)
 
 ---
 
@@ -3044,3 +3045,148 @@ i autoboxing działa automatycznie.
 |--------|----------------|-------------------------------------------------|
 | `long` | ❌ nie          | proste liczby, performance, brak null           |
 | `Long` | ✔ tak          | DTO, JSON, bazy danych, null jako brak wartości |
+
+---
+
+## 📄Dokumentacja testów – możliwe formy <a name="test_documentation_forms"></a>
+
+### ✅ **1. „Ładniejsza” i całkowicie ujednolicona wersja Twojego pliku**
+
+Poniżej znajduje się **nowa wersja sekcji „Test coverage” i „Query parameters”**, spójna stylistycznie, z szablonem,
+tabelami i pełną czytelnością.
+
+🔎 **Uwaga:**
+– zachowuję Twoją treść i pokrycie,  
+– dodaję brakujące przypadki,  
+– całość jest teraz ujednolicona, uporządkowana, czytelna i skalowalna.
+
+### ✅ **☑ Test coverage (ulepszona wersja + pełna struktura)**
+
+##### 🔧 Legend
+
+* **[P#]** – Positive
+* **[N#]** – Negative
+* **[X#]** – Technically untestable (e.g. URI > 2000 chars)
+* **D** – Default applies
+* **I** – Invalid but ignored by API
+
+#### 💠 name `string` (required, 1–16384 chars)
+
+##### 🔹 Summary
+
+| Property   | Value |
+|------------|-------|
+| Required   | ✔     |
+| Min length | 1     |
+| Max length | 16384 |
+| Affects    | `url` |
+
+##### ✅ **Positive**
+
+* **[P1]** Special characters
+* **[P2]** 1 character
+* **[P3]** Leading/trailing spaces (check trimming)
+* **[P4]** Unicode (emoji, PL chars)
+* **[P5]** URL-unsafe characters (encoded)
+* **[P6]** Max-length boundary (≈2000 chars due to URI limit)
+
+##### ❌ **Negative**
+
+* **[N1]** Missing
+* **[N2]** null
+* **[N3]** Empty string
+* **[N4]** Only spaces
+* **[N5]** Invalid UTF-8
+* **[N6]** Non-string type (number, boolean, JSON)
+* **[X1]** >2000 chars (URI limit)
+
+### ✅ **2. Gotowy szablon, którego możesz używać dla KAŻDEGO nowego endpointu**
+
+Możesz wkleić to jako template do swoich dokumentów:
+
+#### **📌 Parameter test template**
+
+#### 💠 {name} `{type}` {constraints}
+
+##### 🔹 Summary
+
+| Property | Value |
+|----------|-------|
+| Required | ✔/❌   |
+| Min      | —     |
+| Max      | —     |
+| Pattern  | —     |
+| Default  | —     |
+| Notes    | —     |
+
+##### ✅ Positive
+
+* **[P1]** Valid input (baseline)
+* **[P2]** Missing (default applies)
+* **[P3]** null
+* **[P4]** Boundary min
+* **[P5]** Boundary max
+* **[P6]** Unicode / special characters
+* **[P7]** Encoded characters
+* **[P8]** Valid alternative representation
+
+##### ❌ Negative
+
+* **[N1]** Empty string
+* **[N2]** Wrong type (boolean/number/object)
+* **[N3]** Invalid format
+* **[N4]** Too short
+* **[N5]** Too long
+* **[N6]** Unsupported value
+* **[N7]** Wrong casing
+* **[N8]** Invalid encoding
+* **[N9]** Impossible enum combination
+
+##### ❌ Technical / Impossible
+
+* **[X1]** >2000 chars (URI limit)
+* **[X2]** Payload too large
+* **[X3]** Unsupported structure
+
+### ✅ **3. Proponuję trzy style formatowania testów — możesz wybrać ulubiony**
+
+#### ⭐ **STYLE A – Twój styl, ale ujednolicony (najlepszy do API testing)**
+
+```
+- 💠name `string`
+  - Positive:
+    - [P1] Special characters
+    - [P2] 1 character
+    - [P3] Unicode
+  - Negative:
+    - [N1] Missing
+    - [N2] Empty
+    - [N3] Invalid UTF-8
+```
+
+Świetny do pracy *technicznej*, bardzo szybki w czytaniu.
+
+#### ⭐ STYLE B – Tabelaryczny (najbardziej „ładny” dla dokumentacji)
+
+##### name `string`
+
+| Case | Type    | Input         | Expected |
+|------|---------|---------------|----------|
+| P1   | Valid   | special chars | 200      |
+| P2   | Valid   | unicode       | 200      |
+| N1   | Invalid | empty         | 400      |
+| N2   | Invalid | null          | 400      |
+| N3   | Invalid | too long      | X        |
+
+Najbardziej formalny. Idealny, jeśli będzie czytać *ktoś inny*.
+
+#### ⭐ STYLE C – Instrukcja testowa (najbardziej „klikalny”)
+
+```sql
+1. Set name = "" → Expect 400
+2. Set name = null → Expect 400
+3. Set name = "abc" → Expect 200
+4. Set name = encoded "%2F%2F" → Expect 200
+```
+
+Dobry np. dla manualnych testerów.
