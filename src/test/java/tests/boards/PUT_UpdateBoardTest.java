@@ -83,6 +83,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
         Map<String, Object> queryParams = payload.toQueryParams();
 
+        // TODO: Czekać na poprawkę lub podczas refactoru dodać GET'a
         // PUT
         responsePut = putUpdateBoard(boardId, queryParams);
         assertThat(responsePut.statusCode()).isEqualTo(200);
