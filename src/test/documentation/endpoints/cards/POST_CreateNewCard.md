@@ -70,15 +70,34 @@ None.
     - **[]** number
     - **[]** Missing
     - **[]** null
-    - **[sprawwdzić]** Empty string ("")
+    - **[sprawdzić]** Empty string ("")
     - **[sprawdzić]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.
   - ❌Negative:
     - **[]** Incorrect
 - 💠due `string`
   - ✅Positive:
-    - **[]** text
+    - **[]** Correct date in YYYY-MM-DD format (e.g., 2025-12-31)
+    - **[]** Current date
+    - **[]** Missing
+    - **[]** Null
+    - **[]** Earliest acceptable date (e.g., 0001-01-01, if the system allows)
+    - **[]** Latest acceptable date (e.g., 9999-12-31, if the system allows)
+    - **[]** Date with local time ignored by the backend (e.g., 2025-11-30T00:00:00 → the backend should parse only the date if allowed)
+    - **[]** Date with valid alternative separators (e.g., 2025/11/30) — if the backend accepts different separators
+    - **[]** Date in time zone (2025-11-30Z or 2025-11-30+02:00) — if the backend can dump to the date itself
   - ❌Negative:
-    - **[]** text
+    - **[]** Empty string ("")
+    - **[]** Incorrect date format (30-11-2025)
+    - **[]** Non-existent date (e.g., 2025-02-30)
+    - **[]** Number instead of date (e.g., 12345)
+    - **[]** Text instead of date ("tomorrow", "abc")
+    - **[]** Unsupported datetime format (2025-11-30 10:20:30)
+    - **[]** Date with month 0 or >12 (2025-00-10, 2025-13-10)
+    - **[]** Date with day 0 or >31 (2025-10-00, 2025-10-32)
+    - **[]** Short format (2025-1-1)
+    - **[]** Special characters that don't form a date (****, !!!, %20%20%20)
+    - **[]** Binary / base64 value
+    - **[]** JSON ({"date":"2025-10-10"} as the query parameter value)
 - 💠start `string`
   - ✅Positive:
     - **[]** text
