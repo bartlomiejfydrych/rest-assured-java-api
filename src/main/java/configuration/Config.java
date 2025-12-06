@@ -4,154 +4,278 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 import java.util.Properties;
 
 public class Config {
 
-    private static final Properties properties = new Properties();
-    private static final Dotenv dotenv = Dotenv.configure().directory("./environment").load();
+    // ==========================================================================================================
+    // VARIABLES
+    // ==========================================================================================================
 
-    // ----------------------------------------------------------
-    // Method that loads a configuration file (config.properties)
-    // ----------------------------------------------------------
+    private static final Properties properties = new Properties();
+    private static final Dotenv dotenv = Dotenv.configure()
+            .directory("./environment")
+            .ignoreIfMissing()
+            .load();
+
+    private static boolean loaded = false;
+
+    // ==========================================================================================================
+    // LOAD CONFIGURATION FILE (config.properties)
+    // ==========================================================================================================
 
     /*
     NOTE FOR ME:
     Mechanizm, który zapewni, że plik z config.properties będzie wczytany tylko raz i później re-używany
-    do wszystkich metod, które pobierają informacje z tego pliku konfiguracyjnego.
+    dla wszystkich metod, które pobierają informacje z tego pliku konfiguracyjnego.
     */
 
-    // Static initializer to load the configuration file
-    static {
-        try (InputStream inputStream = Config.class.getClassLoader().getResourceAsStream("configs/config.properties")) {
-            if (inputStream == null) {
-                throw new IllegalStateException("Configuration file 'config.properties' not found");
+    private static void loadProperties() {
+        if (loaded) return; // Prevents multiple readings
+        loaded = true;
+
+        try (InputStream input = Config.class.getClassLoader()
+                .getResourceAsStream("config.properties")) {
+
+            if (input != null) {
+                properties.load(input);
+            } else {
+                System.err.println("[ERROR] File {config.properties} not found in resources.");
             }
-            properties.load(inputStream);
+
         } catch (IOException e) {
-            throw new IllegalStateException("Error loading configuration file", e);
+            throw new RuntimeException("[ERROR] Unable to load file {config.properties}", e);
         }
     }
 
-    // -----
-    // Utils
-    // -----
+    // ==========================================================================================================
+    // PROPERTY READER
+    // ==========================================================================================================
 
     // STRING
 
-    // config.properties – Utility method to get string property value with optional defaults
-    private static String getConfigProperty(String key, String defaultValue) {
-        return Optional.ofNullable(properties.getProperty(key))
-                .map(String::trim)
-                .orElse(defaultValue != null ? defaultValue : "ERROR: Missing required key from 'config.properties' file: " + key);
-    }
+    private static String getProperty(String key, String defaultValue) {
+        loadProperties();
 
-    // .env – Utility method to get string property value with optional defaults
-    private static String getEnvProperty(String key, String defaultValue) {
-        return Optional.ofNullable(dotenv.get(key))
-                .map(String::trim)
-                .orElse(defaultValue != null ? defaultValue : "ERROR: Missing required key from '.env' file: " + key);
+        // 1. {system} – Get system environment variables
+        String envValue = System.getenv(key);
+        if (envValue != null) {
+            return envValue.trim();
+        }
+
+        // 2. {.env} – Get properties from file
+        String dotenvValue = dotenv.get(key);
+        if (dotenvValue != null) {
+            return dotenvValue.trim();
+        }
+
+        // 3. {config.properties} – Get properties from file
+        String propValue = properties.getProperty(key);
+        if (propValue != null) {
+            return propValue.trim();
+        }
+
+        // 4. {default} – Get default property (if was provided)
+        if (defaultValue != null) {
+            System.out.println(
+                    "[WARNING] (CONFIG) Using default value for missing configuration key '" + key + "': " + defaultValue
+            );
+            return defaultValue;
+        }
+
+        // 5. {missing} – Get error if property is missing
+        throw new IllegalStateException(
+                "[ERROR] (CONFIG) Missing required configuration key: '" + key +
+                        "'. Checked {system environment}, {.env} and {config.properties}."
+        );
     }
 
     // BOOLEAN
 
-    // config.properties – Utility method to get boolean property value with optional defaults
-    private static boolean getConfigPropertyBoolean(String key, Boolean defaultValue) {
-        return Optional.ofNullable(properties.getProperty(key))
-                .map(String::trim)
-                .map(Boolean::parseBoolean)
-                .orElseGet(() -> {
-                    if (defaultValue != null) {
-                        return defaultValue;
-                    } else {
-                        throw new IllegalStateException("ERROR: Missing required key from 'config.properties' file: " + key);
-                    }
-                });
+    private static boolean getProperty(String key, boolean defaultValue) {
+        String raw = getProperty(key, String.valueOf(defaultValue));
+        return Boolean.parseBoolean(raw);
     }
 
-    // .env – Utility method to get boolean property value with optional defaults
-    private static boolean getEnvPropertyBoolean(String key, Boolean defaultValue) {
-        return Optional.ofNullable(dotenv.get(key))
-                .map(String::trim)
-                .map(Boolean::parseBoolean)
-                .orElseGet(() -> {
-                    if (defaultValue != null) {
-                        return defaultValue;
-                    } else {
-                        throw new IllegalStateException("ERROR: Missing required key from '.env' file: " + key);
-                    }
-                });
+    // INTEGER
+
+    private static int getProperty(String key, int defaultValue) {
+        String raw = getProperty(key, String.valueOf(defaultValue));
+        try {
+            return Integer.parseInt(raw);
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException(
+                    "[ERROR] (CONFIG) Invalid integer value for key '" + key + "': " + raw
+            );
+        }
     }
 
-    // --------------------------------------------------------
-    // config.properties – Methods that retrieve data from file
-    // --------------------------------------------------------
+    // LONG
+
+    private static long getProperty(String key, long defaultValue) {
+        String raw = getProperty(key, String.valueOf(defaultValue));
+        try {
+            return Long.parseLong(raw);
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException(
+                    "[ERROR] (CONFIG) Invalid long value for key '" + key + "': " + raw
+            );
+        }
+    }
+
+    // DOUBLE
+
+    private static double getProperty(String key, double defaultValue) {
+        String raw = getProperty(key, String.valueOf(defaultValue));
+        try {
+            return Double.parseDouble(raw);
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException(
+                    "[ERROR] (CONFIG) Invalid double value for key '" + key + "': " + raw
+            );
+        }
+    }
+
+    // ==========================================================================================================
+    // PUBLIC CONFIG GETTERS
+    // ==========================================================================================================
+
+    // -----------------
+    // config.properties
+    // -----------------
 
     // BASE URL
 
-    // Get API base URL
+    // Get API base {URL}
     public static String getBaseUrl() {
-        return getConfigProperty("baseUrl", "https://api.trello.com/1");
+        return getProperty("baseUrl", "https://api.trello.com/1");
     }
 
-    // Get API base URL Protocol
+    // Get API base URL {Protocol}
     public static String getBaseUrlProtocol() {
-        return getConfigProperty("baseUrlProtocol", "https");
+        return getProperty("baseUrlProtocol", "https");
     }
 
-    // Get API base URL Subdomain
+    // Get API base URL {Subdomain}
     public static String getBaseUrlSubdomain() {
-        return getConfigProperty("baseUrlSubdomain", "api");
+        return getProperty("baseUrlSubdomain", "api");
     }
 
-    // Get API base URL Domain
+    // Get API base URL {Domain}
     public static String getBaseUrlDomain() {
-        return getConfigProperty("baseUrlDomain", "trello");
+        return getProperty("baseUrlDomain", "trello");
     }
 
-    // Get API base URL TLD
+    // Get API base URL {TLD}
     public static String getBaseUrlTLD() {
-        return getConfigProperty("baseUrlTLD", "com");
+        return getProperty("baseUrlTLD", "com");
     }
 
-    // Get API base URL Number
+    // Get API base URL {Number}
     public static String getBaseUrlNumber() {
-        return getConfigProperty("baseUrlNumber", "1");
+        return getProperty("baseUrlNumber", "1");
     }
 
     // OTHER VARIABLES
 
-    // Get Trello ID
+    // Get {Trello ID}
     public static String getTrelloId() {
-        return getConfigProperty("trelloId", "67d9d5e34d7b900257deed0e");
+        return getProperty("trelloId", "67d9d5e34d7b900257deed0e");
     }
 
-    // -------------------------------------------
-    // .env – Methods that retrieve data from file
-    // -------------------------------------------
+    // ----
+    // .env
+    // ----
 
     // LOGS MANAGEMENT
 
-    // Get Logs when Fail
+    // Get Logs {when Fail}
     public static boolean getLogsWhenFail() {
-        return getEnvPropertyBoolean("LOGS_WHEN_FAIL", true);
+        return getProperty("LOGS_WHEN_FAIL", true);
     }
 
-    // Get Logs when Fail
+    // Get Logs {always}
     public static boolean getLogsAlways() {
-        return getEnvPropertyBoolean("LOGS_ALWAYS", false);
+        return getProperty("LOGS_ALWAYS", false);
     }
 
     // TRELLO API KEY & TOKEN
 
-    // Get Trello API key
+    // Get Trello {API key}
     public static String getTrelloApiKey() {
-        return getEnvProperty("TRELLO_API_KEY", null);
+        return getProperty("TRELLO_API_KEY", null);
     }
 
-    // Get Trello token
+    // Get Trello {token}
     public static String getTrelloToken() {
-        return getEnvProperty("TRELLO_TOKEN", null);
+        return getProperty("TRELLO_TOKEN", null);
     }
 }
+
+
+
+/*
+########################################################################################################################
+MY ADDITIONAL NOTES
+########################################################################################################################
+
+------------------
+.ignoreIfMissing()
+------------------
+
+Metoda **`.ignoreIfMissing()`** w bibliotece **Dotenv** oznacza:
+
+# ✅ **Jeśli plik `.env` nie istnieje → NIE wyrzucaj błędu. Po prostu go pomiń.**
+
+# 🔍 **Co by było bez `.ignoreIfMissing()`?**
+
+Jeśli napiszesz:
+
+```java
+Dotenv dotenv = Dotenv.load();
+```
+
+a w katalogu nie ma pliku `.env`, to:
+
+❌ Dotenv wyrzuci błąd
+❌ aplikacja się nie uruchomi
+
+# ✨ **Co daje `.ignoreIfMissing()`?**
+
+Jeśli napiszesz:
+
+```java
+Dotenv dotenv = Dotenv.configure()
+        .ignoreIfMissing()
+        .load();
+```
+
+to:
+
+✔ jeśli jest `.env` → zostanie wczytany
+✔ jeśli **nie ma** `.env` → zostanie zignorowany
+✔ program nadal działa
+✔ wartości będą pobierane z env albo z config.properties
+
+# 📌 **Dlaczego to poleciłem?**
+
+Bo w projektach, gdzie masz *opcjonalny* `.env`:
+
+* w CI/CD nie masz `.env`
+* na produkcji nie masz `.env`
+* na cudzych komputerach nie masz `.env`
+* ale *chcesz*, żeby aplikacja mimo to działała
+
+Dzięki temu masz elastyczność:
+
+> Jeśli `.env` jest — super.
+> Jeśli go nie ma — nie ma tragedii.
+
+# ⚡ Podsumowując
+
+✔ `.ignoreIfMissing()` = **opcjonalny plik `.env`**
+✔ Zapobiega błędom
+✔ Sprawia, że aplikacja jest bardziej przenośna
+✔ Ułatwia debugowanie i deployment
+
+*/
