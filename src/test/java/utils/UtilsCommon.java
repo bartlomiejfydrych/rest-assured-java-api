@@ -59,4 +59,6 @@ public class UtilsCommon {
             throw new RuntimeException("Failed to read resource file: " + relativePath, e);
         }
     }
+
+    // TODO: Dodać metodę mieszającą wszystkie zakodowane znaki "%2F%3F%23%3C%3E%22%27%7B%7D%5B%5D%25"
 }
