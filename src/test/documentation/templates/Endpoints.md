@@ -7,13 +7,13 @@
 # 📑Contents
 
 - [📔Basic information](#basic_information)
-  - [🌐Endpoint](#endpoint)
-  - [📗Description](#description)
-  - [📌Important notes](#important_notes)
+   - [🌐Endpoint](#endpoint)
+   - [📗Description](#description)
+   - [📌Important notes](#important_notes)
 - [☑Test coverage](#test_coverage)
-  - [🔗Path parameters](#path_parameters)
-  - [🧵Query parameters](#query_parameters)
-  - [🎫Payload JSON](#payload_json)
+   - [🔗Path parameters](#path_parameters)
+   - [🧵Query parameters](#query_parameters)
+   - [🎫Payload JSON](#payload_json)
 - [📜Response](#response)
 
 ---
