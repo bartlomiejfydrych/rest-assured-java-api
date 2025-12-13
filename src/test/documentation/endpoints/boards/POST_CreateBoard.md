@@ -56,16 +56,19 @@ The new name for the board. 1 to 16384 characters long.
 - **[ P2 ]** 1 character
 - **[ P ]** Leading/Trailing spaces (" text ")
 - **[ P  ]** URL-unsafe characters (`%2F` | encoded)
-- **[ 💥 ]** 16384 characters -> Can't test it because max URI size is ~2000 characters
+- **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
 
 #### ❌Negative
 
-* **[N1]** Missing
-* **[N2]** null
-* **[N3]** Empty string `""`
-* **[N4]** Only spaces
-* **[N5]** Invalid UTF-8
-* **[N6]** Wrong type (number, boolean, JSON object)
+- **[ N1 ]** Missing
+- **[ N2 ]** Null
+- **[ N3 ]** Empty string (`""`)
+- **[ N ]** Only spaces
+- **[ N ]** Invalid UTF-8 (`\x80` | `\xED\xA0\x80`)
+- Wrong type:
+    - **[ N ]** Number
+    - **[ N ]** Boolean
+    - **[ N ]** JSON object
 
 ### 💠defaultLabels `boolean`
 
