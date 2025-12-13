@@ -47,6 +47,7 @@
 - [Number/Liczba jako String – czy powinna przechodzić (Query Params vs. JSON body)](#number_as_string)
 - [Long vs. long (prymitywy) – autoboxing, czyli automatyczne pakowanie prymitywu w obiekt](primitives_long)
 - [Dokumentacja testów – możliwe formy](#test_documentation_forms)
+- [URL – kodowanie znaków](#url_encoded)
 
 ---
 
@@ -3190,3 +3191,32 @@ Najbardziej formalny. Idealny, jeśli będzie czytać *ktoś inny*.
 ```
 
 Dobry np. dla manualnych testerów.
+
+---
+
+## 📄URL – kodowanie znaków <a name="url_encoded"></a>
+
+Poniżej masz **wszystkie te znaki zakodowane URL-owo** oraz jeden **łączny string zawierający je wszystkie zakodowane po kolei** ✔
+
+### 🔐 **URL-encoded każdy znak osobno**
+
+| Znak | URL-encoded |
+|------|-------------|
+| `/`  | `%2F`       |
+| `?`  | `%3F`       |
+| `#`  | `%23`       |
+| `<`  | `%3C`       |
+| `>`  | `%3E`       |
+| `"`  | `%22`       |
+| `'`  | `%27`       |
+| `{`  | `%7B`       |
+| `}`  | `%7D`       |
+| `[`  | `%5B`       |
+| `]`  | `%5D`       |
+| `%`  | `%25`       |
+
+### 🔗 **JEDEN string zawierający wszystkie zakodowane znaki w kolejności jak podałeś**
+
+```
+%2F%3F%23%3C%3E%22%27%7B%7D%5B%5D%25
+```
