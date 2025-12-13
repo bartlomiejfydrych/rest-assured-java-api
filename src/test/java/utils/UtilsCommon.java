@@ -60,5 +60,20 @@ public class UtilsCommon {
         }
     }
 
-    // TODO: Dodać metodę mieszającą wszystkie zakodowane znaki "%2F%3F%23%3C%3E%22%27%7B%7D%5B%5D%25"
+    public static String getAllEncodedSpecialCharactersInRandomOrder() {
+
+        String encodedCharacters = "%2F%3F%23%3C%3E%22%27%7B%7D%5B%5D%25";
+
+        // We split the string into a list of URL codes (after %XX)
+        List<String> tokens = new ArrayList<>();
+        for (int i = 0; i < encodedCharacters.length(); i += 3) {
+            tokens.add(encodedCharacters.substring(i, i + 3));
+        }
+
+        // We mix the order
+        Collections.shuffle(tokens);
+
+        // Put it back together into one String
+        return String.join("", tokens);
+    }
 }
