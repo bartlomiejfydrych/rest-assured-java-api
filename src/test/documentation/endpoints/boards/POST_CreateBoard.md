@@ -61,13 +61,13 @@ The new name for the board. 1 to 16384 characters long.
 #### ❌Negative
 
 - **[ N1 ]** Missing
-- **[ N2 ]** Null
+- **[ N2 ]** null
 - **[ N3 ]** Empty string (`""`)
 - **[ N ]** Only spaces
 - **[ N ]** Invalid UTF-8 (`\x80` | `\xED\xA0\x80`)
 - Wrong type:
-    - **[ N ]** Number
-    - **[ N ]** Boolean
+    - **[ N ]** number
+    - **[ N ]** boolean
     - **[ N ]** JSON object
 
 ### 💠defaultLabels `boolean`
@@ -85,19 +85,23 @@ Determines whether to use the default set of labels.
 
 #### ✅Positive
 
-* **[P1]** Missing
-* **[P2]** true
-* **[P3]** false
-* **[P4]** null
+- **[ P1 ]** Missing (will there be a default value of `true`) → Not in response at all
+- **[ P2 ]** true
+- **[ P3 ]** false
+- **[ P4 ]** null
 
 #### ❌Negative
 
-* **[N1]** `"true"` / `"false"` strings
-* **[N2]** 0 / 1
-* **[N3]** `"yes"`, `"no"`
-* **[N4]** -1
-* **[N5]** Empty string
-* **[N6]** Object/array
+- **[ N ]** "true"
+- **[ N ]** "false"
+- **[ N ]** 0
+- **[ N ]** 1
+- **[ N ]** "yes"
+- **[ N ]** "no"
+- **[ N ]** -1
+- **[ N ]** Empty string (`""`)
+- **[ N ]** Object
+- **[ N ]** Array
 
 ### 💠defaultLists `boolean`
 
@@ -114,19 +118,24 @@ Determines whether to add the default set of lists to a board (To Do, Doing, Don
 
 #### ✅Positive
 
-* **[P1]** Missing
-* **[P2]** true
-* **[P3]** false
-* **[P4]** null
-* **[P5]** Validation when `idBoardSource` is present (ignored)
+- **[ P1 ]** Missing (will there be a default value of `true`) -> Not in response at all
+- **[ P2 ]** true
+- **[ P3 ]** false
+- **[ P4 ]** null
+- **[ ⏭ ]** Is it ignored when `idBoardSource` is given?
 
 #### ❌Negative
 
-* **[N1]** `"true"` / `"false"`
-* **[N2]** numbers
-* **[N3]** text
-* **[N4]** empty string
-* **[N5]** JSON
+- **[ N ]** "true"
+- **[ N ]** "false"
+- **[ N ]** 0
+- **[ N ]** 1
+- **[ N ]** "yes"
+- **[ N ]** "no"
+- **[ N ]** -1
+- **[ N ]** Empty string (`""`)
+- **[ N ]** Object
+- **[ N ]** Array
 
 ### 💠desc `string`
 
@@ -144,18 +153,22 @@ A new description for the board, 0 to 16384 characters long.
 
 #### ✅Positive
 
-* **[P1]** Missing → `""`
-* **[P2]** Special characters
-* **[P3]** Unicode
-* **[P4]** null
-* **[P5]** Only spaces
-* **[P6]** Max-length (~2000 chars)
+- **[ P2 ]** Special characters and numbers
+- **[ P1 ]** Missing (will there be a default value of `""`)
+- **[ P4 ]** null
+- **[ P ]** Leading/Trailing spaces (" text ")
+- **[ P  ]** URL-unsafe characters (`%2F` | encoded)
+- **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
 
 #### ❌Negative
 
-* **[N1]** Invalid UTF-8
-* **[N2]** Raw JSON without encoding
-* **[X1]** >2000 chars
+- **[ N ]** Only spaces
+- **[ N ]** Invalid UTF-8 (`\x80` | `\xED\xA0\x80`)
+- Wrong type:
+  - **[ N ]** number
+  - **[ N ]** boolean
+  - **[ N ]** JSON object
+- **[ 💥 ]** 16385 characters → Can't test it because max URI size is ~2000 characters
 
 ### 💠idOrganization `TrelloID`
 
@@ -172,20 +185,18 @@ The id or name of the Workspace the board should belong to.
 
 #### ✅Positive
 
-* **[P1]** Missing
-* **[P2]** Valid lowercase ID
-* **[P3]** null
-* **[P4]** Valid uppercase ID
+- **[ P1 ]** Missing → Default ID
+- **[ P3 ]** null
+- **[ P2 ]** Valid
 
 #### ❌Negative
 
-* **[N1]** Non-existent ID
-* **[N2]** Non-hex characters
-* **[N3]** Too short
-* **[N4]** Too long
-* **[N5]** Empty string
-* **[N6]** Numeric-only but invalid
-* **[N7]** No access → 403
+- **[ N4 ]** Non-existent
+- **[ N5 ]** Too short
+- **[ N5 ]** Too long
+- **[ N5 ]** Empty string (`""`)
+- **[ N5 ]** Numeric-only
+- **[ N ]** Fits, but we shouldn't have access to it
 
 ### 💠idBoardSource `TrelloID`
 
@@ -202,19 +213,18 @@ The id of a board to copy into the new board.
 
 #### ✅Positive
 
-* **[P1]** Missing
-* **[P2]** Valid ID
-* **[P3]** null
-* **[P4]** Uppercase valid
+- **[ P1 ]** Missing → Not in response at all
+- **[ P3 ]** null
+- **[ ⏭ ]** Valid ID
 
 #### ❌Negative
 
-* **[N1]** Non-existent board
-* **[N2]** Wrong hex structure
-* **[N3]** Too short
-* **[N4]** Too long
-* **[N5]** Empty string
-* **[N6]** No access (403)
+- **[ N6 ]** Non-existent
+- **[ N7 ]** Too short
+- **[ N7 ]** Too long
+- **[ N7 ]** Empty string (`""`)
+- **[ N7 ]** Numeric-only
+- **[ N ]** Fits, but we shouldn't have access to it
 
 ### 💠keepFromSource `string`
 
@@ -231,19 +241,19 @@ To keep cards from the original board pass in the value cards.
 
 #### ✅Positive
 
-* **[P1]** Missing
-* **[P2]** none
-* **[P3]** cards
-* **[P4]** null
-* **[P5]** Leading/trailing spaces
+- **[ P1 ]** Missing (will there be a default value of `none`) → Not in response at all
+- **[ P4 ]** null
+- **[ P2 ]** none
+- **[ P3 ]** cards
+- **[ P ]** Leading/Trailing spaces (" text ")
 
 #### ❌Negative
 
-* **[N1]** Wrong casing
-* **[N2]** Empty string
-* **[N3]** Non-string type
-* **[N4]** Very long value
-* **[N5]** Unknown string (ignored)
+- **[ N ]** NONE
+- **[ N ]** CARDS
+- **[ N ]** Empty string (`""`)
+- **[ N ]** number
+- **[ 💥 ]** Unknown string → It was ignored and board was created
 
 ### 💠powerUps `string`
 
@@ -259,23 +269,26 @@ The Power-Ups that should be enabled on the new board. One of: all, calendar, ca
 
 #### ✅Positive
 
-* **[P1]** Missing
-* **[P2]** all
-* **[P3]** calendar
-* **[P4]** cardAging
-* **[P5]** recap
-* **[P6]** voting
-* **[P7]** Mixed-case valid
-* **[P8]** null
+- **[ P1 ]** Missing → Not in response at all
+- **[ P4 ]** null
+- **[ P2 ]** all
+- **[ P3 ]** calendar
+- **[ P5r ]** cardAging
+- **[ P5r ]** recap
+- **[ P5r ]** voting
 
 #### ❌Negative
 
-* **[N1]** Combined list
-* **[N2]** Empty string
-* **[N3]** Wrong casing
-* **[N4]** Numeric
-* **[N5]** JSON array
-* **[N6]** Unknown value (ignored)
+- **[ N ]** Combined list
+- **[ N ]** Empty string (`""`)
+- **[ N ]** ALL
+- **[ N ]** CALENDAR
+- **[ N ]** CARDAGING
+- **[ N ]** RECAP
+- **[ N ]** VOTING
+- **[ N ]** Numeric
+- **[ N ]** JSON array
+- **[ 💥 ]** Unknown string → It was ignored and board was created
 
 ### 💠prefs_permissionLevel `string`
 
@@ -292,21 +305,21 @@ The permissions level of the board. One of: org, private, public.
 
 #### ✅Positive
 
-* **[P1]** Missing
-* **[P2]** private
-* **[P3]** org
-* **[P4]** public
-* **[P5]** null
-* **[P6]** Uppercase valid (if normalized)
+- **[ P1 ]** Missing (will there be a default value of `private`)
+- **[ P4 ]** null
+- **[ P2 ]** private
+- **[ P3 ]** org
+- **[ P5 ]** public
 
 #### ❌Negative
 
-* **[N1]** Empty
-* **[N2]** Wrong casing
-* **[N3]** Invalid value
-* **[N4]** Number
-* **[N5]** Boolean
-* **[N6]** Too long
+- **[ N8 ]** Invalid value
+- **[ N ]** Empty string (`""`)
+- **[ N ]** PRIVATE
+- **[ N ]** ORG
+- **[ N ]** PUBLIC
+- **[ N ]** Number
+- **[ N ]** Boolean
 
 ### 💠prefs_voting `string`
 
