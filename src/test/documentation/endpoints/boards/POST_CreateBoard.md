@@ -336,21 +336,24 @@ Who can vote on this board. One of disabled, members, observers, org, public.
 
 #### ✅Positive
 
-* **[P1]** Missing
-* **[P2]** disabled
-* **[P3]** members
-* **[P4]** observers
-* **[P5]** org
-* **[P6]** public
-* **[P7]** null
+- **[ P1 ]** Missing
+- **[ P4 ]** null
+- **[ P2 ]** disabled
+- **[ P3 ]** members
+- **[ P5r ]** observers
+- **[ P5r ]** org
+- **[ P5r ]** public
 
 #### ❌Negative
 
-* **[N1]** Empty
-* **[N2]** Wrong casing
-* **[N3]** Combined values
-* **[N4]** Numeric
-* **[N5]** Array
+- **[ N9 ]** Other value
+- **[ N ]** DISABLED
+- **[ N ]** MEMBERS
+- **[ N ]** OBSERVERS
+- **[ N ]** ORG
+- **[ N ]** PUBLIC
+- **[ N ]** Numeric
+- **[ N ]** Array
 
 ### 💠prefs_comments `string`
 
@@ -367,21 +370,25 @@ Who can comment on cards on this board. One of: disabled, members, observers, or
 
 #### ✅Positive
 
-* **[P1]** Missing
-* **[P2]** disabled
-* **[P3]** members
-* **[P4]** observers
-* **[P5]** org
-* **[P6]** public
-* **[P7]** null
+- **[ P1 ]** Missing
+- **[ P4 ]** null
+- **[ P5r ]** disabled
+- **[ P2 ]** members
+- **[ P3 ]** observers
+- **[ P5r ]** org
+- **[ P5r ]** public
 
 #### ❌Negative
 
-* **[N1]** Empty
-* **[N2]** Wrong casing
-* **[N3]** Combined values
-* **[N4]** Numeric
-* **[N5]** Array
+- **[ N10 ]** Other, invalid value
+- **[ N ]** DISABLED
+- **[ N ]** MEMBERS
+- **[ N ]** OBSERVERS
+- **[ N ]** ORG
+- **[ N ]** PUBLIC
+- **[ N ]** Combined values
+- **[ N ]** Numeric
+- **[ N ]** Array
 
 ### 💠prefs_invitations `string`
 
@@ -398,17 +405,17 @@ Determines what types of members can invite users to join. One of: admins, membe
 
 #### ✅Positive
 
-- **[  ]** members
-- **[  ]** admins
-- **[  ]** missing
-- **[  ]** null
+- **[ P1 ]** Missing (will there be a default value `members`)
+- **[ P4 ]** null
+- **[ P2 ]** members
+- **[ P3 ]** admins
 
 #### ❌Negative
 
-- **[   ]** empty
-- **[   ]** wrong casing
-- **[   ]** invalid type
-- **[   ]** unsupported role
+- **[ N ]** Other, invalid value
+- **[ N ]** Empty string (`""`)
+- **[ N ]** MEMBERS
+- **[ N ]** ADMINS
 
 ### 💠prefs_selfJoin `boolean`
 
@@ -424,17 +431,23 @@ Determines whether users can join the boards themselves or whether they have to 
 
 #### ✅Positive
 
-- **[   ]** missing
-- **[   ]** true
-- **[   ]** false
-- **[   ]** null
+- **[ P1 ]** Missing (will there be a default value `true`)
+- **[ P2 ]** true
+- **[ P3 ]** false
+- **[ P4 ]** null
 
 #### ❌Negative
 
-- **[   ]** strings
-- **[   ]** numbers
-- **[   ]** empty
-- **[   ]** JSON
+- **[ N ]** "true"
+- **[ N ]** "false"
+- **[ N ]** 0
+- **[ N ]** 1
+- **[ N ]** "yes"
+- **[ N ]** "no"
+- **[ N ]** -1
+- **[ N ]** Empty string (`""`)
+- **[ N ]** Object
+- **[ N ]** Array
 
 ### 💠prefs_cardCovers `boolean`
 
@@ -450,17 +463,23 @@ Determines whether card covers are enabled.
 
 #### ✅Positive
 
-- **[   ]** missing
-- **[   ]** true
-- **[   ]** false
-- **[   ]** null
+- **[ P1 ]** Missing (will there be a default value `true`)
+- **[ P2 ]** true
+- **[ P3 ]** false
+- **[ P4 ]** null
 
 #### ❌Negative
 
-- **[   ]** strings
-- **[   ]** numbers
-- **[   ]** empty
-- **[   ]** JSON
+- **[ N ]** "true"
+- **[ N ]** "false"
+- **[ N ]** 0
+- **[ N ]** 1
+- **[ N ]** "yes"
+- **[ N ]** "no"
+- **[ N ]** -1
+- **[ N ]** Empty string (`""`)
+- **[ N ]** Object
+- **[ N ]** Array
 
 ### 💠prefs_background `string`
 
@@ -478,18 +497,33 @@ The id of a custom background or one of: blue, orange, green, red, purple, pink,
 
 #### ✅Positive
 
-- **[   ]** valid colors
-- **[   ]** custom ID
-- **[   ]** missing
-- **[   ]** null
+- **[ P1 ]** Missing (will there be a default value of `blue`) -> Not in "prefs"
+- **[ P4 ]** null
+- **[ P2 ]** blue
+- **[ P3 ]** orange
+- **[ P5r ]** green
+- **[ P5r ]** red
+- **[ P5r ]** purple
+- **[ P5r ]** pink
+- **[ P5r ]** lime
+- **[ P5r ]** sky
+- **[ P5r ]** grey
+- **[ P ]** custom ID
 
 #### ❌Negative
 
-- **[   ]** empty
-- **[   ]** wrong casing
-- **[   ]** number
-- **[   ]** JSON
-- **[   ]** too long
+- **[ N ]** Empty string (`""`)
+- **[ N ]** BLUE
+- **[ N ]** ORANGE
+- **[ N ]** GREEN
+- **[ N ]** RED
+- **[ N ]** PURPLE
+- **[ N ]** PINK
+- **[ N ]** LIME
+- **[ N ]** SKY
+- **[ N ]** GREY
+- **[ N ]** number
+- **[ N ]** JSON
 
 ### 💠prefs_cardAging `string`
 
@@ -506,17 +540,25 @@ Determines the type of card aging that should take place on the board if card ag
 
 #### ✅Positive
 
-- **[   ]** missing
-- **[   ]** regular
-- **[   ]** pirate
-- **[   ]** null
+- **[ P1 ]** Missing (will there be a default value of `regular`)
+- **[ P4 ]** null
+- **[ P2 ]** regular
+- **[ P3 ]** pirate
 
 #### ❌Negative
 
-- **[   ]** empty
-- **[   ]** unsupported
-- **[   ]** wrong casing
-- **[   ]** wrong type
+- **[ N12 ]** Other, invalid value
+- **[ N ]** Empty string (`""`)
+- **[ N ]** REGULAR
+- **[ N ]** PIRATE
+- **[ N ]** wrong type
+
+### 💠Other tests
+
+#### ✅Positive
+
+- **[ P1 ]** Providing only required parameters (`name`)
+- **[ P2 ]** Providing all or most parameters at once
 
 # 📜Response <a name="response"></a>
 
