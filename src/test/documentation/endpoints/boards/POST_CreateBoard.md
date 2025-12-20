@@ -145,7 +145,8 @@ Determines whether to use the default set of labels.
 
 #### 📄Description
 
-Determines whether to add the default set of lists to a board (To Do, Doing, Done). It is ignored if idBoardSource is provided.
+Determines whether to add the default set of lists to a board (To Do, Doing, Done).  
+It is ignored if idBoardSource is provided.
 
 #### 📋Summary
 
@@ -156,24 +157,42 @@ Determines whether to add the default set of lists to a board (To Do, Doing, Don
 
 #### ✅Positive
 
-- **[ P1 ]** Missing (will there be a default value of `true`) -> Not in response at all
-- **[ P2 ]** true
-- **[ P3 ]** false
-- **[ P4 ]** null
-- **[ ⏭ ]** Is it ignored when `idBoardSource` is given?
+- BASIC
+    - **[ P1 ]** Missing (will there be a default value of `true`) -> Not in response at all
+    - **[ P2 ]** true
+    - **[ P3 ]** false
+    - **[ P4 ]** null
+- MUST HAVE
+    - **[ P ]** TRUE (uppercase, if normalized)
+    - **[ P ]** FALSE (uppercase, if normalized)
+    - **[ P ]** Value with surrounding whitespace (" true ") if trimmed
+    - **[ ⏭ ]** Parameter is ignored when `idBoardSource` is provided
 
 #### ❌Negative
 
-- **[ N ]** "true"
-- **[ N ]** "false"
-- **[ N ]** 0
-- **[ N ]** 1
-- **[ N ]** "yes"
-- **[ N ]** "no"
-- **[ N ]** -1
-- **[ N ]** Empty string (`""`)
-- **[ N ]** Object
-- **[ N ]** Array
+- BASIC
+    - **[ N ]** `"true"`
+    - **[ N ]** `"false"`
+    - **[ N ]** Empty string (`""`)
+    - **[ N ]** Wrong type: Object (`{}`)
+    - **[ N ]** Wrong type: Array (`[]`)
+- MUST HAVE
+    - **[ N ]** `0`
+    - **[ N ]** `1`
+    - **[ N ]** `-1`
+    - **[ N ]** Floating point (`0.0`)
+    - **[ N ]** Floating point (`1.0`)
+    - **[ N ]** Mixed casing (`"True"`) if not normalized
+    - **[ N ]** Mixed casing (`"False"`) if not normalized
+    - **[ N ]** Boolean embedded in string (`"value=true"`)
+    - **[ N ]** Multiple values (`defaultLists=true&defaultLists=false`)
+- NICE TO HAVE
+    - **[ N ]** `"yes"`
+    - **[ N ]** `"no"`
+    - **[ N ]** `NaN`
+    - **[ N ]** `Infinity`
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double URL-encoded value (`%2574%2572%2575%2565`)
 
 ### 💠desc `string`
 
@@ -191,24 +210,43 @@ A new description for the board, 0 to 16384 characters long.
 
 #### ✅Positive
 
-- **[ P2 ]** Special characters and numbers
-- **[ P1 ]** Missing (will there be a default value of `""`)
-- **[ P4 ]** null
-- **[ P ]** Leading/Trailing spaces (" text ")
-- **[ P  ]** URL-unsafe characters (`%2F` | encoded)
-- **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
+- BASIC
+    - **[ P1 ]** Missing → default value `""` (or not present in response)
+    - **[ P ]** Empty string (`""`)
+    - **[ P2 ]** Special characters and numbers (`"Desc_123-!"`)
+    - **[ P ]** Leading / trailing spaces (`" text "`)
+- MUST HAVE
+    - **[ P4 ]** `null` (treated as empty / not set)
+    - **[ P ]** Unicode characters (PL diacritics, emoji, CJK)
+    - **[ P ]** URL-unsafe characters (encoded: `%2F%3F%23`)
+    - **[ P ]** Percent sign as literal (`100%`)
+    - **[ P ]** Newline characters (`\n`, `\r\n`)
+    - **[ P ]** Tab characters (`\tdescription\t`)
+    - **[ P ]** HTML-looking text (escaped, not executed: `<b>bold</b>`)
+    - **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
 
 #### ❌Negative
 
-- **[ N ]** Only spaces
-- **[ N ]** Invalid UTF-8 (`\x80` | `\xED\xA0\x80`)
-- Wrong type:
-  - **[ N ]** number
-  - **[ N ]** boolean
-  - **[ N ]** JSON object
-- **[ 💥 ]** 16385 characters → Can't test it because max URI size is ~2000 characters
+- BASIC
+    - **[ N ]** Only whitespace characters (`"   "`)
+    - **[ N ]** Only control characters (`\n\t\r`)
+- MUST HAVE
+    - **[ N ]** Invalid UTF-8 (`\x80`, `\xED\xA0\x80`)
+    - **[ N ]** Zero-width characters only (`\u200B`)
+    - **[ N ]** Broken URL encoding (`%2`, `%GG`, `%`)
+    - **[ N ]** HTML / JS injection payload (`<script>alert(1)</script>`)
+    - **[ N ]** SQL-like payload (`' OR 1=1 --`)
+    - **[ N ]** Non-normalized Unicode (`é` vs `e + ́`)
+    - **[ N ]** Wrong type: number (`123`)
+    - **[ N ]** Wrong type: boolean (`true`)
+    - **[ 💥 ]** 16385 characters → Can't test it because max URI size is ~2000 characters
+- NICE TO HAVE
+    - **[ N ]** Wrong type: JSON object (`{"desc":"text"}`)
+    - **[ N ]** Wrong type: Array (`["desc"]`)
 
 ### 💠idOrganization `TrelloID`
+
+*(Example: `"idOrganization": "67d9d5e34d7b900257deed0e"`)*
 
 #### 📄Description
 
@@ -223,20 +261,43 @@ The id or name of the Workspace the board should belong to.
 
 #### ✅Positive
 
-- **[ P1 ]** Missing → Default ID
-- **[ P3 ]** null
-- **[ P2 ]** Valid
+- BASIC
+    - **[ P1 ]** Missing → default Workspace ID
+    - **[ P2 ]** Valid ID (lowercase hex, 24 chars)
+    - **[ P3 ]** `null` (treated as missing / default)
+- MUST HAVE
+    - **[ P ]** Valid ID (uppercase hex, 24 chars)
+    - **[ P ]** Valid ID with mixed casing
+    - **[ P ]** ID pointing to Workspace owned by the user
+    - **[ P ]** ID pointing to Workspace where user is a member
+- NICE TO HAVE
+    - **[ P ]** Valid ID with leading/trailing whitespace (`" 67d9d5e34d7b900257deed0e "`) if trimmed
 
 #### ❌Negative
 
-- **[ N4 ]** Non-existent
-- **[ N5 ]** Too short
-- **[ N5 ]** Too long
-- **[ N5 ]** Empty string (`""`)
-- **[ N5 ]** Numeric-only
-- **[ N ]** Fits, but we shouldn't have access to it
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N5 (poprawić) ]** Too short (less than 24 chars)
+    - **[ N ]** Too long (more than 24 chars)
+    - **[ N ]** Contains non-hex characters (`g`, `z`, `!`)
+- MUST HAVE
+    - **[ N4 ]** Non-existent but valid-format ID
+    - **[ N ]** Valid-format ID without access rights → `403 Forbidden`
+    - **[ N ]** Numeric-only value (`123456789012345678901234`)
+    - **[ N ]** Broken hex pattern (`67d9d5e34d7b900257deed0x`)
+    - **[ N ]** Uppercase non-hex characters (`G–Z`)
+- NICE TO HAVE
+    - **[ N ]** ID with mixed control characters (`"67d9d5e34d7b900257deed0e\r\n"`)
+    - **[ N ]** URL-unsafe characters in the middle (`"67d9d5e34d7b90/0257deed0e"`)
+    - **[ N ]** Double-encoded value (`%2536%2537...`)
+    - **[ N ]** Wrong type: number (`123`)
+    - **[ N ]** Wrong type: boolean (`true`)
+    - **[ N ]** Wrong type: JSON object (`{"id":"67d9d5e34d7b900257deed0e"}`)
+    - **[ N ]** Wrong type: Array (`["67d9d5e34d7b900257deed0e"]`)
 
 ### 💠idBoardSource `TrelloID`
+
+*(Example: `"id": "68063bdc4bdbd152d658851a"`)*
 
 #### 📄Description
 
