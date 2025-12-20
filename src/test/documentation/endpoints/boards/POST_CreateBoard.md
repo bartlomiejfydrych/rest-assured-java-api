@@ -52,23 +52,43 @@ The new name for the board. 1 to 16384 characters long.
 
 #### ✅Positive
 
-- **[ P1 ]** Special characters and numbers
-- **[ P2 ]** 1 character
-- **[ P ]** Leading/Trailing spaces (" text ")
-- **[ P  ]** URL-unsafe characters (`%2F` | encoded)
-- **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
+- BASIC
+    - **[ P1 ]** Special characters and numbers (`"Board_123-!"`)
+    - **[ P2 ]** Exactly 1 character
+    - **[ P ]** Leading/Trailing spaces (`" text "`)
+    - **[ P ]** Unicode characters (PL diacritics, emoji, CJK)
+- MUST HAVE
+    - **[ P ]** URL-unsafe characters (encoded: `%2F%3F%23`)
+    - **[ P ]** Mixed plain text + encoded characters (`test%2Fname`)
+    - **[ P ]** Percent sign as literal (`100%`)
+    - **[ P ]** Newline characters (`\n`, `\r\n`)
+    - **[ P ]** Tab characters (`\ttext\t`)
+    - **[ P ]** HTML-looking text (escaped, not executed: `<button>Test</button>`)
+    - **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
 
 #### ❌Negative
 
-- **[ N1 ]** Missing
-- **[ N2 ]** null
-- **[ N3 ]** Empty string (`""`)
-- **[ N ]** Only spaces
-- **[ N ]** Invalid UTF-8 (`\x80` | `\xED\xA0\x80`)
-- Wrong type:
-    - **[ N ]** number
-    - **[ N ]** boolean
-    - **[ N ]** JSON object
+- BASIC
+    - **[ N1 ]** Missing
+    - **[ N2 ]** null
+    - **[ N3 ]** Empty string (`""`)
+    - **[ N ]** Only control characters (`\n\t\r`)
+    - **[ N ]** Only whitespace characters (` `)
+- MUST HAVE
+    - **[ N ]** Invalid UTF-8 (`\x80`, `\xED\xA0\x80`)
+    - **[ N ]** Mixed valid + invalid UTF-8
+    - **[ N ]** Zero-width characters only (`\u200B`)
+    - **[ N ]** Broken URL encoding (`%2`, `%GG`, `%`)
+    - **[ N ]** Double-encoded input (`%252F`, `%253C`)
+    - **[ N ]** HTML / JS injection payload (`<script>alert(1)</script>`)
+    - **[ N ]** SQL-like payload (`' OR 1=1 --`)
+    - **[ N ]** Non-normalized Unicode (`é` vs `e + ́`)
+    - **[ N ]** Wrong type: number
+    - **[ N ]** Wrong type: boolean
+- NICE TO HAVE
+    - **[ N ]** Wrong type: JSON object (`{"name":"Board"}`)
+    - **[ N ]** Wrong type: Array (`["name"]`)
+    - **[ 💥 ]** 16385 characters → Can't test it because max URI size is ~2000 characters
 
 ### 💠defaultLabels `boolean`
 
@@ -85,23 +105,41 @@ Determines whether to use the default set of labels.
 
 #### ✅Positive
 
-- **[ P1 ]** Missing (will there be a default value of `true`) → Not in response at all
-- **[ P2 ]** true
-- **[ P3 ]** false
-- **[ P4 ]** null
+- BASIC
+    - **[ P1 ]** Missing (will there be a default value of `true`) → Not in response at all
+    - **[ P2 ]** true
+    - **[ P3 ]** false
+    - **[ P4 ]** null
+- MUST HAVE
+    - **[ P ]** TRUE
+    - **[ P ]** FALSE
+    - **[ P ]** Value with surrounding whitespace (`" true "`) if trimmed
 
 #### ❌Negative
 
-- **[ N ]** "true"
-- **[ N ]** "false"
-- **[ N ]** 0
-- **[ N ]** 1
-- **[ N ]** "yes"
-- **[ N ]** "no"
-- **[ N ]** -1
-- **[ N ]** Empty string (`""`)
-- **[ N ]** Object
-- **[ N ]** Array
+- BASIC
+    - **[ N ]** "true"
+    - **[ N ]** "false"
+    - **[ N ]** Empty string (`""`)
+    - **[ N ]** Object
+    - **[ N ]** Array
+- MUST HAVE
+    - **[ N ]** 0
+    - **[ N ]** 1
+    - **[ N ]** -1
+    - **[ N ]** Floating point (`0.0`)
+    - **[ N ]** Floating point (`1.0`)
+    - **[ N ]** Mixed casing (`"True"`) if not normalized
+    - **[ N ]** Mixed casing (`"False"`) if not normalized
+    - **[ N ]** Boolean embedded in string (`"value=true"`)
+    - **[ N ]** Multiple values (`param=true&param=false`)
+- NICE TO HAVE
+    - **[ N ]** "yes"
+    - **[ N ]** "no"
+    - **[ N ]** NaN
+    - **[ N ]** Infinity
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double URL-encoded value (`%2574%2572%2575%2565`)
 
 ### 💠defaultLists `boolean`
 
