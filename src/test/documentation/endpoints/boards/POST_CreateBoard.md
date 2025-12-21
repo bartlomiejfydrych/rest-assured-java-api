@@ -312,18 +312,40 @@ The id of a board to copy into the new board.
 
 #### ✅Positive
 
-- **[ P1 ]** Missing → Not in response at all
-- **[ P3 ]** null
-- **[ ⏭ ]** Valid ID
+- BASIC
+    - **[ P1 ]** Missing → board created without copying
+    - **[ P2 ]** `null` → treated as missing
+    - **[ ⏭ (SPRAWDZIĆ) ]** Valid ID (lowercase hex, 24 chars)
+- MUST HAVE
+    - **[ P ]** Valid ID (uppercase hex, 24 chars)
+    - **[ P ]** Parameters ignored/overridden when copying (`defaultLists`, `defaultLabels` ignored)
+- NICE TO HAVE
+    - **[ P ]** Valid ID with leading/trailing whitespace if trimmed (`" 68063bdc4bdbd152d658851a "`)
 
 #### ❌Negative
 
-- **[ N6 ]** Non-existent
-- **[ N7 ]** Too short
-- **[ N7 ]** Too long
-- **[ N7 ]** Empty string (`""`)
-- **[ N7 ]** Numeric-only
-- **[ N ]** Fits, but we shouldn't have access to it
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N7 (poprawić) ]** Too short (less than 24 chars)
+    - **[ N ]** Too long (more than 24 chars)
+    - **[ N ]** Contains non-hex characters (`g`, `z`, `!`)
+- MUST HAVE
+    - **[ N6 ]** Non-existent but valid-format ID
+    - **[ N ]** Valid-format ID without access rights → `403 Forbidden`
+    - **[ N ]** Numeric-only value (`123456789012345678901234`)
+    - **[ N ]** Broken hex pattern (`68063bdc4bdbd152d658851x`)
+    - **[ N ]** ID with newline characters (`"68063bdc4bdbd152d658851a\n"`)
+    - **[ N ]** ID with control characters (`"68063bdc4bdbd152d658851a\t"`)
+    - **[ N ]** URL-unsafe characters encoded (`"68063bdc4bdbd152d658851a/"`)
+    - **[ N ]** URL-unsafe characters raw (`"68063bdc4bdbd152d658851a%2F"`)
+    - **[ N ]** Multiple values (`idBoardSource=68063bdc4bdbd152d658851a&idBoardSource=abcdefabcdefabcdefabcdef`)
+- NICE TO HAVE
+    - **[ N ]** Double-encoded value (`%2536%2538%2530%2536%2533%2562%2564%2563%2534%2562%2564%2562%2564%2531%2535%2532%2564%2536%2535%2538%2538%2535%2531%2561`)
+    - **[ N ]** Unicode characters inside ID (`"68063bdc4bdbd152d65885🅰️1a"`)
+    - **[ N ]** Wrong type: number (`123`)
+    - **[ N ]** Wrong type: boolean (`true`)
+    - **[ N ]** Wrong type: JSON object (`{"id":"68063bdc4bdbd152d658851a"}`)
+    - **[ N ]** Wrong type: Array (`["68063bdc4bdbd152d658851a"]`)
 
 ### 💠keepFromSource `string`
 
@@ -340,19 +362,37 @@ To keep cards from the original board pass in the value cards.
 
 #### ✅Positive
 
-- **[ P1 ]** Missing (will there be a default value of `none`) → Not in response at all
-- **[ P4 ]** null
-- **[ P2 ]** none
-- **[ P3 ]** cards
-- **[ P ]** Leading/Trailing spaces (" text ")
+- BASIC
+    - **[ P1 ]** Missing (default value `none`) → Param not present in response
+    - **[ P2 ]** `none`
+    - **[ P3 ]** `cards`
+    - **[ P4 ]** `null` → treated as missing / default
+- MUST HAVE
+    - **[ P ]** Value with leading/trailing whitespace (`" cards "`) if trimmed
+    - **[ P ]** `cards` + valid `idBoardSource` → cards are copied
+    - **[ P ]** `none` + valid `idBoardSource` → cards are NOT copied
+- NICE TO HAVE
+    - **[ P ]** URL-encoded enum value (`cards` encoded as `cards`)
+    - **[ P ]** Repeated valid value (`cards,cards`) if ignored safely
 
 #### ❌Negative
 
-- **[ N ]** NONE
-- **[ N ]** CARDS
-- **[ N ]** Empty string (`""`)
-- **[ N ]** number
-- **[ 💥 ]** Unknown string → It was ignored and board was created
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N ]** Unknown string (`"labels"`) → It was ignored and board was created
+- MUST HAVE
+    - **[ N ]** Uppercase value (`"NONE"`) if not normalized
+    - **[ N ]** Uppercase value (`"CARDS"`) if not normalized
+    - **[ N ]** Value with internal whitespace (`"car ds"`)
+    - **[ N ]** Multiple values (`keepFromSource=cards&keepFromSource=none`)
+    - **[ N ]** Enum value without `idBoardSource` (ignored or error — must be defined)
+- NICE TO HAVE
+    - **[ N ]** Numeric value (`1`)
+    - **[ N ]** Boolean value (`true`)
+    - **[ N ]** JSON object (`{"keep":"cards"}`)
+    - **[ N ]** Array (`["cards"]`)
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double-encoded value (`%2563%2561%2572%2564%2573`)
 
 ### 💠powerUps `string`
 
@@ -368,26 +408,41 @@ The Power-Ups that should be enabled on the new board. One of: all, calendar, ca
 
 #### ✅Positive
 
-- **[ P1 ]** Missing → Not in response at all
-- **[ P4 ]** null
-- **[ P2 ]** all
-- **[ P3 ]** calendar
-- **[ P5r ]** cardAging
-- **[ P5r ]** recap
-- **[ P5r ]** voting
+- BASIC
+    - **[ P1 ]** Missing (no Power-Ups enabled) -> Param not present in response
+    - **[ P2 ]** `all`
+    - **[ P3 ]** `calendar`
+    - **[ P5r ]** `cardAging`
+    - **[ P5r ]** `recap`
+    - **[ P5r ]** `voting`
+    - **[ P4 ]** `null` → treated as missing
+- MUST HAVE
+    - **[ P ]** Value with leading/trailing whitespace (`" calendar "`) if trimmed
+- NICE TO HAVE
+    - **[ P ]** URL-encoded enum value (`calendar` encoded)
+    - **[ P ]** Repeated same value (`powerUps=calendar&powerUps=calendar`) if ignored safely
 
 #### ❌Negative
 
-- **[ N ]** Combined list
-- **[ N ]** Empty string (`""`)
-- **[ N ]** ALL
-- **[ N ]** CALENDAR
-- **[ N ]** CARDAGING
-- **[ N ]** RECAP
-- **[ N ]** VOTING
-- **[ N ]** Numeric
-- **[ N ]** JSON array
-- **[ 💥 ]** Unknown string → It was ignored and board was created
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N ]** Combined list (`"calendar,recap"`)
+    - **[ N ]** Unknown string (`"labels"`)
+- MUST HAVE
+    - **[ N ]** Uppercase value (`"ALL"`) if not normalized
+    - **[ N ]** Uppercase value (`"CALENDAR"`) if not normalized
+    - **[ N ]** Uppercase value (`"CARDAGING"`) if not normalized
+    - **[ N ]** Uppercase value (`"RECAP"`) if not normalized
+    - **[ N ]** Uppercase value (`"VOTING"`) if not normalized
+    - **[ N ]** Internal whitespace (`"card Aging"`)
+    - **[ N ]** Multiple values (`powerUps=calendar&powerUps=recap`)
+- NICE TO HAVE
+    - **[ N ]** Numeric value (`1`)
+    - **[ N ]** Boolean value (`true`)
+    - **[ N ]** JSON array (`["calendar"]`)
+    - **[ N ]** JSON object (`{"powerUps":"calendar"}`)
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double-encoded value (`%2563%2561%256C%2565%256E%2564%2561%2572`)
 
 ### 💠prefs_permissionLevel `string`
 
@@ -404,21 +459,39 @@ The permissions level of the board. One of: org, private, public.
 
 #### ✅Positive
 
-- **[ P1 ]** Missing (will there be a default value of `private`)
-- **[ P4 ]** null
-- **[ P2 ]** private
-- **[ P3 ]** org
-- **[ P5 ]** public
+- BASIC
+    - **[ P1 ]** Missing (default value `private`) → Param not present in response
+    - **[ P2 ]** `private`
+    - **[ P3 ]** `org`
+    - **[ P5 ]** `public`
+    - **[ P4 ]** `null` → treated as missing / default
+- MUST HAVE
+    - **[ P ]** `private` → board visible only to members
+    - **[ P ]** `org` → board visible to Workspace members only
+    - **[ P ]** `public` → board publicly accessible
+    - **[ P ]** Value with leading/trailing whitespace (`" public "`) if trimmed
+- NICE TO HAVE
+    - **[ P ]** URL-encoded enum value (`public` encoded)
+    - **[ P ]** Repeated same value (`prefs_permissionLevel=private&prefs_permissionLevel=private`) if ignored safely
 
 #### ❌Negative
 
-- **[ N8 ]** Invalid value
-- **[ N ]** Empty string (`""`)
-- **[ N ]** PRIVATE
-- **[ N ]** ORG
-- **[ N ]** PUBLIC
-- **[ N ]** Number
-- **[ N ]** Boolean
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N8 ]** Invalid value (`"team"`)
+- MUST HAVE
+    - **[ N ]** Uppercase value (`"PRIVATE"`) if not normalized
+    - **[ N ]** Uppercase value (`"ORG"`) if not normalized
+    - **[ N ]** Uppercase value (`"PUBLIC"`) if not normalized
+    - **[ N ]** Internal whitespace (`"pub lic"`)
+    - **[ N ]** Multiple values (`prefs_permissionLevel=private&prefs_permissionLevel=public`)
+- NICE TO HAVE
+    - **[ N ]** Numeric value (`1`)
+    - **[ N ]** Boolean value (`true`)
+    - **[ N ]** JSON object (`{"permission":"public"}`)
+    - **[ N ]** Array (`["public"]`)
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double-encoded value (`%2570%2575%2562%256C%2569%2563`)
 
 ### 💠prefs_voting `string`
 
