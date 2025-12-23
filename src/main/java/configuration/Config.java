@@ -35,7 +35,7 @@ public class Config {
         loaded = true;
 
         try (InputStream input = Config.class.getClassLoader()
-                .getResourceAsStream("config.properties")) {
+                .getResourceAsStream("configs/config.properties")) {
 
             if (input != null) {
                 properties.load(input);
