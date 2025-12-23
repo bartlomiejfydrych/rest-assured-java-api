@@ -58,6 +58,7 @@ The new name for the board. 1 to 16384 characters long.
     - **[ P ]** Leading/Trailing spaces (`" text "`)
     - **[ P ]** Unicode characters (PL diacritics, emoji, CJK)
 - MUST HAVE
+    - **[ P ]** Can there be two boards with the same name?
     - **[ P ]** URL-unsafe characters (encoded: `%2F%3F%23`)
     - **[ P ]** Mixed plain text + encoded characters (`test%2Fname`)
     - **[ P ]** Percent sign as literal (`100%`)
