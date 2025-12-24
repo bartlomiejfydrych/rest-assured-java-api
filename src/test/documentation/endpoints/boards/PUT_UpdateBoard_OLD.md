@@ -189,7 +189,7 @@ Whether the acting user is subscribed to the board
 Style: `form`  
 Pattern: `^[0-9a-fA-F]{24}$`
 
-### 💠idOrganization `string` (📌It is possible that instead of String there is `TrelloID` | `^[0-9a-fA-F]{24}$`)
+### 💠idOrganization `string`
 
 The id of the Workspace the board should be moved to
 
