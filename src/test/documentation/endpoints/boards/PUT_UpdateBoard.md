@@ -201,7 +201,382 @@ A new description for the board, 0 to 16384 characters long.
     - **[ N ]** Wrong type: JSON object (`{"desc":"text"}`)
     - **[ N ]** Wrong type: Array (`["desc"]`)
 
-DOKOŃCZYĆ
+### 💠closed `boolean`
+
+#### 📄Description
+
+Whether the board is closed.
+
+#### 📋Summary
+
+| Property | Value                                             |
+|----------|---------------------------------------------------|
+| Required | ❌                                                 |
+| Default  | false                                             |
+| Effect   | `true` → archive board <br>`false` → reopen board |
+
+#### ✅Positive
+
+- BASIC
+    - **[ P3 ]** Missing → no change to board state
+    - **[ P1 ]** `true`
+    - **[ P4 ]** `false`
+    - **[ P5 ]** `null` → treated as missing (no change)
+- MUST HAVE
+    - **[ P ]** Idempotent update (`closed=true` on already closed board)
+    - **[ P ]** TRUE (uppercase, if normalized)
+    - **[ P ]** FALSE (uppercase, if normalized)
+    - **[ P ]** URL-encoded boolean value (`true` → `%74%72%75%65`)
+    - **[ P ]** URL-encoded boolean value (`false` → `%66%61%6C%73%65`)
+- NICE TO HAVE
+    - **[ P ]** Toggle closed state multiple times (`true → false → true`)
+    - **[ P ]** Partial update request with only `closed` field
+
+#### ❌Negative
+
+- BASIC
+    - **[ N ]** `"true"`
+    - **[ N ]** `"false"`
+    - **[ N ]** Empty string (`""`)
+    - **[ N ]** Object (`{"closed":true}`)
+    - **[ N ]** Array (`[true]`)
+- MUST HAVE
+    - **[ N ]** Numeric (`0`)
+    - **[ N ]** Numeric (`1`)
+    - **[ N ]** Negative number (`-1`)
+    - **[ N ]** Floating point (`0.0`)
+    - **[ N ]** Floating point (`1.0`)
+    - **[ N ]** Boolean embedded in string (`"value=true"`)
+    - **[ N ]** Multiple values (`closed=true&closed=false`)
+- NICE TO HAVE
+    - **[ N ]** `"yes"`
+    - **[ N ]** `"no"`
+    - **[ N ]** `NaN`
+    - **[ N ]** `Infinity`
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double URL-encoded value (`%2574%2572%2575%2565`)
+
+### 💠subscribed `TrelloID`
+
+#### 📄Description
+
+Whether the acting user is subscribed to the board.  
+Style: `form`  
+Pattern: `^[0-9a-fA-F]{24}$`
+
+#### 📋Summary
+
+| Property | Value                               |
+|----------|-------------------------------------|
+| Required | ❌                                   |
+| Pattern  | `^[0-9a-fA-F]{24}$`                 |
+| Effect   | Subscribe / unsubscribe acting user |
+
+#### ✅Positive
+
+- BASIC
+    - **[ P3 ]** Missing → subscription state unchanged
+    - **[ P2 ]** `null` → treated as missing (no change)
+    - **[ 💥 ]** Valid TrelloID (`"68063bdc4bdbd152d658851a"`) → I was unable to determine the correct TrelloID
+- MUST HAVE
+    - **[ P ]** Valid ID of acting user → user becomes subscribed to the board
+    - **[ P ]** Valid ID already subscribed → idempotent (no duplicate subscription)
+    - **[ P ]** Mixed-case hex ID (`"68063BdC4BdBd152D658851A"`)
+    - **[ P ]** URL-encoded valid ID (`"68063bdc4bdbd152d658851a"` → encoded in URL)
+- NICE TO HAVE
+    - **[ P ]** Partial update request with only `subscribed` field
+    - **[ P ]** Subscribe → unsubscribe → subscribe flow (state changes are consistent)
+
+#### ❌Negative
+
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N ]** Too short ID (`"68063bdc4bdbd152d65885"`)
+    - **[ N ]** Too long ID (`"68063bdc4bdbd152d658851aff"`)
+- MUST HAVE
+    - **[ N3 ]** Non-hex characters (`"zz063bdc4bdbd152d658851a"`)
+    - **[ N ]** Numeric-only value (`"123456789012345678901234"`)
+    - **[ N2 ]** Valid format but non-existent ID (`"ffffffffffffffffffffffff"`)
+    - **[ N ]** Valid ID but user has no access to board → 403 Forbidden
+    - **[ N ]** Multiple values (`subscribed=id1&subscribed=id2`)
+- NICE TO HAVE
+    - **[ N ]** ID with newline character (`"68063bdc4bdbd152d658851a\n"`)
+    - **[ N ]** ID with control character (`"68063bdc4bdbd152d658851a\t"`)
+    - **[ N ]** URL-unsafe character raw (`"68063bdc4bdbd152d658851a/"`)
+    - **[ N ]** URL-unsafe character encoded (`"68063bdc4bdbd152d658851a%2F"`)
+    - **[ N ]** Double URL-encoded value (`"%2536%2538%2530%2536%2533%2562%2564%2563..."`)
+    - **[ N ]** Unicode characters inside ID (`"68063bdc4bdbd152d65885ą"`)
+
+### 💠idOrganization `string`
+
+#### 📄Description
+
+The id of the Workspace the board should be moved to.
+
+#### 📋Summary
+
+| Property | Value                            |
+|----------|----------------------------------|
+| Required | ❌                                |
+| Pattern  | `^[0-9a-fA-F]{24}$`              |
+| Effect   | Moves board to another Workspace |
+
+#### ✅Positive
+
+- BASIC
+    - **[ P3 ]** Missing → board remains in current Workspace
+    - **[ P2 ]** `null` → treated as missing (no change)
+    - **[ P1 ]** Valid Workspace ID (`"67d9d5e34d7b900257deed0e"`)
+- MUST HAVE
+    - **[ P ]** Move board to another Workspace user belongs to → `idOrganization` updated
+    - **[ P ]** Move board to the same Workspace → idempotent (no change)
+    - **[ P ]** Mixed-case hex ID (`"67D9d5E34D7B900257DeEd0E"`)
+    - **[ P ]** URL-encoded valid ID (`"67d9d5e34d7b900257deed0e"` → encoded in URL)
+    - **[ P ]** Move closed (archived) board to another Workspace
+- NICE TO HAVE
+    - **[ P ]** Multiple moves in sequence (`orgA → orgB → orgA`)
+    - **[ P ]** Partial update request with only `idOrganization` field
+
+#### ❌Negative
+
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N3 ]** Too short ID (`"67d9d5e34d7b900257deed"`)
+    - **[ N ]** Too long ID (`"67d9d5e34d7b900257deed0eff"`)
+- MUST HAVE
+    - **[ N ]** Workspace name instead of ID (`"my-workspace-name"`)
+    - **[ N ]** Non-hex characters (`"zzd9d5e34d7b900257deed0e"`)
+    - **[ N ]** Numeric-only value (`"123456789012345678901234"`)
+    - **[ N4 ]** Valid format but non-existent Workspace ID (`"ffffffffffffffffffffffff"`)
+    - **[ N ]** Valid ID but user has no permission to move board there → 403 Forbidden
+    - **[ N ]** Workspace does not allow board creation / move → 400 / 403 depending on API behavior
+    - **[ N ]** Multiple values (`idOrganization=org1&idOrganization=org2`)
+    - **[ N ]** Attempt to move closed board → expected error
+- NICE TO HAVE
+    - **[ N ]** ID with newline character (`"67d9d5e34d7b900257deed0e\n"`)
+    - **[ N ]** ID with control character (`"67d9d5e34d7b900257deed0e\t"`)
+    - **[ N ]** URL-unsafe character raw (`"67d9d5e34d7b900257deed0e/"`)
+    - **[ N ]** URL-unsafe character encoded (`"67d9d5e34d7b900257deed0e%2F"`)
+    - **[ N ]** Double URL-encoded value (`"%2536%2537%2564%2539%2564%2535..."`)
+    - **[ N ]** Unicode characters inside ID (`"67d9d5e34d7b900257deedą"`)
+
+### 💠prefs/permissionLevel `string`
+
+#### 📄Description
+
+The permissions level of the board. One of: org, private, public.
+
+#### 📋Summary
+
+| Property     | Value                |
+|--------------|----------------------|
+| Valid values | org, private, public |
+| Default      | private              |
+
+#### ✅Positive
+
+- BASIC
+  - **[ P3 ]** Missing (default value `private`) → Param not present in response
+  - **[ P4 ]** `private`
+  - **[ P1 ]** `org`
+  - **[ P5 ]** `public`
+  - **[ P2 ]** `null` → treated as missing / default
+- MUST HAVE
+  - **[ P ]** `private` → board visible only to members
+  - **[ P ]** `org` → board visible to Workspace members only
+  - **[ P ]** `public` → board publicly accessible
+  - **[ P ]** Value with leading/trailing whitespace (`" public "`) if trimmed
+- NICE TO HAVE
+  - **[ P ]** URL-encoded enum value (`public` encoded)
+  - **[ P ]** Repeated same value (`prefs_permissionLevel=private&prefs_permissionLevel=private`) if ignored safely
+
+#### ❌Negative
+
+- BASIC
+  - **[ N ]** Empty string (`""`)
+  - **[ N6 ]** Invalid value (`"team"`)
+- MUST HAVE
+  - **[ N ]** Uppercase value (`"PRIVATE"`) if not normalized
+  - **[ N ]** Uppercase value (`"ORG"`) if not normalized
+  - **[ N ]** Uppercase value (`"PUBLIC"`) if not normalized
+  - **[ N ]** Internal whitespace (`"pub lic"`)
+  - **[ N ]** Multiple values (`prefs_permissionLevel=private&prefs_permissionLevel=public`)
+- NICE TO HAVE
+  - **[ N ]** Numeric value (`1`)
+  - **[ N ]** Boolean value (`true`)
+  - **[ N ]** JSON object (`{"permission":"public"}`)
+  - **[ N ]** Array (`["public"]`)
+  - **[ N ]** Broken URL encoding (`%`, `%GG`)
+  - **[ N ]** Double-encoded value (`%2570%2575%2562%256C%2569%2563`)
+
+### 💠prefs/selfJoin `boolean`
+
+#### 📄Description
+
+Determines whether users can join the boards themselves or whether they have to be invited.
+
+#### 📋Summary
+
+| Property | Value |
+|----------|-------|
+| Default  | true  |
+
+#### ✅Positive
+
+- BASIC
+  - **[ P3 ]** Missing (default value `true`) → Param not present in response
+  - **[ P1 ]** `true`
+  - **[ P4 ]** `false`
+  - **[ P2 ]** `null` → treated as missing / default
+- MUST HAVE
+  - **[ P ]** `true` → users can self-join the board
+  - **[ P ]** `false` → users must be invited
+  - **[ P ]** Value with surrounding whitespace (`" true "`) if trimmed
+  - **[ P ]** Uppercase boolean (`TRUE`) if normalized
+  - **[ P ]** Uppercase boolean (`FALSE`) if normalized
+- NICE TO HAVE
+  - **[ P ]** URL-encoded boolean value (`prefs_selfJoin=true`)
+  - **[ P ]** URL-encoded boolean value (`prefs_selfJoin=false`)
+  - **[ P ]** Repeated same value (`prefs_selfJoin=true&prefs_selfJoin=true`) if ignored safely
+
+#### ❌Negative
+
+- BASIC
+  - **[ N ]** `"true"`
+  - **[ N ]** `"false"`
+  - **[ N ]** Empty string (`""`)
+  - **[ N ]** Wrong type: Object (`{}`)
+  - **[ N ]** Wrong type: Array (`[]`)
+- MUST HAVE
+  - **[ N ]** `0`
+  - **[ N ]** `1`
+  - **[ N ]** `-1`
+  - **[ N ]** Floating point (`0.0`)
+  - **[ N ]** Floating point (`1.0`)
+  - **[ N ]** Boolean embedded in string (`"value=true"`)
+  - **[ N ]** Multiple values (`prefs_selfJoin=true&prefs_selfJoin=false`)
+- NICE TO HAVE
+  - **[ N ]** `"yes"`
+  - **[ N ]** `"no"`
+  - **[ N ]** `NaN`
+  - **[ N ]** `Infinity`
+  - **[ N ]** Broken URL encoding (`%`, `%GG`)
+  - **[ N ]** Double URL-encoded value (`%2574%2572%2575%2565`)
+
+### 💠prefs/cardCovers `boolean`
+
+#### 📄Description
+
+Whether card covers should be displayed on this board.
+
+#### 📋Summary
+
+| Property | Value |
+|----------|-------|
+| Default  | true  |
+
+#### ✅Positive
+
+- BASIC
+  - **[ P3 ]** Missing (default value `true`) → Param not present in response
+  - **[ P1 ]** `true`
+  - **[ P4 ]** `false`
+  - **[ P2 ]** `null` → treated as missing / default
+- MUST HAVE
+  - **[ P ]** `true` → card covers enabled
+  - **[ P ]** `false` → card covers disabled
+  - **[ P ]** Uppercase boolean (`TRUE`) if normalized
+  - **[ P ]** Uppercase boolean (`FALSE`) if normalized
+  - **[ P ]** Value with surrounding whitespace (`" true "`) if trimmed
+- NICE TO HAVE
+  - **[ P ]** URL-encoded boolean value (`prefs_cardCovers=true`)
+  - **[ P ]** URL-encoded boolean value (`prefs_cardCovers=false`)
+  - **[ P ]** Repeated same value (`prefs_cardCovers=true&prefs_cardCovers=true`) if ignored safely
+
+#### ❌Negative
+
+- BASIC
+  - **[ N ]** `"true"`
+  - **[ N ]** `"false"`
+  - **[ N ]** Empty string (`""`)
+  - **[ N ]** Wrong type: Object (`{}`)
+  - **[ N ]** Wrong type: Array (`[]`)
+- MUST HAVE
+  - **[ N ]** `0`
+  - **[ N ]** `1`
+  - **[ N ]** `-1`
+  - **[ N ]** Floating point (`0.0`)
+  - **[ N ]** Floating point (`1.0`)
+  - **[ N ]** Mixed casing (`"True"`) if not normalized
+  - **[ N ]** Mixed casing (`"False"`) if not normalized
+  - **[ N ]** Boolean embedded in string (`"value=true"`)
+  - **[ N ]** Multiple values (`prefs_cardCovers=true&prefs_cardCovers=false`)
+- NICE TO HAVE
+  - **[ N ]** `"yes"`
+  - **[ N ]** `"no"`
+  - **[ N ]** `NaN`
+  - **[ N ]** `Infinity`
+  - **[ N ]** Broken URL encoding (`%`, `%GG`)
+  - **[ N ]** Double URL-encoded value (`%2574%2572%2575%2565`)
+
+### 💠prefs/hideVotes `boolean`
+
+#### 📄Description
+
+Determines whether the Voting Power-Up should hide who voted on cards.
+
+#### 📋Summary
+
+| Property   | Value                                                         |
+|------------|---------------------------------------------------------------|
+| Required   | ❌                                                             |
+| Default    | false                                                         |
+| Effect     | `true` → votes are anonymous <br>`false` → voters are visible |
+| Depends on | `powerUps=voting`                                             |
+
+#### ✅Positive
+
+- BASIC
+    - **[ P3 ]** Missing → no change to current setting
+    - **[ P1 ]** `true`
+    - **[ P4 ]** `false`
+    - **[ P2 ]** `null` → treated as missing (no change)
+- MUST HAVE
+    - **[ P ]** Enable vote hiding (`true`) when Voting Power-Up is enabled
+    - **[ P ]** Disable vote hiding (`false`) when Voting Power-Up is enabled
+    - **[ P ]** Idempotent update (`true` → `true`, `false` → `false`)
+    - **[ P ]** TRUE (uppercase, if normalized)
+    - **[ P ]** FALSE (uppercase, if normalized)
+    - **[ P ]** URL-encoded boolean value (`true` → `%74%72%75%65`)
+    - **[ P ]** URL-encoded boolean value (`false` → `%66%61%6C%73%65`)
+- NICE TO HAVE
+    - **[ P ]** Toggle value multiple times (`true → false → true`)
+    - **[ P ]** Partial update request with only `prefs/hideVotes` field
+    - **[ P ]** Parameter ignored when Voting Power-Up is not enabled
+
+#### ❌Negative
+
+- BASIC
+    - **[ N ]** `"true"`
+    - **[ N ]** `"false"`
+    - **[ N ]** Empty string (`""`)
+    - **[ N ]** Object (`{"hideVotes":true}`)
+    - **[ N ]** Array (`[true]`)
+- MUST HAVE
+    - **[ N ]** Numeric (`0`)
+    - **[ N ]** Numeric (`1`)
+    - **[ N ]** Negative number (`-1`)
+    - **[ N ]** Floating point (`0.0`)
+    - **[ N ]** Floating point (`1.0`)
+    - **[ N ]** Boolean embedded in string (`"value=true"`)
+    - **[ N ]** Multiple values (`prefs/hideVotes=true&prefs/hideVotes=false`)
+- NICE TO HAVE
+    - **[ N ]** `"yes"`
+    - **[ N ]** `"no"`
+    - **[ N ]** `NaN`
+    - **[ N ]** `Infinity`
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double URL-encoded value (`%2574%2572%2575%2565`)
 
 ---
 
