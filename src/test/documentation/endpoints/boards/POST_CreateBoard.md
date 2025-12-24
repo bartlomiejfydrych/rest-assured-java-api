@@ -267,6 +267,7 @@ The id or name of the Workspace the board should belong to.
     - **[ P2 ]** Valid ID (lowercase hex, 24 chars)
     - **[ P3 ]** `null` (treated as missing / default)
 - MUST HAVE
+    - **[ P ]** Workspace name instead of ID (`"my-workspace-name"`)
     - **[ P ]** Valid ID (uppercase hex, 24 chars)
     - **[ P ]** Valid ID with mixed casing
     - **[ P ]** ID pointing to Workspace owned by the user
@@ -283,6 +284,7 @@ The id or name of the Workspace the board should belong to.
     - **[ N ]** Contains non-hex characters (`g`, `z`, `!`)
 - MUST HAVE
     - **[ N4 ]** Non-existent but valid-format ID
+    - **[ N ]** Non-existent Workspace name
     - **[ N ]** Valid-format ID without access rights → `403 Forbidden`
     - **[ N ]** Numeric-only value (`123456789012345678901234`)
     - **[ N ]** Broken hex pattern (`67d9d5e34d7b900257deed0x`)
