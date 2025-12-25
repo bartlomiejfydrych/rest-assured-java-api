@@ -21,6 +21,7 @@
   - [Utils Tests](#start_wt_utils_tests)
   - [Test – ostateczny](#start_wt_test_final)
   - [Dokumentacja](#start_wt_documentation)
+- [TestBase – dlaczego lepiej nie deklarować w nim zmiennych 'response' i innych rzeczy](#test_base_variables)
 - [Boolean – testy](#boolean_tests)
 - [RequestSpecification](#request_specification)
 - [RestAssured.filters()](#rest_assured_filters)
@@ -138,11 +139,11 @@
 18. W pliku `TestBase` tworzymy wstępną konfigurację:
     - Deklarujemy zmienne i obiekty:
       - requestSpecificationCommon
-      - responsePost
-      - responsePut
-      - responseGet
-      - responseDelete
-      - faker
+      - responsePost (tylko, jeśli testy nie będą uruchamiane równolegle!)
+      - responsePut (tylko, jeśli testy nie będą uruchamiane równolegle!)
+      - responseGet (tylko, jeśli testy nie będą uruchamiane równolegle!)
+      - responseDelete (tylko, jeśli testy nie będą uruchamiane równolegle!)
+      - faker (opcjonalne)
     - Ustawiamy `setUpAll()` dla `@BeforeAll`:
       - czy mają być wyświetlane logi zawsze
       - czy mają być wyświetlane tylko, jeśli test się wywali
@@ -396,6 +397,223 @@
       - I tu również pod każdym parametrem rozpisujemy przypadki testowe, czyli możliwe dane, jakie mogą/powinny wpadać
     - Query params / Payload
     - Response
+
+---
+
+## 📄TestBase – dlaczego lepiej nie deklarować w nim zmiennych 'response' i innych rzeczy <a name="test_base_variables"></a>
+
+To **bardzo dobre pytanie** – i ważne, bo tu nie ma odpowiedzi „czarno-białej”.
+Krótko: **to nie jest „źle”**, ale **ma konkretne konsekwencje**, o których warto świadomie wiedzieć.
+
+Poniżej masz **uczciwą, praktyczną odpowiedź** + **rekomendację**, jak to robić „po inżyniersku”, a nie „książkowo”.
+
+### 1️⃣ Czy to źle, że trzymasz to wszystko w `TestBase`?
+
+#### ❌ Nie – to NIE jest błąd
+
+To **bardzo częsty pattern w testach API**.
+
+W praktyce:
+
+* 70–80% projektów testowych robi dokładnie to samo
+* szczególnie w testach **E2E / integracyjnych**
+
+Więc:
+
+> ❗ **To nie jest anty-pattern. To jest kompromis.**
+
+### 2️⃣ Dlaczego ludzie jednak ostrzegają przed takim podejściem?
+
+Bo **mieszasz różne rodzaje odpowiedzialności** w jednym miejscu.
+
+Popatrzmy na Twoje pola i podzielmy je na kategorie 👇
+
+#### 🟢 1. Rzeczy, które są OK w `TestBase`
+
+##### ✅ RequestSpecification
+
+```java
+protected static RequestSpecification requestSpecificationCommon;
+```
+
+✔️ **Jak najbardziej OK**  
+To jest **konfiguracja infrastruktury testów**
+
+##### ✅ Test tags
+
+```java
+protected static final String testTagPositive = "positive";
+protected static final String testTagNegative = "negative";
+```
+
+✔️ OK  
+Stałe wspólne dla testów – dobra lokalizacja
+
+##### ✅ ObjectMapper
+
+```java
+protected static ObjectMapper objectMapper = new ObjectMapper();
+```
+
+✔️ OK  
+Stateless, thread-safe, często współdzielony
+
+#### 🟡 2. Rzeczy „na granicy” (nie złe, ale ryzykowne)
+
+##### ⚠️ Response
+
+```java
+protected static Response responsePost;
+protected static Response responsePut;
+protected static Response responseGet;
+protected static Response responseDelete;
+```
+
+**Dlaczego to bywa problematyczne?**
+
+* to jest **stan konkretnego testu**
+* może zostać nadpisany przez inny test
+* przy równoległych testach → ❌ chaos
+
+Ale:  
+✔️ **jeśli testy są sekwencyjne**  
+✔️ **jeśli wiesz, że nie używasz parallel execution**
+
+→ to **jest akceptowalne**
+
+> 📌 W wielu projektach testowych tak się robi – świadomie.
+
+#### 🟡 3. Faker i Random
+
+```java
+protected static Faker faker = new Faker();
+protected static Random random = new Random();
+```
+
+To **nie jest błąd**, ale:
+
+* to nie jest konfiguracja testów
+* to są **narzędzia pomocnicze**
+
+📌 Lepsze miejsce:
+
+* `UtilsCommon`
+* albo `TestDataFactory`
+
+ALE:  
+✔️ jeśli używasz ich **bardzo często**  
+✔️ i chcesz mieć szybki dostęp
+
+→ **nie jest to grzech**
+
+### 3️⃣ Prawdziwy problem: STATYCZNOŚĆ + STAN
+
+Twoje pola są:
+
+```java
+protected static ...
+```
+
+To oznacza:
+
+* wspólne dla **WSZYSTKICH testów**
+* jeden test może wpłynąć na drugi
+
+#### Przykład ryzyka:
+
+```java
+responsePost = postCreateLabel(...);
+// inny test nadpisuje responsePost
+```
+
+Jeśli:
+
+* uruchomisz testy równolegle
+* lub zmienisz kolejność
+
+➡️ testy mogą się losowo wysypywać
+
+### 4️⃣ Dlaczego mimo to często się tak robi?
+
+Bo w testach API:
+
+* **czytelność > purystyczna architektura**
+* **szybkość pisania testów > idealny design**
+* testy i tak:
+    * nie są częścią produkcji
+    * mają inny cykl życia
+
+> 🧠 **Test code ≠ Production code**
+
+### 5️⃣ Rozsądna rekomendacja (BEST PRACTICE w praktyce)
+
+#### ✅ ZOSTAW w `TestBase`:
+
+```java
+RequestSpecification
+ObjectMapper
+testTagPositive / testTagNegative
+```
+
+#### 🟡 MOŻESZ zostawić:
+
+```java
+Response responseX
+Faker
+Random
+```
+
+**ALE pod warunkiem:**
+* testy nie są uruchamiane równolegle
+* masz spójną konwencję użycia
+* wiesz, że to „shared mutable state”
+
+### 6️⃣ Najlepszy kompromis (polecam 👇)
+
+#### 🔥 Rozwiązanie HYBRYDOWE
+
+```java
+public abstract class TestBase {
+
+    protected static RequestSpecification requestSpec;
+    protected static ObjectMapper objectMapper;
+
+    protected static final String POSITIVE = "positive";
+    protected static final String NEGATIVE = "negative";
+}
+```
+
+A w testach:
+
+```java
+Response responsePost;
+Response responsePut;
+```
+
+I w utilsach:
+
+```java
+UtilsCommon.getRandomSingleChar();
+UtilsCommon.pickRandom(...);
+```
+
+➡️ **maksymalna czytelność**  
+➡️ **minimum powtórzeń**  
+➡️ **brak ukrytych side-effectów**
+
+### 7️⃣ TL;DR – krótko i konkretnie
+
+❓ *Czy to źle?*  
+👉 **Nie**
+
+❓ *Czy idealnie?*  
+👉 **Też nie**
+
+❓ *Czy akceptowalne w testach API?*  
+👉 **Jak najbardziej**
+
+❓ *Czy rozumiem, dlaczego tak zrobiłeś?*  
+👉 **100% tak**
 
 ---
 
