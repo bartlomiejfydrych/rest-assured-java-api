@@ -14,6 +14,11 @@ import org.junit.jupiter.api.BeforeAll;
 import java.util.Random;
 
 public class TestBase {
+
+    // ==========================================================================================================
+    // VARIABLES AND OBJECTS
+    // ==========================================================================================================
+
     // Object containing all request settings
     protected static RequestSpecification requestSpecificationCommon;
     // Variables to save responses
@@ -31,23 +36,38 @@ public class TestBase {
     protected static final String testTagPositive = "positive";
     protected static final String testTagNegative = "negative";
 
+    // ==========================================================================================================
+    // SET UP
+    // ==========================================================================================================
+
     @BeforeAll
     public static void setUpAll() {
-
         // LOGS
+        configureLogging();
+        // CONFIGURATION – REQUEST
+        // Class that allows you to configure API requests in a readable and reusable way
+        requestSpecificationCommon = RequestSpecConfig.getRequestSpecification();
+    }
 
+    // ==========================================================================================================
+    // METHODS – SUB
+    // ==========================================================================================================
+
+    // --------------------
+    // LOGS – CONFIGURATION
+    // --------------------
+
+    private static void configureLogging() {
         // Always print in console all request and response data
         if (Config.getLogsAlways()) {
-            RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+            RestAssured.filters(
+                    new RequestLoggingFilter(),
+                    new ResponseLoggingFilter()
+            );
         }
         // Only when test fail print in console all request and response data
         if (Config.getLogsWhenFail()) {
             RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         }
-
-        // OTHERS
-
-        // Class that allows you to configure API requests in a readable and reusable way
-        requestSpecificationCommon = RequestSpecConfig.getRequestSpecification();
     }
 }
