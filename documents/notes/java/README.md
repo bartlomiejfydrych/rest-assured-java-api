@@ -5,6 +5,7 @@
 - [ENV — Zmienne środowiskowe](#env)
 - [Enum](#enum)
 - [Typ zmiennej – Long](#long)
+- [Set Up (setUp) czy Setup? – prawidłowe nazewnictwo](#set_up_or_setup)
 
 ---
 
@@ -176,3 +177,97 @@ To nie zmienia wartości, ale poprawia czytelność.
 
 > ➜ Dodaj `L` na końcu dużych liczb, które mają być typu `long`.  
 > ➜ `Long listPost4 = 140737488322560L;` — to poprawna i zalecana wersja.
+
+---
+
+## 📄Set Up (setUp) czy Setup? – prawidłowe nazewnictwo <a name="set_up_or_setup"></a>
+
+W programowaniu piszemy:  
+`Set up` czy `Setup`?
+
+Albo nazwy metod w Java:  
+`setUpAll()` czy `setupAll()`?
+
+To bardzo dobre pytanie — i dobrze, że je zadajesz, bo tu **łatwo o niekonsekwencję**.
+
+### 🔹 Skrótowa odpowiedź
+
+**W Javie i w testach poprawnie piszemy:**
+
+> ✅ **setUp**  
+> ❌ setup
+
+Czyli:
+
+```java
+setUp()
+setUpAll()
+tearDown()
+tearDownAll()
+```
+
+### 🔍 Dlaczego **setUp**, a nie **setup**?
+
+#### 1️⃣ Różnica językowa (angielski)
+
+* **to set up** → **czasownik** (coś ustawić)
+* **a setup** → **rzeczownik** (konfiguracja)
+
+W kodzie:
+
+* **metody = czynności (czasowniki)**
+* **zmienne/klasy = rzeczy (rzeczowniki)**
+
+Dlatego:
+
+```java
+setUp()      // ✔ ustawia środowisko
+tearDown()  // ✔ sprząta środowisko
+```
+
+A nie:
+
+```java
+setup()     // ❌ brzmi jak rzeczownik
+```
+
+### 🧪 Konwencja testowa (JUnit, TestNG)
+
+JUnit i TestNG **historycznie i konwencyjnie** używają:
+
+```java
+@BeforeEach
+void setUp() {}
+
+@AfterEach
+void tearDown()
+
+@BeforeAll
+static void setUpAll()
+
+@AfterAll
+static void tearDownAll()
+```
+
+To jest **de facto standard branżowy**.
+
+### 🚫 Kiedy można użyć `setup`?
+
+Tylko gdy jest to **rzeczownik**, np.:
+
+```java
+class TestSetup {}
+SetupConfiguration config;
+```
+
+Ale **nie** dla metod wykonujących akcję.
+
+### ✅ Podsumowanie (do zapamiętania)
+
+| Kontekst        | Poprawnie                  |
+|-----------------|----------------------------|
+| Metoda          | `setUp()`                  |
+| Metoda          | `setUpAll()`               |
+| Metoda          | `tearDown()`               |
+| Metoda          | `tearDownAll()`            |
+| Zmienna / klasa | `SetupConfig`, `TestSetup` |
