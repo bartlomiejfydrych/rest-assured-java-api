@@ -578,6 +578,369 @@ Determines whether the Voting Power-Up should hide who voted on cards.
     - **[ N ]** Broken URL encoding (`%`, `%GG`)
     - **[ N ]** Double URL-encoded value (`%2574%2572%2575%2565`)
 
+### 💠prefs/invitations `string`
+
+#### 📄Description
+
+Who can invite people to this board. One of: admins, members.
+
+#### 📋Summary
+
+| Property     | Value           |
+|--------------|-----------------|
+| Valid values | members, admins |
+| Default      | members         |
+
+#### ✅Positive
+
+- BASIC
+    - **[ P3 ]** Missing → value remains unchanged
+    - **[ P4 ]** `members`
+    - **[ P1 ]** `admins`
+    - **[ P2 ]** `null` → treated as missing (no change)
+- MUST HAVE
+    - **[ P ]** Change value from `members` → `admins`
+    - **[ P ]** Change value from `admins` → `members`
+    - **[ P ]** Idempotent update (`members` → `members`)
+    - **[ P ]** `members` → all board members can invite users
+    - **[ P ]** `admins` → only board admins can invite users
+    - **[ P ]** Value with leading/trailing whitespace (`" admins "`) if trimmed
+- NICE TO HAVE
+    - **[ P ]** URL-encoded enum value (`members` encoded)
+    - **[ P ]** Repeated same value (`prefs/invitations=members&prefs/invitations=members`) if ignored safely
+
+#### ❌Negative
+
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N7 ]** Invalid value (`"owners"`)
+- MUST HAVE
+    - **[ N ]** Uppercase value (`"MEMBERS"`) if not normalized
+    - **[ N ]** Uppercase value (`"ADMINS"`) if not normalized
+    - **[ N ]** Internal whitespace (`"ad mins"`)
+    - **[ N ]** Multiple values (`prefs/invitations=members&prefs/invitations=admins`)
+    - **[ N ]** User without permission attempts to change value → `403 Forbidden`
+- NICE TO HAVE
+    - **[ N ]** Numeric value (`1`)
+    - **[ N ]** Boolean value (`true`)
+    - **[ N ]** JSON object (`{"invite":"admins"}`)
+    - **[ N ]** Array (`["members"]`)
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double-encoded value (`%256D%2565%256D%2562%2565%2572%2573`)
+
+### 💠prefs/voting `string`
+
+#### 📄Description
+
+Who can vote on this board. One of disabled, members, observers, org, public
+
+#### 📋Summary
+
+| Property     | Value                                     |
+|--------------|-------------------------------------------|
+| Valid values | disabled, members, observers, org, public |
+| Default      | disabled                                  |
+
+#### ✅Positive
+
+- BASIC
+    - **[ P3 ]** Missing → value remains unchanged
+    - **[ P1 ]** `disabled`
+    - **[ P4 ]** `members`
+    - **[ 💥 (SPRAWDZIĆ) ]** `observers` → Can't test it because "board is not in an organization with observers enabled" and I don't want to change it
+    - **[ P5r ]** `org`
+    - **[ P5r ]** `public`
+    - **[ P2 ]** `null` → treated as missing (no change)
+- MUST HAVE
+    - **[ P ]** Change value `disabled` → `members`
+    - **[ P ]** Change value `members` → `public`
+    - **[ P ]** Change value `public` → `disabled`
+    - **[ P ]** Idempotent update (`members` → `members`)
+    - **[ P ]** `disabled` → voting disabled for everyone
+    - **[ P ]** `members` → only board members can vote
+    - **[ P ]** `observers` → members + observers can vote
+    - **[ P ]** `org` → Workspace members can vote
+    - **[ P ]** `public` → anyone can vote
+    - **[ P ]** Value with leading/trailing whitespace (`" members "`) if trimmed
+- NICE TO HAVE
+    - **[ P ]** URL-encoded enum value (`members` encoded)
+    - **[ P ]** Repeated same value (`prefs/voting=members&prefs/voting=members`) if ignored safely
+
+#### ❌Negative
+
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N8 ]** Invalid value (`"admins"`)
+- MUST HAVE
+    - **[ N ]** Uppercase value (`"DISABLED"`) if not normalized
+    - **[ N ]** Uppercase value (`"MEMBERS"`) if not normalized
+    - **[ N ]** Uppercase value (`"OBSERVERS"`) if not normalized
+    - **[ N ]** Uppercase value (`"ORG"`) if not normalized
+    - **[ N ]** Uppercase value (`"PUBLIC"`) if not normalized
+    - **[ N ]** Internal whitespace (`"mem bers"`)
+    - **[ N ]** Multiple values (`prefs/voting=members&prefs/voting=public`)
+    - **[ N ]** User without permission attempts to change voting settings → `403 Forbidden`
+- NICE TO HAVE
+    - **[ N ]** Numeric value (`1`)
+    - **[ N ]** Boolean value (`true`)
+    - **[ N ]** JSON object (`{"voting":"members"}`)
+    - **[ N ]** Array (`["members"]`)
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double-encoded value (`%256D%2565%256D%2562%2565%2572%2573`)
+
+### 💠prefs/comments `string`
+
+#### 📄Description
+
+Who can comment on cards on this board. One of: disabled, members, observers, org, public.
+
+#### 📋Summary
+
+| Property     | Value                                     |
+|--------------|-------------------------------------------|
+| Valid values | disabled, members, observers, org, public |
+| Default      | members                                   |
+
+#### ✅Positive
+
+- BASIC
+    - **[ P3 ]** Missing → value remains unchanged
+    - **[ P4 ]** `members`
+    - **[ 💥 (SPRAWDZIĆ) ]** `observers` → Can't test it because "board is not in an organization with observers enabled" and I don't want to change it
+    - **[ P1 ]** `disabled`
+    - **[ P5r ]** `org`
+    - **[ P5r ]** `public`
+    - **[ P2 ]** `null` → treated as missing (no change)
+- MUST HAVE
+    - **[ P ]** Change value `members` → `observers`
+    - **[ P ]** Change value `observers` → `public`
+    - **[ P ]** Change value `public` → `disabled`
+    - **[ P ]** Change value `disabled` → `members`
+    - **[ P ]** Idempotent update (`members` → `members`)
+    - **[ P ]** `members` → only board members can comment
+    - **[ P ]** `observers` → members + observers can comment
+    - **[ P ]** `org` → Workspace members can comment
+    - **[ P ]** `public` → anyone can comment
+    - **[ P ]** `disabled` → comments disabled for everyone
+    - **[ P ]** Value with leading/trailing whitespace (`" observers "`) if trimmed
+- NICE TO HAVE
+    - **[ P ]** URL-encoded enum value (`members` encoded)
+    - **[ P ]** Repeated same value (`prefs/comments=members&prefs/comments=members`) if ignored safely
+
+#### ❌Negative
+
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N9 ]** Invalid value (`"admins"`)
+    - **[ N ]** Combined values (`"members,observers"`)
+- MUST HAVE
+    - **[ N ]** Uppercase value (`"DISABLED"`) if not normalized
+    - **[ N ]** Uppercase value (`"MEMBERS"`) if not normalized
+    - **[ N ]** Uppercase value (`"OBSERVERS"`) if not normalized
+    - **[ N ]** Uppercase value (`"ORG"`) if not normalized
+    - **[ N ]** Uppercase value (`"PUBLIC"`) if not normalized
+    - **[ N ]** Mixed casing (`"Members"`) if not normalized
+    - **[ N ]** Internal whitespace (`"mem bers"`)
+    - **[ N ]** Multiple values (`prefs/comments=members&prefs/comments=public`)
+    - **[ N ]** User without permission attempts to change comment settings → `403 Forbidden`
+- NICE TO HAVE
+    - **[ N ]** Numeric value (`1`)
+    - **[ N ]** Boolean value (`true`)
+    - **[ N ]** JSON object (`{"comments":"members"}`)
+    - **[ N ]** Array (`["members"]`)
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double-encoded value (`%256D%2565%256D%2562%2565%2572%2573`)
+
+### 💠prefs/background `string`
+
+#### 📄Description
+
+The id of a custom background or one of: blue, orange, green, red, purple, pink, lime, sky, grey.
+
+#### 📋Summary
+
+| Property     | Value                                                   |
+|--------------|---------------------------------------------------------|
+| Valid values | blue, orange, green, red, purple, pink, lime, sky, grey |
+| Default      | blue                                                    |
+| Also accepts | custom background ID                                    |
+
+#### ✅Positive
+
+- BASIC
+    - **[ P3 ]** Missing → background remains unchanged
+    - **[ P1 ]** `blue`
+    - **[ P4 ]** `orange`
+    - **[ P5r ]** `green`
+    - **[ P5r ]** `red`
+    - **[ P5r ]** `purple`
+    - **[ P5r ]** `pink`
+    - **[ P5r ]** `lime`
+    - **[ P5r ]** `sky`
+    - **[ P5r ]** `grey`
+    - **[ P2 ]** `null` → treated as missing (no change)
+- MUST HAVE
+    - **[ P ]** Change enum background (`blue` → `red`)
+    - **[ P ]** Change enum → custom background ID
+    - **[ P ]** Change custom background ID → enum (`customID` → `grey`)
+    - **[ P ]** Change custom background ID → another custom ID
+    - **[ P ]** Idempotent update (`blue` → `blue`)
+    - **[ P ]** Idempotent update (same custom background ID)
+    - **[ P ]** Valid custom background ID (owned by user) (`"5abbe4b7ddc1b351ef961414"`)
+    - **[ P ]** Valid custom background ID (user has access)
+    - **[ P ]** Value with leading/trailing whitespace (`" grey "`) if trimmed
+- NICE TO HAVE
+    - **[ P ]** URL-encoded enum value (`sky` encoded)
+    - **[ P ]** URL-encoded custom background ID
+    - **[ P ]** Repeated same value (`prefs/background=blue&prefs/background=blue`) if ignored safely
+    - **[ P ]** Partial update request with only `prefs/background`
+
+#### ❌Negative
+
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N10 ]** Invalid value (`"black"`)
+- MUST HAVE
+    - **[ N ]** Uppercase value (`"BLUE"`) if not normalized
+    - **[ N ]** Uppercase value (`"ORANGE"`) if not normalized
+    - **[ N ]** Uppercase value (`"GREEN"`) if not normalized
+    - **[ N ]** Uppercase value (`"RED"`) if not normalized
+    - **[ N ]** Uppercase value (`"PURPLE"`) if not normalized
+    - **[ N ]** Uppercase value (`"PINK"`) if not normalized
+    - **[ N ]** Uppercase value (`"LIME"`) if not normalized
+    - **[ N ]** Uppercase value (`"SKY"`) if not normalized
+    - **[ N ]** Uppercase value (`"GREY"`) if not normalized
+    - **[ N ]** Internal whitespace (`"gr ey"`)
+    - **[ N ]** Multiple values (`prefs/background=blue&prefs/background=red`)
+    - **[ N ]** User without permission attempts to change background → `403 Forbidden`
+- NICE TO HAVE
+    - **[ N ]** Numeric value (`1`)
+    - **[ N ]** Boolean value (`true`)
+    - **[ N ]** JSON object (`{"background":"blue"}`)
+    - **[ N ]** Array (`["blue"]`)
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double-encoded value (`%2562%256C%2575%2565`)
+    - **[ N ]** Valid-format background ID without access rights
+    - **[ N ]** Non-existent custom background ID
+
+### 💠prefs/cardAging `string`
+
+#### 📄Description
+
+One of: pirate, regular.
+
+#### 📋Summary
+
+| Property     | Value           |
+|--------------|-----------------|
+| Valid values | regular, pirate |
+| Default      | regular         |
+
+#### ✅Positive
+
+- BASIC
+    - **[ P3 ]** Missing → card aging setting remains unchanged
+    - **[ P1 ]** `regular`
+    - **[ P4 ]** `pirate`
+    - **[ P2 ]** `null` → treated as missing (no change)
+- MUST HAVE
+    - **[ P ]** Change value (`regular` → `pirate`)
+    - **[ P ]** Change value (`pirate` → `regular`)
+    - **[ P ]** Idempotent update (`regular` → `regular`)
+    - **[ P ]** Idempotent update (`pirate` → `pirate`)
+    - **[ P ]** Value with leading/trailing whitespace (`" pirate "`) if trimmed
+    - **[ P ]** Parameter is ignored if `powerUps=cardAging` is not enabled
+    - **[ P ]** Value is applied after enabling `powerUps=cardAging`
+- NICE TO HAVE
+    - **[ P ]** URL-encoded enum value (`pirate` encoded)
+    - **[ P ]** Repeated same value (`prefs/cardAging=regular&prefs/cardAging=regular`) if ignored safely
+    - **[ P ]** Partial update request with only `prefs/cardAging`
+
+#### ❌Negative
+
+- BASIC
+    - **[ N ]** Empty string (`""`)
+    - **[ N11 ]** Invalid value (`"modern"`)
+- MUST HAVE
+    - **[ N ]** Uppercase value (`"REGULAR"`) if not normalized
+    - **[ N ]** Uppercase value (`"PIRATE"`) if not normalized
+    - **[ N ]** Internal whitespace (`"pi rate"`)
+    - **[ N ]** Multiple values (`prefs/cardAging=regular&prefs/cardAging=pirate`)
+    - **[ N ]** User without permission attempts to change card aging → `403 Forbidden`
+- NICE TO HAVE
+    - **[ N ]** Numeric value (`1`)
+    - **[ N ]** Boolean value (`true`)
+    - **[ N ]** JSON object (`{"aging":"pirate"}`)
+    - **[ N ]** Array (`["regular"]`)
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double-encoded value (`%2570%2569%2572%2561%2574%2565`)
+
+### 💠prefs/calendarFeedEnabled `boolean`
+
+#### 📄Description
+
+Determines whether the calendar feed is enabled or not.
+
+#### 📋Summary
+
+| Property | Value                                                                |
+|----------|----------------------------------------------------------------------|
+| Required | ❌                                                                    |
+| Default  | false                                                                |
+| Effect   | `true` → calendar feed enabled <br> `false` → calendar feed disabled |
+
+#### ✅Positive
+
+- BASIC
+    - **[ P3 ]** Missing → no change to current calendar feed state
+    - **[ P1 ]** `true`
+    - **[ P4 ]** `false`
+    - **[ P2 ]** `null` → treated as missing (no change)
+- MUST HAVE
+    - **[ P ]** Change value (`false` → `true`)
+    - **[ P ]** Change value (`true` → `false`)
+    - **[ P ]** Idempotent update (`true` → `true`)
+    - **[ P ]** Idempotent update (`false` → `false`)
+    - **[ P ]** Uppercase boolean (`TRUE`) if normalized
+    - **[ P ]** Uppercase boolean (`FALSE`) if normalized
+    - **[ P ]** URL-encoded boolean value (`true` → `%74%72%75%65`)
+    - **[ P ]** URL-encoded boolean value (`false` → `%66%61%6C%73%65`)
+- NICE TO HAVE
+    - **[ P ]** Toggle value multiple times (`true → false → true`)
+    - **[ P ]** Partial update request with only (`prefs/calendarFeedEnabled`)
+
+#### ❌Negative
+
+- BASIC
+    - **[ N ]** `"true"`
+    - **[ N ]** `"false"`
+    - **[ N ]** Empty string (`""`)
+    - **[ N ]** Object (`{"calendarFeedEnabled":true}`)
+    - **[ N ]** Array (`[true]`)
+- MUST HAVE
+    - **[ N ]** Numeric (`0`)
+    - **[ N ]** Numeric (`1`)
+    - **[ N ]** Negative number (`-1`)
+    - **[ N ]** Floating point (`0.0`)
+    - **[ N ]** Floating point (`1.0`)
+    - **[ N ]** Boolean embedded in string (`"value=true"`)
+    - **[ N ]** Multiple values (`prefs/calendarFeedEnabled=true&prefs/calendarFeedEnabled=false`)
+- NICE TO HAVE
+    - **[ N ]** `"yes"`
+    - **[ N ]** `"no"`
+    - **[ N ]** `NaN`
+    - **[ N ]** `Infinity`
+    - **[ N ]** Broken URL encoding (`%`, `%GG`)
+    - **[ N ]** Double URL-encoded value (`%2574%2572%2575%2565`)
+
+### 💠Other tests
+
+#### ✅Positive
+
+- **[ P1 ]** Providing all or most parameters at once
+- **[ P1 | P4 ]** Checking if (POST_url != PUT_url) when table name is changed
+- **[ P1 | P4 ]** Checking if the beginning of the URL response PUT and POST remains the same
+
 ---
 
 # 📜Response <a name="response"></a>
