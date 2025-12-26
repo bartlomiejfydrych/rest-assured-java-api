@@ -2,6 +2,7 @@ package tests.labels;
 
 import base.TestBase;
 import dto.labels.POST_CreateLabelDto;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import payloads.labels.POST_CreateLabelPayload;
 
@@ -23,6 +24,11 @@ import static utils_tests.labels.POST_CreateLabelUtils.validateGetAgainstPost;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class POST_CreateLabelTest extends TestBase {
+
+    private Response responsePost;
+    private Response responsePut;
+    private Response responseGet;
+    private Response responseDelete;
 
     private String boardId;
     private String labelName;

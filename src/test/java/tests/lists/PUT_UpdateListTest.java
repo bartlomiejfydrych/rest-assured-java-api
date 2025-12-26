@@ -34,6 +34,11 @@ import static utils_tests.lists.PUT_UpdateListUtils.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateListTest extends TestBase {
 
+    private Response responsePost;
+    private Response responsePut;
+    private Response responseGet;
+    private Response responseDelete;
+
     /*
     NOTES:
     – Some variables are intentionally taken from POST to expected response to check whether PUT has accidentally changed them when it was not supposed to.

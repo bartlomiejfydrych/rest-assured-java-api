@@ -1,6 +1,7 @@
 package tests.labels;
 
 import base.TestBase;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,11 @@ import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 
 public class DELETE_DeleteLabelTest extends TestBase {
+
+    private Response responsePost;
+    private Response responsePut;
+    private Response responseGet;
+    private Response responseDelete;
 
     private String boardId;
     private String labelId;

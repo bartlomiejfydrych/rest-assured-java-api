@@ -3,6 +3,7 @@ package tests.labels;
 import base.TestBase;
 import dto.labels.GET_GetLabelDto;
 import dto.labels.PUT_UpdateLabelDto;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import payloads.labels.PUT_UpdateLabelPayload;
 
@@ -27,6 +28,11 @@ import static utils_tests.labels.PUT_UpdateLabelUtils.validateGetAgainstPut;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateLabelTest extends TestBase {
+
+    private Response responsePost;
+    private Response responsePut;
+    private Response responseGet;
+    private Response responseDelete;
 
     private String boardId;
     private String labelId;

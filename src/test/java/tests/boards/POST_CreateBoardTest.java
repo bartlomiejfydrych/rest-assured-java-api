@@ -3,6 +3,7 @@ package tests.boards;
 import base.TestBase;
 import configuration.Config;
 import dto.boards.POST_CreateBoardDto;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -22,6 +23,11 @@ import static utils_tests.boards.POST_CreateBoardUtils.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class POST_CreateBoardTest extends TestBase {
+
+    private Response responsePost;
+    private Response responsePut;
+    private Response responseGet;
+    private Response responseDelete;
 
     private String boardId;
     private String trelloId = Config.getTrelloId();

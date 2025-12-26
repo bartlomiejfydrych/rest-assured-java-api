@@ -4,6 +4,7 @@ import base.TestBase;
 import dto.labels.POST_CreateLabelDto;
 import dto.labels.PUT_UpdateFieldOnLabelDto;
 import enums.labels.LabelField;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,11 @@ import static utils_tests.labels.PUT_UpdateFieldOnLabelUtils.validateGetAgainstP
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateFieldOnLabelTest extends TestBase {
+
+    private Response responsePost;
+    private Response responsePut;
+    private Response responseGet;
+    private Response responseDelete;
 
     private String boardId;
     private String labelId;

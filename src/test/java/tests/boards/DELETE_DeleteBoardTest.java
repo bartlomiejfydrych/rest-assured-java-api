@@ -1,6 +1,7 @@
 package tests.boards;
 
 import base.TestBase;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
 import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
@@ -11,6 +12,11 @@ import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 
 public class DELETE_DeleteBoardTest extends TestBase {
+
+    private Response responsePost;
+    private Response responsePut;
+    private Response responseGet;
+    private Response responseDelete;
 
     private String boardId;
 

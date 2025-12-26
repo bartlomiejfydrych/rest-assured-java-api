@@ -2,6 +2,7 @@ package tests.emoji;
 
 import base.TestBase;
 import dto.emoji.GET_ListAvailableEmojiDto;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import payloads.emoji.GET_ListAvailableEmojiPayload;
 
@@ -14,6 +15,11 @@ import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsResponse.*;
 
 public class GET_ListAvailableEmojiTest extends TestBase {
+
+    private Response responsePost;
+    private Response responsePut;
+    private Response responseGet;
+    private Response responseDelete;
 
     // --------------
     // POSITIVE TESTS

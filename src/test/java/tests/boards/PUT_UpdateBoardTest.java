@@ -5,6 +5,7 @@ import configuration.Config;
 import dto.boards.GET_GetBoardDto;
 import dto.boards.POST_CreateBoardDto;
 import dto.boards.PUT_UpdateBoardDto;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import payloads.boards.PUT_UpdateBoardPayload;
 
@@ -27,6 +28,11 @@ import static utils_tests.boards.PUT_UpdateBoardUtils.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateBoardTest extends TestBase {
+
+    private Response responsePost;
+    private Response responsePut;
+    private Response responseGet;
+    private Response responseDelete;
 
     private String trelloId = Config.getTrelloId();
     // POST changing variables

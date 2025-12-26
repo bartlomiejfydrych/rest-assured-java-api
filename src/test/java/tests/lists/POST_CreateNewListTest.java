@@ -28,6 +28,11 @@ import static utils_tests.lists.POST_CreateNewListUtils.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class POST_CreateNewListTest extends TestBase {
 
+    private Response responsePost;
+    private Response responsePut;
+    private Response responseGet;
+    private Response responseDelete;
+
     private String boardId;
     private String listName;
     private String listIdListSource;
