@@ -14,6 +14,27 @@ import java.net.URL;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class BoardBaseDto {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_DESC = "desc";
+    public static final String FIELD_DESC_DATA = "descData";
+    public static final String FIELD_CLOSED = "closed";
+    public static final String FIELD_ID_ORGANIZATION = "idOrganization";
+    public static final String FIELD_ID_ENTERPRISE = "idEnterprise";
+    public static final String FIELD_PINNED = "pinned";
+    public static final String FIELD_URL = "url";
+    public static final String FIELD_SHORT_URL = "shortUrl";
+    public static final String FIELD_PREFS = "prefs";
+    public static final String FIELD_LABEL_NAMES = "labelNames";
+
+    // ==========================================================================================================
+    // FIELDS – VALIDATION CONSTRAINTS
+    // ==========================================================================================================
+
     @NotNull
     @Pattern(regexp = "^[0-9a-fA-F]{24}$")
     public String id;
@@ -53,20 +74,24 @@ public class BoardBaseDto {
     @NotNull
     public LabelNames labelNames;
 
+    // ==========================================================================================================
+    // CONSTRUCTORS
+    // ==========================================================================================================
+
     @JsonCreator
     public BoardBaseDto(
-            @JsonProperty(value = "id", required = true) String id,
-            @JsonProperty(value = "name", required = true) String name,
-            @JsonProperty(value = "desc", required = true) String desc,
-            @JsonProperty(value = "descData", required = true) DescData descData,
-            @JsonProperty(value = "closed", required = true) Boolean closed,
-            @JsonProperty(value = "idOrganization", required = true) String idOrganization,
-            @JsonProperty(value = "idEnterprise", required = true) Object idEnterprise,
-            @JsonProperty(value = "pinned", required = true) Boolean pinned,
-            @JsonProperty(value = "url", required = true) URL url,
-            @JsonProperty(value = "shortUrl", required = true) URL shortUrl,
-            @JsonProperty(value = "prefs", required = true) Prefs prefs,
-            @JsonProperty(value = "labelNames", required = true) LabelNames labelNames
+            @JsonProperty(value = FIELD_ID, required = true) String id,
+            @JsonProperty(value = FIELD_NAME, required = true) String name,
+            @JsonProperty(value = FIELD_DESC, required = true) String desc,
+            @JsonProperty(value = FIELD_DESC_DATA, required = true) DescData descData,
+            @JsonProperty(value = FIELD_CLOSED, required = true) Boolean closed,
+            @JsonProperty(value = FIELD_ID_ORGANIZATION, required = true) String idOrganization,
+            @JsonProperty(value = FIELD_ID_ENTERPRISE, required = true) Object idEnterprise,
+            @JsonProperty(value = FIELD_PINNED, required = true) Boolean pinned,
+            @JsonProperty(value = FIELD_URL, required = true) URL url,
+            @JsonProperty(value = FIELD_SHORT_URL, required = true) URL shortUrl,
+            @JsonProperty(value = FIELD_PREFS, required = true) Prefs prefs,
+            @JsonProperty(value = FIELD_LABEL_NAMES, required = true) LabelNames labelNames
     ) {
         this.id = id;
         this.name = name;
