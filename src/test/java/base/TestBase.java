@@ -7,7 +7,6 @@ import configuration.RequestSpecConfig;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -19,22 +18,31 @@ public class TestBase {
     // VARIABLES AND OBJECTS
     // ==========================================================================================================
 
+    // --------
+    // REQUESTS
+    // --------
+
     // Object containing all request settings
     protected static RequestSpecification requestSpecificationCommon;
-    // Variables to save responses
-    protected static Response responsePost;
-    protected static Response responsePut;
-    protected static Response responseGet;
-    protected static Response responseDelete;
+    // Mapper object to transform response String into JsonNode object
+    protected static ObjectMapper objectMapper = new ObjectMapper();
+
+    // -----
+    // TESTS
+    // -----
+
+    // Test tags
+    protected static final String testTagPositive = "positive";
+    protected static final String testTagNegative = "negative";
+
+    // -------
+    // HELPERS
+    // -------
+
     // Faker object to generate fake random data
     protected static Faker faker = new Faker();
     // Random object to used to select a random element
     protected static Random random = new Random();
-    // Mapper object to transform response String into JsonNode object
-    protected static ObjectMapper objectMapper = new ObjectMapper();
-    // Test tags
-    protected static final String testTagPositive = "positive";
-    protected static final String testTagNegative = "negative";
 
     // ==========================================================================================================
     // SET UP
