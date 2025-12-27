@@ -47,7 +47,7 @@ public class BoardBaseDto {
     @Size(max = 16384)
     public String desc;
 
-    @Valid
+    @Valid // <-- validates nested fields if object exists
     public DescData descData;
 
     @NotNull
@@ -57,6 +57,7 @@ public class BoardBaseDto {
     @Pattern(regexp = "^[0-9a-fA-F]{24}$")
     public String idOrganization;
 
+    @Valid // <-- validates nested fields if object exists
     public Object idEnterprise;
 
     @NotNull
