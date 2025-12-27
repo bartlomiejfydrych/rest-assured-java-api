@@ -4,12 +4,53 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dto.boards.board.prefs.SwitcherView;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Prefs {
+
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    public static final String FIELD_PERMISSION_LEVEL = "permissionLevel";
+    public static final String FIELD_HIDE_VOTES = "hideVotes";
+    public static final String FIELD_VOTING = "voting";
+    public static final String FIELD_COMMENTS = "comments";
+    public static final String FIELD_INVITATIONS = "invitations";
+    public static final String FIELD_SELF_JOIN = "selfJoin";
+    public static final String FIELD_CARD_COVERS = "cardCovers";
+    public static final String FIELD_SHOW_COMPLETE_STATUS = "showCompleteStatus";
+    public static final String FIELD_CARD_COUNTS = "cardCounts";
+    public static final String FIELD_IS_TEMPLATE = "isTemplate";
+    public static final String FIELD_CARD_AGING = "cardAging";
+    public static final String FIELD_CALENDAR_FEED_ENABLED = "calendarFeedEnabled";
+    public static final String FIELD_HIDDEN_PLUGIN_BOARD_BUTTONS = "hiddenPluginBoardButtons";
+    public static final String FIELD_SWITCHER_VIEWS = "switcherViews";
+    public static final String FIELD_AUTO_ARCHIVE = "autoArchive";
+    public static final String FIELD_BACKGROUND = "background";
+    public static final String FIELD_BACKGROUND_COLOR = "backgroundColor";
+    public static final String FIELD_BACKGROUND_DARK_COLOR = "backgroundDarkColor";
+    public static final String FIELD_BACKGROUND_IMAGE = "backgroundImage";
+    public static final String FIELD_BACKGROUND_DARK_IMAGE = "backgroundDarkImage";
+    public static final String FIELD_BACKGROUND_IMAGE_SCALED = "backgroundImageScaled";
+    public static final String FIELD_BACKGROUND_TILE = "backgroundTile";
+    public static final String FIELD_BACKGROUND_BRIGHTNESS = "backgroundBrightness";
+    public static final String FIELD_SHARED_SOURCE_URL = "sharedSourceUrl";
+    public static final String FIELD_BACKGROUND_BOTTOM_COLOR = "backgroundBottomColor";
+    public static final String FIELD_BACKGROUND_TOP_COLOR = "backgroundTopColor";
+    public static final String FIELD_CAN_BE_PUBLIC = "canBePublic";
+    public static final String FIELD_CAN_BE_ENTERPRISE = "canBeEnterprise";
+    public static final String FIELD_CAN_BE_ORG = "canBeOrg";
+    public static final String FIELD_CAN_BE_PRIVATE = "canBePrivate";
+    public static final String FIELD_CAN_INVITE = "canInvite";
+
+    // ==========================================================================================================
+    // FIELDS – VALIDATION CONSTRAINTS
+    // ==========================================================================================================
 
     @NotNull
     @Pattern(regexp = "org|private|public")
@@ -52,6 +93,7 @@ public class Prefs {
     @NotNull
     public List<SwitcherView> switcherViews;
 
+    @Valid // <-- validates nested fields if object exists
     public Object autoArchive;
 
     @NotNull
@@ -87,39 +129,43 @@ public class Prefs {
     @NotNull
     public Boolean canInvite;
 
+    // ==========================================================================================================
+    // CONSTRUCTORS
+    // ==========================================================================================================
+
     @JsonCreator
     public Prefs(
-            @JsonProperty(value = "permissionLevel", required = true) String permissionLevel,
-            @JsonProperty(value = "hideVotes", required = true) Boolean hideVotes,
-            @JsonProperty(value = "voting", required = true) String voting,
-            @JsonProperty(value = "comments", required = true) String comments,
-            @JsonProperty(value = "invitations", required = true) String invitations,
-            @JsonProperty(value = "selfJoin", required = true) Boolean selfJoin,
-            @JsonProperty(value = "cardCovers", required = true) Boolean cardCovers,
-            @JsonProperty(value = "showCompleteStatus", required = true) Boolean showCompleteStatus,
-            @JsonProperty(value = "cardCounts", required = true) Boolean cardCounts,
-            @JsonProperty(value = "isTemplate", required = true) Boolean isTemplate,
-            @JsonProperty(value = "cardAging", required = true) String cardAging,
-            @JsonProperty(value = "calendarFeedEnabled", required = true) Boolean calendarFeedEnabled,
-            @JsonProperty(value = "hiddenPluginBoardButtons", required = true) List<Object> hiddenPluginBoardButtons,
-            @JsonProperty(value = "switcherViews", required = true) List<SwitcherView> switcherViews,
-            @JsonProperty("autoArchive") Object autoArchive,
-            @JsonProperty(value = "background", required = true) String background,
-            @JsonProperty(value = "backgroundColor", required = true) String backgroundColor,
-            @JsonProperty("backgroundDarkColor") Object backgroundDarkColor,
-            @JsonProperty("backgroundImage") Object backgroundImage,
-            @JsonProperty("backgroundDarkImage") Object backgroundDarkImage,
-            @JsonProperty("backgroundImageScaled") Object backgroundImageScaled,
-            @JsonProperty(value = "backgroundTile", required = true) Boolean backgroundTile,
-            @JsonProperty(value = "backgroundBrightness", required = true) String backgroundBrightness,
-            @JsonProperty("sharedSourceUrl") Object sharedSourceUrl,
-            @JsonProperty(value = "backgroundBottomColor", required = true) String backgroundBottomColor,
-            @JsonProperty(value = "backgroundTopColor", required = true) String backgroundTopColor,
-            @JsonProperty(value = "canBePublic", required = true) Boolean canBePublic,
-            @JsonProperty(value = "canBeEnterprise", required = true) Boolean canBeEnterprise,
-            @JsonProperty(value = "canBeOrg", required = true) Boolean canBeOrg,
-            @JsonProperty(value = "canBePrivate", required = true) Boolean canBePrivate,
-            @JsonProperty(value = "canInvite", required = true) Boolean canInvite
+            @JsonProperty(value = FIELD_PERMISSION_LEVEL, required = true) String permissionLevel,
+            @JsonProperty(value = FIELD_HIDE_VOTES, required = true) Boolean hideVotes,
+            @JsonProperty(value = FIELD_VOTING, required = true) String voting,
+            @JsonProperty(value = FIELD_COMMENTS, required = true) String comments,
+            @JsonProperty(value = FIELD_INVITATIONS, required = true) String invitations,
+            @JsonProperty(value = FIELD_SELF_JOIN, required = true) Boolean selfJoin,
+            @JsonProperty(value = FIELD_CARD_COVERS, required = true) Boolean cardCovers,
+            @JsonProperty(value = FIELD_SHOW_COMPLETE_STATUS, required = true) Boolean showCompleteStatus,
+            @JsonProperty(value = FIELD_CARD_COUNTS, required = true) Boolean cardCounts,
+            @JsonProperty(value = FIELD_IS_TEMPLATE, required = true) Boolean isTemplate,
+            @JsonProperty(value = FIELD_CARD_AGING, required = true) String cardAging,
+            @JsonProperty(value = FIELD_CALENDAR_FEED_ENABLED, required = true) Boolean calendarFeedEnabled,
+            @JsonProperty(value = FIELD_HIDDEN_PLUGIN_BOARD_BUTTONS, required = true) List<Object> hiddenPluginBoardButtons,
+            @JsonProperty(value = FIELD_SWITCHER_VIEWS, required = true) List<SwitcherView> switcherViews,
+            @JsonProperty(value = FIELD_AUTO_ARCHIVE) Object autoArchive,
+            @JsonProperty(value = FIELD_BACKGROUND, required = true) String background,
+            @JsonProperty(value = FIELD_BACKGROUND_COLOR, required = true) String backgroundColor,
+            @JsonProperty(value = FIELD_BACKGROUND_DARK_COLOR) Object backgroundDarkColor,
+            @JsonProperty(value = FIELD_BACKGROUND_IMAGE) Object backgroundImage,
+            @JsonProperty(value = FIELD_BACKGROUND_DARK_IMAGE) Object backgroundDarkImage,
+            @JsonProperty(value = FIELD_BACKGROUND_IMAGE_SCALED) Object backgroundImageScaled,
+            @JsonProperty(value = FIELD_BACKGROUND_TILE, required = true) Boolean backgroundTile,
+            @JsonProperty(value = FIELD_BACKGROUND_BRIGHTNESS, required = true) String backgroundBrightness,
+            @JsonProperty(value = FIELD_SHARED_SOURCE_URL) Object sharedSourceUrl,
+            @JsonProperty(value = FIELD_BACKGROUND_BOTTOM_COLOR, required = true) String backgroundBottomColor,
+            @JsonProperty(value = FIELD_BACKGROUND_TOP_COLOR, required = true) String backgroundTopColor,
+            @JsonProperty(value = FIELD_CAN_BE_PUBLIC, required = true) Boolean canBePublic,
+            @JsonProperty(value = FIELD_CAN_BE_ENTERPRISE, required = true) Boolean canBeEnterprise,
+            @JsonProperty(value = FIELD_CAN_BE_ORG, required = true) Boolean canBeOrg,
+            @JsonProperty(value = FIELD_CAN_BE_PRIVATE, required = true) Boolean canBePrivate,
+            @JsonProperty(value = FIELD_CAN_INVITE, required = true) Boolean canInvite
     ) {
         this.permissionLevel = permissionLevel;
         this.hideVotes = hideVotes;
@@ -154,6 +200,7 @@ public class Prefs {
         this.canInvite = canInvite;
     }
 
+    // Empty constructor - needed to be able to assign values manually
     public Prefs() {
     }
 }
