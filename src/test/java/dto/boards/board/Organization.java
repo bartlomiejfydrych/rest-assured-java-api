@@ -12,6 +12,19 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Organization {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_DISPLAY_NAME = "displayName";
+    public static final String FIELD_MEMBERSHIPS = "memberships";
+
+    // ==========================================================================================================
+    // FIELDS – VALIDATION CONSTRAINTS
+    // ==========================================================================================================
+
     @NotNull
     public String id;
 
@@ -25,12 +38,16 @@ public class Organization {
     @NotEmpty
     public List<OrganizationMemberships> memberships;
 
+    // ==========================================================================================================
+    // CONSTRUCTORS
+    // ==========================================================================================================
+
     @JsonCreator
     public Organization(
-            @JsonProperty(value = "id", required = true) String id,
-            @JsonProperty(value = "name", required = true) String name,
-            @JsonProperty(value = "displayName", required = true) String displayName,
-            @JsonProperty(value = "memberships", required = true) List<OrganizationMemberships> memberships
+            @JsonProperty(value = FIELD_ID, required = true) String id,
+            @JsonProperty(value = FIELD_NAME, required = true) String name,
+            @JsonProperty(value = FIELD_DISPLAY_NAME, required = true) String displayName,
+            @JsonProperty(value = FIELD_MEMBERSHIPS, required = true) List<OrganizationMemberships> memberships
     ) {
         this.id = id;
         this.name = name;
@@ -38,6 +55,7 @@ public class Organization {
         this.memberships = memberships;
     }
 
+    // Empty constructor - needed to be able to assign values manually
     public Organization() {
     }
 }
