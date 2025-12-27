@@ -8,6 +8,47 @@ import jakarta.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class LabelNames {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    public static final String FIELD_GREEN = "green";
+    public static final String FIELD_YELLOW = "yellow";
+    public static final String FIELD_ORANGE = "orange";
+    public static final String FIELD_RED = "red";
+    public static final String FIELD_PURPLE = "purple";
+    public static final String FIELD_BLUE = "blue";
+    public static final String FIELD_SKY = "sky";
+    public static final String FIELD_LIME = "lime";
+    public static final String FIELD_PINK = "pink";
+    public static final String FIELD_BLACK = "black";
+
+    public static final String FIELD_GREEN_DARK = "green_dark";
+    public static final String FIELD_YELLOW_DARK = "yellow_dark";
+    public static final String FIELD_ORANGE_DARK = "orange_dark";
+    public static final String FIELD_RED_DARK = "red_dark";
+    public static final String FIELD_PURPLE_DARK = "purple_dark";
+    public static final String FIELD_BLUE_DARK = "blue_dark";
+    public static final String FIELD_SKY_DARK = "sky_dark";
+    public static final String FIELD_LIME_DARK = "lime_dark";
+    public static final String FIELD_PINK_DARK = "pink_dark";
+    public static final String FIELD_BLACK_DARK = "black_dark";
+
+    public static final String FIELD_GREEN_LIGHT = "green_light";
+    public static final String FIELD_YELLOW_LIGHT = "yellow_light";
+    public static final String FIELD_ORANGE_LIGHT = "orange_light";
+    public static final String FIELD_RED_LIGHT = "red_light";
+    public static final String FIELD_PURPLE_LIGHT = "purple_light";
+    public static final String FIELD_BLUE_LIGHT = "blue_light";
+    public static final String FIELD_SKY_LIGHT = "sky_light";
+    public static final String FIELD_LIME_LIGHT = "lime_light";
+    public static final String FIELD_PINK_LIGHT = "pink_light";
+    public static final String FIELD_BLACK_LIGHT = "black_light";
+
+    // ==========================================================================================================
+    // FIELDS – VALIDATION CONSTRAINTS
+    // ==========================================================================================================
+
     @NotNull
     public String green;
     @NotNull
@@ -30,81 +71,85 @@ public class LabelNames {
     public String black;
 
     @NotNull
-    public String green_dark;
+    public String greenDark;
     @NotNull
-    public String yellow_dark;
+    public String yellowDark;
     @NotNull
-    public String orange_dark;
+    public String orangeDark;
     @NotNull
-    public String red_dark;
+    public String redDark;
     @NotNull
-    public String purple_dark;
+    public String purpleDark;
     @NotNull
-    public String blue_dark;
+    public String blueDark;
     @NotNull
-    public String sky_dark;
+    public String skyDark;
     @NotNull
-    public String lime_dark;
+    public String limeDark;
     @NotNull
-    public String pink_dark;
+    public String pinkDark;
     @NotNull
-    public String black_dark;
+    public String blackDark;
 
     @NotNull
-    public String green_light;
+    public String greenLight;
     @NotNull
-    public String yellow_light;
+    public String yellowLight;
     @NotNull
-    public String orange_light;
+    public String orangeLight;
     @NotNull
-    public String red_light;
+    public String redLight;
     @NotNull
-    public String purple_light;
+    public String purpleLight;
     @NotNull
-    public String blue_light;
+    public String blueLight;
     @NotNull
-    public String sky_light;
+    public String skyLight;
     @NotNull
-    public String lime_light;
+    public String limeLight;
     @NotNull
-    public String pink_light;
+    public String pinkLight;
     @NotNull
-    public String black_light;
+    public String blackLight;
+
+    // ==========================================================================================================
+    // CONSTRUCTORS
+    // ==========================================================================================================
 
     @JsonCreator
     public LabelNames(
-            @JsonProperty(value = "green", required = true) String green,
-            @JsonProperty(value = "yellow", required = true) String yellow,
-            @JsonProperty(value = "orange", required = true) String orange,
-            @JsonProperty(value = "red", required = true) String red,
-            @JsonProperty(value = "purple", required = true) String purple,
-            @JsonProperty(value = "blue", required = true) String blue,
-            @JsonProperty(value = "sky", required = true) String sky,
-            @JsonProperty(value = "lime", required = true) String lime,
-            @JsonProperty(value = "pink", required = true) String pink,
-            @JsonProperty(value = "black", required = true) String black,
+            @JsonProperty(value = FIELD_GREEN, required = true) String green,
+            @JsonProperty(value = FIELD_YELLOW, required = true) String yellow,
+            @JsonProperty(value = FIELD_ORANGE, required = true) String orange,
+            @JsonProperty(value = FIELD_RED, required = true) String red,
+            @JsonProperty(value = FIELD_PURPLE, required = true) String purple,
+            @JsonProperty(value = FIELD_BLUE, required = true) String blue,
+            @JsonProperty(value = FIELD_SKY, required = true) String sky,
+            @JsonProperty(value = FIELD_LIME, required = true) String lime,
+            @JsonProperty(value = FIELD_PINK, required = true) String pink,
+            @JsonProperty(value = FIELD_BLACK, required = true) String black,
 
-            @JsonProperty(value = "green_dark", required = true) String green_dark,
-            @JsonProperty(value = "yellow_dark", required = true) String yellow_dark,
-            @JsonProperty(value = "orange_dark", required = true) String orange_dark,
-            @JsonProperty(value = "red_dark", required = true) String red_dark,
-            @JsonProperty(value = "purple_dark", required = true) String purple_dark,
-            @JsonProperty(value = "blue_dark", required = true) String blue_dark,
-            @JsonProperty(value = "sky_dark", required = true) String sky_dark,
-            @JsonProperty(value = "lime_dark", required = true) String lime_dark,
-            @JsonProperty(value = "pink_dark", required = true) String pink_dark,
-            @JsonProperty(value = "black_dark", required = true) String black_dark,
+            @JsonProperty(value = FIELD_GREEN_DARK, required = true) String greenDark,
+            @JsonProperty(value = FIELD_YELLOW_DARK, required = true) String yellowDark,
+            @JsonProperty(value = FIELD_ORANGE_DARK, required = true) String orangeDark,
+            @JsonProperty(value = FIELD_RED_DARK, required = true) String redDark,
+            @JsonProperty(value = FIELD_PURPLE_DARK, required = true) String purpleDark,
+            @JsonProperty(value = FIELD_BLUE_DARK, required = true) String blueDark,
+            @JsonProperty(value = FIELD_SKY_DARK, required = true) String skyDark,
+            @JsonProperty(value = FIELD_LIME_DARK, required = true) String limeDark,
+            @JsonProperty(value = FIELD_PINK_DARK, required = true) String pinkDark,
+            @JsonProperty(value = FIELD_BLACK_DARK, required = true) String blackDark,
 
-            @JsonProperty(value = "green_light", required = true) String green_light,
-            @JsonProperty(value = "yellow_light", required = true) String yellow_light,
-            @JsonProperty(value = "orange_light", required = true) String orange_light,
-            @JsonProperty(value = "red_light", required = true) String red_light,
-            @JsonProperty(value = "purple_light", required = true) String purple_light,
-            @JsonProperty(value = "blue_light", required = true) String blue_light,
-            @JsonProperty(value = "sky_light", required = true) String sky_light,
-            @JsonProperty(value = "lime_light", required = true) String lime_light,
-            @JsonProperty(value = "pink_light", required = true) String pink_light,
-            @JsonProperty(value = "black_light", required = true) String black_light
+            @JsonProperty(value = FIELD_GREEN_LIGHT, required = true) String greenLight,
+            @JsonProperty(value = FIELD_YELLOW_LIGHT, required = true) String yellowLight,
+            @JsonProperty(value = FIELD_ORANGE_LIGHT, required = true) String orangeLight,
+            @JsonProperty(value = FIELD_RED_LIGHT, required = true) String redLight,
+            @JsonProperty(value = FIELD_PURPLE_LIGHT, required = true) String purpleLight,
+            @JsonProperty(value = FIELD_BLUE_LIGHT, required = true) String blueLight,
+            @JsonProperty(value = FIELD_SKY_LIGHT, required = true) String skyLight,
+            @JsonProperty(value = FIELD_LIME_LIGHT, required = true) String limeLight,
+            @JsonProperty(value = FIELD_PINK_LIGHT, required = true) String pinkLight,
+            @JsonProperty(value = FIELD_BLACK_LIGHT, required = true) String blackLight
     ) {
         this.green = green;
         this.yellow = yellow;
@@ -117,29 +162,30 @@ public class LabelNames {
         this.pink = pink;
         this.black = black;
 
-        this.green_dark = green_dark;
-        this.yellow_dark = yellow_dark;
-        this.orange_dark = orange_dark;
-        this.red_dark = red_dark;
-        this.purple_dark = purple_dark;
-        this.blue_dark = blue_dark;
-        this.sky_dark = sky_dark;
-        this.lime_dark = lime_dark;
-        this.pink_dark = pink_dark;
-        this.black_dark = black_dark;
+        this.greenDark = greenDark;
+        this.yellowDark = yellowDark;
+        this.orangeDark = orangeDark;
+        this.redDark = redDark;
+        this.purpleDark = purpleDark;
+        this.blueDark = blueDark;
+        this.skyDark = skyDark;
+        this.limeDark = limeDark;
+        this.pinkDark = pinkDark;
+        this.blackDark = blackDark;
 
-        this.green_light = green_light;
-        this.yellow_light = yellow_light;
-        this.orange_light = orange_light;
-        this.red_light = red_light;
-        this.purple_light = purple_light;
-        this.blue_light = blue_light;
-        this.sky_light = sky_light;
-        this.lime_light = lime_light;
-        this.pink_light = pink_light;
-        this.black_light = black_light;
+        this.greenLight = greenLight;
+        this.yellowLight = yellowLight;
+        this.orangeLight = orangeLight;
+        this.redLight = redLight;
+        this.purpleLight = purpleLight;
+        this.blueLight = blueLight;
+        this.skyLight = skyLight;
+        this.limeLight = limeLight;
+        this.pinkLight = pinkLight;
+        this.blackLight = blackLight;
     }
 
+    // Empty constructor - needed to be able to assign values manually
     public LabelNames() {
     }
 }
