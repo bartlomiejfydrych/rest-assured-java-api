@@ -34,6 +34,8 @@
 - [UtilsCompare.java – opis kodu](#utils_compare_java)
 - [UtilsResponse.java – opis kodu](#utils_response_java)
 - [DTO – opcjonalne parametry](#dto_optional_parameters)
+- [DTO – opcjonalne parametry 2](#dto_optional_parameters_2)
+- [DTO – (value = ...)](#dto_value)
 - [Struktura JSON – JsonSchema vs. DTO/POJO](#json_schema_dto_pojo)
 - [Porównywanie JSON'ów – wyzwania, podejścia, praktyki](#json_compare_intro)
 - [Porównywanie JSON'ów – ObjectMapper](#json_compare_object_mapper)
@@ -1903,6 +1905,323 @@ public class SkinVariations {
     }
 }
 ```
+
+---
+
+## 📄DTO – opcjonalne parametry 2 <a name="dto_optional_parameters_2"></a>
+
+### Pytanie
+
+Przypomnij mi, dlaczego tutaj pole "organization" zostawiliśmy osobno, nie podając go z pozostałymi parametrami w @JsonCreator?  
+Z tego, co pamiętam, to obiekt ten raz się pojawia w response, a raz nie.  
+I dlaczego ma on @JsonProperty(FIELD_ORGANIZATION) nad sobą?
+
+```java
+@Valid // <-- validates nested fields if object exists
+@JsonProperty(FIELD_ORGANIZATION)
+public Organization organization;
+```
+
+### Odpowiedź
+
+Bardzo dobre pytanie — i dobrze, że do tego wracasz, bo to **jedna z ważniejszych decyzji projektowych w tym DTO**.
+Przypomnę Ci to **krok po kroku**, logicznie, „dlaczego tak, a nie inaczej”.
+
+#### TL;DR (krótkie przypomnienie)
+
+**Pole `organization`:**
+
+* **raz występuje w response, raz nie**
+* **nie jest wymagane zawsze**
+* **ma być walidowane tylko wtedy, gdy się pojawi**
+* **nie może powodować błędu deserializacji, gdy go brak**
+
+➡️ dlatego:
+
+* **NIE jest w `@JsonCreator`**
+* **JEST polem z `@JsonProperty`**
+* **MA `@Valid`, ale NIE `@NotNull`**
+
+#### 1️⃣ Dlaczego `organization` NIE jest w `@JsonCreator`
+
+##### Co robi `@JsonCreator`?
+
+Gdy masz:
+
+```java
+@JsonCreator
+public PUT_UpdateBoardDto(
+    @JsonProperty(value = "id", required = true) String id,
+    ...
+)
+```
+
+to **Jackson mówi**:
+
+> „Aby stworzyć obiekt, muszę dostać WSZYSTKIE parametry konstruktora”
+
+Jeśli **jakiegokolwiek parametru zabraknie**, a masz:
+
+```java
+FAIL_ON_MISSING_CREATOR_PROPERTIES = true
+```
+
+➡️ **deserializacja WYBUCHA**
+
+##### Co by się stało, gdybyś dodał tam `organization`?
+
+```java
+@JsonProperty(value = "organization", required = false) Organization organization
+```
+
+❌ Nadal problem:
+
+* Jackson **i tak oczekuje tego parametru w JSON**
+* „required = false” **nie ratuje przy creatorze**
+* brak pola →
+  **Missing creator property 'organization'**
+
+Czyli dokładnie ten błąd, który już kiedyś widziałeś.
+
+##### Wniosek
+
+> `@JsonCreator` **nie nadaje się do pól, które są opcjonalne w response**
+
+Dlatego:  
+✔️ **`organization` MUSI być poza konstruktorem**
+
+#### 2️⃣ Dlaczego `organization` jest polem, a nie parametrem konstruktora
+
+Jackson ma **dwa tryby deserializacji**:
+
+| Tryb                         | Kiedy                  |
+|------------------------------|------------------------|
+| Konstruktor (`@JsonCreator`) | pola **zawsze obecne** |
+| Field / setter               | pola **opcjonalne**    |
+
+Ty zrobiłeś dokładnie to, co trzeba:
+
+```java
+@JsonProperty(FIELD_ORGANIZATION)
+public Organization organization;
+```
+
+Co to daje?
+
+* jeśli **pole jest w JSON** → Jackson je ustawi
+* jeśli **pola nie ma** → `organization == null`
+* **brak błędu**
+* walidacja działa tylko, gdy obiekt istnieje
+
+✔️ dokładnie to, czego potrzebujesz
+
+#### 3️⃣ Dlaczego `@JsonProperty(FIELD_ORGANIZATION)` nad polem?
+
+To jest **kluczowy detal**, który często się pomija.
+
+##### Po co to jest?
+
+```java
+@JsonProperty("organization")
+public Organization organization;
+```
+
+Zapewnia:
+
+1. **Jawne mapowanie**
+    * nawet jeśli nazwa pola w Javie się zmieni
+2. **Spójność z `FIELD_ORGANIZATION`**
+3. **Czytelność**
+    * od razu widać, że to pole pochodzi z JSON-a
+4. **Brak zależności od naming strategy**
+
+Bez tego:
+
+* Jackson mapowałby „domyślnie”
+* ale **Twoje DTO straciłoby precyzję**
+
+➡️ W testach API **jawność > magia**
+
+#### 4️⃣ Dlaczego `@Valid`, ale bez `@NotNull`
+
+```java
+@Valid
+@JsonProperty(FIELD_ORGANIZATION)
+public Organization organization;
+```
+
+##### Co to dokładnie oznacza?
+
+| Sytuacja                         | Efekt                 |
+|----------------------------------|-----------------------|
+| `organization` **nie ma w JSON** | `null`, OK            |
+| `organization` **jest w JSON**   | walidowane            |
+| `organization` jest `null`       | `@Valid` nic nie robi |
+
+Czyli:
+
+> **Waliduj, ale tylko jeśli istnieje**
+
+To jest **idealne zachowanie dla pól opcjonalnych**.
+
+#### 5️⃣ Dlaczego to rozwiązanie jest „właściwe”
+
+Masz jednocześnie:
+
+* `FAIL_ON_UNKNOWN_PROPERTIES = true`
+* `FAIL_ON_MISSING_CREATOR_PROPERTIES = true`
+* pełną walidację Bean Validation
+* brak fałszywych błędów
+
+To jest **najbezpieczniejsza i najbardziej przewidywalna konfiguracja**.
+
+#### 6️⃣ Jak zapamiętać tę zasadę na przyszłość
+
+Możesz zapamiętać prostą regułę:
+
+> **Jeśli pole:**
+>
+> * zawsze występuje → `@JsonCreator`
+> * czasami występuje → pole/setter + `@JsonProperty`
+> * ma być walidowane, tylko gdy jest → `@Valid` bez `@NotNull`
+
+#### 7️⃣ Podsumowanie w jednym zdaniu
+
+**`organization` jest poza `@JsonCreator`, bo jest opcjonalne w response i nie może powodować błędu deserializacji,
+a `@JsonProperty` zapewnia jawne mapowanie i walidację tylko wtedy, gdy pole się pojawi.**
+
+---
+
+## 📄DTO – (value = ...) <a name="dto_value"></a>
+
+### Pytanie
+
+Dlaczego niektóre pola nie mają (value = ...)?
+
+### Odpowiedź
+
+Bardzo dobre pytanie — i dobrze, że to zauważyłeś 👍  
+Krótka odpowiedź: **`value =` jest opcjonalne**, a brak `value =` **nie zmienia zachowania adnotacji**.
+
+Poniżej pełne, uporządkowane wyjaśnienie 👇
+
+#### 1️⃣ Dlaczego czasem jest `@JsonProperty("x")`, a czasem `@JsonProperty(value = "x")`?
+
+Bo **`value` jest domyślnym (pierwszym) parametrem adnotacji**.
+
+##### Te dwie wersje są **IDENTYCZNE**:
+
+```java
+@JsonProperty("backgroundImage")
+```
+
+```java
+@JsonProperty(value = "backgroundImage")
+```
+
+➡️ Kompilator Javy traktuje je dokładnie tak samo.
+
+#### 2️⃣ Kiedy MUSISZ użyć `value =`?
+
+Tylko wtedy, gdy **używasz więcej niż jednego parametru adnotacji**, np.:
+
+```java
+@JsonProperty(value = "name", required = true)
+```
+
+Nie możesz wtedy napisać:
+
+```java
+@JsonProperty("name", true) // ❌ nielegalne
+```
+
+#### 3️⃣ Dlaczego w Twoim kodzie część pól ma `value =`, a część nie?
+
+##### Przykłady:
+
+```java
+@JsonProperty(FIELD_AUTO_ARCHIVE)
+Object autoArchive;
+```
+
+```java
+@JsonProperty(value = FIELD_PERMISSION_LEVEL, required = true)
+String permissionLevel;
+```
+
+To **świadomy wybór stylistyczny**:
+
+| Przypadek           | Dlaczego                     |
+|---------------------|------------------------------|
+| Bez `required`      | krótszy zapis, czytelniej    |
+| Z `required = true` | trzeba jawnie nazwać `value` |
+
+#### 4️⃣ Czy to wpływa na działanie Jacksona?
+
+❌ **Nie ma absolutnie żadnego wpływu**.
+
+Jackson:
+
+* tak samo mapuje JSON → Java
+* tak samo waliduje obecność pól (`required = true`)
+* tak samo serializuje obiekt
+
+To **czysto składniowa różnica**.
+
+#### 5️⃣ Czy warto to ujednolicić?
+
+##### Opcja A – spójność i czytelność (polecane)
+
+```java
+@JsonProperty(value = FIELD_BACKGROUND, required = true)
+```
+
+```java
+@JsonProperty(value = FIELD_AUTO_ARCHIVE)
+```
+
+✔ czytelne  
+✔ jednoznaczne  
+✔ łatwiejsze code review
+
+##### Opcja B – krócej tam, gdzie się da
+
+```java
+@JsonProperty(FIELD_AUTO_ARCHIVE)
+```
+
+```java
+@JsonProperty(value = FIELD_BACKGROUND, required = true)
+```
+
+✔ mniej „szumu”  
+✔ często spotykane w projektach
+
+#### 6️⃣ Moja rekomendacja dla Twojego projektu
+
+Biorąc pod uwagę:
+
+* testy API
+* DTO jako **kontrakt**
+* nacisk na czytelność i walidację
+
+👉 **trzymaj się jednej konwencji**:
+
+> **Zawsze używaj `value = ...`, nawet gdy jest tylko jeden parametr**
+
+To bardzo dobrze skaluje się przy:
+
+* refaktoryzacjach
+* dodawaniu `required`
+* porównywaniu DTO
+
+### TL;DR 🧠
+
+* `value` to **domyślny parametr adnotacji**
+* `@JsonProperty("x")` == `@JsonProperty(value = "x")`
+* `value =` jest wymagane tylko, gdy są inne parametry
+* brak `value =` **nie jest błędem**
+* **konsekwencja > skrótowość**
 
 ---
 
