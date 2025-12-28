@@ -18,6 +18,9 @@ public class PUT_UpdateBoardDto extends BoardBaseDto {
     // FIELDS
     // ==========================================================================================================
 
+    // NOTE:
+    // These variables are also used to call the name of an ignored, redundant field when comparing objects using AssertJ.
+
     public static final String FIELD_ORGANIZATION = "organization";
 
     // ==========================================================================================================
