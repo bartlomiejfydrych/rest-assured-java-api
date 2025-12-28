@@ -3,6 +3,7 @@ package utils_tests.lists;
 import base.TestBase;
 import dto.lists.GET_GetListDto;
 import dto.lists.POST_CreateNewListDto;
+import io.restassured.response.Response;
 
 import static endpoints.lists.GET_GetList.getGetList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +29,7 @@ public class POST_CreateNewListUtils extends TestBase {
     }
 
     public static void validateGetAgainstPost(POST_CreateNewListDto responsePostDto) {
-        responseGet = getGetList(responsePostDto.id);
+        Response responseGet = getGetList(responsePostDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
         GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
