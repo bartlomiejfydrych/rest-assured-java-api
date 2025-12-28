@@ -8,26 +8,48 @@ import jakarta.validation.Valid;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class SkinVariations {
 
-    @Valid
-    @JsonProperty("1F3FB")
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // NOTE:
+    // These variables are also used to call the name of an ignored, redundant field when comparing objects using AssertJ.
+
+    public static final String FIELD_1F3FB = "1F3FB";
+    public static final String FIELD_1F3FC = "1F3FC";
+    public static final String FIELD_1F3FD = "1F3FD";
+    public static final String FIELD_1F3FE = "1F3FE";
+    public static final String FIELD_1F3FF = "1F3FF";
+
+    // ==========================================================================================================
+    // FIELDS – VALIDATION CONSTRAINTS
+    // ==========================================================================================================
+
+    @Valid // <-- validates nested fields if object exists
+    @JsonProperty(FIELD_1F3FB)
     public SkinVariationEntry oneF3FB;
 
-    @Valid
-    @JsonProperty("1F3FC")
+    @Valid // <-- validates nested fields if object exists
+    @JsonProperty(FIELD_1F3FC)
     public SkinVariationEntry oneF3FC;
 
-    @Valid
-    @JsonProperty("1F3FD")
+    @Valid // <-- validates nested fields if object exists
+    @JsonProperty(FIELD_1F3FD)
     public SkinVariationEntry oneF3FD;
 
-    @Valid
-    @JsonProperty("1F3FE")
+    @Valid // <-- validates nested fields if object exists
+    @JsonProperty(FIELD_1F3FE)
     public SkinVariationEntry oneF3FE;
 
-    @Valid
-    @JsonProperty("1F3FF")
+    @Valid // <-- validates nested fields if object exists
+    @JsonProperty(FIELD_1F3FF)
     public SkinVariationEntry oneF3FF;
 
+    // ==========================================================================================================
+    // CONSTRUCTORS
+    // ==========================================================================================================
+
+    // Empty constructor - needed to be able to assign values manually
     public SkinVariations() {
     }
 }
