@@ -16,6 +16,9 @@ public class Prefs {
     // FIELDS
     // ==========================================================================================================
 
+    // NOTE:
+    // These variables are also used to call the name of an ignored, redundant field when comparing objects using AssertJ.
+
     public static final String FIELD_PERMISSION_LEVEL = "permissionLevel";
     public static final String FIELD_HIDE_VOTES = "hideVotes";
     public static final String FIELD_VOTING = "voting";
