@@ -18,6 +18,9 @@ public class BoardBaseDto {
     // FIELDS
     // ==========================================================================================================
 
+    // NOTE:
+    // These variables are also used to call the name of an ignored, redundant field when comparing objects using AssertJ.
+
     public static final String FIELD_ID = "id";
     public static final String FIELD_NAME = "name";
     public static final String FIELD_DESC = "desc";
