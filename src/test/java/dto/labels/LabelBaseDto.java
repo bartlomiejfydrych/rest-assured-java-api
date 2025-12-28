@@ -8,6 +8,23 @@ import jakarta.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class LabelBaseDto {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // NOTE:
+    // These variables are also used to call the name of an ignored, redundant field when comparing objects using AssertJ.
+
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_ID_BOARD = "idBoard";
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_COLOR = "color";
+    public static final String FIELD_USES = "uses";
+
+    // ==========================================================================================================
+    // FIELDS – VALIDATION CONSTRAINTS
+    // ==========================================================================================================
+
     @NotNull
     public String id;
 
@@ -24,13 +41,17 @@ public class LabelBaseDto {
     @NotNull
     public Integer uses;
 
+    // ==========================================================================================================
+    // CONSTRUCTORS
+    // ==========================================================================================================
+
     @JsonCreator
     public LabelBaseDto(
-            @JsonProperty(value = "id", required = true) String id,
-            @JsonProperty(value = "idBoard", required = true) String idBoard,
-            @JsonProperty(value = "name", required = true) String name,
-            @JsonProperty(value = "color") String color,
-            @JsonProperty(value = "uses", required = true) Integer uses
+            @JsonProperty(value = FIELD_ID, required = true) String id,
+            @JsonProperty(value = FIELD_ID_BOARD, required = true) String idBoard,
+            @JsonProperty(value = FIELD_NAME, required = true) String name,
+            @JsonProperty(value = FIELD_COLOR) String color,
+            @JsonProperty(value = FIELD_USES, required = true) Integer uses
     ) {
         this.id = id;
         this.idBoard = idBoard;
@@ -39,6 +60,7 @@ public class LabelBaseDto {
         this.uses = uses;
     }
 
+    // Empty constructor - needed to be able to assign values manually
     public LabelBaseDto() {
     }
 }
