@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import dto.boards.board.DescData;
 import dto.boards.board.LabelNames;
 import dto.boards.board.Prefs;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import java.net.URL;
@@ -17,12 +18,16 @@ public class POST_CreateBoardDto extends BoardBaseDto {
     // FIELDS
     // ==========================================================================================================
 
+    // NOTE:
+    // These variables are also used to call the name of an ignored, redundant field when comparing objects using AssertJ.
+
     public static final String FIELD_LIMITS = "limits";
 
     // ==========================================================================================================
     // FIELDS – VALIDATION CONSTRAINTS
     // ==========================================================================================================
 
+    @Valid // <-- validates nested fields if object exists
     @NotNull
     public Object limits;
 
