@@ -9,6 +9,24 @@ import jakarta.validation.constraints.Pattern;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class OrganizationMemberships {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // NOTE:
+    // These variables are also used to call the name of an ignored, redundant field when comparing objects using AssertJ.
+
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_ID_MEMBER = "idMember";
+    public static final String FIELD_MEMBER_TYPE = "memberType";
+    public static final String FIELD_UNCONFIRMED = "unconfirmed";
+    public static final String FIELD_DEACTIVATED = "deactivated";
+    public static final String FIELD_LAST_ACTIVE = "lastActive";
+
+    // ==========================================================================================================
+    // FIELDS – VALIDATION CONSTRAINTS
+    // ==========================================================================================================
+
     @NotNull
     public String id;
 
@@ -31,14 +49,18 @@ public class OrganizationMemberships {
     )
     public String lastActive;
 
+    // ==========================================================================================================
+    // CONSTRUCTORS
+    // ==========================================================================================================
+
     @JsonCreator
     public OrganizationMemberships(
-            @JsonProperty(value = "id", required = true) String id,
-            @JsonProperty(value = "idMember", required = true) String idMember,
-            @JsonProperty(value = "memberType", required = true) String memberType,
-            @JsonProperty(value = "unconfirmed", required = true) Boolean unconfirmed,
-            @JsonProperty(value = "deactivated", required = true) Boolean deactivated,
-            @JsonProperty(value = "lastActive", required = true) String lastActive
+            @JsonProperty(value = FIELD_ID, required = true) String id,
+            @JsonProperty(value = FIELD_ID_MEMBER, required = true) String idMember,
+            @JsonProperty(value = FIELD_MEMBER_TYPE, required = true) String memberType,
+            @JsonProperty(value = FIELD_UNCONFIRMED, required = true) Boolean unconfirmed,
+            @JsonProperty(value = FIELD_DEACTIVATED, required = true) Boolean deactivated,
+            @JsonProperty(value = FIELD_LAST_ACTIVE, required = true) String lastActive
     ) {
         this.id = id;
         this.idMember = idMember;
@@ -48,6 +70,7 @@ public class OrganizationMemberships {
         this.lastActive = lastActive;
     }
 
+    // Empty constructor - needed to be able to assign values manually
     public OrganizationMemberships() {
     }
 }
