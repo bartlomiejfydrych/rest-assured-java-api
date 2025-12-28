@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dto.boards.board.organization.OrganizationMemberships;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -15,6 +16,9 @@ public class Organization {
     // ==========================================================================================================
     // FIELDS
     // ==========================================================================================================
+
+    // NOTE:
+    // These variables are also used to call the name of an ignored, redundant field when comparing objects using AssertJ.
 
     public static final String FIELD_ID = "id";
     public static final String FIELD_NAME = "name";
@@ -36,6 +40,7 @@ public class Organization {
 
     @NotNull
     @NotEmpty
+    @Valid // <-- validates nested fields if object exists
     public List<OrganizationMemberships> memberships;
 
     // ==========================================================================================================
