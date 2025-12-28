@@ -12,6 +12,9 @@ public class LabelNames {
     // FIELDS
     // ==========================================================================================================
 
+    // NOTE:
+    // These variables are also used to call the name of an ignored, redundant field when comparing objects using AssertJ.
+
     public static final String FIELD_GREEN = "green";
     public static final String FIELD_YELLOW = "yellow";
     public static final String FIELD_ORANGE = "orange";
