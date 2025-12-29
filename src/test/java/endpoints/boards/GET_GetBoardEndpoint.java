@@ -1,19 +1,20 @@
 package endpoints.boards;
 
-import base.TestBase;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
 
-public class GET_GetBoardEndpoint extends TestBase {
+public class GET_GetBoardEndpoint extends BoardsBaseEndpoint {
 
-    private static final String url = "/boards";
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
 
-    public static Response getGetBoard(String id) {
+    public static Response getBoard(String boardId) {
         return given().
-                    spec(requestSpecificationCommon).
+                    spec(spec()).
                 when().
-                    get(url + "/" + id).
+                    get(boardById(boardId)).
                 then().
                     extract().
                     response();
