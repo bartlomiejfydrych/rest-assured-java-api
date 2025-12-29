@@ -1,8 +1,9 @@
 package endpoints;
 
+import configuration.RequestSpecConfig;
 import io.restassured.specification.RequestSpecification;
 
-import static configuration.RequestSpecConfig.getRequestSpecification;
+import java.util.Map;
 
 public class BaseEndpoint {
 
@@ -11,6 +12,20 @@ public class BaseEndpoint {
     // ==========================================================================================================
 
     protected static RequestSpecification spec() {
-        return getRequestSpecification();
+        return RequestSpecConfig.getRequestSpecification();
+    }
+
+    // ==========================================================================================================
+    // UTILS
+    // ==========================================================================================================
+
+    protected static RequestSpecification applyQueryParams(
+            RequestSpecification spec,
+            Map<String, Object> queryParams
+    ) {
+        if (queryParams != null && !queryParams.isEmpty()) {
+            spec.queryParams(queryParams);
+        }
+        return spec;
     }
 }
