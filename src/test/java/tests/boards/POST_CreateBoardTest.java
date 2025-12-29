@@ -3,6 +3,7 @@ package tests.boards;
 import base.TestBase;
 import configuration.Config;
 import dto.boards.POST_CreateBoardDto;
+import endpoints.boards.DEL_DeleteBoardEndpoint;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import payloads.boards.POST_CreateBoardPayload;
 
 import java.util.Map;
 
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoardMissingRequiredParameters;
 import static expected_responses.boards.POST_CreateBoardExpected.*;
@@ -35,7 +35,7 @@ public class POST_CreateBoardTest extends TestBase {
     @AfterEach
     public void tearDownDeleteBoard() {
         if (boardId != null) {
-            responseDelete = deleteDeleteBoard(boardId);
+            responseDelete = DEL_DeleteBoardEndpoint.deleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
         }
     }
@@ -380,7 +380,7 @@ public class POST_CreateBoardTest extends TestBase {
 
     //@Test
     public void deleteBoard() {
-        responseDelete = deleteDeleteBoard("68724f5bfffa6577a4dc0dbb");
+        responseDelete = DEL_DeleteBoardEndpoint.deleteBoard("68724f5bfffa6577a4dc0dbb");
         assertThat(responseDelete.statusCode()).isEqualTo(200);
     }
 }

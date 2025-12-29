@@ -6,7 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.labels.DEL_DeleteLabelEndpoint.deleteDeleteLabel;
 import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
@@ -37,7 +37,7 @@ public class DEL_DeleteLabelTest extends TestBase {
     @AfterEach
     public void tearDownDeleteBoard() {
         if (boardId != null) {
-            responseDelete = deleteDeleteBoard(boardId);
+            responseDelete = deleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardId = null;
         }

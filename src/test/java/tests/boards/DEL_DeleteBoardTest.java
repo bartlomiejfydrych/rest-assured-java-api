@@ -4,8 +4,8 @@ import base.TestBase;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
-import static endpoints.boards.GET_GetBoardEndpoint.getGetBoard;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
+import static endpoints.boards.GET_GetBoardEndpoint.getBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjectsJsonNode;
@@ -34,11 +34,11 @@ public class DEL_DeleteBoardTest extends TestBase {
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
         // DELETE
-        responseDelete = deleteDeleteBoard(boardId);
+        responseDelete = deleteBoard(boardId);
         assertThat(responseDelete.statusCode()).isEqualTo(200);
         compareObjectsJsonNode(responseDelete, expectedResponse);
         // GET
-        responseGet = getGetBoard(boardId);
+        responseGet = getBoard(boardId);
         assertThat(responseGet.statusCode()).isEqualTo(404);
         assertThat(responseGet.getBody().asString()).isEqualTo("The requested resource was not found.");
     }

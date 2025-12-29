@@ -8,7 +8,7 @@ import payloads.labels.POST_CreateLabelPayload;
 
 import java.util.Map;
 
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
 import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabelAnyParams;
@@ -44,7 +44,7 @@ public class POST_CreateLabelTest extends TestBase {
     @AfterAll
     public void tearDownDeleteBoard() {
         if (boardId != null) {
-            responseDelete = deleteDeleteBoard(boardId);
+            responseDelete = deleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardId = null;
         }

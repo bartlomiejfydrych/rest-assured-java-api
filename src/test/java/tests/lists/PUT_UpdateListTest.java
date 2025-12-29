@@ -14,7 +14,7 @@ import payloads.lists.PUT_UpdateListPayload;
 
 import java.util.Map;
 
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.lists.GET_GetListEndpoint.getGetList;
 import static endpoints.lists.POST_CreateNewListEndpoint.postCreateNewList;
@@ -72,7 +72,7 @@ public class PUT_UpdateListTest extends TestBase {
     @AfterAll
     public void tearDownDeleteBoardAndList() {
         if (boardId != null) {
-            responseDelete = deleteDeleteBoard(boardId);
+            responseDelete = deleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardId = null;
             listId = null;
@@ -394,7 +394,7 @@ public class PUT_UpdateListTest extends TestBase {
             // DELETE (delete {board 2})
             if (boardId2 != null) {
                 try {
-                    responseDelete = deleteDeleteBoard(boardId2);
+                    responseDelete = deleteBoard(boardId2);
                     assertThat(responseDelete.statusCode()).isEqualTo(200);
                 } catch (Exception e) {
                     System.err.println("ERROR: Failed to delete {board2}: " + boardId2);

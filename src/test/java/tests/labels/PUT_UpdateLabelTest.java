@@ -9,7 +9,7 @@ import payloads.labels.PUT_UpdateLabelPayload;
 
 import java.util.Map;
 
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
 import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
@@ -52,7 +52,7 @@ public class PUT_UpdateLabelTest extends TestBase {
     @AfterAll
     public void tearDownDeleteBoardAndLabel() {
         if (boardId != null) {
-            responseDelete = deleteDeleteBoard(boardId);
+            responseDelete = deleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardId = null;
             labelId = null;
