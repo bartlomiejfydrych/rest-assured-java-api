@@ -1,19 +1,20 @@
 package endpoints.boards;
 
-import base.TestBase;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
 
-public class DEL_DeleteBoardEndpoint extends TestBase {
+public class DEL_DeleteBoardEndpoint extends BoardsBaseEndpoint {
 
-    private static final String url = "/boards";
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
 
-    public static Response deleteDeleteBoard(String id) {
+    public static Response deleteBoard(String boardId) {
         return given().
-                    spec(requestSpecificationCommon).
+                    spec(spec()).
                 when().
-                    delete(url + "/" + id).
+                    delete(boardById(boardId)).
                 then().
                     extract().
                     response();
