@@ -1,48 +1,40 @@
 package endpoints.labels;
 
 import base.TestBase;
+import enums.labels.LabelField;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-import java.util.Map;
-
 import static io.restassured.RestAssured.given;
 
-
-public class POST_CreateLabel extends TestBase {
+public class PUT_UpdateFieldOnLabelEndpoint extends TestBase {
 
     private static final String url = "/labels";
 
-    public static Response postCreateLabel(String idBoard, String name, String color) {
+    public static Response putUpdateFieldOnLabel(String id, LabelField field, String value) {
 
         RequestSpecification spec = given().
                 spec(requestSpecificationCommon).
-                queryParam("idBoard", idBoard).
-                queryParam("name", name).
-                queryParam("color", color);
+                queryParam("value", value);
 
         return spec.
                 when().
-                    post(url).
+                    put(url + "/" + id + "/" + field.getValue()).
                 then().
                     extract().
                     response();
     }
 
-    public static Response postCreateLabelAnyParams(Map<String, Object> queryParams) {
+    public static Response putUpdateFieldOnLabelWithoutValue(String id, LabelField field) {
 
         RequestSpecification spec = given().
                 spec(requestSpecificationCommon);
 
-        if (queryParams != null && !queryParams.isEmpty()) {
-            spec.queryParams(queryParams);
-        }
-
         return spec.
                 when().
-                    post(url).
+                put(url + "/" + id + "/" + field.getValue()).
                 then().
-                    extract().
-                    response();
+                extract().
+                response();
     }
 }

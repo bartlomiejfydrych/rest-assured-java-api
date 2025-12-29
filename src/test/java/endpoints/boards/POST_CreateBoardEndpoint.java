@@ -8,14 +8,15 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
-public class PUT_UpdateBoard extends TestBase {
+public class POST_CreateBoardEndpoint extends TestBase {
 
     private static final String url = "/boards";
 
-    public static Response putUpdateBoard(String id, Map<String, Object> queryParams) {
+    public static Response postCreateBoard(String name, Map<String, Object> queryParams) {
 
         RequestSpecification spec = given().
-                spec(requestSpecificationCommon);
+                spec(requestSpecificationCommon).
+                queryParam("name", name);
 
         if (queryParams != null && !queryParams.isEmpty()) {
             spec.queryParams(queryParams);
@@ -23,7 +24,17 @@ public class PUT_UpdateBoard extends TestBase {
 
         return spec.
                 when().
-                    put(url + "/" + id).
+                    post(url).
+                then().
+                    extract().
+                    response();
+    }
+
+    public static Response postCreateBoardMissingRequiredParameters() {
+        return given().
+                    spec(requestSpecificationCommon).
+                when().
+                    post(url).
                 then().
                     extract().
                     response();

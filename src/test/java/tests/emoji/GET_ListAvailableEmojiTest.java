@@ -8,7 +8,7 @@ import payloads.emoji.GET_ListAvailableEmojiPayload;
 
 import java.util.Map;
 
-import static endpoints.emoji.GET_ListAvailableEmoji.getListAvailableEmoji;
+import static endpoints.emoji.GET_ListAvailableEmojiEndpoint.getListAvailableEmoji;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.readResourceFileAsString;
 import static utils.UtilsCompare.compareObjects;

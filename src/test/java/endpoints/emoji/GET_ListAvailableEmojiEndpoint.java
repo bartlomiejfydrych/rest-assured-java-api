@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
-public class GET_ListAvailableEmoji extends TestBase {
+public class GET_ListAvailableEmojiEndpoint extends TestBase {
 
     private static final String url = "/emoji";
 

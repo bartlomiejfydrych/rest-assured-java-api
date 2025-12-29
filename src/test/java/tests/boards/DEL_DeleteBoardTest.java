@@ -4,14 +4,14 @@ import base.TestBase;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
-import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
-import static endpoints.boards.GET_GetBoard.getGetBoard;
-import static endpoints.boards.POST_CreateBoard.postCreateBoard;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.GET_GetBoardEndpoint.getGetBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 
-public class DELETE_DeleteBoardTest extends TestBase {
+public class DEL_DeleteBoardTest extends TestBase {
 
     private Response responsePost;
     private Response responsePut;

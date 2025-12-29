@@ -5,7 +5,7 @@ import dto.lists.GET_GetListDto;
 import dto.lists.POST_CreateNewListDto;
 import io.restassured.response.Response;
 
-import static endpoints.lists.GET_GetList.getGetList;
+import static endpoints.lists.GET_GetListEndpoint.getGetList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsResponse.deserializeAndValidate;

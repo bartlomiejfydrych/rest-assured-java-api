@@ -3,10 +3,11 @@ package utils_tests.boards;
 import base.TestBase;
 import dto.boards.GET_GetBoardDto;
 import dto.boards.PUT_UpdateBoardDto;
+import io.restassured.response.Response;
 
 import java.net.URL;
 
-import static endpoints.boards.GET_GetBoard.getGetBoard;
+import static endpoints.boards.GET_GetBoardEndpoint.getGetBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsResponse.deserializeAndValidate;
@@ -28,7 +29,7 @@ public class PUT_UpdateBoardUtils extends TestBase {
     }
 
     public static void validateGetAgainstPut(PUT_UpdateBoardDto responsePutDto) {
-        responseGet = getGetBoard(responsePutDto.id);
+        Response responseGet = getGetBoard(responsePutDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
         GET_GetBoardDto responseGetDto = deserializeAndValidate(responseGet, GET_GetBoardDto.class);

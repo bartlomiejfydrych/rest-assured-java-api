@@ -14,11 +14,11 @@ import payloads.lists.PUT_UpdateListPayload;
 
 import java.util.Map;
 
-import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
-import static endpoints.boards.POST_CreateBoard.postCreateBoard;
-import static endpoints.lists.GET_GetList.getGetList;
-import static endpoints.lists.POST_CreateNewList.postCreateNewList;
-import static endpoints.lists.PUT_UpdateList.putUpdateList;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.lists.GET_GetListEndpoint.getGetList;
+import static endpoints.lists.POST_CreateNewListEndpoint.postCreateNewList;
+import static endpoints.lists.PUT_UpdateListEndpoint.putUpdateList;
 import static expected_responses.lists.PUT_UpdateListExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.getAllCharactersSetInRandomOrder;

@@ -6,16 +6,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
-import static endpoints.boards.POST_CreateBoard.postCreateBoard;
-import static endpoints.labels.DELETE_DeleteLabel.deleteDeleteLabel;
-import static endpoints.labels.GET_GetLabel.getGetLabel;
-import static endpoints.labels.POST_CreateLabel.postCreateLabel;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.labels.DEL_DeleteLabelEndpoint.deleteDeleteLabel;
+import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
+import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 
-public class DELETE_DeleteLabelTest extends TestBase {
+public class DEL_DeleteLabelTest extends TestBase {
 
     private Response responsePost;
     private Response responsePut;

@@ -8,10 +8,10 @@ import payloads.labels.POST_CreateLabelPayload;
 
 import java.util.Map;
 
-import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
-import static endpoints.boards.POST_CreateBoard.postCreateBoard;
-import static endpoints.labels.POST_CreateLabel.postCreateLabel;
-import static endpoints.labels.POST_CreateLabel.postCreateLabelAnyParams;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
+import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabelAnyParams;
 import static expected_responses.labels.POST_CreateLabelExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.*;

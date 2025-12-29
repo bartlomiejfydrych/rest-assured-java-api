@@ -1,4 +1,4 @@
-package endpoints.lists;
+package endpoints.labels;
 
 import base.TestBase;
 import io.restassured.response.Response;
@@ -8,11 +8,11 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
-public class PUT_UpdateList extends TestBase {
+public class PUT_UpdateLabelEndpoint extends TestBase {
 
-    private static final String url = "/lists";
+    private static final String url = "/labels";
 
-    public static Response putUpdateList(String idList, Map<String, Object> queryParams) {
+    public static Response putUpdateLabel(String id, Map<String, Object> queryParams) {
 
         RequestSpecification spec = given().
                 spec(requestSpecificationCommon);
@@ -23,7 +23,7 @@ public class PUT_UpdateList extends TestBase {
 
         return spec.
                 when().
-                    put(url + "/" + idList).
+                    put(url + "/" + id).
                 then().
                     extract().
                     response();

@@ -1,19 +1,19 @@
-package endpoints.labels;
+package endpoints.boards;
 
 import base.TestBase;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
 
-public class GET_GetLabel extends TestBase {
+public class DEL_DeleteBoardEndpoint extends TestBase {
 
-    private static final String url = "/labels";
+    private static final String url = "/boards";
 
-    public static Response getGetLabel(String id) {
+    public static Response deleteDeleteBoard(String id) {
         return given().
                     spec(requestSpecificationCommon).
                 when().
-                    get(url + "/" + id).
+                    delete(url + "/" + id).
                 then().
                     extract().
                     response();

@@ -1,4 +1,4 @@
-package endpoints.lists;
+package endpoints.labels;
 
 import base.TestBase;
 import io.restassured.response.Response;
@@ -8,20 +8,18 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
-public class POST_CreateNewList extends TestBase {
 
-    private static final String url = "/lists";
+public class POST_CreateLabelEndpoint extends TestBase {
 
-    public static Response postCreateNewList(String idBoard, String name, Map<String, Object> queryParams) {
+    private static final String url = "/labels";
+
+    public static Response postCreateLabel(String idBoard, String name, String color) {
 
         RequestSpecification spec = given().
                 spec(requestSpecificationCommon).
                 queryParam("idBoard", idBoard).
-                queryParam("name", name);
-
-        if (queryParams != null && !queryParams.isEmpty()) {
-            spec.queryParams(queryParams);
-        }
+                queryParam("name", name).
+                queryParam("color", color);
 
         return spec.
                 when().
@@ -31,7 +29,7 @@ public class POST_CreateNewList extends TestBase {
                     response();
     }
 
-    public static Response postCreateNewListAnyParams(Map<String, Object> queryParams) {
+    public static Response postCreateLabelAnyParams(Map<String, Object> queryParams) {
 
         RequestSpecification spec = given().
                 spec(requestSpecificationCommon);

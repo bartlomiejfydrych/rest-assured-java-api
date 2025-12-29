@@ -1,15 +1,15 @@
-package endpoints.boards;
+package endpoints.labels;
 
 import base.TestBase;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
 
-public class GET_GetBoard extends TestBase {
+public class GET_GetLabelEndpoint extends TestBase {
 
-    private static final String url = "/boards";
+    private static final String url = "/labels";
 
-    public static Response getGetBoard(String id) {
+    public static Response getGetLabel(String id) {
         return given().
                     spec(requestSpecificationCommon).
                 when().

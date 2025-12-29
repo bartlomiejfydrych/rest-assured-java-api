@@ -11,9 +11,9 @@ import payloads.boards.POST_CreateBoardPayload;
 
 import java.util.Map;
 
-import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
-import static endpoints.boards.POST_CreateBoard.postCreateBoard;
-import static endpoints.boards.POST_CreateBoard.postCreateBoardMissingRequiredParameters;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoardMissingRequiredParameters;
 import static expected_responses.boards.POST_CreateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.pickRandom;

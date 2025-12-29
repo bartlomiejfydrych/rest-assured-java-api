@@ -12,10 +12,10 @@ import payloads.boards.PUT_UpdateBoardPayload;
 import java.net.URL;
 import java.util.Map;
 
-import static endpoints.boards.DELETE_DeleteBoard.deleteDeleteBoard;
-import static endpoints.boards.GET_GetBoard.getGetBoard;
-import static endpoints.boards.POST_CreateBoard.postCreateBoard;
-import static endpoints.boards.PUT_UpdateBoard.putUpdateBoard;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.GET_GetBoardEndpoint.getGetBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.boards.PUT_UpdateBoardEndpoint.putUpdateBoard;
 import static expected_responses.boards.PUT_UpdateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.*;
