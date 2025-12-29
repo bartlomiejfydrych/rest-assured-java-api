@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
 import static endpoints.labels.PUT_UpdateFieldOnLabelEndpoint.putUpdateFieldOnLabel;
@@ -53,7 +53,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
     @AfterAll
     public void tearDownDeleteBoardAndLabel() {
         if (boardId != null) {
-            responseDelete = deleteDeleteBoard(boardId);
+            responseDelete = deleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardId = null;
             labelId = null;

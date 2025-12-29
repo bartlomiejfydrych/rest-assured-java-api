@@ -11,7 +11,7 @@ import payloads.lists.POST_CreateNewListPayload;
 
 import java.util.Map;
 
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.lists.POST_CreateNewListEndpoint.postCreateNewList;
 import static endpoints.lists.POST_CreateNewListEndpoint.postCreateNewListAnyParams;
@@ -48,7 +48,7 @@ public class POST_CreateNewListTest extends TestBase {
     @AfterAll
     public void tearDownDeleteBoard() {
         if (boardId != null) {
-            responseDelete = deleteDeleteBoard(boardId);
+            responseDelete = deleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardId = null;
         }
