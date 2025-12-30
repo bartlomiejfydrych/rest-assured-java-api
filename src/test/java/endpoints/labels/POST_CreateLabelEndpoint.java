@@ -1,46 +1,56 @@
 package endpoints.labels;
 
-import base.TestBase;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
-import java.util.Map;
+import payloads.labels.POST_CreateLabelPayload;
 
 import static io.restassured.RestAssured.given;
 
 
-public class POST_CreateLabelEndpoint extends TestBase {
+public class POST_CreateLabelEndpoint extends LabelsBaseEndpoint {
 
-    private static final String url = "/labels";
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
 
-    public static Response postCreateLabel(String idBoard, String name, String color) {
+    // --------------------------
+    // WITH REQUIRED QUERY PARAMS
+    // --------------------------
 
-        RequestSpecification spec = given().
-                spec(requestSpecificationCommon).
-                queryParam("idBoard", idBoard).
-                queryParam("name", name).
-                queryParam("color", color);
+    public static Response createLabel(String idBoard, String name, String color) {
 
-        return spec.
+        RequestSpecification requestSpecification =
+                given().
+                    spec(getSpecification()).
+                    queryParam("idBoard", idBoard).
+                    queryParam("name", name).
+                    queryParam("color", color);
+
+        return requestSpecification.
                 when().
-                    post(url).
+                    post(ENDPOINT_LABELS).
                 then().
                     extract().
                     response();
     }
 
-    public static Response postCreateLabelAnyParams(Map<String, Object> queryParams) {
+    // ---------------
+    // WITH ANY PARAMS
+    // ---------------
 
-        RequestSpecification spec = given().
-                spec(requestSpecificationCommon);
+    public static Response createLabelWithAnyParams(POST_CreateLabelPayload payload) {
 
-        if (queryParams != null && !queryParams.isEmpty()) {
-            spec.queryParams(queryParams);
+        RequestSpecification requestSpecification =
+                given().
+                    spec(getSpecification());
+
+        if (payload != null) {
+            applyQueryParams(requestSpecification, payload.toQueryParams());
         }
 
-        return spec.
+        return requestSpecification.
                 when().
-                    post(url).
+                    post(ENDPOINT_LABELS).
                 then().
                     extract().
                     response();
