@@ -11,7 +11,7 @@ public class BaseEndpoint {
     // METHODS – MAIN
     // ==========================================================================================================
 
-    protected static RequestSpecification spec() {
+    protected static RequestSpecification getSpecification() {
         return RequestSpecConfig.getRequestSpecification();
     }
 
@@ -20,12 +20,12 @@ public class BaseEndpoint {
     // ==========================================================================================================
 
     protected static RequestSpecification applyQueryParams(
-            RequestSpecification spec,
+            RequestSpecification requestSpecification,
             Map<String, Object> queryParams
     ) {
         if (queryParams != null && !queryParams.isEmpty()) {
-            spec.queryParams(queryParams);
+            requestSpecification.queryParams(queryParams);
         }
-        return spec;
+        return requestSpecification;
     }
 }
