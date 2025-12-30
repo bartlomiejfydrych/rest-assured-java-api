@@ -1,29 +1,34 @@
 package endpoints.emoji;
 
-import base.TestBase;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
-import java.util.Map;
+import payloads.emoji.GET_ListAvailableEmojiPayload;
 
 import static io.restassured.RestAssured.given;
 
-public class GET_ListAvailableEmojiEndpoint extends TestBase {
+public class GET_ListAvailableEmojiEndpoint extends EmojiBaseEndpoint {
 
-    private static final String url = "/emoji";
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
 
-    public static Response getListAvailableEmoji(Map<String, Object> queryParams) {
+    // -----------------
+    // WITH QUERY PARAMS
+    // -----------------
 
-        RequestSpecification spec = given().
-                spec(requestSpecificationCommon);
+    public static Response getListAvailableEmoji(GET_ListAvailableEmojiPayload payload) {
 
-        if (queryParams != null && !queryParams.isEmpty()) {
-            spec.queryParams(queryParams);
+        RequestSpecification requestSpecification =
+                given().
+                    spec(getSpecification());
+
+        if (payload != null) {
+            applyQueryParams(requestSpecification, payload.toQueryParams());
         }
 
-        return spec.
+        return requestSpecification.
                 when().
-                    get(url).
+                    get(ENDPOINT_EMOJI).
                 then().
                     extract().
                     response();
