@@ -11,9 +11,9 @@ import java.util.Map;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
-import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
-import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
-import static endpoints.labels.PUT_UpdateLabelEndpoint.putUpdateLabel;
+import static endpoints.labels.GET_GetLabelEndpoint.getLabel;
+import static endpoints.labels.POST_CreateLabelEndpoint.createLabel;
+import static endpoints.labels.PUT_UpdateLabelEndpoint.updateLabel;
 import static expected_responses.labels.PUT_UpdateLabelExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.*;
@@ -44,7 +44,7 @@ public class PUT_UpdateLabelTest extends TestBase {
         responsePost = createBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
-        responsePost = postCreateLabel(boardId, generateRandomLabelName(), generateRandomLabelColor());
+        responsePost = createLabel(boardId, generateRandomLabelName(), generateRandomLabelColor());
         assertThat(responsePost.statusCode()).isEqualTo(200);
         labelId = responsePost.getBody().jsonPath().getString("id");
     }
@@ -73,10 +73,9 @@ public class PUT_UpdateLabelTest extends TestBase {
                 .setName(labelName)
                 .setColor(labelColor)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateLabel(labelId, queryParams);
+        responsePut = updateLabel(labelId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateLabelDto.class);
         PUT_UpdateLabelDto expectedResponsePutDto = prepareExpectedResponsePut(
@@ -101,10 +100,9 @@ public class PUT_UpdateLabelTest extends TestBase {
                 .setName(labelName)
                 .setColor(labelColor)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateLabel(labelId, queryParams);
+        responsePut = updateLabel(labelId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateLabelDto.class);
         PUT_UpdateLabelDto expectedResponsePutDto = prepareExpectedResponsePut(
@@ -122,11 +120,11 @@ public class PUT_UpdateLabelTest extends TestBase {
     @Test
     public void P3_shouldUpdateLabelWhenNameAndColorAreMissing() {
         // GET (We need to retrieve the current state of the label)
-        responseGet = getGetLabel(labelId);
+        responseGet = getLabel(labelId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetLabelDto responseGetDto = deserializeAndValidate(responseGet, GET_GetLabelDto.class);
         // PUT
-        responsePut = putUpdateLabel(labelId, null);
+        responsePut = updateLabel(labelId, null);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateLabelDto.class);
         compareObjects(responsePutDto, responseGetDto);
@@ -141,14 +139,13 @@ public class PUT_UpdateLabelTest extends TestBase {
                 .setName(null)
                 .setColor(null)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // GET (We need to retrieve the current state of the label)
-        responseGet = getGetLabel(labelId);
+        responseGet = getLabel(labelId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetLabelDto responseGetDto = deserializeAndValidate(responseGet, GET_GetLabelDto.class);
         // PUT
-        responsePut = putUpdateLabel(labelId, queryParams);
+        responsePut = updateLabel(labelId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateLabelDto.class);
         compareObjects(responsePutDto, responseGetDto);
@@ -173,10 +170,9 @@ public class PUT_UpdateLabelTest extends TestBase {
                 .setName(labelName)
                 .setColor(labelColor)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = putUpdateLabel(labelId, queryParams);
+        responsePut = putUpdateLabel(labelId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateLabelDto.class);
         PUT_UpdateLabelDto expectedResponsePutDto = deserializeJson(P5ExpectedPutLabelResponse, PUT_UpdateLabelDto.class);
@@ -202,9 +198,8 @@ public class PUT_UpdateLabelTest extends TestBase {
         PUT_UpdateLabelPayload payload = new PUT_UpdateLabelPayload.Builder()
                 .setColor("N1KeK123")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
-        responsePut = putUpdateLabel(boardId, queryParams);
+        responsePut = updateLabel(boardId, payload);
         assertThat(responsePut.getStatusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePut, expectedPutLabelResponseInvalidColor);
     }
