@@ -12,7 +12,7 @@ import org.junit.jupiter.api.TestInstance;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
-import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
+import static endpoints.labels.POST_CreateLabelEndpoint.createLabel;
 import static endpoints.labels.PUT_UpdateFieldOnLabelEndpoint.putUpdateFieldOnLabel;
 import static endpoints.labels.PUT_UpdateFieldOnLabelEndpoint.putUpdateFieldOnLabelWithoutValue;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +44,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         responsePost = createBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
-        responsePost = postCreateLabel(boardId, generateRandomLabelName(), generateRandomLabelColor());
+        responsePost = createLabel(boardId, generateRandomLabelName(), generateRandomLabelColor());
         assertThat(responsePost.statusCode()).isEqualTo(200);
         responsePostDto = deserializeAndValidate(responsePost, POST_CreateLabelDto.class);
         labelId = responsePostDto.id;
