@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
-import static endpoints.labels.DEL_DeleteLabelEndpoint.deleteDeleteLabel;
-import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
-import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
+import static endpoints.labels.DEL_DeleteLabelEndpoint.deleteLabel;
+import static endpoints.labels.GET_GetLabelEndpoint.getLabel;
+import static endpoints.labels.POST_CreateLabelEndpoint.createLabel;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
@@ -61,15 +61,15 @@ public class DEL_DeleteLabelTest extends TestBase {
                 """;
 
         // POST
-        responsePost = postCreateLabel(boardId, labelName, labelColor);
+        responsePost = createLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         labelId = responsePost.getBody().jsonPath().getString("id");
         // DELETE
-        responseDelete = deleteDeleteLabel(labelId);
+        responseDelete = deleteLabel(labelId);
         assertThat(responseDelete.statusCode()).isEqualTo(200);
         compareObjectsJsonNode(responseDelete, expectedResponse);
         // GET
-        responseGet = getGetLabel(labelId);
+        responseGet = getLabel(labelId);
         assertThat(responseGet.statusCode()).isEqualTo(404);
         assertThat(responseGet.getBody().asString()).isEqualTo("The requested resource was not found.");
     }
