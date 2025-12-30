@@ -1,19 +1,21 @@
 package endpoints.labels;
 
-import base.TestBase;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
 
-public class GET_GetLabelEndpoint extends TestBase {
+public class GET_GetLabelEndpoint extends LabelsBaseEndpoint {
 
-    private static final String url = "/labels";
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
 
-    public static Response getGetLabel(String id) {
+    public static Response getLabel(String labelId) {
+
         return given().
-                    spec(requestSpecificationCommon).
+                    spec(getSpecification()).
                 when().
-                    get(url + "/" + id).
+                    get(labelById(labelId)).
                 then().
                     extract().
                     response();
