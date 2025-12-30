@@ -87,11 +87,10 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .setPrefsCardAging("regular")
                 .setPrefsCalendarFeedEnabled(true)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // TODO: Czekać na poprawkę lub podczas refactoru dodać GET'a
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
@@ -124,10 +123,9 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .setPrefsCardAging(null)
                 .setPrefsCalendarFeedEnabled(null)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P2ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
@@ -172,10 +170,9 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .setPrefsCardAging("pirate")
                 .setPrefsCalendarFeedEnabled(false)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
@@ -210,10 +207,9 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .setPrefsComments(prefsComments)
                 .setPrefsBackground(prefsBackground)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P5ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
@@ -247,10 +243,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setName("")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePut, expectedResponse);
     }
@@ -263,10 +258,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setSubscribed("123456789098765432123456")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
     }
@@ -277,10 +271,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setSubscribed("123abc")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
     }
@@ -299,10 +292,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setIdOrganization("123456789098765432123456")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(401);
         compareObjectsJsonNode(responsePut, expectedResponse);
     }
@@ -319,10 +311,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setIdOrganization("123abc")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(401);
         compareObjectsJsonNode(responsePut, expectedResponse);
     }
@@ -335,10 +326,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsPermissionLevel("KeK")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/permissionLevel");
     }
@@ -351,10 +341,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsInvitations("KeK")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/invitations");
     }
@@ -367,10 +356,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsVoting("KeK")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/voting");
     }
@@ -383,10 +371,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsComments("KeK")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/comments");
     }
@@ -406,10 +393,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsBackground("KeK")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePut, expectedResponse);
     }
@@ -422,10 +408,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsCardAging("KeK")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // PUT
-        responsePut = updateBoard(boardId, queryParams);
+        responsePut = updateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/cardAging");
     }
