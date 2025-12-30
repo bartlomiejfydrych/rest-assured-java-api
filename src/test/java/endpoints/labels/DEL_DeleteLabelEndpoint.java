@@ -1,19 +1,21 @@
 package endpoints.labels;
 
-import base.TestBase;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
 
-public class DEL_DeleteLabelEndpoint extends TestBase {
+public class DEL_DeleteLabelEndpoint extends LabelsBaseEndpoint {
 
-    private static final String url = "/labels";
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
 
-    public static Response deleteDeleteLabel(String id) {
+    public static Response deleteLabel(String labelId) {
+
         return given().
-                    spec(requestSpecificationCommon).
+                    spec(getSpecification()).
                 when().
-                    delete(url + "/" + id).
+                    delete(labelById(labelId)).
                 then().
                     extract().
                     response();
