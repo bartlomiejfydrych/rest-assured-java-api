@@ -10,7 +10,7 @@ import payloads.labels.PUT_UpdateLabelPayload;
 import java.util.Map;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
-import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
 import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
 import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
 import static endpoints.labels.PUT_UpdateLabelEndpoint.putUpdateLabel;
@@ -41,7 +41,7 @@ public class PUT_UpdateLabelTest extends TestBase {
 
     @BeforeAll
     public void setUpCreateBoardAndLabel() {
-        responsePost = postCreateBoard(generateRandomBoardName(), null);
+        responsePost = createBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
         responsePost = postCreateLabel(boardId, generateRandomLabelName(), generateRandomLabelColor());

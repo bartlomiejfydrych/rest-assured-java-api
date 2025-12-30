@@ -10,11 +10,10 @@ import org.junit.jupiter.api.*;
 import payloads.boards.PUT_UpdateBoardPayload;
 
 import java.net.URL;
-import java.util.Map;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.GET_GetBoardEndpoint.getBoard;
-import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
 import static endpoints.boards.PUT_UpdateBoardEndpoint.updateBoard;
 import static expected_responses.boards.PUT_UpdateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,7 +42,7 @@ public class PUT_UpdateBoardTest extends TestBase {
 
     @BeforeAll
     public void setUpCreateBoard() {
-        responsePost = postCreateBoard(generateRandomBoardName(), null);
+        responsePost = createBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateBoardDto responsePostDto = deserializeJson(responsePost, POST_CreateBoardDto.class);
         boardId = responsePostDto.id;

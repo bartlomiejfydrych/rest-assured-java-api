@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.GET_GetBoardEndpoint.getBoard;
-import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
@@ -30,7 +30,7 @@ public class DEL_DeleteBoardTest extends TestBase {
                 """;
 
         // POST
-        responsePost = postCreateBoard(generateRandomBoardName(), null);
+        responsePost = createBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
         // DELETE

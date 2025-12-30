@@ -12,7 +12,7 @@ import payloads.lists.POST_CreateNewListPayload;
 import java.util.Map;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
-import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
 import static endpoints.lists.POST_CreateNewListEndpoint.postCreateNewList;
 import static endpoints.lists.POST_CreateNewListEndpoint.postCreateNewListAnyParams;
 import static expected_responses.lists.POST_CreateNewListExpected.*;
@@ -40,7 +40,7 @@ public class POST_CreateNewListTest extends TestBase {
 
     @BeforeAll
     public void setUpCreateBoard() {
-        responsePost = postCreateBoard(generateRandomBoardName(), null);
+        responsePost = createBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
     }

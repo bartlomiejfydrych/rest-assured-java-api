@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
-import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
 import static endpoints.labels.DEL_DeleteLabelEndpoint.deleteDeleteLabel;
 import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
 import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
@@ -29,7 +29,7 @@ public class DEL_DeleteLabelTest extends TestBase {
 
     @BeforeEach
     public void setUpCreateBoard() {
-        responsePost = postCreateBoard(generateRandomBoardName(), null);
+        responsePost = createBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
     }

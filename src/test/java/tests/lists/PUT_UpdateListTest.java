@@ -15,7 +15,7 @@ import payloads.lists.PUT_UpdateListPayload;
 import java.util.Map;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
-import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
 import static endpoints.lists.GET_GetListEndpoint.getGetList;
 import static endpoints.lists.POST_CreateNewListEndpoint.postCreateNewList;
 import static endpoints.lists.PUT_UpdateListEndpoint.putUpdateList;
@@ -60,7 +60,7 @@ public class PUT_UpdateListTest extends TestBase {
 
     @BeforeAll
     public void setUpCreateBoardAndList() {
-        responsePost = postCreateBoard(generateRandomBoardName(), null);
+        responsePost = createBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id" );
         responsePost = postCreateNewList(boardId, generateRandomListName(), null);
@@ -361,7 +361,7 @@ public class PUT_UpdateListTest extends TestBase {
         */
 
         // POST (add {board 2})
-        responsePost = postCreateBoard(generateRandomBoardName(), null);
+        responsePost = createBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         String boardId2 = responsePost.getBody().jsonPath().getString("id" );
         try {
