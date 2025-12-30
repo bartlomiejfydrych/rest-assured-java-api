@@ -1,40 +1,49 @@
 package endpoints.boards;
 
-import base.TestBase;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
-import java.util.Map;
+import payloads.boards.POST_CreateBoardPayload;
 
 import static io.restassured.RestAssured.given;
 
-public class POST_CreateBoardEndpoint extends TestBase {
+public class POST_CreateBoardEndpoint extends BoardsBaseEndpoint {
 
-    private static final String url = "/boards";
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
 
-    public static Response postCreateBoard(String name, Map<String, Object> queryParams) {
+    // -----------------
+    // WITH QUERY PARAMS
+    // -----------------
 
-        RequestSpecification spec = given().
-                spec(requestSpecificationCommon).
-                queryParam("name", name);
+    public static Response createBoard(String name, POST_CreateBoardPayload payload) {
 
-        if (queryParams != null && !queryParams.isEmpty()) {
-            spec.queryParams(queryParams);
+        RequestSpecification requestSpecification =
+                given().
+                    spec(getSpecification()).
+                    queryParam("name", name);
+
+        if (payload != null) {
+            applyQueryParams(requestSpecification, payload.toQueryParams());
         }
 
-        return spec.
+        return requestSpecification.
                 when().
-                    post(url).
+                    post(ENDPOINT_BOARDS).
                 then().
                     extract().
                     response();
     }
 
-    public static Response postCreateBoardMissingRequiredParameters() {
+    // --------------------
+    // WITHOUT QUERY PARAMS
+    // --------------------
+
+    public static Response createBoardMissingRequiredParameters() {
         return given().
-                    spec(requestSpecificationCommon).
+                    spec(getSpecification()).
                 when().
-                    post(url).
+                    post(ENDPOINT_BOARDS).
                 then().
                     extract().
                     response();
