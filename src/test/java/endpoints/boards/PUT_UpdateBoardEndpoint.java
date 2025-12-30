@@ -34,11 +34,18 @@ public class PUT_UpdateBoardEndpoint extends BoardsBaseEndpoint {
                     response();
     }
 
-    // --------------------
-    // WITHOUT QUERY PARAMS
-    // --------------------
+    // -------------------
+    // WITHOUT ID & PARAMS
+    // -------------------
 
-    public static Response updateBoard(String boardId) {
-        return updateBoard(boardId, null);
+    public static Response updateBoardWithoutIdAndParams() {
+
+        return given().
+                    spec(getSpecification()).
+                when().
+                    put(ENDPOINT_BOARDS).
+                then().
+                    extract().
+                    response();
     }
 }
