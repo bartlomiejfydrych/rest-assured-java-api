@@ -51,10 +51,9 @@ public class GET_ListAvailableEmojiTest extends TestBase {
                 .setLocale(null)
                 .setSpritesheets(null)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // GET
-        responseGet = getListAvailableEmoji(queryParams);
+        responseGet = getListAvailableEmoji(payload);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidate(responseGet, GET_ListAvailableEmojiDto.class);
         GET_ListAvailableEmojiDto expectedResponseGetDto = deserializeJson(expectedResponseJsonFile, GET_ListAvailableEmojiDto.class);
@@ -71,10 +70,9 @@ public class GET_ListAvailableEmojiTest extends TestBase {
         GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
                 .setSpritesheets(false)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // GET
-        responseGet = getListAvailableEmoji(queryParams);
+        responseGet = getListAvailableEmoji(payload);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidate(responseGet, GET_ListAvailableEmojiDto.class);
         GET_ListAvailableEmojiDto expectedResponseGetDto = deserializeJson(expectedResponseJsonFile, GET_ListAvailableEmojiDto.class);
@@ -92,10 +90,9 @@ public class GET_ListAvailableEmojiTest extends TestBase {
                 .setLocale("en-US")
                 .setSpritesheets(true)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // GET
-        responseGet = getListAvailableEmoji(queryParams);
+        responseGet = getListAvailableEmoji(payload);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidate(responseGet, GET_ListAvailableEmojiDto.class);
         GET_ListAvailableEmojiDto expectedResponseGetDto = deserializeJson(expectedResponseJsonFile, GET_ListAvailableEmojiDto.class);
@@ -112,10 +109,9 @@ public class GET_ListAvailableEmojiTest extends TestBase {
         GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
                 .setLocale("ABCDabcdĄŚąś1234!@#$")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // GET
-        responseGet = getListAvailableEmoji(queryParams);
+        responseGet = getListAvailableEmoji(payload);
         assertThat(responseGet.statusCode()).isEqualTo(400);
         assertThat(responseGet.getBody().asString()).isEqualTo("invalid value for locale");
     }
