@@ -12,7 +12,7 @@ public class GET_GetBoardEndpoint extends BoardsBaseEndpoint {
 
     public static Response getBoard(String boardId) {
         return given().
-                    spec(spec()).
+                    spec(getSpecification()).
                 when().
                     get(boardById(boardId)).
                 then().
