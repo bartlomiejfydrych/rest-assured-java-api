@@ -10,8 +10,8 @@ import java.util.Map;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
-import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
-import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabelAnyParams;
+import static endpoints.labels.POST_CreateLabelEndpoint.createLabel;
+import static endpoints.labels.POST_CreateLabelEndpoint.createLabelWithAnyParams;
 import static expected_responses.labels.POST_CreateLabelExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.*;
@@ -61,7 +61,7 @@ public class POST_CreateLabelTest extends TestBase {
         labelColor = pickRandom("yellow", "purple", "blue", "red", "green", "orange", "black", "sky", "pink", "lime");
 
         // POST
-        responsePost = postCreateLabel(boardId, labelName, labelColor);
+        responsePost = createLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateLabelDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateLabelDto.class);
         POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
@@ -83,7 +83,7 @@ public class POST_CreateLabelTest extends TestBase {
         labelColor = null;
 
         // POST
-        responsePost = postCreateLabel(boardId, labelName, labelColor);
+        responsePost = createLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateLabelDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateLabelDto.class);
         POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
@@ -111,37 +111,36 @@ public class POST_CreateLabelTest extends TestBase {
                 .setName("N1 Label Name")
                 .setColor("yellow")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
-        responsePost = postCreateLabelAnyParams(queryParams);
+        responsePost = createLabelWithAnyParams(payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N2_shouldNotCreateLabelWhenBoardIdIsNull() {
-        responsePost = postCreateLabel(null, "N2 Label Name", "purple");
+        responsePost = createLabel(null, "N2 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N3_shouldNotCreateLabelWhenBoardIdIsEmptyString() {
-        responsePost = postCreateLabel("", "N3 Label Name", "purple");
+        responsePost = createLabel("", "N3 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N4_shouldNotCreateLabelWhenBoardIdNonExistent() {
-        responsePost = postCreateLabel("999999", "N4 Label Name", "purple");
+        responsePost = createLabel("999999", "N4 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N5_shouldNotCreateLabelWhenBoardIdIsIncorrect() {
-        responsePost = postCreateLabel("Text", "N5 Label Name", "purple");
+        responsePost = createLabel("Text", "N5 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
     }
@@ -155,9 +154,8 @@ public class POST_CreateLabelTest extends TestBase {
                 .setIdBoard(boardId)
                 .setColor("purple")
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
-        responsePost = postCreateLabelAnyParams(queryParams);
+        responsePost = createLabelWithAnyParams(payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for name");
     }
@@ -277,7 +275,7 @@ public class POST_CreateLabelTest extends TestBase {
 
     @Test
     public void N11_shouldNotCreateLabelWhenLabelColorIsIncorrect() {
-        responsePost = postCreateLabel(boardId, "N11 Label Name", "KEK123");
+        responsePost = createLabel(boardId, "N11 Label Name", "KEK123");
         assertThat(responsePost.getStatusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidColor);
     }
