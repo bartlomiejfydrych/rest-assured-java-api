@@ -10,7 +10,7 @@ public class DEL_DeleteBoardEndpoint extends BoardsBaseEndpoint {
     // METHODS – MAIN
     // ==========================================================================================================
 
-    public static Response deleteBoard(String boardId) {
+    public static Response deleteDeleteBoard(String boardId) {
         return given().
                     spec(getSpecification()).
                 when().
