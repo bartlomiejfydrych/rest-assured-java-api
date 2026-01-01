@@ -1,40 +1,72 @@
 package endpoints.labels;
 
-import base.TestBase;
 import enums.labels.LabelField;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import static io.restassured.RestAssured.given;
 
-public class PUT_UpdateFieldOnLabelEndpoint extends TestBase {
+public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
 
-    private static final String url = "/labels";
+    // ==========================================================================================================
+    // METHODS – SUB
+    // ==========================================================================================================
 
-    public static Response putUpdateFieldOnLabel(String id, LabelField field, String value) {
+    // -----------
+    // CORE METHOD
+    // -----------
 
-        RequestSpecification spec = given().
-                spec(requestSpecificationCommon).
-                queryParam("value", value);
+    private static Response put(String requestPath, String fieldValue) {
 
-        return spec.
+        RequestSpecification requestSpecification =
+                given().
+                    spec(getSpecification());
+
+        if (fieldValue != null) {
+            requestSpecification.queryParam("value", fieldValue);
+        }
+
+        return requestSpecification.
                 when().
-                    put(url + "/" + id + "/" + field.getValue()).
+                    put(requestPath).
                 then().
                     extract().
                     response();
     }
 
-    public static Response putUpdateFieldOnLabelWithoutValue(String id, LabelField field) {
+    // -----
+    // UTILS
+    // -----
 
-        RequestSpecification spec = given().
-                spec(requestSpecificationCommon);
+    private static String labelFieldById(String labelId, LabelField labelField) {
+        return labelById(labelId) + "/" + labelField.getValue();
+    }
 
-        return spec.
-                when().
-                put(url + "/" + id + "/" + field.getValue()).
-                then().
-                extract().
-                response();
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
+
+    // --------
+    // POSITIVE
+    // --------
+
+    public static Response updateFieldOnLabel(String labelId, LabelField labelField, String fieldValue) {
+        return put(labelFieldById(labelId, labelField), fieldValue);
+    }
+
+    // --------
+    // NEGATIVE
+    // --------
+
+    public static Response updateFieldOnLabelWithoutFieldValue(String labelId, LabelField labelField) {
+        return put(labelFieldById(labelId, labelField), null);
+    }
+
+    public static Response updateFieldOnLabelWithoutLabelField(String labelId) {
+        return put(labelById(labelId), null);
+    }
+
+    public static Response updateFieldOnLabelWithoutLabelId() {
+        return put(ENDPOINT_LABELS, null);
     }
 }
