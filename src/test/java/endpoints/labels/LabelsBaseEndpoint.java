@@ -15,6 +15,6 @@ public class LabelsBaseEndpoint extends BaseEndpoint {
     // ==========================================================================================================
 
     protected static String labelById(String labelId) {
-        return ENDPOINT_LABELS + "/" +labelId;
+        return ENDPOINT_LABELS + "/" + labelId;
     }
 }
