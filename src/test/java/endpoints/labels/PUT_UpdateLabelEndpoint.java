@@ -16,7 +16,7 @@ public class PUT_UpdateLabelEndpoint extends LabelsBaseEndpoint {
     // WITH QUERY PARAMS
     // -----------------
 
-    public static Response updateLabel(String labelId, PUT_UpdateLabelPayload payload) {
+    public static Response putUpdateLabel(String labelId, PUT_UpdateLabelPayload payload) {
 
         RequestSpecification requestSpecification =
                 given().
@@ -38,7 +38,7 @@ public class PUT_UpdateLabelEndpoint extends LabelsBaseEndpoint {
     // WITHOUT ID & PARAMS
     // -------------------
 
-    public static Response updateLabelWithoutIdAndParams() {
+    public static Response putUpdateLabelWithoutIdAndParams() {
 
         return given().
                     spec(getSpecification()).
