@@ -50,7 +50,7 @@ public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
     // POSITIVE
     // --------
 
-    public static Response updateFieldOnLabel(String labelId, LabelField labelField, String fieldValue) {
+    public static Response putUpdateFieldOnLabel(String labelId, LabelField labelField, String fieldValue) {
         return put(labelFieldById(labelId, labelField), fieldValue);
     }
 
@@ -58,15 +58,15 @@ public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
     // NEGATIVE
     // --------
 
-    public static Response updateFieldOnLabelWithoutFieldValue(String labelId, LabelField labelField) {
+    public static Response putUpdateFieldOnLabelWithoutFieldValue(String labelId, LabelField labelField) {
         return put(labelFieldById(labelId, labelField), null);
     }
 
-    public static Response updateFieldOnLabelWithoutLabelField(String labelId) {
+    public static Response putUpdateFieldOnLabelWithoutLabelField(String labelId) {
         return put(labelById(labelId), null);
     }
 
-    public static Response updateFieldOnLabelWithoutLabelId() {
+    public static Response putUpdateFieldOnLabelWithoutLabelId() {
         return put(ENDPOINT_LABELS, null);
     }
 }
