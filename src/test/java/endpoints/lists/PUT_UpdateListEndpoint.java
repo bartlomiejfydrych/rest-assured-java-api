@@ -1,29 +1,48 @@
 package endpoints.lists;
 
-import base.TestBase;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
-import java.util.Map;
+import payloads.lists.PUT_UpdateListPayload;
 
 import static io.restassured.RestAssured.given;
 
-public class PUT_UpdateListEndpoint extends TestBase {
+public class PUT_UpdateListEndpoint extends ListsBaseEndpoint {
 
-    private static final String url = "/lists";
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
 
-    public static Response putUpdateList(String idList, Map<String, Object> queryParams) {
+    // -----------------
+    // WITH QUERY PARAMS
+    // -----------------
 
-        RequestSpecification spec = given().
-                spec(requestSpecificationCommon);
+    public static Response putUpdateList(String listId, PUT_UpdateListPayload payload) {
 
-        if (queryParams != null && !queryParams.isEmpty()) {
-            spec.queryParams(queryParams);
+        RequestSpecification requestSpecification =
+                given().
+                    spec(getSpecification());
+
+        if (payload != null) {
+            applyQueryParams(requestSpecification, payload.toQueryParams());
         }
 
-        return spec.
+        return requestSpecification.
                 when().
-                    put(url + "/" + idList).
+                    put(listById(listId)).
+                then().
+                    extract().
+                    response();
+    }
+
+    // -------------------
+    // WITHOUT ID & PARAMS
+    // -------------------
+
+    public static Response putUpdateListWithoutIdAndParams() {
+        return given().
+                    spec(getSpecification()).
+                when().
+                    put(ENDPOINT_LISTS).
                 then().
                     extract().
                     response();
