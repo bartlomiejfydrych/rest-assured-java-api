@@ -1,48 +1,72 @@
 package endpoints.lists;
 
-import base.TestBase;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
-import java.util.Map;
+import payloads.lists.POST_CreateNewListPayload;
 
 import static io.restassured.RestAssured.given;
 
-public class POST_CreateNewListEndpoint extends TestBase {
+public class POST_CreateNewListEndpoint extends ListsBaseEndpoint {
 
-    private static final String url = "/lists";
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
 
-    public static Response postCreateNewList(String idBoard, String name, Map<String, Object> queryParams) {
+    // -----------------
+    // WITH QUERY PARAMS
+    // -----------------
 
-        RequestSpecification spec = given().
-                spec(requestSpecificationCommon).
-                queryParam("idBoard", idBoard).
-                queryParam("name", name);
+    public static Response postCreateNewList(String boardId, String listName, POST_CreateNewListPayload payload) {
 
-        if (queryParams != null && !queryParams.isEmpty()) {
-            spec.queryParams(queryParams);
+        RequestSpecification requestSpecification =
+                given().
+                    spec(getSpecification()).
+                    queryParam("idBoard", boardId).
+                    queryParam("name", listName);
+
+        if (payload != null) {
+            applyQueryParams(requestSpecification, payload.toQueryParams());
         }
 
-        return spec.
+        return requestSpecification.
                 when().
-                    post(url).
+                    post(ENDPOINT_LISTS).
                 then().
                     extract().
                     response();
     }
 
-    public static Response postCreateNewListAnyParams(Map<String, Object> queryParams) {
+    // ---------------
+    // WITH ANY PARAMS
+    // ---------------
 
-        RequestSpecification spec = given().
-                spec(requestSpecificationCommon);
+    public static Response postCreateNewListWithAnyParams(POST_CreateNewListPayload payload) {
 
-        if (queryParams != null && !queryParams.isEmpty()) {
-            spec.queryParams(queryParams);
+        RequestSpecification requestSpecification =
+                given().
+                    spec(getSpecification());
+
+        if (payload != null) {
+            applyQueryParams(requestSpecification, payload.toQueryParams());
         }
 
-        return spec.
+        return requestSpecification.
                 when().
-                    post(url).
+                    post(ENDPOINT_LISTS).
+                then().
+                    extract().
+                    response();
+    }
+
+    // --------------------
+    // WITHOUT QUERY PARAMS
+    // --------------------
+
+    public static Response postCreateNewListMissingRequiredParameters() {
+        return given().
+                    spec(getSpecification()).
+                when().
+                    post(ENDPOINT_LISTS).
                 then().
                     extract().
                     response();
