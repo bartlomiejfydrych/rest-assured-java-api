@@ -16,12 +16,12 @@ public class POST_CreateBoardEndpoint extends BoardsBaseEndpoint {
     // WITH QUERY PARAMS
     // -----------------
 
-    public static Response createBoard(String name, POST_CreateBoardPayload payload) {
+    public static Response postCreateBoard(String boardName, POST_CreateBoardPayload payload) {
 
         RequestSpecification requestSpecification =
                 given().
                     spec(getSpecification()).
-                    queryParam("name", name);
+                    queryParam("name", boardName);
 
         if (payload != null) {
             applyQueryParams(requestSpecification, payload.toQueryParams());
@@ -39,7 +39,7 @@ public class POST_CreateBoardEndpoint extends BoardsBaseEndpoint {
     // WITHOUT QUERY PARAMS
     // --------------------
 
-    public static Response createBoardMissingRequiredParameters() {
+    public static Response postCreateBoardMissingRequiredParameters() {
         return given().
                     spec(getSpecification()).
                 when().
