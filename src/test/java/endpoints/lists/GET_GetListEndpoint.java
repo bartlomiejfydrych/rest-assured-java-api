@@ -1,19 +1,20 @@
 package endpoints.lists;
 
-import base.TestBase;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
 
-public class GET_GetListEndpoint extends TestBase {
+public class GET_GetListEndpoint extends ListsBaseEndpoint {
 
-    private static final String url = "/lists";
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
 
-    public static Response getGetList(String id) {
+    public static Response getGetList(String listId) {
         return given().
-                    spec(requestSpecificationCommon).
+                    spec(getSpecification()).
                 when().
-                    get(url + "/" + id).
+                    get(listById(listId)).
                 then().
                     extract().
                     response();
