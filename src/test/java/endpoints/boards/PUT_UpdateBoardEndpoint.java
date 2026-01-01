@@ -16,7 +16,7 @@ public class PUT_UpdateBoardEndpoint extends BoardsBaseEndpoint {
     // WITH QUERY PARAMS
     // -----------------
 
-    public static Response updateBoard(String boardId, PUT_UpdateBoardPayload payload) {
+    public static Response putUpdateBoard(String boardId, PUT_UpdateBoardPayload payload) {
 
         RequestSpecification requestSpecification =
                 given().
@@ -38,7 +38,7 @@ public class PUT_UpdateBoardEndpoint extends BoardsBaseEndpoint {
     // WITHOUT ID & PARAMS
     // -------------------
 
-    public static Response updateBoardWithoutIdAndParams() {
+    public static Response putUpdateBoardWithoutIdAndParams() {
 
         return given().
                     spec(getSpecification()).
