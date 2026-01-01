@@ -10,7 +10,7 @@ public class GET_GetLabelEndpoint extends LabelsBaseEndpoint {
     // METHODS – MAIN
     // ==========================================================================================================
 
-    public static Response getLabel(String labelId) {
+    public static Response getGetLabel(String labelId) {
 
         return given().
                     spec(getSpecification()).
