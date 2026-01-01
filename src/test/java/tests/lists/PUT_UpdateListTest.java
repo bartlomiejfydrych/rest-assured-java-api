@@ -12,10 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import payloads.lists.PUT_UpdateListPayload;
 
-import java.util.Map;
-
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
-import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.lists.GET_GetListEndpoint.getGetList;
 import static endpoints.lists.POST_CreateNewListEndpoint.postCreateNewList;
 import static endpoints.lists.PUT_UpdateListEndpoint.putUpdateList;
@@ -60,7 +58,7 @@ public class PUT_UpdateListTest extends TestBase {
 
     @BeforeAll
     public void setUpCreateBoardAndList() {
-        responsePost = createBoard(generateRandomBoardName(), null);
+        responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id" );
         responsePost = postCreateNewList(boardId, generateRandomListName(), null);
@@ -72,7 +70,7 @@ public class PUT_UpdateListTest extends TestBase {
     @AfterAll
     public void tearDownDeleteBoardAndList() {
         if (boardId != null) {
-            responseDelete = deleteBoard(boardId);
+            responseDelete = deleteDeleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardId = null;
             listId = null;
@@ -95,14 +93,13 @@ public class PUT_UpdateListTest extends TestBase {
                 .setClosed(listClosed)
                 .setSubscribed(listSubscribed)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
         // PUT
-        responsePut = putUpdateList(listId, queryParams);
+        responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
@@ -131,14 +128,13 @@ public class PUT_UpdateListTest extends TestBase {
                 .setPos(listPosAsLong)
                 .setSubscribed(listSubscribed)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
         // PUT
-        responsePut = putUpdateList(listId, queryParams);
+        responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
@@ -170,14 +166,13 @@ public class PUT_UpdateListTest extends TestBase {
         PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
                 .setPos(listPosAsString)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
         // PUT
-        responsePut = putUpdateList(listId, queryParams);
+        responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareUniversalExpectedResponsePut(
@@ -206,14 +201,13 @@ public class PUT_UpdateListTest extends TestBase {
                 .setClosed(listClosed)
                 .setSubscribed(listSubscribed)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
         // PUT
-        responsePut = putUpdateList(listId, queryParams);
+        responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
@@ -248,17 +242,12 @@ public class PUT_UpdateListTest extends TestBase {
         PUT_UpdateListPayload payload2 = new PUT_UpdateListPayload.Builder()
                 .setPos(listPos2)
                 .build();
-        Map<String, Object> queryParams2 = payload2.toQueryParams();
-
         PUT_UpdateListPayload payload3 = new PUT_UpdateListPayload.Builder()
                 .setPos(listPos3)
                 .build();
-        Map<String, Object> queryParams3 = payload3.toQueryParams();
-
         PUT_UpdateListPayload payload4 = new PUT_UpdateListPayload.Builder()
                 .setPos(listPos4)
                 .build();
-        Map<String, Object> queryParams4 = payload4.toQueryParams();
 
         // ---
         // ACT
@@ -281,7 +270,7 @@ public class PUT_UpdateListTest extends TestBase {
         String listId4 = responsePostDto4.id;
 
         // PUT (edit list 2 -> POS: top)
-        Response responsePut2 = putUpdateList(listId2, queryParams2);
+        Response responsePut2 = putUpdateList(listId2, payload2);
         assertThat(responsePut2.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto2 = deserializeAndValidate(responsePut2, PUT_UpdateListDto.class);
         Long responsePutPos2 = responsePutDto2.pos;
@@ -298,7 +287,7 @@ public class PUT_UpdateListTest extends TestBase {
         // GET
         validateGetAgainstPut(responsePutDto2);
         // PUT (edit list 3 -> POS: bottom)
-        Response responsePut3 = putUpdateList(listId3, queryParams3);
+        Response responsePut3 = putUpdateList(listId3, payload3);
         assertThat(responsePut3.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto3 = deserializeAndValidate(responsePut3, PUT_UpdateListDto.class);
         Long responsePutPos3 = responsePutDto3.pos;
@@ -315,7 +304,7 @@ public class PUT_UpdateListTest extends TestBase {
         // GET
         validateGetAgainstPut(responsePutDto3);
         // PUT (edit list 4 -> POS: 140737488322560L)
-        Response responsePut4 = putUpdateList(listId4, queryParams4);
+        Response responsePut4 = putUpdateList(listId4, payload4);
         assertThat(responsePut4.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto4 = deserializeAndValidate(responsePut4, PUT_UpdateListDto.class);
         Long responsePutPos4 = responsePutDto4.pos;
@@ -361,7 +350,7 @@ public class PUT_UpdateListTest extends TestBase {
         */
 
         // POST (add {board 2})
-        responsePost = createBoard(generateRandomBoardName(), null);
+        responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         String boardId2 = responsePost.getBody().jsonPath().getString("id" );
         try {
@@ -374,8 +363,8 @@ public class PUT_UpdateListTest extends TestBase {
             PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
                     .setIdBoard(boardId2)
                     .build();
-            Map<String, Object> queryParams = payload.toQueryParams();
-            responsePut = putUpdateList(listId2, queryParams);
+
+            responsePut = putUpdateList(listId2, payload);
             assertThat(responsePut.statusCode()).isEqualTo(200);
             PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
             PUT_UpdateListDto expectedResponsePutDto = prepareUniversalExpectedResponsePut(
@@ -394,7 +383,7 @@ public class PUT_UpdateListTest extends TestBase {
             // DELETE (delete {board 2})
             if (boardId2 != null) {
                 try {
-                    responseDelete = deleteBoard(boardId2);
+                    responseDelete = deleteDeleteBoard(boardId2);
                     assertThat(responseDelete.statusCode()).isEqualTo(200);
                 } catch (Exception e) {
                     System.err.println("ERROR: Failed to delete {board2}: " + boardId2);
@@ -414,14 +403,13 @@ public class PUT_UpdateListTest extends TestBase {
                 .setName(listName)
                 .setIdBoard(boardId2)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
         // PUT
-        responsePut = putUpdateList(listId, queryParams);
+        responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
@@ -444,14 +432,13 @@ public class PUT_UpdateListTest extends TestBase {
         PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
                 .setPos(listPosAsString)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
 
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
         // PUT
-        responsePut = putUpdateList(listId, queryParams);
+        responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
@@ -495,9 +482,8 @@ public class PUT_UpdateListTest extends TestBase {
         PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
                 .setName(listName)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
         // ACT
-        responsePut = putUpdateList(listId, queryParams);
+        responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for name" );
@@ -513,9 +499,8 @@ public class PUT_UpdateListTest extends TestBase {
                 .setName(generateRandomListName())
                 .setIdBoard(boardIdN)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
         // ACT
-        responsePut = putUpdateList(listId, queryParams);
+        responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePut, expectedPutUpdateListResponseInvalidBoardId);
@@ -529,9 +514,8 @@ public class PUT_UpdateListTest extends TestBase {
                 .setName(generateRandomListName())
                 .setIdBoard(boardIdN)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
         // ACT
-        responsePut = putUpdateList(listId, queryParams);
+        responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(404);
         compareObjectsJsonNode(responsePut, expectedPutUpdateListResponseBoardNotFound);
@@ -545,9 +529,8 @@ public class PUT_UpdateListTest extends TestBase {
                 .setName(generateRandomListName())
                 .setIdBoard(boardIdN)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
         // ACT
-        responsePut = putUpdateList(listId, queryParams);
+        responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePut, expectedPutUpdateListResponseInvalidBoardId);
@@ -563,9 +546,8 @@ public class PUT_UpdateListTest extends TestBase {
                 .setName(generateRandomListName())
                 .setPos(listPosAsString)
                 .build();
-        Map<String, Object> queryParams = payload.toQueryParams();
         // ACT
-        responsePut = putUpdateList(listId, queryParams);
+        responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePut, expectedPutUpdateListResponseInvalidPosition);
