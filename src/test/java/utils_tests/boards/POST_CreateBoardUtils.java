@@ -5,7 +5,7 @@ import dto.boards.GET_GetBoardDto;
 import dto.boards.POST_CreateBoardDto;
 import io.restassured.response.Response;
 
-import static endpoints.boards.GET_GetBoardEndpoint.getBoard;
+import static endpoints.boards.GET_GetBoardEndpoint.getGetBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsResponse.deserializeAndValidate;
@@ -23,7 +23,7 @@ public class POST_CreateBoardUtils extends TestBase {
     }
 
     public static void validateGetAgainstPost(POST_CreateBoardDto responsePostDto) {
-        Response responseGet = getBoard(responsePostDto.id);
+        Response responseGet = getGetBoard(responsePostDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
         GET_GetBoardDto responseGetDto = deserializeAndValidate(responseGet, GET_GetBoardDto.class);

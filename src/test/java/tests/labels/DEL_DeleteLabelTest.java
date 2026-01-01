@@ -6,11 +6,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
-import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
-import static endpoints.labels.DEL_DeleteLabelEndpoint.deleteLabel;
-import static endpoints.labels.GET_GetLabelEndpoint.getLabel;
-import static endpoints.labels.POST_CreateLabelEndpoint.createLabel;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.labels.DEL_DeleteLabelEndpoint.deleteDeleteLabel;
+import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
+import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
@@ -29,7 +29,7 @@ public class DEL_DeleteLabelTest extends TestBase {
 
     @BeforeEach
     public void setUpCreateBoard() {
-        responsePost = createBoard(generateRandomBoardName(), null);
+        responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
     }
@@ -37,7 +37,7 @@ public class DEL_DeleteLabelTest extends TestBase {
     @AfterEach
     public void tearDownDeleteBoard() {
         if (boardId != null) {
-            responseDelete = deleteBoard(boardId);
+            responseDelete = deleteDeleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardId = null;
         }
@@ -61,15 +61,15 @@ public class DEL_DeleteLabelTest extends TestBase {
                 """;
 
         // POST
-        responsePost = createLabel(boardId, labelName, labelColor);
+        responsePost = postCreateLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         labelId = responsePost.getBody().jsonPath().getString("id");
         // DELETE
-        responseDelete = deleteLabel(labelId);
+        responseDelete = deleteDeleteLabel(labelId);
         assertThat(responseDelete.statusCode()).isEqualTo(200);
         compareObjectsJsonNode(responseDelete, expectedResponse);
         // GET
-        responseGet = getLabel(labelId);
+        responseGet = getGetLabel(labelId);
         assertThat(responseGet.statusCode()).isEqualTo(404);
         assertThat(responseGet.getBody().asString()).isEqualTo("The requested resource was not found.");
     }

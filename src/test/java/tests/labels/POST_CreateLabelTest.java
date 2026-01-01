@@ -6,12 +6,10 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import payloads.labels.POST_CreateLabelPayload;
 
-import java.util.Map;
-
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
-import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
-import static endpoints.labels.POST_CreateLabelEndpoint.createLabel;
-import static endpoints.labels.POST_CreateLabelEndpoint.createLabelWithAnyParams;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
+import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabelWithAnyParams;
 import static expected_responses.labels.POST_CreateLabelExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.*;
@@ -36,7 +34,7 @@ public class POST_CreateLabelTest extends TestBase {
 
     @BeforeAll
     public void setUpCreateBoard() {
-        responsePost = createBoard(generateRandomBoardName(), null);
+        responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
     }
@@ -44,7 +42,7 @@ public class POST_CreateLabelTest extends TestBase {
     @AfterAll
     public void tearDownDeleteBoard() {
         if (boardId != null) {
-            responseDelete = deleteBoard(boardId);
+            responseDelete = deleteDeleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardId = null;
         }
@@ -61,7 +59,7 @@ public class POST_CreateLabelTest extends TestBase {
         labelColor = pickRandom("yellow", "purple", "blue", "red", "green", "orange", "black", "sky", "pink", "lime");
 
         // POST
-        responsePost = createLabel(boardId, labelName, labelColor);
+        responsePost = postCreateLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateLabelDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateLabelDto.class);
         POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
@@ -83,7 +81,7 @@ public class POST_CreateLabelTest extends TestBase {
         labelColor = null;
 
         // POST
-        responsePost = createLabel(boardId, labelName, labelColor);
+        responsePost = postCreateLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateLabelDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateLabelDto.class);
         POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
@@ -112,35 +110,35 @@ public class POST_CreateLabelTest extends TestBase {
                 .setColor("yellow")
                 .build();
 
-        responsePost = createLabelWithAnyParams(payload);
+        responsePost = postCreateLabelWithAnyParams(payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N2_shouldNotCreateLabelWhenBoardIdIsNull() {
-        responsePost = createLabel(null, "N2 Label Name", "purple");
+        responsePost = postCreateLabel(null, "N2 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N3_shouldNotCreateLabelWhenBoardIdIsEmptyString() {
-        responsePost = createLabel("", "N3 Label Name", "purple");
+        responsePost = postCreateLabel("", "N3 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N4_shouldNotCreateLabelWhenBoardIdNonExistent() {
-        responsePost = createLabel("999999", "N4 Label Name", "purple");
+        responsePost = postCreateLabel("999999", "N4 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N5_shouldNotCreateLabelWhenBoardIdIsIncorrect() {
-        responsePost = createLabel("Text", "N5 Label Name", "purple");
+        responsePost = postCreateLabel("Text", "N5 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
     }
@@ -155,7 +153,7 @@ public class POST_CreateLabelTest extends TestBase {
                 .setColor("purple")
                 .build();
 
-        responsePost = createLabelWithAnyParams(payload);
+        responsePost = postCreateLabelWithAnyParams(payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for name");
     }
@@ -275,7 +273,7 @@ public class POST_CreateLabelTest extends TestBase {
 
     @Test
     public void N11_shouldNotCreateLabelWhenLabelColorIsIncorrect() {
-        responsePost = createLabel(boardId, "N11 Label Name", "KEK123");
+        responsePost = postCreateLabel(boardId, "N11 Label Name", "KEK123");
         assertThat(responsePost.getStatusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidColor);
     }

@@ -10,10 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import payloads.boards.POST_CreateBoardPayload;
 
-import java.util.Map;
-
-import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
-import static endpoints.boards.POST_CreateBoardEndpoint.createBoardMissingRequiredParameters;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoardMissingRequiredParameters;
 import static expected_responses.boards.POST_CreateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.pickRandom;
@@ -35,7 +33,7 @@ public class POST_CreateBoardTest extends TestBase {
     @AfterEach
     public void tearDownDeleteBoard() {
         if (boardId != null) {
-            responseDelete = DEL_DeleteBoardEndpoint.deleteBoard(boardId);
+            responseDelete = DEL_DeleteBoardEndpoint.deleteDeleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
         }
     }
@@ -50,7 +48,7 @@ public class POST_CreateBoardTest extends TestBase {
         String boardName = "!\"#$%&\\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ęĘóÓąĄśŚłŁżŻźŹćĆńŃ" + faker.number().randomNumber();
 
         // POST
-        responsePost = createBoard(boardName, null);
+        responsePost = postCreateBoard(boardName, null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
         POST_CreateBoardDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateBoardDto.class);
@@ -83,7 +81,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .build();
 
         // POST
-        responsePost = createBoard(boardName, payload);
+        responsePost = postCreateBoard(boardName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
         POST_CreateBoardDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateBoardDto.class);
@@ -118,7 +116,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .build();
 
         // POST
-        responsePost = createBoard(boardName, payload);
+        responsePost = postCreateBoard(boardName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
         POST_CreateBoardDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateBoardDto.class);
@@ -151,7 +149,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .build();
 
         // POST
-        responsePost = createBoard(boardName, payload);
+        responsePost = postCreateBoard(boardName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
         POST_CreateBoardDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateBoardDto.class);
@@ -189,7 +187,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .build();
 
         // POST
-        responsePost = createBoard(boardName, payload);
+        responsePost = postCreateBoard(boardName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
         POST_CreateBoardDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateBoardDto.class);
@@ -213,21 +211,21 @@ public class POST_CreateBoardTest extends TestBase {
 
     @Test
     public void N1_shouldNotCreateBoardWhenNameWasNotGiven() {
-        responsePost = createBoardMissingRequiredParameters();
+        responsePost = postCreateBoardMissingRequiredParameters();
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostBoardResponseInvalidName);
     }
 
     @Test
     public void N2_shouldNotCreateBoardWhenNameIsNull() {
-        responsePost = createBoard(null, null);
+        responsePost = postCreateBoard(null, null);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostBoardResponseInvalidName);
     }
 
     @Test
     public void N3_shouldNotCreateBoardWhenNameIsEmptyString() {
-        responsePost = createBoard("", null);
+        responsePost = postCreateBoard("", null);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedPostBoardResponseInvalidName);
     }
@@ -241,7 +239,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .setIdOrganization("123456789098765432123456")
                 .build();
 
-        responsePost = createBoard(generateRandomBoardName(), payload);
+        responsePost = postCreateBoard(generateRandomBoardName(), payload);
         assertThat(responsePost.statusCode()).isEqualTo(401);
         assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized org access");
     }
@@ -253,7 +251,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .setIdOrganization("123abc")
                 .build();
 
-        responsePost = createBoard(generateRandomBoardName(), payload);
+        responsePost = postCreateBoard(generateRandomBoardName(), payload);
         assertThat(responsePost.statusCode()).isEqualTo(401);
         assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized organization.");
     }
@@ -267,7 +265,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .setIdBoardSource("123456789098765432123456")
                 .build();
 
-        responsePost = createBoard(generateRandomBoardName(), payload);
+        responsePost = postCreateBoard(generateRandomBoardName(), payload);
         assertThat(responsePost.statusCode()).isEqualTo(404);
         assertThat(responsePost.getBody().asString()).isEqualTo("source board not found");
     }
@@ -286,7 +284,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .setIdBoardSource("123abc")
                 .build();
 
-        responsePost = createBoard(generateRandomBoardName(), payload);
+        responsePost = postCreateBoard(generateRandomBoardName(), payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePost, expectedResponse);
     }
@@ -300,7 +298,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .setPrefsPermissionLevel("other")
                 .build();
 
-        responsePost = createBoard(generateRandomBoardName(), payload);
+        responsePost = postCreateBoard(generateRandomBoardName(), payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_permissionLevel");
     }
@@ -314,7 +312,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .setPrefsVoting("other")
                 .build();
 
-        responsePost = createBoard(generateRandomBoardName(), payload);
+        responsePost = postCreateBoard(generateRandomBoardName(), payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_voting");
     }
@@ -328,7 +326,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .setPrefsComments("other")
                 .build();
 
-        responsePost = createBoard(generateRandomBoardName(), payload);
+        responsePost = postCreateBoard(generateRandomBoardName(), payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_comments");
     }
@@ -342,7 +340,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .setPrefsInvitations("other")
                 .build();
 
-        responsePost = createBoard(generateRandomBoardName(), payload);
+        responsePost = postCreateBoard(generateRandomBoardName(), payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_invitations");
     }
@@ -356,7 +354,7 @@ public class POST_CreateBoardTest extends TestBase {
                 .setPrefsCardAging("other")
                 .build();
 
-        responsePost = createBoard(generateRandomBoardName(), payload);
+        responsePost = postCreateBoard(generateRandomBoardName(), payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_cardAging");
     }
@@ -367,7 +365,7 @@ public class POST_CreateBoardTest extends TestBase {
 
     //@Test
     public void deleteBoard() {
-        responseDelete = DEL_DeleteBoardEndpoint.deleteBoard("68724f5bfffa6577a4dc0dbb");
+        responseDelete = DEL_DeleteBoardEndpoint.deleteDeleteBoard("68724f5bfffa6577a4dc0dbb");
         assertThat(responseDelete.statusCode()).isEqualTo(200);
     }
 }

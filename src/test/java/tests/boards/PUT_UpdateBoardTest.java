@@ -11,10 +11,10 @@ import payloads.boards.PUT_UpdateBoardPayload;
 
 import java.net.URL;
 
-import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteBoard;
-import static endpoints.boards.GET_GetBoardEndpoint.getBoard;
-import static endpoints.boards.POST_CreateBoardEndpoint.createBoard;
-import static endpoints.boards.PUT_UpdateBoardEndpoint.updateBoard;
+import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
+import static endpoints.boards.GET_GetBoardEndpoint.getGetBoard;
+import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
+import static endpoints.boards.PUT_UpdateBoardEndpoint.putUpdateBoard;
 import static expected_responses.boards.PUT_UpdateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.*;
@@ -42,7 +42,7 @@ public class PUT_UpdateBoardTest extends TestBase {
 
     @BeforeAll
     public void setUpCreateBoard() {
-        responsePost = createBoard(generateRandomBoardName(), null);
+        responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateBoardDto responsePostDto = deserializeJson(responsePost, POST_CreateBoardDto.class);
         boardId = responsePostDto.id;
@@ -54,7 +54,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     @AfterAll
     public void tearDownDeleteBoard() {
         if (boardId != null) {
-            responseDelete = deleteBoard(boardId);
+            responseDelete = deleteDeleteBoard(boardId);
             assertThat(responseDelete.statusCode()).isEqualTo(200);
             boardId = null;
         }
@@ -89,7 +89,7 @@ public class PUT_UpdateBoardTest extends TestBase {
 
         // TODO: Czekać na poprawkę lub podczas refactoru dodać GET'a
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
@@ -124,7 +124,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P2ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
@@ -138,11 +138,11 @@ public class PUT_UpdateBoardTest extends TestBase {
         // (We need to retrieve the current state of the previously created board to have something to compare it with,
         // to ensure that nothing has changed in this test after editing.)
         // GET
-        responseGet = getBoard(boardId);
+        responseGet = getGetBoard(boardId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetBoardDto responseGetDto = deserializeAndValidate(responseGet, GET_GetBoardDto.class);
         // PUT
-        responsePut = updateBoard(boardId, null);
+        responsePut = putUpdateBoard(boardId, null);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         compareObjects(responsePutDto, responseGetDto, PUT_UpdateBoardDto.FIELD_ORGANIZATION);
@@ -171,7 +171,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
@@ -208,7 +208,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
         PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P5ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
@@ -244,7 +244,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePut, expectedResponse);
     }
@@ -259,7 +259,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
     }
@@ -272,7 +272,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
     }
@@ -293,7 +293,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(401);
         compareObjectsJsonNode(responsePut, expectedResponse);
     }
@@ -312,7 +312,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(401);
         compareObjectsJsonNode(responsePut, expectedResponse);
     }
@@ -327,7 +327,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/permissionLevel");
     }
@@ -342,7 +342,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/invitations");
     }
@@ -357,7 +357,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/voting");
     }
@@ -372,7 +372,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/comments");
     }
@@ -394,7 +394,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareObjectsJsonNode(responsePut, expectedResponse);
     }
@@ -409,7 +409,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .build();
 
         // PUT
-        responsePut = updateBoard(boardId, payload);
+        responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/cardAging");
     }

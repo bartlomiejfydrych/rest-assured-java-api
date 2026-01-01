@@ -5,7 +5,7 @@ import dto.labels.GET_GetLabelDto;
 import dto.labels.POST_CreateLabelDto;
 import io.restassured.response.Response;
 
-import static endpoints.labels.GET_GetLabelEndpoint.getLabel;
+import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.pickRandom;
 import static utils.UtilsCompare.compareObjects;
@@ -30,7 +30,7 @@ public class POST_CreateLabelUtils extends TestBase {
     }
 
     public static void validateGetAgainstPost(POST_CreateLabelDto responsePostDto) {
-        Response responseGet = getLabel(responsePostDto.id);
+        Response responseGet = getGetLabel(responsePostDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
         GET_GetLabelDto responseGetDto = deserializeAndValidate(responseGet, GET_GetLabelDto.class);
