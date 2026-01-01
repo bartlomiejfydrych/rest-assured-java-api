@@ -10,7 +10,7 @@ public class DEL_DeleteLabelEndpoint extends LabelsBaseEndpoint {
     // METHODS – MAIN
     // ==========================================================================================================
 
-    public static Response deleteLabel(String labelId) {
+    public static Response deleteDeleteLabel(String labelId) {
 
         return given().
                     spec(getSpecification()).
