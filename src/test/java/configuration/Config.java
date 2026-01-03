@@ -35,7 +35,7 @@ public class Config {
         loaded = true;
 
         try (InputStream input = Config.class.getClassLoader()
-                .getResourceAsStream("configs/config.properties")) {
+                .getResourceAsStream("configuration/config.properties")) {
 
             if (input != null) {
                 properties.load(input);
@@ -52,7 +52,9 @@ public class Config {
     // PROPERTY READER
     // ==========================================================================================================
 
+    // ------
     // STRING
+    // ------
 
     private static String getProperty(String key, String defaultValue) {
         loadProperties();
@@ -90,14 +92,18 @@ public class Config {
         );
     }
 
+    // -------
     // BOOLEAN
+    // -------
 
     private static boolean getProperty(String key, boolean defaultValue) {
         String raw = getProperty(key, String.valueOf(defaultValue));
         return Boolean.parseBoolean(raw);
     }
 
+    // -------
     // INTEGER
+    // -------
 
     private static int getProperty(String key, int defaultValue) {
         String raw = getProperty(key, String.valueOf(defaultValue));
@@ -110,7 +116,9 @@ public class Config {
         }
     }
 
+    // ----
     // LONG
+    // ----
 
     private static long getProperty(String key, long defaultValue) {
         String raw = getProperty(key, String.valueOf(defaultValue));
@@ -123,7 +131,9 @@ public class Config {
         }
     }
 
+    // ------
     // DOUBLE
+    // ------
 
     private static double getProperty(String key, double defaultValue) {
         String raw = getProperty(key, String.valueOf(defaultValue));
@@ -211,8 +221,6 @@ public class Config {
         return getProperty("TRELLO_TOKEN", null);
     }
 }
-
-
 
 /*
 ########################################################################################################################
