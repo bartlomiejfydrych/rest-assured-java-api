@@ -6,6 +6,8 @@
 - [Enum](#enum)
 - [Typ zmiennej – Long](#long)
 - [Set Up (setUp) czy Setup? – prawidłowe nazewnictwo](#set_up_or_setup)
+- [Interfejsy – metody abstrakcyjne](#interface_abstract_methods)
+- [Interfejsy znacznikowe – co to jest?](#interface_marker)
 
 ---
 
@@ -271,3 +273,360 @@ Ale **nie** dla metod wykonujących akcję.
 | Metoda          | `tearDown()`               |
 | Metoda          | `tearDownAll()`            |
 | Zmienna / klasa | `SetupConfig`, `TestSetup` |
+
+---
+
+## 📄Interfejsy – metody abstrakcyjne <a name="interface_abstract_methods"></a>
+
+Co oznacza ta linia:  
+`String key();`
+
+Świetne pytanie — to jest **bardzo ważny element**, który warto dobrze zrozumieć 👍  
+Wyjaśnijmy to **krok po kroku**, na spokojnie.
+
+### 1️⃣ Gdzie to występuje?
+
+Linia:
+
+```java
+String key();
+```
+
+pojawia się u Ciebie **w interfejsie**, np.:
+
+```java
+public interface QueryParam {
+    String key();
+}
+```
+
+### 2️⃣ Co to dokładnie oznacza?
+
+#### 🔹 To jest **deklaracja metody w interfejsie**
+
+Czyli:
+
+* **nie ma ciała metody**
+* **nie ma implementacji**
+* mówi tylko:  
+  👉 *„Każda klasa / enum, który implementuje ten interfejs, MUSI mieć metodę `key()` zwracającą `String`”*
+
+To jest **kontrakt**, nie implementacja.
+
+### 3️⃣ Jak to się ma do enumów?
+
+Spójrz na przykład enuma:
+
+```java
+public enum BoardCommonQueryParam implements QueryParam {
+
+    NAME("name"),
+    DESC("desc"),
+    CLOSED("closed");
+
+    private final String key;
+
+    BoardCommonQueryParam(String key) {
+        this.key = key;
+    }
+
+    @Override
+    public String key() {
+        return key;
+    }
+}
+```
+
+#### Co się tu dzieje?
+
+* enum **implementuje `QueryParam`**
+* więc **musi** zaimplementować metodę `key()`
+* metoda `key()` zwraca **rzeczywistą nazwę parametru w API**
+
+### 4️⃣ Dlaczego to nie jest np. pole `String key`?
+
+Bo:
+
+❌ pole:
+
+```java
+String key;
+```
+
+* **nie wymusza niczego** na implementujących klasach
+* nie jest częścią kontraktu
+* interfejsy nie trzymają stanu (pól instancyjnych)
+
+✔ metoda:
+
+```java
+String key();
+```
+
+* **wymusza** istnienie tej metody
+* pozwala na **polimorfizm**
+* umożliwia używanie różnych enumów w jednym miejscu
+
+### 5️⃣ Dlaczego to jest takie dobre w Twoim przypadku?
+
+Dzięki temu możesz pisać:
+
+```java
+protected void putIfNotNull(
+        Map<String, Object> params,
+        QueryParam param,
+        Object value
+) {
+    if (value != null) {
+        params.put(param.key(), value);
+    }
+}
+```
+
+I **nie obchodzi Cię**, czy `param` pochodzi z:
+
+* `BoardCommonQueryParam`
+* `BoardPostQueryParam`
+* `LabelQueryParam`
+* `ListQueryParam`
+
+Każdy z nich **ma metodę `key()`**, bo implementuje interfejs.
+
+### 6️⃣ Jak to działa „pod maską”?
+
+To jest klasyczny **polimorfizm**:
+
+```java
+QueryParam param = BoardCommonQueryParam.NAME;
+String k = param.key(); // "name"
+```
+
+Java:
+
+* patrzy na **rzeczywisty typ obiektu**
+* wywołuje **konkretną implementację `key()`**
+* nie interesuje jej, że zmienna jest typu `QueryParam`
+
+### 7️⃣ Mentalny model (najważniejsze)
+
+> # `String key();`
+>
+> **„Każdy query param MUSI wiedzieć, jak nazywa się w API”**
+
+To wszystko 🙂
+
+### 8️⃣ TL;DR
+
+* `String key();` to **metoda abstrakcyjna w interfejsie**
+* wymusza implementację w enumach
+* umożliwia wspólną obsługę różnych parametrów
+* to **fundament Twojej architektury payloadów**
+
+---
+
+## 📄Interfejsy znacznikowe – co to jest? <a name="interface_marker"></a>
+
+Już tłumaczę **DLACZEGO zaproponowałem**:
+
+```java
+public interface PostQueryParam extends QueryParam {}
+public interface PutQueryParam extends QueryParam {}
+```
+
+i **kiedy to ma sens**, a kiedy **nie trzeba** tego robić.
+
+### 1️⃣ Co to w ogóle jest?
+
+To są **interfejsy znacznikowe drugiego poziomu**.
+
+Schemat:
+
+```
+QueryParam
+   ├── PostQueryParam
+   └── PutQueryParam
+```
+
+One:
+
+* **nic nie dodają technicznie**
+* **nie mają metod**
+* ale **niosą znaczenie semantyczne**
+
+### 2️⃣ Jaki problem one rozwiązują?
+
+#### Problem: te same parametry ≠ te same operacje
+
+W Trello (i większości API):
+
+| Parametr      | POST | PUT |
+|---------------|------|-----|
+| name          | ✅    | ✅   |
+| desc          | ✅    | ✅   |
+| idBoardSource | ✅    | ❌   |
+| closed        | ❌    | ✅   |
+| subscribed    | ❌    | ✅   |
+
+Jeżeli wszystko wrzucisz do jednego worka:
+
+```java
+enum BoardQueryParam implements QueryParam { ... }
+```
+
+➡️ **nic Cię nie powstrzyma**, żeby:
+
+* użyć POST-only parametru w PUT
+* użyć PUT-only parametru w POST
+* napisać test logicznie błędny, który *„przechodzi”*
+
+### 3️⃣ Co dają `PostQueryParam` i `PutQueryParam`?
+
+#### 🔹 1. Dokumentacja w kodzie (najważniejsze)
+
+To jest **czytelniejsze niż Javadoc**:
+
+```java
+enum BoardPostQueryParam implements PostQueryParam {
+    ID_BOARD_SOURCE("idBoardSource"),
+    KEEP_FROM_SOURCE("keepFromSource");
+}
+```
+
+Już z samej nazwy wiesz:  
+➡️ *tego NIE używaj w PUT*
+
+#### 🔹 2. Kompilator jako strażnik (opcjonalnie)
+
+Możesz napisać:
+
+```java
+protected static void putIfNotNull(
+        Map<String, Object> params,
+        PutQueryParam param,
+        Object value
+) { ... }
+```
+
+I wtedy:
+
+```java
+putIfNotNull(params, BoardPostQueryParam.ID_BOARD_SOURCE, value);
+```
+
+❌ **nie skompiluje się**
+
+To jest **złoto** w większym projekcie.
+
+#### 🔹 3. Skalowalność frameworka testowego
+
+Dzisiaj:
+
+* POST
+* PUT
+
+Jutro:
+
+* PATCH
+* DELETE
+* COPY
+* MOVE
+
+Dodajesz:
+
+```java
+interface PatchQueryParam extends QueryParam {}
+```
+
+i **nic nie psujesz**.
+
+### 4️⃣ Czy to jest zawsze potrzebne?
+
+#### ❌ NIE, jeśli:
+
+* masz 2–3 endpointy
+* testy piszesz sam
+* API jest bardzo proste
+
+#### ✅ TAK, jeśli:
+
+* testów jest dużo
+* API ma dużo wyjątków
+* chcesz, żeby framework **bronił się sam**
+* testy mają być utrzymywane miesiącami
+
+Ty **już jesteś w tym drugim przypadku**.
+
+### 5️⃣ Czy to jest overengineering?
+
+👉 **Nie w Twoim kontekście**
+
+Overengineering byłby wtedy, gdybyś:
+
+* miał 1 payload
+* 3 parametry
+* 2 testy
+
+U Ciebie:
+
+* wiele endpointów
+* wiele payloadów
+* wiele kombinacji
+* długofalowy framework
+
+To jest **właściwy poziom abstrakcji**.
+
+### 6️⃣ Jak to się składa w całość (pełny obraz)
+
+```java
+interface QueryParam {
+    String key();
+}
+
+interface PostQueryParam extends QueryParam {}
+interface PutQueryParam extends QueryParam {}
+
+enum BoardCommonQueryParam implements PostQueryParam, PutQueryParam {
+    NAME("name"),
+    DESC("desc"),
+    ID_ORGANIZATION("idOrganization");
+}
+
+enum BoardPostQueryParam implements PostQueryParam {
+    ID_BOARD_SOURCE("idBoardSource"),
+    KEEP_FROM_SOURCE("keepFromSource");
+}
+
+enum BoardPutQueryParam implements PutQueryParam {
+    CLOSED("closed"),
+    SUBSCRIBED("subscribed");
+}
+```
+
+### 7️⃣ Dlaczego zaproponowałem to Tobie konkretnie?
+
+Bo:
+
+* już masz **BasePayload**
+* już masz **buildery**
+* już unikasz magicznych stringów
+* już myślisz o **wspólnych helperach**
+
+Ten krok:
+➡️ **domyka architekturę**
+
+### TL;DR
+
+Zaproponowałem:
+
+```java
+PostQueryParam
+PutQueryParam
+```
+
+bo one:
+
+* kodują **zasady API** w typach
+* zapobiegają błędom logicznym
+* dokumentują różnice POST vs PUT
+* pozwalają kompilatorowi pilnować testów
+* skalują się wraz z projektem
