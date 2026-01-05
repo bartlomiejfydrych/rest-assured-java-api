@@ -4,6 +4,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import payloads.boards.POST_CreateBoardPayload;
 
+import static enums.query_parameters.boards.BoardBaseQueryParameters.NAME;
 import static io.restassured.RestAssured.given;
 
 public class POST_CreateBoardEndpoint extends BoardsBaseEndpoint {
@@ -21,7 +22,7 @@ public class POST_CreateBoardEndpoint extends BoardsBaseEndpoint {
         RequestSpecification requestSpecification =
                 given().
                     spec(getSpecification()).
-                    queryParam("name", boardName);
+                    queryParam(NAME.key(), boardName);
 
         if (payload != null) {
             applyQueryParams(requestSpecification, payload.toQueryParams());
