@@ -1,13 +1,18 @@
 package payloads.boards;
 
+import payloads.BasePayload;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class POST_CreateBoardPayload {
+import static enums.query_parameters.boards.BoardBaseQueryParameters.*;
+import static enums.query_parameters.boards.POST_CreateBoardQueryParameters.*;
 
-    // ----------------
-    // Query parameters
-    // ----------------
+public class POST_CreateBoardPayload extends BasePayload {
+
+    // ==========================================================================================================
+    // FIELDS – QUERY PARAMETERS
+    // ==========================================================================================================
 
     private final String name;
     private final Boolean defaultLabels;
@@ -26,36 +31,37 @@ public class POST_CreateBoardPayload {
     private final String prefsBackground;
     private final String prefsCardAging;
 
-    // -----------------------------------------
-    // Helper method – conversion to queryParams
-    // -----------------------------------------
+    // ==========================================================================================================
+    // HELPER METHOD – CONVERTS A CLASS OBJECT TO QUERY PARAMETER MAP
+    // ==========================================================================================================
 
     public Map<String, Object> toQueryParams() {
+
         Map<String, Object> params = new HashMap<>();
 
-        if (name != null) params.put("name", name);
-        if (defaultLabels != null) params.put("defaultLabels", defaultLabels);
-        if (defaultLists != null) params.put("defaultLists", defaultLists);
-        if (desc != null) params.put("desc", desc);
-        if (idOrganization != null) params.put("idOrganization", idOrganization);
-        if (idBoardSource != null) params.put("idBoardSource", idBoardSource);
-        if (keepFromSource != null) params.put("keepFromSource", keepFromSource);
-        if (powerUps != null) params.put("powerUps", powerUps);
-        if (prefsPermissionLevel != null) params.put("prefs_permissionLevel", prefsPermissionLevel);
-        if (prefsVoting != null) params.put("prefs_voting", prefsVoting);
-        if (prefsComments != null) params.put("prefs_comments", prefsComments);
-        if (prefsInvitations != null) params.put("prefs_invitations", prefsInvitations);
-        if (prefsSelfJoin != null) params.put("prefs_selfJoin", prefsSelfJoin);
-        if (prefsCardCovers != null) params.put("prefs_cardCovers", prefsCardCovers);
-        if (prefsBackground != null) params.put("prefs_background", prefsBackground);
-        if (prefsCardAging != null) params.put("prefs_cardAging", prefsCardAging);
+        putIfNotNull(params, NAME, name);
+        putIfNotNull(params, DEFAULT_LABELS, defaultLabels);
+        putIfNotNull(params, DEFAULT_LISTS, defaultLists);
+        putIfNotNull(params, DESC, desc);
+        putIfNotNull(params, ID_ORGANIZATION, idOrganization);
+        putIfNotNull(params, ID_BOARD_SOURCE, idBoardSource);
+        putIfNotNull(params, KEEP_FROM_SOURCE, keepFromSource);
+        putIfNotNull(params, POWER_UPS, powerUps);
+        putIfNotNull(params, PREFS_PERMISSION_LEVEL, prefsPermissionLevel);
+        putIfNotNull(params, PREFS_VOTING, prefsVoting);
+        putIfNotNull(params, PREFS_COMMENTS, prefsComments);
+        putIfNotNull(params, PREFS_INVITATIONS, prefsInvitations);
+        putIfNotNull(params, PREFS_SELF_JOIN, prefsSelfJoin);
+        putIfNotNull(params, PREFS_CARD_COVERS, prefsCardCovers);
+        putIfNotNull(params, PREFS_BACKGROUND, prefsBackground);
+        putIfNotNull(params, PREFS_CARD_AGING, prefsCardAging);
 
         return params;
     }
 
-    // --------------
-    // Example of use
-    // --------------
+    // ==========================================================================================================
+    // EXAMPLE OF USE
+    // ==========================================================================================================
 
     /*
 
@@ -70,9 +76,9 @@ public class POST_CreateBoardPayload {
 
     */
 
-    // -----------------------------------------------------
-    // Private constructor (accessible only through builder)
-    // -----------------------------------------------------
+    // ==========================================================================================================
+    // PRIVATE CONSTRUCTOR (ACCESSIBLE ONLY THROUGH BUILDER)
+    // ==========================================================================================================
 
     private POST_CreateBoardPayload(Builder builder) {
         this.name = builder.name;
@@ -93,9 +99,9 @@ public class POST_CreateBoardPayload {
         this.prefsCardAging = builder.prefsCardAging;
     }
 
-    // -------
-    // Builder
-    // -------
+    // ==========================================================================================================
+    // BUILDER
+    // ==========================================================================================================
 
     public static class Builder {
         private String name;
