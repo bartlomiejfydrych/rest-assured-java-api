@@ -1,13 +1,18 @@
 package payloads.boards;
 
+import payloads.BasePayload;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class PUT_UpdateBoardPayload {
+import static enums.query_parameters.boards.BoardBaseQueryParameters.*;
+import static enums.query_parameters.boards.PUT_UpdateBoardQueryParameters.*;
 
-    // ----------------
-    // Query parameters
-    // ----------------
+public class PUT_UpdateBoardPayload extends BasePayload {
+
+    // ==========================================================================================================
+    // FIELDS – QUERY PARAMETERS
+    // ==========================================================================================================
 
     private final String name;
     private final String desc;
@@ -25,35 +30,36 @@ public class PUT_UpdateBoardPayload {
     private final String prefsCardAging;
     private final Boolean prefsCalendarFeedEnabled;
 
-    // -----------------------------------------
-    // Helper method – conversion to queryParams
-    // -----------------------------------------
+    // ==========================================================================================================
+    // HELPER METHOD – CONVERTS A CLASS OBJECT TO QUERY PARAMETER MAP
+    // ==========================================================================================================
 
     public Map<String, Object> toQueryParams() {
+
         Map<String, Object> params = new HashMap<>();
 
-        if (name != null) params.put("name", name);
-        if (desc != null) params.put("desc", desc);
-        if (closed != null) params.put("closed", closed);
-        if (subscribed != null) params.put("subscribed", subscribed);
-        if (idOrganization != null) params.put("idOrganization", idOrganization);
-        if (prefsPermissionLevel != null) params.put("prefs/permissionLevel", prefsPermissionLevel);
-        if (prefsSelfJoin != null) params.put("prefs/selfJoin", prefsSelfJoin);
-        if (prefsCardCovers != null) params.put("prefs/cardCovers", prefsCardCovers);
-        if (prefsHideVotes != null) params.put("prefs/hideVotes", prefsHideVotes);
-        if (prefsInvitations != null) params.put("prefs/invitations", prefsInvitations);
-        if (prefsVoting != null) params.put("prefs/voting", prefsVoting);
-        if (prefsComments != null) params.put("prefs/comments", prefsComments);
-        if (prefsBackground != null) params.put("prefs/background", prefsBackground);
-        if (prefsCardAging != null) params.put("prefs/cardAging", prefsCardAging);
-        if (prefsCalendarFeedEnabled != null) params.put("prefs/calendarFeedEnabled", prefsCalendarFeedEnabled);
+        putIfNotNull(params, NAME, name);
+        putIfNotNull(params, DESC, desc);
+        putIfNotNull(params, CLOSED, closed);
+        putIfNotNull(params, SUBSCRIBED, subscribed);
+        putIfNotNull(params, ID_ORGANIZATION, idOrganization);
+        putIfNotNull(params, PREFS_PERMISSION_LEVEL, prefsPermissionLevel);
+        putIfNotNull(params, PREFS_SELF_JOIN, prefsSelfJoin);
+        putIfNotNull(params, PREFS_CARD_COVERS, prefsCardCovers);
+        putIfNotNull(params, PREFS_HIDE_VOTES, prefsHideVotes);
+        putIfNotNull(params, PREFS_INVITATIONS, prefsInvitations);
+        putIfNotNull(params, PREFS_VOTING, prefsVoting);
+        putIfNotNull(params, PREFS_COMMENTS, prefsComments);
+        putIfNotNull(params, PREFS_BACKGROUND, prefsBackground);
+        putIfNotNull(params, PREFS_CARD_AGING, prefsCardAging);
+        putIfNotNull(params, PREFS_CALENDAR_FEED_ENABLED, prefsCalendarFeedEnabled);
 
         return params;
     }
 
-    // --------------
-    // Example of use
-    // --------------
+    // ==========================================================================================================
+    // EXAMPLE OF USE
+    // ==========================================================================================================
 
     /*
 
@@ -68,9 +74,9 @@ public class PUT_UpdateBoardPayload {
 
     */
 
-    // -----------------------------------------------------
-    // Private constructor (accessible only through builder)
-    // -----------------------------------------------------
+    // ==========================================================================================================
+    // PRIVATE CONSTRUCTOR (ACCESSIBLE ONLY THROUGH BUILDER)
+    // ==========================================================================================================
 
     private PUT_UpdateBoardPayload(Builder builder) {
         this.name = builder.name;
@@ -90,9 +96,9 @@ public class PUT_UpdateBoardPayload {
         this.prefsCalendarFeedEnabled = builder.prefsCalendarFeedEnabled;
     }
 
-    // -------
-    // Builder
-    // -------
+    // ==========================================================================================================
+    // BUILDER
+    // ==========================================================================================================
 
     public static class Builder {
         private String name;
