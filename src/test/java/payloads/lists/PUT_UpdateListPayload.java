@@ -1,39 +1,45 @@
 package payloads.lists;
 
+import payloads.BasePayload;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class PUT_UpdateListPayload {
+import static enums.query_parameters.lists.lists.ListBaseQueryParameters.*;
+import static enums.query_parameters.lists.lists.PUT_UpdateListQueryParameters.*;
 
-    // ----------------
-    // Query parameters
-    // ----------------
+public class PUT_UpdateListPayload extends BasePayload {
 
-    private final String idBoard;
+    // ==========================================================================================================
+    // FIELDS – QUERY PARAMETERS
+    // ==========================================================================================================
+
     private final String name;
     private final Boolean closed;
+    private final String idBoard;
     private final Object pos;   // Can be String or Long (Number)
     private final Boolean subscribed;
 
-    // -----------------------------------------
-    // Helper method – conversion to queryParams
-    // -----------------------------------------
+    // ==========================================================================================================
+    // HELPER METHOD – CONVERTS A CLASS OBJECT TO QUERY PARAMETER MAP
+    // ==========================================================================================================
 
     public Map<String, Object> toQueryParams() {
+
         Map<String, Object> params = new HashMap<>();
 
-        if (idBoard != null) params.put("idBoard", idBoard);
-        if (name != null) params.put("name", name);
-        if (closed != null) params.put("closed", closed);
-        if (pos != null) params.put("pos", pos);
-        if (subscribed != null) params.put("subscribed", subscribed);
+        putIfNotNull(params, NAME, name);
+        putIfNotNull(params, CLOSED, closed);
+        putIfNotNull(params, ID_BOARD, idBoard);
+        putIfNotNull(params, POS, pos);
+        putIfNotNull(params, SUBSCRIBED, subscribed);
 
         return params;
     }
 
-    // --------------
-    // Example of use
-    // --------------
+    // ==========================================================================================================
+    // EXAMPLE OF USE
+    // ==========================================================================================================
 
     /*
 
@@ -49,9 +55,9 @@ public class PUT_UpdateListPayload {
 
     */
 
-    // -----------------------------------------------------
-    // Private constructor (accessible only through builder)
-    // -----------------------------------------------------
+    // ==========================================================================================================
+    // PRIVATE CONSTRUCTOR (ACCESSIBLE ONLY THROUGH BUILDER)
+    // ==========================================================================================================
 
     private PUT_UpdateListPayload(Builder builder) {
         this.idBoard = builder.idBoard;
@@ -61,9 +67,9 @@ public class PUT_UpdateListPayload {
         this.subscribed = builder.subscribed;
     }
 
-    // -------
-    // Builder
-    // -------
+    // ==========================================================================================================
+    // BUILDER
+    // ==========================================================================================================
 
     public static class Builder {
         private String idBoard;
