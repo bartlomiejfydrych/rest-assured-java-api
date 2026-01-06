@@ -5,8 +5,8 @@ import payloads.BasePayload;
 import java.util.HashMap;
 import java.util.Map;
 
-import static enums.query_parameters.boards.BoardBaseQueryParameters.*;
-import static enums.query_parameters.boards.PUT_UpdateBoardQueryParameters.*;
+import static enums.query_parameters.boards.boards.BoardBaseQueryParameters.*;
+import static enums.query_parameters.boards.boards.PUT_UpdateBoardQueryParameters.*;
 
 public class PUT_UpdateBoardPayload extends BasePayload {
 

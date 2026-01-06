@@ -1,21 +1,26 @@
-package enums.query_parameters.boards;
+package enums.query_parameters.boards.boards;
 
-import enums.query_parameters.interfaces.boards.POST_CreateBoardQueryParam;
 import enums.query_parameters.interfaces.boards.PUT_UpdateBoardQueryParam;
 
-public enum BoardBaseQueryParameters implements POST_CreateBoardQueryParam, PUT_UpdateBoardQueryParam {
+public enum PUT_UpdateBoardQueryParameters implements PUT_UpdateBoardQueryParam {
 
     // ==========================================================================================================
     // ENUMS
     // ==========================================================================================================
 
-    // -----------------------
-    // COMMON QUERY PARAMETERS
-    // -----------------------
+    CLOSED("closed"),
+    SUBSCRIBED("subscribed"),
 
-    NAME("name"),
-    DESC("desc"),
-    ID_ORGANIZATION("idOrganization");
+    PREFS_PERMISSION_LEVEL("prefs/permissionLevel"),
+    PREFS_SELF_JOIN("prefs/selfJoin"),
+    PREFS_CARD_COVERS("prefs/cardCovers"),
+    PREFS_HIDE_VOTES("prefs/hideVotes"),
+    PREFS_INVITATIONS("prefs/invitations"),
+    PREFS_VOTING("prefs/voting"),
+    PREFS_COMMENTS("prefs/comments"),
+    PREFS_BACKGROUND("prefs/background"),
+    PREFS_CARD_AGING("prefs/cardAging"),
+    PREFS_CALENDAR_FEED_ENABLED("prefs/calendarFeedEnabled");
 
     // ==========================================================================================================
     // INTERNAL ENUM VALUE
@@ -27,7 +32,7 @@ public enum BoardBaseQueryParameters implements POST_CreateBoardQueryParam, PUT_
     // CONSTRUCTOR
     // ==========================================================================================================
 
-    BoardBaseQueryParameters(String key) {
+    PUT_UpdateBoardQueryParameters(String key) {
         this.key = key;
     }
 

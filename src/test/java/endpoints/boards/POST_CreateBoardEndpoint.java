@@ -4,7 +4,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import payloads.boards.POST_CreateBoardPayload;
 
-import static enums.query_parameters.boards.BoardBaseQueryParameters.NAME;
+import static enums.query_parameters.boards.boards.BoardBaseQueryParameters.NAME;
 import static io.restassured.RestAssured.given;
 
 public class POST_CreateBoardEndpoint extends BoardsBaseEndpoint {

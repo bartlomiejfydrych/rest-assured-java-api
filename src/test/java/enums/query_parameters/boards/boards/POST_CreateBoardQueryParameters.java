@@ -1,4 +1,4 @@
-package enums.query_parameters.boards;
+package enums.query_parameters.boards.boards;
 
 import enums.query_parameters.interfaces.boards.POST_CreateBoardQueryParam;
 
