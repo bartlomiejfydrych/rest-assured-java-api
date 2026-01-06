@@ -1,33 +1,38 @@
 package payloads.labels;
 
+import payloads.BasePayload;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class PUT_UpdateLabelPayload {
+import static enums.query_parameters.labels.LabelBaseQueryParameters.*;
 
-    // ----------------
-    // Query parameters
-    // ----------------
+public class PUT_UpdateLabelPayload extends BasePayload {
+
+    // ==========================================================================================================
+    // FIELDS – QUERY PARAMETERS
+    // ==========================================================================================================
 
     private final String name;
     private final String color;
 
-    // -----------------------------------------
-    // Helper method – conversion to queryParams
-    // -----------------------------------------
+    // ==========================================================================================================
+    // HELPER METHOD – CONVERTS A CLASS OBJECT TO QUERY PARAMETER MAP
+    // ==========================================================================================================
 
     public Map<String, Object> toQueryParams() {
+
         Map<String, Object> params = new HashMap<>();
 
-        if (name != null) params.put("name", name);
-        if (color != null) params.put("color", color);
+        putIfNotNull(params, NAME, name);
+        putIfNotNull(params, COLOR, color);
 
         return params;
     }
 
-    // --------------
-    // Example of use
-    // --------------
+    // ==========================================================================================================
+    // EXAMPLE OF USE
+    // ==========================================================================================================
 
     /*
 
@@ -40,18 +45,18 @@ public class PUT_UpdateLabelPayload {
 
     */
 
-    // -----------------------------------------------------
-    // Private constructor (accessible only through builder)
-    // -----------------------------------------------------
+    // ==========================================================================================================
+    // PRIVATE CONSTRUCTOR (ACCESSIBLE ONLY THROUGH BUILDER)
+    // ==========================================================================================================
 
     private PUT_UpdateLabelPayload(Builder builder) {
         this.name = builder.name;
         this.color = builder.color;
     }
 
-    // -------
-    // Builder
-    // -------
+    // ==========================================================================================================
+    // BUILDER
+    // ==========================================================================================================
 
     public static class Builder {
         private String name;
