@@ -4,6 +4,7 @@ import enums.labels.LabelField;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
+import static enums.query_parameters.labels.PUT_UpdateFieldOnLabelQueryParameters.*;
 import static io.restassured.RestAssured.given;
 
 public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
@@ -23,7 +24,7 @@ public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
                     spec(getSpecification());
 
         if (fieldValue != null) {
-            requestSpecification.queryParam("value", fieldValue);
+            requestSpecification.queryParam(VALUE.key(), fieldValue);
         }
 
         return requestSpecification.
