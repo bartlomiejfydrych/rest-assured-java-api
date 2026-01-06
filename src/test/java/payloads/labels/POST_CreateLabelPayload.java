@@ -1,35 +1,41 @@
 package payloads.labels;
 
+import payloads.BasePayload;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class POST_CreateLabelPayload {
+import static enums.query_parameters.labels.LabelBaseQueryParameters.*;
+import static enums.query_parameters.labels.POST_CreateLabelQueryParameters.*;
 
-    // ----------------
-    // Query parameters
-    // ----------------
+public class POST_CreateLabelPayload extends BasePayload {
+
+    // ==========================================================================================================
+    // FIELDS – QUERY PARAMETERS
+    // ==========================================================================================================
 
     private final String idBoard;
     private final String name;
     private final String color;
 
-    // -----------------------------------------
-    // Helper method – conversion to queryParams
-    // -----------------------------------------
+    // ==========================================================================================================
+    // HELPER METHOD – CONVERTS A CLASS OBJECT TO QUERY PARAMETER MAP
+    // ==========================================================================================================
 
     public Map<String, Object> toQueryParams() {
+
         Map<String, Object> params = new HashMap<>();
 
-        if (idBoard != null) params.put("idBoard", idBoard);
-        if (name != null) params.put("name", name);
-        if (color != null) params.put("color", color);
+        putIfNotNull(params, ID_BOARD, idBoard);
+        putIfNotNull(params, NAME, name);
+        putIfNotNull(params, COLOR, color);
 
         return params;
     }
 
-    // --------------
-    // Example of use
-    // --------------
+    // ==========================================================================================================
+    // EXAMPLE OF USE
+    // ==========================================================================================================
 
     /*
 
@@ -43,9 +49,9 @@ public class POST_CreateLabelPayload {
 
     */
 
-    // -----------------------------------------------------
-    // Private constructor (accessible only through builder)
-    // -----------------------------------------------------
+    // ==========================================================================================================
+    // PRIVATE CONSTRUCTOR (ACCESSIBLE ONLY THROUGH BUILDER)
+    // ==========================================================================================================
 
     private POST_CreateLabelPayload(Builder builder) {
         this.idBoard = builder.idBoard;
@@ -53,9 +59,9 @@ public class POST_CreateLabelPayload {
         this.color = builder.color;
     }
 
-    // -------
-    // Builder
-    // -------
+    // ==========================================================================================================
+    // BUILDER
+    // ==========================================================================================================
 
     public static class Builder {
         private String idBoard;
