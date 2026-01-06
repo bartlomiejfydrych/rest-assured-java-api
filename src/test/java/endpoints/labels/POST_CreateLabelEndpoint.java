@@ -4,6 +4,8 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import payloads.labels.POST_CreateLabelPayload;
 
+import static enums.query_parameters.labels.LabelBaseQueryParameters.*;
+import static enums.query_parameters.labels.POST_CreateLabelQueryParameters.*;
 import static io.restassured.RestAssured.given;
 
 
@@ -22,9 +24,9 @@ public class POST_CreateLabelEndpoint extends LabelsBaseEndpoint {
         RequestSpecification requestSpecification =
                 given().
                     spec(getSpecification()).
-                    queryParam("idBoard", boardId).
-                    queryParam("name", labelName).
-                    queryParam("color", labelColor);
+                    queryParam(ID_BOARD.key(), boardId).
+                    queryParam(NAME.key(), labelName).
+                    queryParam(COLOR.key(), labelColor);
 
         return requestSpecification.
                 when().
