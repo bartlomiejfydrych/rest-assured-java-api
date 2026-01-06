@@ -1,37 +1,43 @@
 package payloads.lists;
 
+import payloads.BasePayload;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class POST_CreateNewListPayload {
+import static enums.query_parameters.lists.lists.ListBaseQueryParameters.*;
+import static enums.query_parameters.lists.lists.POST_CreateNewListQueryParameters.*;
 
-    // ----------------
-    // Query parameters
-    // ----------------
+public class POST_CreateNewListPayload extends BasePayload {
 
-    private final String idBoard;
+    // ==========================================================================================================
+    // FIELDS – QUERY PARAMETERS
+    // ==========================================================================================================
+
     private final String name;
+    private final String idBoard;
     private final String idListSource;
     private final Object pos;   // Can be String or Long (Number)
 
-    // -----------------------------------------
-    // Helper method – conversion to queryParams
-    // -----------------------------------------
+    // ==========================================================================================================
+    // HELPER METHOD – CONVERTS A CLASS OBJECT TO QUERY PARAMETER MAP
+    // ==========================================================================================================
 
     public Map<String, Object> toQueryParams() {
+
         Map<String, Object> params = new HashMap<>();
 
-        if (idBoard != null) params.put("idBoard", idBoard);
-        if (name != null) params.put("name", name);
-        if (idListSource != null) params.put("idListSource", idListSource);
-        if (pos != null) params.put("pos", pos);
+        putIfNotNull(params, NAME, name);
+        putIfNotNull(params, ID_BOARD, idBoard);
+        putIfNotNull(params, ID_LIST_SOURCE, idListSource);
+        putIfNotNull(params, POS, pos);
 
         return params;
     }
 
-    // --------------
-    // Example of use
-    // --------------
+    // ==========================================================================================================
+    // EXAMPLE OF USE
+    // ==========================================================================================================
 
     /*
 
@@ -46,9 +52,9 @@ public class POST_CreateNewListPayload {
 
     */
 
-    // -----------------------------------------------------
-    // Private constructor (accessible only through builder)
-    // -----------------------------------------------------
+    // ==========================================================================================================
+    // PRIVATE CONSTRUCTOR (ACCESSIBLE ONLY THROUGH BUILDER)
+    // ==========================================================================================================
 
     private POST_CreateNewListPayload(Builder builder) {
         this.idBoard = builder.idBoard;
@@ -57,9 +63,9 @@ public class POST_CreateNewListPayload {
         this.pos = builder.pos;
     }
 
-    // -------
-    // Builder
-    // -------
+    // ==========================================================================================================
+    // BUILDER
+    // ==========================================================================================================
 
     public static class Builder {
         private String idBoard;
