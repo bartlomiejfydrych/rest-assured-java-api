@@ -1,33 +1,38 @@
 package payloads.emoji;
 
+import payloads.BasePayload;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class GET_ListAvailableEmojiPayload {
+import static enums.query_parameters.emoji.GET_ListAvailableEmojiQueryParameters.*;
 
-    // ----------------
-    // Query parameters
-    // ----------------
+public class GET_ListAvailableEmojiPayload extends BasePayload {
+
+    // ==========================================================================================================
+    // FIELDS – QUERY PARAMETERS
+    // ==========================================================================================================
 
     private final String locale;
     private final Boolean spritesheets;
 
-    // -----------------------------------------
-    // Helper method – conversion to queryParams
-    // -----------------------------------------
+    // ==========================================================================================================
+    // HELPER METHOD – CONVERTS A CLASS OBJECT TO QUERY PARAMETER MAP
+    // ==========================================================================================================
 
     public Map<String, Object> toQueryParams() {
+
         Map<String, Object> params = new HashMap<>();
 
-        if (locale != null) params.put("locale", locale);
-        if (spritesheets != null) params.put("spritesheets", spritesheets);
+        putIfNotNull(params, LOCALE, locale);
+        putIfNotNull(params, SPRITESHEETS, spritesheets);
 
         return params;
     }
 
-    // --------------
-    // Example of use
-    // --------------
+    // ==========================================================================================================
+    // EXAMPLE OF USE
+    // ==========================================================================================================
 
     /*
 
@@ -40,18 +45,18 @@ public class GET_ListAvailableEmojiPayload {
 
     */
 
-    // -----------------------------------------------------
-    // Private constructor (accessible only through builder)
-    // -----------------------------------------------------
+    // ==========================================================================================================
+    // PRIVATE CONSTRUCTOR (ACCESSIBLE ONLY THROUGH BUILDER)
+    // ==========================================================================================================
 
     private GET_ListAvailableEmojiPayload(Builder builder) {
         this.locale = builder.locale;
         this.spritesheets = builder.spritesheets;
     }
 
-    // -------
-    // Builder
-    // -------
+    // ==========================================================================================================
+    // BUILDER
+    // ==========================================================================================================
 
     public static class Builder {
         private String locale;
