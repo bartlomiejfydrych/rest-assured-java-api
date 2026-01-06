@@ -4,6 +4,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import payloads.lists.POST_CreateNewListPayload;
 
+import static enums.query_parameters.lists.lists.ListBaseQueryParameters.*;
 import static io.restassured.RestAssured.given;
 
 public class POST_CreateNewListEndpoint extends ListsBaseEndpoint {
@@ -21,8 +22,8 @@ public class POST_CreateNewListEndpoint extends ListsBaseEndpoint {
         RequestSpecification requestSpecification =
                 given().
                     spec(getSpecification()).
-                    queryParam("idBoard", boardId).
-                    queryParam("name", listName);
+                    queryParam(ID_BOARD.key(), boardId).
+                    queryParam(NAME.key(), listName);
 
         if (payload != null) {
             applyQueryParams(requestSpecification, payload.toQueryParams());
