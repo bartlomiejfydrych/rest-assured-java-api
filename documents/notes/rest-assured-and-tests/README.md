@@ -51,6 +51,7 @@
 - [Long vs. long (prymitywy) – autoboxing, czyli automatyczne pakowanie prymitywu w obiekt](primitives_long)
 - [Dokumentacja testów – możliwe formy](#test_documentation_forms)
 - [URL – kodowanie znaków](#url_encoded)
+- [SEED – informacje](#seed_information)
 
 ---
 
@@ -3757,3 +3758,347 @@ Poniżej masz **wszystkie te znaki zakodowane URL-owo** oraz jeden **łączny st
 ```
 %2F%3F%23%3C%3E%22%27%7B%7D%5B%5D%25
 ```
+
+---
+
+## 📄SEED – informacje <a name="seed_information"></a>
+
+```text
+Wytłumacz mi dokładniej o co chodzi w tym punkcie:
+2️⃣ Random / Faker – deterministyczność testów 🎯
+```
+
+Świetne pytanie — to **bardzo ważny temat w testach automatycznych**, a często pomijany 👍  
+Wyjaśnię to **krok po kroku**, na przykładach z życia testera API.
+
+### 🔴 Problem: „losowość” w testach
+
+Masz w kodzie:
+
+```java
+private static final Random RANDOM = new Random();
+private static final Faker faker = new Faker();
+```
+
+To oznacza, że:
+
+* **każde uruchomienie testów generuje inne dane**
+* test, który dziś przechodzi, **jutro może się wywalić**
+* jeśli test padnie → **nie jesteś w stanie odtworzyć danych**, które go zepsuły
+
+#### Przykład z testu API
+
+```java
+String email = faker.internet().emailAddress();
+
+given()
+    .body(new User(email))
+.when()
+    .post("/users")
+.then()
+    .statusCode(201);
+```
+
+Dziś:
+
+```
+email = john_1987@test.com → 201 OK
+```
+
+Jutro:
+
+```
+email = admin@test.com → 409 Conflict
+```
+
+➡️ Test „losowo” zaczyna failować.
+
+### 🟡 Co to jest deterministyczność?
+
+**Test deterministyczny**:
+
+> Dla tych samych danych wejściowych → zawsze ten sam wynik
+
+Czyli:
+
+* te same randomy
+* te same dane
+* te same requesty
+
+### 🧠 Seed – klucz do kontroli losowości
+
+#### Co to jest seed?
+
+**Seed** to liczba startowa dla generatora losowego.
+
+```java
+new Random(12345);
+```
+
+Dla tego samego seed:
+
+* `nextInt()`
+* `nextBoolean()`
+* `faker.name().firstName()`
+
+👉 **zawsze dadzą ten sam wynik**
+
+### 🔁 Bez seeda vs z seedem
+
+#### ❌ Bez seeda
+
+```java
+Random r = new Random();
+
+System.out.println(r.nextInt(100)); // za każdym razem inna liczba
+```
+
+#### ✅ Z seedem
+
+```java
+Random r = new Random(42);
+
+System.out.println(r.nextInt(100)); // ZAWSZE ta sama liczba
+```
+
+### 🧪 Dlaczego to jest krytyczne w testach?
+
+#### 1️⃣ Debugowanie
+
+Test failuje na CI:
+
+```
+Expected status code 201 but was 400
+```
+
+Masz seed w logach:
+
+```
+Using test.seed=12345
+```
+
+Uruchamiasz lokalnie:
+
+```bash
+mvn test -Dtest.seed=12345
+```
+
+➡️ Dostajesz **identyczne dane**  
+➡️ Możesz **odtworzyć błąd 1:1**
+
+#### 2️⃣ Stabilność testów
+
+Bez seeda:
+
+* flaki
+* niereprodukowalne błędy
+* „u mnie działa”
+
+Z seedem:
+
+* fail = realny problem
+* brak losowych konfliktów danych
+* przewidywalność
+
+### 🧰 Jak to wdrożyć w praktyce
+
+#### Centralny seed
+
+```java
+public final class RandomUtils {
+
+    private static final long SEED =
+            Long.getLong("test.seed", System.currentTimeMillis());
+
+    public static final Random RANDOM = new Random(SEED);
+    public static final Faker FAKER = new Faker(RANDOM);
+
+    static {
+        System.out.println("Using test.seed=" + SEED);
+    }
+
+    private RandomUtils() {}
+}
+```
+
+#### Użycie w testach
+
+```java
+String username = RandomUtils.FAKER.name().username();
+int age = RandomUtils.RANDOM.nextInt(18, 65);
+```
+
+### 🟢 A co z pełną losowością?
+
+Czasem **chcesz chaos** (np. testy fuzzingowe).
+
+Rozwiązanie:
+
+* domyślnie seed
+* opcjonalnie wyłączalny
+
+```bash
+mvn test -Dtest.seed=$(date +%s)
+```
+
+Albo:
+
+```java
+-Dtest.seed=RANDOM
+```
+
+### 🧠 Złota zasada testera
+
+> **Losowość jest dobra do generowania danych  
+> Determinizm jest niezbędny do debugowania**
+
+### TL;DR
+
+* Faker i Random bez seeda = niestabilne testy
+* Seed = powtarzalność
+* Powtarzalność = debugowalność
+* Najlepiej:
+
+    * seed z `-Dtest.seed`
+    * logowanie seeda
+    * jeden `Random` / `Faker` globalnie
+
+```text
+Właśnie po to używam tego bez seed'a żeby dane były losowe.
+Chyba tak powinno być
+```
+
+Masz **rację co do intencji** 👍 — i bardzo dobrze ją czujesz.  
+Losowe dane **są potrzebne** w testach API.  
+Problem nie polega na *tym, że używasz losowości*, tylko **na braku kontroli nad nią**.
+
+Pozwól, że to precyzyjnie rozdzielę, bo tu jest kluczowa różnica, o którą często toczy się ta dyskusja.
+
+### ✅ Masz rację: losowość jest dobra (a często konieczna)
+
+Używasz randomów, bo chcesz:
+
+* unikać konfliktów danych (`email`, `username`)
+* testować różne kombinacje inputów
+* łapać edge case’y
+* nie testować w kółko „John / [test@test.com](mailto:test@test.com)”
+
+To jest **100% poprawne** podejście.
+
+### ❌ Ale: „losowość bez kontroli” to problem
+
+Aktualnie masz:
+
+```java
+new Random();
+new Faker();
+```
+
+Czyli:
+
+* **losowość nieodtwarzalna**
+* brak możliwości cofnięcia czasu
+* fail na CI = zagadka
+
+#### Przykład realnego problemu
+
+Test padł:
+
+```
+Expected 201 but was 400
+```
+
+W logach nie masz:
+
+* użytego emaila
+* username
+* danych requestu
+* seeda
+
+➡️ **nie jesteś w stanie odtworzyć scenariusza**
+
+### 🧠 Kluczowe rozróżnienie
+
+#### ❌ „Albo losowość, albo deterministyczność”
+
+To fałszywa alternatywa.
+
+#### ✅ Prawidłowe podejście:
+
+> **Losowość + możliwość jej odtworzenia**
+
+Seed **nie wyłącza losowości**  
+Seed **umożliwia jej powtórzenie**
+
+### 🔁 Co naprawdę daje seed (bez zabierania losowości)
+
+#### Domyślnie (jak teraz)
+
+```bash
+mvn test
+```
+
+* dane są losowe ✔️
+* każdy run inny ✔️
+
+#### Gdy test się wywali
+
+Z logów:
+
+```
+Using test.seed=1715274012345
+```
+
+I wtedy:
+
+```bash
+mvn test -Dtest.seed=1715274012345
+```
+
+➡️ **ten sam chaos**  
+➡️ **ten sam błąd**  
+➡️ **debugowanie możliwe**
+
+### 🧪 To jest dokładnie ten sam model, którego używają:
+
+* testy property-based
+* fuzzing
+* QuickCheck
+* Hypothesis
+* duże zespoły QA/Backend
+
+Losowość ≠ brak kontroli.
+
+### ⚠️ Co się dzieje bez seeda (praktyka zespołowa)
+
+Po czasie:
+
+* testy flaky
+* retry na CI
+* ignorowanie faili
+* „odpal jeszcze raz”
+* brak zaufania do testów
+
+To **nie teoria**, tylko klasyka projektów testowych.
+
+### 🟢 Najlepszy kompromis (polecany)
+
+```java
+long seed = Long.getLong("test.seed", System.currentTimeMillis());
+Random random = new Random(seed);
+Faker faker = new Faker(random);
+
+log.info("Test seed: {}", seed);
+```
+
+* 99% czasu → pełna losowość
+* 1% czasu → pełna powtarzalność
+* 0% frustracji
+
+### 🧠 Złota zasada (praktyczna, testerska)
+
+> **Losowe dane są dobre  
+> Nieodtwarzalne testy są złe**
+
+Ty **robisz dobrą rzecz** używając randomów.  
+Seed to tylko **pas bezpieczeństwa**, nie kaganiec.
