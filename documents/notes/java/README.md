@@ -8,6 +8,7 @@
 - [Set Up (setUp) czy Setup? – prawidłowe nazewnictwo](#set_up_or_setup)
 - [Interfejsy – metody abstrakcyjne](#interface_abstract_methods)
 - [Interfejsy znacznikowe – co to jest?](#interface_marker)
+- [Static initialization block – blok statycznej inicjalizacji](#static_initialization_block)
 
 ---
 
@@ -630,3 +631,152 @@ bo one:
 * dokumentują różnice POST vs PUT
 * pozwalają kompilatorowi pilnować testów
 * skalują się wraz z projektem
+
+---
+
+## 📄Static initialization block – blok statycznej inicjalizacji <a name="static_initialization_block"></a>
+
+Świetnie, że o to pytasz — bo to **bardzo ważny, ale często niezrozumiały element Javy**.  
+Wyjaśnię to jasno i „testersko”, bez akademickiego bełkotu.
+
+### 🔹 Co to jest ta sekcja?
+
+```java
+static {
+    System.out.println("Using {test.seed} = " + SEED);
+}
+```
+
+To jest **blok statycznej inicjalizacji** (*static initialization block*).
+
+### 🧠 Co to oznacza w praktyce?
+
+#### 1️⃣ Kiedy ten kod się wykona?
+
+➡️ **Dokładnie raz**  
+➡️ **W momencie pierwszego załadowania klasy `RandomProvider` przez JVM**
+
+Czyli:
+
+* gdy **pierwszy raz** użyjesz:
+
+  ```java
+  RandomProvider.random();
+  ```
+
+  albo
+
+  ```java
+  RandomProvider.faker();
+  ```
+
+* **nie przy każdym teście**
+
+* **nie przy każdym wywołaniu metody**
+
+#### 2️⃣ Dlaczego on tam jest?
+
+Ten blok służy do:
+
+✔️ wykonania kodu *raz*  
+✔️ po inicjalizacji pól statycznych  
+✔️ zanim ktokolwiek zacznie korzystać z klasy
+
+W Twoim przypadku:
+
+```java
+private static final long SEED = ...
+private static final Random RANDOM = ...
+private static final Faker FAKER = ...
+```
+
+➡️ **SEED jest już ustalony**  
+➡️ **RANDOM i FAKER są już gotowe**  
+➡️ dopiero wtedy wypisujesz informację
+
+### 🧪 Po co logować seed?
+
+#### Praktyczny sens (najważniejsze)
+
+Jeśli test się wysypie na CI, w logach zobaczysz np.:
+
+```
+Using {test.seed} = 1715274012345
+```
+
+I możesz:
+
+```bash
+mvn test -Dtest.seed=1715274012345
+```
+
+➡️ odtworzyć dokładnie ten sam przebieg danych  
+➡️ debugować lokalnie  
+➡️ nie zgadywać
+
+### 🔍 Dlaczego to NIE jest konstruktor?
+
+Bo:
+
+* klasa jest `final`
+* konstruktor jest `private`
+* **nie tworzysz instancji**
+
+Nie ma:
+
+```java
+new RandomProvider();
+```
+
+➡️ więc **konstruktor nigdy by się nie wykonał**
+
+Static block to **jedyny sensowny sposób** wykonania kodu „na start”.
+
+### ⚠️ Co można, a czego nie powinno się robić w static block?
+
+#### ✅ Dobre zastosowania
+
+* logowanie konfiguracji
+* walidacja zmiennych środowiskowych
+* inicjalizacja statycznych zasobów
+* sprawdzenie `test.seed`
+
+#### ❌ Złe zastosowania
+
+* logika testowa
+* I/O (poza logami)
+* wywołania API
+* ciężkie obliczenia
+
+### 🧠 Mała poprawka stylistyczna (polecam)
+
+Teraz masz:
+
+```java
+System.out.println("Using {test.seed} = " + SEED);
+```
+
+Lepiej:
+
+```java
+System.out.println("Using test.seed = " + SEED);
+```
+
+Albo (jeszcze lepiej, jeśli masz logger):
+
+```java
+log.info("Using test.seed = {}", SEED);
+```
+
+### 🧾 TL;DR
+
+* To jest **blok statyczny**
+* Wykonuje się **raz**, przy ładowaniu klasy
+* Służy do:
+    * logowania
+    * inicjalizacji
+    * setupu globalnego
+* W Twoim przypadku:
+    * loguje seed
+    * umożliwia debugowanie testów
+* Jest tu **jak najbardziej na miejscu** 👍
