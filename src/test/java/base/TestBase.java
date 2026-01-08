@@ -9,6 +9,7 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeAll;
+import utils.RandomProvider;
 
 import java.util.Random;
 
@@ -40,9 +41,9 @@ public class TestBase {
     // -------
 
     // Faker object to generate fake random data
-    protected static Faker faker = new Faker();
+    protected static final Faker faker = RandomProvider.faker();
     // Random object to used to select a random element
-    protected static Random random = new Random();
+    protected static final Random random = RandomProvider.random();
 
     // ==========================================================================================================
     // SET UP
