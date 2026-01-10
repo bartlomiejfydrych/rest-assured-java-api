@@ -7,8 +7,8 @@ import io.restassured.response.Response;
 
 import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.UtilsCommon.pickRandom;
 import static utils.UtilsCompare.compareObjects;
+import static utils.UtilsRandom.pickRandom;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
 

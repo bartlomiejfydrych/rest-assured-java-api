@@ -14,8 +14,8 @@ import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoardMissingRequiredParameters;
 import static expected_responses.boards.POST_CreateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.UtilsCommon.pickRandom;
 import static utils.UtilsCompare.*;
+import static utils.UtilsRandom.pickRandom;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils_tests.boards.POST_CreateBoardUtils.*;
 

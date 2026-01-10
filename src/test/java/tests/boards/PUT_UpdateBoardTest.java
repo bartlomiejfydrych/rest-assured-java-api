@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCommon.*;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareObjectsJsonNode;
+import static utils.UtilsRandom.pickRandom;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
