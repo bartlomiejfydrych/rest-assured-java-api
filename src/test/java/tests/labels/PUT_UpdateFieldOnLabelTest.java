@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import utils.UtilsString;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
@@ -16,11 +17,11 @@ import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
 import static endpoints.labels.PUT_UpdateFieldOnLabelEndpoint.putUpdateFieldOnLabel;
 import static endpoints.labels.PUT_UpdateFieldOnLabelEndpoint.putUpdateFieldOnLabelWithoutFieldValue;
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.UtilsCommon.*;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils.UtilsRandom.pickRandom;
 import static utils.UtilsResponse.deserializeAndValidate;
+import static utils.UtilsString.getAllCharactersSetInRandomOrder;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.labels.POST_CreateLabelUtils.generateRandomLabelColor;
 import static utils_tests.labels.POST_CreateLabelUtils.generateRandomLabelName;
@@ -85,7 +86,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
     @Test
     public void P2_shouldUpdateLabelFieldNameWithOneCharacter() {
 
-        labelFieldValue = getRandomSingleChar();
+        labelFieldValue = UtilsString.getRandomSingleCharAlphanumeric();
         responsePostDto.name = labelFieldValue;
 
         // PUT

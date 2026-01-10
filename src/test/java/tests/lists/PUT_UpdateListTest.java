@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import payloads.lists.PUT_UpdateListPayload;
+import utils.UtilsString;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
@@ -19,12 +20,11 @@ import static endpoints.lists.POST_CreateNewListEndpoint.postCreateNewList;
 import static endpoints.lists.PUT_UpdateListEndpoint.putUpdateList;
 import static expected_responses.lists.PUT_UpdateListExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.UtilsCommon.getAllCharactersSetInRandomOrder;
-import static utils.UtilsCommon.getRandomSingleChar;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
+import static utils.UtilsString.getAllCharactersSetInRandomOrder;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.lists.POST_CreateNewListUtils.generateRandomListName;
 import static utils_tests.lists.PUT_UpdateListUtils.*;
@@ -117,7 +117,7 @@ public class PUT_UpdateListTest extends TestBase {
     @Test
     public void P2_shouldUpdateListWhereNameOneCharacterAndClosedFalseSubscribedFalsePosNull() {
 
-        listName = getRandomSingleChar();
+        listName = UtilsString.getRandomSingleCharAlphanumeric();
         listClosed = false;
         listPosAsLong = null;
         listSubscribed = false;

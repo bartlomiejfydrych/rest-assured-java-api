@@ -8,6 +8,7 @@ import dto.boards.PUT_UpdateBoardDto;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import payloads.boards.PUT_UpdateBoardPayload;
+import utils.UtilsString;
 
 import java.net.URL;
 
@@ -17,12 +18,12 @@ import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.boards.PUT_UpdateBoardEndpoint.putUpdateBoard;
 import static expected_responses.boards.PUT_UpdateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.UtilsCommon.*;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareObjectsJsonNode;
 import static utils.UtilsRandom.pickRandom;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
+import static utils.UtilsString.getAllCharactersSetInRandomOrder;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.boards.PUT_UpdateBoardUtils.*;
 
@@ -154,7 +155,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     @Test
     public void P4_shouldUpdateBoardWhenMostStringParametersHaveOnlyOneCharacterAndBooleansAreFalse() {
 
-        boardName = getRandomSingleChar();
+        boardName = UtilsString.getRandomSingleCharAlphanumeric();
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setName(boardName)
