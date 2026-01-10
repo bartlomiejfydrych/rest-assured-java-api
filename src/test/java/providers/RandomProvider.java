@@ -1,10 +1,10 @@
-package utils;
+package providers;
 
 import com.github.javafaker.Faker;
 
 import java.util.Random;
 
-public final class UtilsRandomProvider {
+public final class RandomProvider {
 
     // ==========================================================================================================
     // FIELDS
@@ -42,7 +42,7 @@ public final class UtilsRandomProvider {
     // CONSTRUCTOR
     // ==========================================================================================================
 
-    private UtilsRandomProvider() {
+    private RandomProvider() {
     }
 
     // ==========================================================================================================
