@@ -4,7 +4,7 @@ import com.github.javafaker.Faker;
 
 import java.util.Random;
 
-public final class RandomProvider {
+public final class UtilsRandomProvider {
 
     // ==========================================================================================================
     // FIELDS
@@ -42,7 +42,7 @@ public final class RandomProvider {
     // CONSTRUCTOR
     // ==========================================================================================================
 
-    private RandomProvider() {
+    private UtilsRandomProvider() {
     }
 
     // ==========================================================================================================
