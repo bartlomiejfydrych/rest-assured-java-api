@@ -9,6 +9,7 @@
 - [Interfejsy – metody abstrakcyjne](#interface_abstract_methods)
 - [Interfejsy znacznikowe – co to jest?](#interface_marker)
 - [Static initialization block – blok statycznej inicjalizacji](#static_initialization_block)
+- [Resources vs. ścieżki plików](#resources_vs_path)
 
 ---
 
@@ -780,3 +781,189 @@ log.info("Using test.seed = {}", SEED);
     * loguje seed
     * umożliwia debugowanie testów
 * Jest tu **jak najbardziej na miejscu** 👍
+
+---
+
+## 📄Resources vs. ścieżki plików <a name="resources_vs_path"></a>
+
+### 🧠 O co chodzi: *resources* vs *ścieżki plików*
+
+W Javie są **dwa różne światy**:
+
+#### 1️⃣ File system (Paths / Files)
+
+```java
+Paths.get("src/test/resources/request.json")
+Files.readString(...)
+```
+
+➡️ działa **tylko wtedy**, gdy:
+
+* pliki faktycznie istnieją na dysku
+* uruchamiasz testy z projektu (IDE, Maven)
+
+❌ **nie działa**, gdy:
+
+* aplikacja/testy są uruchomione z JAR-a
+* resource jest w classpath, a nie na FS
+
+#### 2️⃣ Classpath resources (to, czym są `resources`)
+
+Pliki w:
+
+```
+src/main/resources
+src/test/resources
+```
+
+Po buildzie:
+
+* **nie są plikami**
+* są wpisami w **classpath**
+* mogą być:
+
+    * w katalogu
+    * w JAR
+    * w JAR w JAR-ze (fat jar)
+
+➡️ **Nie masz gwarancji ścieżki plikowej**
+
+### 🔴 Co jest nie tak z Twoją metodą
+
+Twoja metoda:
+
+```java
+Files.readString(Paths.get(relativePath), StandardCharsets.UTF_8);
+```
+
+Zakłada, że:
+
+* `relativePath` istnieje na dysku
+* `Paths.get()` ma sens
+
+To jest **fałszywe założenie dla resources**.
+
+### ❌ Konkretne problemy
+
+#### ❌ 1. Nie działa w JAR
+
+```text
+java.nio.file.NoSuchFileException
+```
+
+bo:
+
+* resource jest wewnątrz JAR
+* nie ma realnej ścieżki
+
+#### ❌ 2. Zależność od katalogu roboczego
+
+```bash
+mvn test
+```
+
+vs
+
+```bash
+java -jar tests.jar
+```
+
+➡️ inny working directory  
+➡️ testy zaczynają losowo failować
+
+### ✅ Jak powinno się czytać resources
+
+#### ✔️ Poprawny sposób: ClassLoader
+
+```java
+InputStream is = ClassLoader
+        .getSystemResourceAsStream("requests/createBoard.json");
+```
+
+albo:
+
+```java
+UtilsCommon.class
+        .getClassLoader()
+        .getResourceAsStream("requests/createBoard.json");
+```
+
+To:
+
+* działa w IDE
+* działa w Mavenie
+* działa w JAR
+* działa zawsze
+
+### ✅ Poprawiona wersja Twojej metody
+
+```java
+public static String readResourceFileAsString(String resourcePath) {
+    try (InputStream is = UtilsCommon.class
+            .getClassLoader()
+            .getResourceAsStream(resourcePath)) {
+
+        if (is == null) {
+            throw new IllegalArgumentException("Resource not found: " + resourcePath);
+        }
+
+        return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+
+    } catch (IOException e) {
+        throw new RuntimeException("Failed to read resource: " + resourcePath, e);
+    }
+}
+```
+
+### 🧪 Jak tego używać w testach
+
+Struktura:
+
+```
+src/test/resources/
+└── requests/
+    └── createBoard.json
+```
+
+Test:
+
+```java
+String body = readResourceFileAsString("requests/createBoard.json");
+```
+
+❌ NIE:
+
+```java
+"src/test/resources/requests/createBoard.json"
+```
+
+### 🎯 Dlaczego to jest ważne w testach API
+
+W testach często:
+
+* trzymasz request body w JSON
+* trzymasz response fixtures
+* porównujesz payloady
+
+Jeśli używasz `Paths.get()`:
+
+* testy są **kruche**
+* działają „u mnie”
+* padają na CI / Dockerze / JAR
+
+### TL;DR
+
+**Resources ≠ files**
+
+❌ `Paths.get()` → file system  
+✅ `ClassLoader.getResourceAsStream()` → classpath
+
+Twoja metoda:
+
+* działa lokalnie
+* **nie jest future-proof**
+
+Po poprawce:  
+✔️ działa wszędzie  
+✔️ odporna na JAR  
+✔️ poprawna architektonicznie
