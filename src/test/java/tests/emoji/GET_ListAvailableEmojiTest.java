@@ -6,12 +6,10 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import payloads.emoji.GET_ListAvailableEmojiPayload;
 
-import java.util.Map;
-
 import static endpoints.emoji.GET_ListAvailableEmojiEndpoint.getListAvailableEmoji;
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.UtilsCommon.readResourceFileAsString;
 import static utils.UtilsCompare.compareObjects;
+import static utils.UtilsFile.readResourceFileAsString;
 import static utils.UtilsResponse.*;
 
 public class GET_ListAvailableEmojiTest extends TestBase {
@@ -29,7 +27,7 @@ public class GET_ListAvailableEmojiTest extends TestBase {
     public void P1_shouldGetListAvailableEmojiWhenQueryParametersAreMissing() {
 
         String expectedResponseJsonFile = readResourceFileAsString(
-                "src/test/resources/expected_responses/emoji/GET_ListAvaiableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json"
+                "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json"
         );
 
         // GET
@@ -44,7 +42,7 @@ public class GET_ListAvailableEmojiTest extends TestBase {
     public void P2_shouldGetListAvailableEmojiWhenQueryParametersAreNull() {
 
         String expectedResponseJsonFile = readResourceFileAsString(
-                "src/test/resources/expected_responses/emoji/GET_ListAvaiableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json"
+                "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json"
         );
 
         GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
@@ -64,7 +62,7 @@ public class GET_ListAvailableEmojiTest extends TestBase {
     public void P3_shouldGetListAvailableEmojiWhenSpritesheetsIsFalse() {
 
         String expectedResponseJsonFile = readResourceFileAsString(
-                "src/test/resources/expected_responses/emoji/GET_ListAvaiableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json"
+                "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json"
         );
 
         GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
@@ -83,7 +81,7 @@ public class GET_ListAvailableEmojiTest extends TestBase {
     public void P4_shouldGetListAvailableEmojiWithOtherLocaleAndWhenSpritesheetsIsTrue() {
 
         String expectedResponseJsonFile = readResourceFileAsString(
-                "src/test/resources/expected_responses/emoji/GET_ListAvaiableEmojiExpected/P4_ExpectedGetListAvailableEmojiResponse.json"
+                "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/P4_ExpectedGetListAvailableEmojiResponse.json"
         );
 
         GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
