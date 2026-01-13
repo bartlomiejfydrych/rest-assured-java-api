@@ -45,6 +45,7 @@
 - [Junit – TestInstance.Lifecycle](#junit_testinstance_lifecycle)
 - [AssertJ – porównywanie obiektów](#assertj_object_compare)
 - [AssertJ – dodawanie komentarzy/logów do testów](#assertj_comments_logs)
+- [AssertJ – soft assertions](#assertj_soft_assertions)
 - [Zmienne – podstawianie pod String/Text Block](#variables_string_text_block)
 - [Response (expected, universal) – opcjonalne parametry](#response_expected_universal_optional_parameters)
 - [Number/Liczba jako String – czy powinna przechodzić (Query Params vs. JSON body)](#number_as_string)
@@ -2989,6 +2990,221 @@ assertThat(responsePostPos2)
     .as("Pozycja elementu powinna być mniejsza niż poprzednia")
     .isLessThan(responsePostPos1);
 ```
+
+---
+
+## 📄AssertJ – soft assertions <a name="assertj_soft_assertions"></a>
+
+### 🧪 SoftAssertions (AssertJ) – notatka praktyczna
+
+### 1️⃣ Czym są SoftAssertions?
+
+`SoftAssertions` to mechanizm z biblioteki **AssertJ**, który pozwala:
+
+* wykonywać **wiele asercji w jednym teście**
+* **nie przerywać testu przy pierwszym błędzie**
+* zebrać wszystkie błędy
+* zgłosić je **razem na końcu**
+
+W przeciwieństwie do standardowych (hard) asercji:
+
+```java
+assertThat(a).isEqualTo(b); // przerywa test przy pierwszym błędzie
+```
+
+`SoftAssertions` pozwalają zobaczyć **pełny obraz różnic**.
+
+### 2️⃣ Hard assertions vs Soft assertions
+
+#### 🔴 Hard assertions (domyślne)
+
+```java
+assertThat(actual).isEqualTo(expected);
+assertThat(statusCode).isEqualTo(200);
+```
+
+* test kończy się **przy pierwszym failu**
+* dobre do:
+    * status code
+    * autoryzacji
+    * smoke testów
+    * warunków krytycznych
+
+#### 🟢 Soft assertions
+
+```java
+SoftAssertions softly = new SoftAssertions();
+
+softly.assertThat(actual).isEqualTo(expected);
+softly.assertThat(statusCode).isEqualTo(200);
+
+softly.assertAll();
+```
+
+* test **wykonuje wszystkie asercje**
+* raportuje **wszystkie błędy naraz**
+* idealne do:
+    * porównań JSON
+    * dużych obiektów
+    * testów regresji
+
+### 3️⃣ Złota zasada SoftAssertions ⚠️
+
+> **Zawsze musisz wywołać `assertAll()`**
+
+```java
+softly.assertAll();
+```
+
+Jeśli zapomnisz:
+* test **ZAWSZE przejdzie**
+* nawet jeśli były błędy ❌
+
+➡️ To najczęstszy i najgroźniejszy błąd.
+
+### 4️⃣ Typowy wzorzec użycia
+
+```java
+SoftAssertions softly = new SoftAssertions();
+
+softly.assertThat(value1).isEqualTo(expected1);
+softly.assertThat(value2).isNotNull();
+softly.assertThat(list).hasSize(3);
+
+softly.assertAll();
+```
+
+### 5️⃣ SoftAssertions + RecursiveComparison (bardzo częsty case)
+
+```java
+SoftAssertions softly = new SoftAssertions();
+
+softly.assertThat(actualObject)
+        .usingRecursiveComparison(config)
+        .isEqualTo(expectedObject);
+
+softly.assertAll();
+```
+
+Efekt:
+* dostajesz **pełny diff obiektu**
+* zamiast jednego błędu
+
+### 6️⃣ SoftAssertions w testach API
+
+#### Przykład: porównanie response JSON
+
+```java
+SoftAssertions softly = new SoftAssertions();
+
+softly.assertThat(response.getStatusCode()).isEqualTo(200);
+softly.assertThat(actualJson)
+        .usingRecursiveComparison(config)
+        .isEqualTo(expectedJson);
+
+softly.assertAll();
+```
+
+👉 Uwaga:
+* **status code** często lepiej sprawdzać hard assertem
+* **body** → soft assertions
+
+### 7️⃣ Kiedy używać SoftAssertions? ✅
+
+#### Używaj, gdy:
+
+* porównujesz **duże struktury danych**
+* testujesz **regresję**
+* chcesz zobaczyć **wszystkie różnice**
+* test nie ma „jednego krytycznego warunku”
+
+#### Przykłady:
+
+* porównanie JSON response
+* porównanie DTO ↔ expected object
+* snapshot tests
+
+### 8️⃣ Kiedy NIE używać SoftAssertions? ❌
+
+Nie używaj, gdy:
+* test ma tylko jedną asercję
+* failure powinien **natychmiast przerwać test**
+* testujesz:
+    * autoryzację
+    * status code
+    * dostępność endpointu
+* piszesz **smoke / health-check**
+
+### 9️⃣ SoftAssertions a utils / helper classes
+
+#### ❗ Dwie szkoły
+
+##### 1️⃣ SoftAssertions w testach (klasyczna)
+
+```java
+SoftAssertions softly = new SoftAssertions();
+```
+
+✔️ pełna kontrola w teście  
+✔️ jasne zakończenie `assertAll()`
+
+##### 2️⃣ SoftAssertions w utils (jak u Ciebie)
+
+```java
+compareResponseWithJsonSoft(...)
+```
+
+✔️ prostsze testy  
+✔️ mniej boilerplate  
+✔️ OK dla porównań typu „1 duża asercja”
+
+➡️ **Twoje rozwiązanie jest poprawne**, bo:
+* soft assert dotyczy jednej logicznej operacji
+* `assertAll()` jest zawsze wołane
+
+### 🔟 SoftAssertionsExtension (JUnit 5)
+
+JUnit 5 oferuje:
+
+```java
+@ExtendWith(SoftAssertionsExtension.class)
+```
+
+Wtedy:
+* `SoftAssertions` są wstrzykiwane
+* `assertAll()` jest wołane automatycznie
+
+⚠️ **Nie używaj tego w utilsach**  
+✔️ tylko w testach
+
+### 1️⃣1️⃣ Najczęstsze błędy ❌
+
+* ❌ brak `assertAll()`
+* ❌ statyczny `SoftAssertions`
+* ❌ reużywanie jednego obiektu w wielu testach
+* ❌ mieszanie hard i soft bez świadomości
+* ❌ soft assertions dla status code
+
+### 1️⃣2️⃣ Best practices (skrót)
+
+✔️ SoftAssertions = duże porównania  
+✔️ Hard assertions = warunki krytyczne  
+✔️ `assertAll()` zawsze na końcu  
+✔️ Nie używaj softów „wszędzie”  
+✔️ Bądź świadomy wyboru
+
+### 1️⃣3️⃣ TL;DR
+
+> **SoftAssertions to narzędzie diagnostyczne, nie zamiennik zwykłych asercji**
+
+Dobrze użyte:
+* przyspieszają debugowanie
+* poprawiają czytelność raportów
+* zwiększają wartość testów regresyjnych
+
+Źle użyte:
+* maskują błędy
+* dają fałszywie zielone testy
 
 ---
 
