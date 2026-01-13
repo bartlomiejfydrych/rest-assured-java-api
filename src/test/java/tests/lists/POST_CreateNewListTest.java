@@ -17,7 +17,7 @@ import static endpoints.lists.POST_CreateNewListEndpoint.postCreateNewListWithAn
 import static expected_responses.lists.POST_CreateNewListExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsCompare.compareObjectsJsonNode;
+import static utils.UtilsCompare.compareResponseWithJson;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsString.getAllCharactersSetInRandomOrder;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
@@ -391,7 +391,7 @@ public class POST_CreateNewListTest extends TestBase {
 
         responsePost = postCreateNewList(boardId, listName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, N10ExpectedPostNewListResponse);
+        compareResponseWithJson(responsePost, N10ExpectedPostNewListResponse);
     }
 
     // pos
@@ -408,7 +408,7 @@ public class POST_CreateNewListTest extends TestBase {
 
         responsePost = postCreateNewList(boardId, listName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, N11ExpectedPostNewListResponse);
+        compareResponseWithJson(responsePost, N11ExpectedPostNewListResponse);
     }
 
     /*

@@ -12,7 +12,7 @@ import static endpoints.labels.DEL_DeleteLabelEndpoint.deleteDeleteLabel;
 import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
 import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.UtilsCompare.compareObjectsJsonNode;
+import static utils.UtilsCompare.compareResponseWithJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 
 public class DEL_DeleteLabelTest extends TestBase {
@@ -67,7 +67,7 @@ public class DEL_DeleteLabelTest extends TestBase {
         // DELETE
         responseDelete = deleteDeleteLabel(labelId);
         assertThat(responseDelete.statusCode()).isEqualTo(200);
-        compareObjectsJsonNode(responseDelete, expectedResponse);
+        compareResponseWithJson(responseDelete, expectedResponse);
         // GET
         responseGet = getGetLabel(labelId);
         assertThat(responseGet.statusCode()).isEqualTo(404);

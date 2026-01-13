@@ -21,7 +21,7 @@ import static endpoints.lists.PUT_UpdateListEndpoint.putUpdateList;
 import static expected_responses.lists.PUT_UpdateListExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsCompare.compareObjectsJsonNode;
+import static utils.UtilsCompare.compareResponseWithJson;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
 import static utils.UtilsString.getAllCharactersSetInRandomOrder;
@@ -503,7 +503,7 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePut, expectedPutUpdateListResponseInvalidBoardId);
+        compareResponseWithJson(responsePut, expectedPutUpdateListResponseInvalidBoardId);
     }
 
     @Test
@@ -518,7 +518,7 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(404);
-        compareObjectsJsonNode(responsePut, expectedPutUpdateListResponseBoardNotFound);
+        compareResponseWithJson(responsePut, expectedPutUpdateListResponseBoardNotFound);
     }
 
     @Test
@@ -533,7 +533,7 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePut, expectedPutUpdateListResponseInvalidBoardId);
+        compareResponseWithJson(responsePut, expectedPutUpdateListResponseInvalidBoardId);
     }
 
     // {pos}
@@ -550,6 +550,6 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePut, expectedPutUpdateListResponseInvalidPosition);
+        compareResponseWithJson(responsePut, expectedPutUpdateListResponseInvalidPosition);
     }
 }

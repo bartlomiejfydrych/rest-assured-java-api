@@ -8,7 +8,7 @@ import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
 import static endpoints.boards.GET_GetBoardEndpoint.getGetBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.UtilsCompare.compareObjectsJsonNode;
+import static utils.UtilsCompare.compareResponseWithJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 
 public class DEL_DeleteBoardTest extends TestBase {
@@ -36,7 +36,7 @@ public class DEL_DeleteBoardTest extends TestBase {
         // DELETE
         responseDelete = deleteDeleteBoard(boardId);
         assertThat(responseDelete.statusCode()).isEqualTo(200);
-        compareObjectsJsonNode(responseDelete, expectedResponse);
+        compareResponseWithJson(responseDelete, expectedResponse);
         // GET
         responseGet = getGetBoard(boardId);
         assertThat(responseGet.statusCode()).isEqualTo(404);

@@ -16,7 +16,7 @@ import static endpoints.labels.PUT_UpdateLabelEndpoint.putUpdateLabel;
 import static expected_responses.labels.PUT_UpdateLabelExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsCompare.compareObjectsJsonNode;
+import static utils.UtilsCompare.compareResponseWithJson;
 import static utils.UtilsRandom.pickRandom;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsString.getAllCharactersSetInRandomOrder;
@@ -201,6 +201,6 @@ public class PUT_UpdateLabelTest extends TestBase {
 
         responsePut = putUpdateLabel(boardId, payload);
         assertThat(responsePut.getStatusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePut, expectedPutLabelResponseInvalidColor);
+        compareResponseWithJson(responsePut, expectedPutLabelResponseInvalidColor);
     }
 }

@@ -19,7 +19,7 @@ import static endpoints.boards.PUT_UpdateBoardEndpoint.putUpdateBoard;
 import static expected_responses.boards.PUT_UpdateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsCompare.compareObjectsJsonNode;
+import static utils.UtilsCompare.compareResponseWithJson;
 import static utils.UtilsRandom.pickRandom;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsResponse.deserializeJson;
@@ -248,7 +248,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         // PUT
         responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePut, expectedResponse);
+        compareResponseWithJson(responsePut, expectedResponse);
     }
 
     // subscribed
@@ -297,7 +297,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         // PUT
         responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(401);
-        compareObjectsJsonNode(responsePut, expectedResponse);
+        compareResponseWithJson(responsePut, expectedResponse);
     }
 
     @Test
@@ -316,7 +316,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         // PUT
         responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(401);
-        compareObjectsJsonNode(responsePut, expectedResponse);
+        compareResponseWithJson(responsePut, expectedResponse);
     }
 
     // prefs/permissionLevel
@@ -398,7 +398,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         // PUT
         responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePut, expectedResponse);
+        compareResponseWithJson(responsePut, expectedResponse);
     }
 
     // prefs/cardAging

@@ -18,7 +18,7 @@ import static endpoints.labels.PUT_UpdateFieldOnLabelEndpoint.putUpdateFieldOnLa
 import static endpoints.labels.PUT_UpdateFieldOnLabelEndpoint.putUpdateFieldOnLabelWithoutFieldValue;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsCompare.compareObjectsJsonNode;
+import static utils.UtilsCompare.compareResponseWithJson;
 import static utils.UtilsRandom.pickRandom;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsString.getAllCharactersSetInRandomOrder;
@@ -211,6 +211,6 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         // PUT
         responsePut = putUpdateFieldOnLabel(labelId, LabelField.COLOR, "KEK123");
         assertThat(responsePut.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePut, expectedResponse);
+        compareResponseWithJson(responsePut, expectedResponse);
     }
 }

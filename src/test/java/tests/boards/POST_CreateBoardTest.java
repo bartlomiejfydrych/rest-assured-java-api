@@ -213,21 +213,21 @@ public class POST_CreateBoardTest extends TestBase {
     public void N1_shouldNotCreateBoardWhenNameWasNotGiven() {
         responsePost = postCreateBoardMissingRequiredParameters();
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, expectedPostBoardResponseInvalidName);
+        compareResponseWithJson(responsePost, expectedPostBoardResponseInvalidName);
     }
 
     @Test
     public void N2_shouldNotCreateBoardWhenNameIsNull() {
         responsePost = postCreateBoard(null, null);
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, expectedPostBoardResponseInvalidName);
+        compareResponseWithJson(responsePost, expectedPostBoardResponseInvalidName);
     }
 
     @Test
     public void N3_shouldNotCreateBoardWhenNameIsEmptyString() {
         responsePost = postCreateBoard("", null);
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, expectedPostBoardResponseInvalidName);
+        compareResponseWithJson(responsePost, expectedPostBoardResponseInvalidName);
     }
 
     // idOrganization
@@ -286,7 +286,7 @@ public class POST_CreateBoardTest extends TestBase {
 
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, expectedResponse);
+        compareResponseWithJson(responsePost, expectedResponse);
     }
 
     // prefs_permissionLevel

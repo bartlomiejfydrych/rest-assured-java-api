@@ -14,7 +14,7 @@ import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabelWithAnyPa
 import static expected_responses.labels.POST_CreateLabelExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsCompare.compareObjectsJsonNode;
+import static utils.UtilsCompare.compareResponseWithJson;
 import static utils.UtilsRandom.pickRandom;
 import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsString.getAllCharactersSetInRandomOrder;
@@ -114,35 +114,35 @@ public class POST_CreateLabelTest extends TestBase {
 
         responsePost = postCreateLabelWithAnyParams(payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
+        compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N2_shouldNotCreateLabelWhenBoardIdIsNull() {
         responsePost = postCreateLabel(null, "N2 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
+        compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N3_shouldNotCreateLabelWhenBoardIdIsEmptyString() {
         responsePost = postCreateLabel("", "N3 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
+        compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N4_shouldNotCreateLabelWhenBoardIdNonExistent() {
         responsePost = postCreateLabel("999999", "N4 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
+        compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     @Test
     public void N5_shouldNotCreateLabelWhenBoardIdIsIncorrect() {
         responsePost = postCreateLabel("Text", "N5 Label Name", "purple");
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidId);
+        compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
     }
 
     // name
@@ -277,6 +277,6 @@ public class POST_CreateLabelTest extends TestBase {
     public void N11_shouldNotCreateLabelWhenLabelColorIsIncorrect() {
         responsePost = postCreateLabel(boardId, "N11 Label Name", "KEK123");
         assertThat(responsePost.getStatusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, expectedPostLabelResponseInvalidColor);
+        compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidColor);
     }
 }
