@@ -3,7 +3,7 @@ package base;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import configuration.Config;
-import configuration.RequestSpecConfig;
+import configuration.ConfigRequestSpec;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -55,7 +55,7 @@ public class TestBase {
         configureLogging();
         // CONFIGURATION – REQUEST
         // Class that allows you to configure API requests in a readable and reusable way
-        requestSpecificationCommon = RequestSpecConfig.getRequestSpecification();
+        requestSpecificationCommon = ConfigRequestSpec.getRequestSpecification();
     }
 
     // ==========================================================================================================

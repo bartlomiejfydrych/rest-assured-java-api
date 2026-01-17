@@ -1,6 +1,6 @@
 package endpoints;
 
-import configuration.RequestSpecConfig;
+import configuration.ConfigRequestSpec;
 import io.restassured.specification.RequestSpecification;
 
 import java.util.Map;
@@ -12,7 +12,7 @@ public class BaseEndpoint {
     // ==========================================================================================================
 
     protected static RequestSpecification getSpecification() {
-        return RequestSpecConfig.getRequestSpecification();
+        return ConfigRequestSpec.getRequestSpecification();
     }
 
     // ==========================================================================================================
