@@ -8,8 +8,8 @@ import io.restassured.response.Response;
 import static endpoints.lists.GET_GetListEndpoint.getGetList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsResponse.deserializeAndValidate;
-import static utils.UtilsResponse.deserializeJson;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
+import static utils.response.UtilsResponseDeserializer.deserializeJson;
 
 public class POST_CreateNewListUtils extends TestBase {
 
@@ -32,7 +32,7 @@ public class POST_CreateNewListUtils extends TestBase {
         Response responseGet = getGetList(responsePostDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
-        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
+        GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
         compareObjects(responsePostDto, responseGetDto, POST_CreateNewListDto.FIELD_LIMITS);
     }
 

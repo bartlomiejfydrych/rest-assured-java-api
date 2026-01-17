@@ -8,8 +8,8 @@ import io.restassured.response.Response;
 import static endpoints.boards.GET_GetBoardEndpoint.getGetBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsResponse.deserializeAndValidate;
-import static utils.UtilsResponse.deserializeJson;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
+import static utils.response.UtilsResponseDeserializer.deserializeJson;
 
 public class POST_CreateBoardUtils extends TestBase {
 
@@ -26,7 +26,7 @@ public class POST_CreateBoardUtils extends TestBase {
         Response responseGet = getGetBoard(responsePostDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
-        GET_GetBoardDto responseGetDto = deserializeAndValidate(responseGet, GET_GetBoardDto.class);
+        GET_GetBoardDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetBoardDto.class);
         compareObjects(responsePostDto, responseGetDto, POST_CreateBoardDto.FIELD_LIMITS);
     }
 

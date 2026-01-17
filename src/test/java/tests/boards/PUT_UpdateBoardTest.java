@@ -21,9 +21,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareResponseWithJson;
 import static utils.UtilsRandom.pickRandom;
-import static utils.UtilsResponse.deserializeAndValidate;
-import static utils.UtilsResponse.deserializeJson;
 import static utils.UtilsString.getAllCharactersSetInRandomOrder;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
+import static utils.response.UtilsResponseDeserializer.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.boards.PUT_UpdateBoardUtils.*;
 
@@ -93,7 +93,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         // PUT
         responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
+        PUT_UpdateBoardDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateBoardDto.class);
         assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
         assertThat(stripBoardNameFromUrl(responsePutDto.url)).isEqualTo(stripBoardNameFromUrl(boardUrl));
         PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P1ExpectedPutBoardResponse, boardId, boardName, responsePutDto.url, boardShortUrl);
@@ -128,7 +128,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         // PUT
         responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
+        PUT_UpdateBoardDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateBoardDto.class);
         PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P2ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
@@ -142,11 +142,11 @@ public class PUT_UpdateBoardTest extends TestBase {
         // GET
         responseGet = getGetBoard(boardId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_GetBoardDto responseGetDto = deserializeAndValidate(responseGet, GET_GetBoardDto.class);
+        GET_GetBoardDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetBoardDto.class);
         // PUT
         responsePut = putUpdateBoard(boardId, null);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
+        PUT_UpdateBoardDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateBoardDto.class);
         compareObjects(responsePutDto, responseGetDto, PUT_UpdateBoardDto.FIELD_ORGANIZATION);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -175,7 +175,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         // PUT
         responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
+        PUT_UpdateBoardDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateBoardDto.class);
         assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
         assertThat(stripBoardNameFromUrl(responsePutDto.url)).isEqualTo(stripBoardNameFromUrl(boardUrl));
         PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P4ExpectedPutBoardResponse, boardId, boardName, responsePutDto.url, boardShortUrl);
@@ -212,7 +212,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         // PUT
         responsePut = putUpdateBoard(boardId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateBoardDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateBoardDto.class);
+        PUT_UpdateBoardDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateBoardDto.class);
         PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P5ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
         expectedResponsePutDto.prefs.voting = prefsVoting;
         expectedResponsePutDto.prefs.comments = prefsComments;

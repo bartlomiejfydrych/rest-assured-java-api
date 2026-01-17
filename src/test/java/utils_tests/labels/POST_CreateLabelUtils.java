@@ -9,8 +9,8 @@ import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsRandom.pickRandom;
-import static utils.UtilsResponse.deserializeAndValidate;
-import static utils.UtilsResponse.deserializeJson;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
+import static utils.response.UtilsResponseDeserializer.deserializeJson;
 
 public class POST_CreateLabelUtils extends TestBase {
 
@@ -33,7 +33,7 @@ public class POST_CreateLabelUtils extends TestBase {
         Response responseGet = getGetLabel(responsePostDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
-        GET_GetLabelDto responseGetDto = deserializeAndValidate(responseGet, GET_GetLabelDto.class);
+        GET_GetLabelDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetLabelDto.class);
         compareObjects(responsePostDto, responseGetDto, POST_CreateLabelDto.FIELD_LIMITS);
     }
 

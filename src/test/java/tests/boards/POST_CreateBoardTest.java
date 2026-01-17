@@ -16,7 +16,7 @@ import static expected_responses.boards.POST_CreateBoardExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.*;
 import static utils.UtilsRandom.pickRandom;
-import static utils.UtilsResponse.deserializeAndValidate;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
 import static utils_tests.boards.POST_CreateBoardUtils.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -51,7 +51,7 @@ public class POST_CreateBoardTest extends TestBase {
         responsePost = postCreateBoard(boardName, null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
-        POST_CreateBoardDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateBoardDto.class);
+        POST_CreateBoardDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateBoardDto.class);
         POST_CreateBoardDto expectedResponsePostDto = prepareExpectedResponsePost(P1ExpectedPostBoardResponse, responsePostDto, boardName);
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
@@ -84,7 +84,7 @@ public class POST_CreateBoardTest extends TestBase {
         responsePost = postCreateBoard(boardName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
-        POST_CreateBoardDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateBoardDto.class);
+        POST_CreateBoardDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateBoardDto.class);
         POST_CreateBoardDto expectedResponsePostDto = prepareExpectedResponsePost(P2ExpectedPostBoardResponse, responsePostDto, boardName);
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
@@ -119,7 +119,7 @@ public class POST_CreateBoardTest extends TestBase {
         responsePost = postCreateBoard(boardName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
-        POST_CreateBoardDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateBoardDto.class);
+        POST_CreateBoardDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateBoardDto.class);
         POST_CreateBoardDto expectedResponsePostDto = prepareExpectedResponsePost(P3ExpectedPostBoardResponse, responsePostDto, boardName);
         expectedResponsePostDto.desc = desc;
         compareObjects(responsePostDto, expectedResponsePostDto);
@@ -152,7 +152,7 @@ public class POST_CreateBoardTest extends TestBase {
         responsePost = postCreateBoard(boardName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
-        POST_CreateBoardDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateBoardDto.class);
+        POST_CreateBoardDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateBoardDto.class);
         POST_CreateBoardDto expectedResponsePostDto = prepareExpectedResponsePost(P4ExpectedPostBoardResponse, responsePostDto, boardName);
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
@@ -190,7 +190,7 @@ public class POST_CreateBoardTest extends TestBase {
         responsePost = postCreateBoard(boardName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.jsonPath().getString("id");
-        POST_CreateBoardDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateBoardDto.class);
+        POST_CreateBoardDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateBoardDto.class);
         POST_CreateBoardDto expectedResponsePostDto = prepareExpectedResponsePost(P5ExpectedPostBoardResponse, responsePostDto, boardName);
         expectedResponsePostDto.prefs.voting = prefsVoting;
         expectedResponsePostDto.prefs.comments = prefsComments;

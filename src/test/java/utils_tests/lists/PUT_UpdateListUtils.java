@@ -9,8 +9,8 @@ import static endpoints.lists.GET_GetListEndpoint.getGetList;
 import static expected_responses.lists.PUT_UpdateListExpected.BaseExpectedPutUpdateListResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsResponse.deserializeAndValidate;
-import static utils.UtilsResponse.deserializeJson;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
+import static utils.response.UtilsResponseDeserializer.deserializeJson;
 
 public class PUT_UpdateListUtils extends TestBase {
 
@@ -74,7 +74,7 @@ public class PUT_UpdateListUtils extends TestBase {
         Response responseGet = getGetList(responsePutDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
-        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
+        GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
         compareObjects(
                 responsePutDto,
                 responseGetDto,

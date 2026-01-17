@@ -18,8 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareResponseWithJson;
 import static utils.UtilsRandom.pickRandom;
-import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsString.getAllCharactersSetInRandomOrder;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.labels.POST_CreateLabelUtils.generateRandomLabelColor;
 import static utils_tests.labels.POST_CreateLabelUtils.generateRandomLabelName;
@@ -77,7 +77,7 @@ public class PUT_UpdateLabelTest extends TestBase {
         // PUT
         responsePut = putUpdateLabel(labelId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateLabelDto.class);
+        PUT_UpdateLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateLabelDto.class);
         PUT_UpdateLabelDto expectedResponsePutDto = prepareExpectedResponsePut(
                 P1ExpectedPutLabelResponse,
                 responsePutDto,
@@ -104,7 +104,7 @@ public class PUT_UpdateLabelTest extends TestBase {
         // PUT
         responsePut = putUpdateLabel(labelId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateLabelDto.class);
+        PUT_UpdateLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateLabelDto.class);
         PUT_UpdateLabelDto expectedResponsePutDto = prepareExpectedResponsePut(
                 P2ExpectedPutLabelResponse,
                 responsePutDto,
@@ -122,11 +122,11 @@ public class PUT_UpdateLabelTest extends TestBase {
         // GET (We need to retrieve the current state of the label)
         responseGet = getGetLabel(labelId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_GetLabelDto responseGetDto = deserializeAndValidate(responseGet, GET_GetLabelDto.class);
+        GET_GetLabelDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetLabelDto.class);
         // PUT
         responsePut = putUpdateLabel(labelId, null);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateLabelDto.class);
+        PUT_UpdateLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateLabelDto.class);
         compareObjects(responsePutDto, responseGetDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -143,11 +143,11 @@ public class PUT_UpdateLabelTest extends TestBase {
         // GET (We need to retrieve the current state of the label)
         responseGet = getGetLabel(labelId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_GetLabelDto responseGetDto = deserializeAndValidate(responseGet, GET_GetLabelDto.class);
+        GET_GetLabelDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetLabelDto.class);
         // PUT
         responsePut = putUpdateLabel(labelId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateLabelDto.class);
+        PUT_UpdateLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateLabelDto.class);
         compareObjects(responsePutDto, responseGetDto);
         // GET
         validateGetAgainstPut(responsePutDto);

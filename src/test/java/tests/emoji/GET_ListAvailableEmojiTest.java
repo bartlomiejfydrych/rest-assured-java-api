@@ -10,7 +10,8 @@ import static endpoints.emoji.GET_ListAvailableEmojiEndpoint.getListAvailableEmo
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsFile.readResourceFileAsString;
-import static utils.UtilsResponse.*;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
+import static utils.response.UtilsResponseDeserializer.deserializeJson;
 
 public class GET_ListAvailableEmojiTest extends TestBase {
 
@@ -33,7 +34,7 @@ public class GET_ListAvailableEmojiTest extends TestBase {
         // GET
         responseGet = getListAvailableEmoji(null);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidate(responseGet, GET_ListAvailableEmojiDto.class);
+        GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidateJson(responseGet, GET_ListAvailableEmojiDto.class);
         GET_ListAvailableEmojiDto expectedResponseGetDto = deserializeJson(expectedResponseJsonFile, GET_ListAvailableEmojiDto.class);
         compareObjects(responseGetDto, expectedResponseGetDto);
     }
@@ -53,7 +54,7 @@ public class GET_ListAvailableEmojiTest extends TestBase {
         // GET
         responseGet = getListAvailableEmoji(payload);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidate(responseGet, GET_ListAvailableEmojiDto.class);
+        GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidateJson(responseGet, GET_ListAvailableEmojiDto.class);
         GET_ListAvailableEmojiDto expectedResponseGetDto = deserializeJson(expectedResponseJsonFile, GET_ListAvailableEmojiDto.class);
         compareObjects(responseGetDto, expectedResponseGetDto);
     }
@@ -72,7 +73,7 @@ public class GET_ListAvailableEmojiTest extends TestBase {
         // GET
         responseGet = getListAvailableEmoji(payload);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidate(responseGet, GET_ListAvailableEmojiDto.class);
+        GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidateJson(responseGet, GET_ListAvailableEmojiDto.class);
         GET_ListAvailableEmojiDto expectedResponseGetDto = deserializeJson(expectedResponseJsonFile, GET_ListAvailableEmojiDto.class);
         compareObjects(responseGetDto, expectedResponseGetDto);
     }
@@ -92,7 +93,7 @@ public class GET_ListAvailableEmojiTest extends TestBase {
         // GET
         responseGet = getListAvailableEmoji(payload);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidate(responseGet, GET_ListAvailableEmojiDto.class);
+        GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidateJson(responseGet, GET_ListAvailableEmojiDto.class);
         GET_ListAvailableEmojiDto expectedResponseGetDto = deserializeJson(expectedResponseJsonFile, GET_ListAvailableEmojiDto.class);
         compareObjects(responseGetDto, expectedResponseGetDto);
     }

@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareResponseWithJson;
 import static utils.UtilsRandom.pickRandom;
-import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsString.getAllCharactersSetInRandomOrder;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.labels.POST_CreateLabelUtils.generateRandomLabelColor;
 import static utils_tests.labels.POST_CreateLabelUtils.generateRandomLabelName;
@@ -48,7 +48,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         boardId = responsePost.getBody().jsonPath().getString("id");
         responsePost = postCreateLabel(boardId, generateRandomLabelName(), generateRandomLabelColor());
         assertThat(responsePost.statusCode()).isEqualTo(200);
-        responsePostDto = deserializeAndValidate(responsePost, POST_CreateLabelDto.class);
+        responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateLabelDto.class);
         labelId = responsePostDto.id;
     }
 
@@ -77,7 +77,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         // PUT
         responsePut = putUpdateFieldOnLabel(labelId, LabelField.NAME, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateFieldOnLabelDto.class);
+        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -92,7 +92,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         // PUT
         responsePut = putUpdateFieldOnLabel(labelId, LabelField.NAME, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateFieldOnLabelDto.class);
+        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -107,7 +107,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         // PUT
         responsePut = putUpdateFieldOnLabel(labelId, LabelField.NAME, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateFieldOnLabelDto.class);
+        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -124,7 +124,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         // PUT
         responsePut = putUpdateFieldOnLabel(labelId, LabelField.COLOR, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateFieldOnLabelDto.class);
+        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -139,7 +139,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         // PUT
         responsePut = putUpdateFieldOnLabel(labelId, LabelField.COLOR, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateFieldOnLabelDto.class);
+        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -154,7 +154,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         // PUT
         responsePut = putUpdateFieldOnLabel(labelId, LabelField.COLOR, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateFieldOnLabelDto.class);
+        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
         // GET
         validateGetAgainstPut(responsePutDto);

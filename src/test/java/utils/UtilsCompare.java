@@ -6,7 +6,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.UtilsResponse.parseStringToJsonNode;
+import static utils.response.UtilsResponseJsonParser.parseStringToJsonNode;
 
 public final class UtilsCompare {
 

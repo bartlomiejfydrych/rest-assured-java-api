@@ -22,9 +22,9 @@ import static expected_responses.lists.PUT_UpdateListExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareResponseWithJson;
-import static utils.UtilsResponse.deserializeAndValidate;
-import static utils.UtilsResponse.deserializeJson;
 import static utils.UtilsString.getAllCharactersSetInRandomOrder;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
+import static utils.response.UtilsResponseDeserializer.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.lists.POST_CreateNewListUtils.generateRandomListName;
 import static utils_tests.lists.PUT_UpdateListUtils.*;
@@ -63,7 +63,7 @@ public class PUT_UpdateListTest extends TestBase {
         boardId = responsePost.getBody().jsonPath().getString("id" );
         responsePost = postCreateNewList(boardId, generateRandomListName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
-        responsePostDto = deserializeAndValidate(responsePost, POST_CreateNewListDto.class);
+        responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateNewListDto.class);
         listId = responsePostDto.id;
     }
 
@@ -97,11 +97,11 @@ public class PUT_UpdateListTest extends TestBase {
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
+        GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
         // PUT
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
+        PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
                 P1ExpectedPutUpdateListResponse,
                 listId,
@@ -132,11 +132,11 @@ public class PUT_UpdateListTest extends TestBase {
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
+        GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
         // PUT
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
+        PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
                 P2ExpectedPutUpdateListResponse,
                 listId,
@@ -170,11 +170,11 @@ public class PUT_UpdateListTest extends TestBase {
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
+        GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
         // PUT
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
+        PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareUniversalExpectedResponsePut(
                 listId,
                 responseGetDto.name,
@@ -205,11 +205,11 @@ public class PUT_UpdateListTest extends TestBase {
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
+        GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
         // PUT
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
+        PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
                 P4ExpectedPutUpdateListResponse,
                 listId,
@@ -272,7 +272,7 @@ public class PUT_UpdateListTest extends TestBase {
         // PUT (edit list 2 -> POS: top)
         Response responsePut2 = putUpdateList(listId2, payload2);
         assertThat(responsePut2.statusCode()).isEqualTo(200);
-        PUT_UpdateListDto responsePutDto2 = deserializeAndValidate(responsePut2, PUT_UpdateListDto.class);
+        PUT_UpdateListDto responsePutDto2 = deserializeAndValidateJson(responsePut2, PUT_UpdateListDto.class);
         Long responsePutPos2 = responsePutDto2.pos;
         PUT_UpdateListDto expectedResponsePutDto2 = prepareUniversalExpectedResponsePut(
                 listId2,
@@ -289,7 +289,7 @@ public class PUT_UpdateListTest extends TestBase {
         // PUT (edit list 3 -> POS: bottom)
         Response responsePut3 = putUpdateList(listId3, payload3);
         assertThat(responsePut3.statusCode()).isEqualTo(200);
-        PUT_UpdateListDto responsePutDto3 = deserializeAndValidate(responsePut3, PUT_UpdateListDto.class);
+        PUT_UpdateListDto responsePutDto3 = deserializeAndValidateJson(responsePut3, PUT_UpdateListDto.class);
         Long responsePutPos3 = responsePutDto3.pos;
         PUT_UpdateListDto expectedResponsePutDto3 = prepareUniversalExpectedResponsePut(
                 listId3,
@@ -306,7 +306,7 @@ public class PUT_UpdateListTest extends TestBase {
         // PUT (edit list 4 -> POS: 140737488322560L)
         Response responsePut4 = putUpdateList(listId4, payload4);
         assertThat(responsePut4.statusCode()).isEqualTo(200);
-        PUT_UpdateListDto responsePutDto4 = deserializeAndValidate(responsePut4, PUT_UpdateListDto.class);
+        PUT_UpdateListDto responsePutDto4 = deserializeAndValidateJson(responsePut4, PUT_UpdateListDto.class);
         Long responsePutPos4 = responsePutDto4.pos;
         PUT_UpdateListDto expectedResponsePutDto4 = prepareUniversalExpectedResponsePut(
                 listId4,
@@ -366,7 +366,7 @@ public class PUT_UpdateListTest extends TestBase {
 
             responsePut = putUpdateList(listId2, payload);
             assertThat(responsePut.statusCode()).isEqualTo(200);
-            PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
+            PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
             PUT_UpdateListDto expectedResponsePutDto = prepareUniversalExpectedResponsePut(
                     listId2,
                     responsePostDto.name,
@@ -407,11 +407,11 @@ public class PUT_UpdateListTest extends TestBase {
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
+        GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
         // PUT
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
+        PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
                 P7ExpectedPutUpdateListResponse,
                 listId,
@@ -436,11 +436,11 @@ public class PUT_UpdateListTest extends TestBase {
         // GET (current status of the list)
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_GetListDto responseGetDto = deserializeAndValidate(responseGet, GET_GetListDto.class);
+        GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
         // PUT
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateListDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateListDto.class);
+        PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
         PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
                 P8ExpectedPutUpdateListResponse,
                 listId,

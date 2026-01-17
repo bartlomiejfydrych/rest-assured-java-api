@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static providers.RandomProvider.random;
+import static providers.ProviderRandom.random;
 
 public final class UtilsString {
 

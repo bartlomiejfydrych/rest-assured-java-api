@@ -8,7 +8,7 @@ import io.restassured.response.Response;
 import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsResponse.deserializeAndValidate;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
 
 public class PUT_UpdateFieldOnLabelUtils extends TestBase {
 
@@ -16,7 +16,7 @@ public class PUT_UpdateFieldOnLabelUtils extends TestBase {
         Response responseGet = getGetLabel(responsePutDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
-        GET_GetLabelDto responseGetDto = deserializeAndValidate(responseGet, GET_GetLabelDto.class);
+        GET_GetLabelDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetLabelDto.class);
         compareObjects(responsePutDto, responseGetDto);
     }
 }

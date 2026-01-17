@@ -10,8 +10,8 @@ import java.net.URL;
 import static endpoints.boards.GET_GetBoardEndpoint.getGetBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsResponse.deserializeAndValidate;
-import static utils.UtilsResponse.deserializeJson;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
+import static utils.response.UtilsResponseDeserializer.deserializeJson;
 
 public class PUT_UpdateBoardUtils extends TestBase {
 
@@ -32,7 +32,7 @@ public class PUT_UpdateBoardUtils extends TestBase {
         Response responseGet = getGetBoard(responsePutDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
-        GET_GetBoardDto responseGetDto = deserializeAndValidate(responseGet, GET_GetBoardDto.class);
+        GET_GetBoardDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetBoardDto.class);
         compareObjects(responsePutDto, responseGetDto, PUT_UpdateBoardDto.FIELD_ORGANIZATION);
     }
 

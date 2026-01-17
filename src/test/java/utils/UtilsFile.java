@@ -1,5 +1,7 @@
 package utils;
 
+import exceptions.ExceptionResourceRead;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +24,7 @@ public final class UtilsFile {
             return new String(is.readAllBytes(), StandardCharsets.UTF_8);
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read resource: " + resourcePath, e);
+            throw new ExceptionResourceRead("Failed to read resource: " + resourcePath, e);
         }
     }
 }

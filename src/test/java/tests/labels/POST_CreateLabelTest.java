@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareResponseWithJson;
 import static utils.UtilsRandom.pickRandom;
-import static utils.UtilsResponse.deserializeAndValidate;
 import static utils.UtilsString.getAllCharactersSetInRandomOrder;
+import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.labels.POST_CreateLabelUtils.prepareExpectedResponsePost;
 import static utils_tests.labels.POST_CreateLabelUtils.validateGetAgainstPost;
@@ -63,7 +63,7 @@ public class POST_CreateLabelTest extends TestBase {
         // POST
         responsePost = postCreateLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
-        POST_CreateLabelDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateLabelDto.class);
+        POST_CreateLabelDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateLabelDto.class);
         POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
                 P1ExpectedPostLabelResponse,
                 responsePostDto,
@@ -85,7 +85,7 @@ public class POST_CreateLabelTest extends TestBase {
         // POST
         responsePost = postCreateLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
-        POST_CreateLabelDto responsePostDto = deserializeAndValidate(responsePost, POST_CreateLabelDto.class);
+        POST_CreateLabelDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateLabelDto.class);
         POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
                 P2ExpectedPostLabelResponse,
                 responsePostDto,
