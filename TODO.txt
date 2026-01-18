@@ -2,12 +2,11 @@
 TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
-- Dodać enumy dla wartości query parametrów
 - Napisać testy jednostkowe dla moich metod w Utils
 - Opisać w notatkach wszystkie sposoby pisania testów, jakich nauczono mnie na kursie (czyli te podstawowe testy)
 - Do dokumentacji requestów i opisu repo napisać, że jeśli w requestach brakuje jakichś testów, lub czymś się różnią od
 tego, co jest w głównej dokumentacji Trello, to znaczy, że Trello coś zmieniło lub dodało i nie było tego, gdy to pisałem
-- Testy negatywne, które okazały się pozytywne odkomentować i przeniść do testów pozytywnych
+- Testy negatywne, które okazały się pozytywne odkomentować i przenieść do testów pozytywnych
 - Do testów PUT'ów dodać GET'y dla większej pewności i niezależności
 - Napisać własny logger
 - Refaktor testów w ich aktualnym stanie i ilości

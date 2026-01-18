@@ -1,6 +1,6 @@
 package endpoints.labels;
 
-import enums.labels.LabelField;
+import enums.query_parameters.labels.LabelBaseQueryParameters;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -39,8 +39,8 @@ public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
     // UTILS
     // -----
 
-    private static String labelFieldById(String labelId, LabelField labelField) {
-        return labelById(labelId) + "/" + labelField.getValue();
+    private static String labelFieldById(String labelId, LabelBaseQueryParameters labelField) {
+        return labelById(labelId) + "/" + labelField.key();
     }
 
     // ==========================================================================================================
@@ -51,7 +51,7 @@ public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
     // POSITIVE
     // --------
 
-    public static Response putUpdateFieldOnLabel(String labelId, LabelField labelField, String fieldValue) {
+    public static Response putUpdateFieldOnLabel(String labelId, LabelBaseQueryParameters labelField, String fieldValue) {
         return put(labelFieldById(labelId, labelField), fieldValue);
     }
 
@@ -59,7 +59,7 @@ public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
     // NEGATIVE
     // --------
 
-    public static Response putUpdateFieldOnLabelWithoutFieldValue(String labelId, LabelField labelField) {
+    public static Response putUpdateFieldOnLabelWithoutFieldValue(String labelId, LabelBaseQueryParameters labelField) {
         return put(labelFieldById(labelId, labelField), null);
     }
 

@@ -3,7 +3,7 @@ package tests.labels;
 import base.TestBase;
 import dto.labels.POST_CreateLabelDto;
 import dto.labels.PUT_UpdateFieldOnLabelDto;
-import enums.labels.LabelField;
+import enums.query_parameters.labels.LabelBaseQueryParameters;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -75,7 +75,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         responsePostDto.name = labelFieldValue;
 
         // PUT
-        responsePut = putUpdateFieldOnLabel(labelId, LabelField.NAME, labelFieldValue);
+        responsePut = putUpdateFieldOnLabel(labelId, LabelBaseQueryParameters.NAME, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
@@ -90,7 +90,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         responsePostDto.name = labelFieldValue;
 
         // PUT
-        responsePut = putUpdateFieldOnLabel(labelId, LabelField.NAME, labelFieldValue);
+        responsePut = putUpdateFieldOnLabel(labelId, LabelBaseQueryParameters.NAME, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
@@ -105,7 +105,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         responsePostDto.name = labelFieldValue;
 
         // PUT
-        responsePut = putUpdateFieldOnLabel(labelId, LabelField.NAME, labelFieldValue);
+        responsePut = putUpdateFieldOnLabel(labelId, LabelBaseQueryParameters.NAME, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
@@ -122,7 +122,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         responsePostDto.color = labelFieldValue;
 
         // PUT
-        responsePut = putUpdateFieldOnLabel(labelId, LabelField.COLOR, labelFieldValue);
+        responsePut = putUpdateFieldOnLabel(labelId, LabelBaseQueryParameters.COLOR, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
@@ -137,7 +137,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         responsePostDto.color = labelFieldValue;
 
         // PUT
-        responsePut = putUpdateFieldOnLabel(labelId, LabelField.COLOR, labelFieldValue);
+        responsePut = putUpdateFieldOnLabel(labelId, LabelBaseQueryParameters.COLOR, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
@@ -152,7 +152,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         responsePostDto.color = null;
 
         // PUT
-        responsePut = putUpdateFieldOnLabel(labelId, LabelField.COLOR, labelFieldValue);
+        responsePut = putUpdateFieldOnLabel(labelId, LabelBaseQueryParameters.COLOR, labelFieldValue);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
         compareObjects(responsePutDto, responsePostDto);
@@ -169,7 +169,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
     @Test
     public void N1_shouldNotUpdateLabelFieldNameWithoutValue() {
         // PUT
-        responsePut = putUpdateFieldOnLabelWithoutFieldValue(labelId, LabelField.NAME);
+        responsePut = putUpdateFieldOnLabelWithoutFieldValue(labelId, LabelBaseQueryParameters.NAME);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for value");
     }
@@ -182,7 +182,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
     @Test
     public void N2_shouldNotUpdateLabelFieldColorWithoutValue() {
         // PUT
-        responsePut = putUpdateFieldOnLabelWithoutValue(labelId, LabelField.COLOR);
+        responsePut = putUpdateFieldOnLabelWithoutValue(labelId, LabelBaseQueryParameters.COLOR);
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for value");
 
@@ -209,7 +209,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
                 """;
 
         // PUT
-        responsePut = putUpdateFieldOnLabel(labelId, LabelField.COLOR, "KEK123");
+        responsePut = putUpdateFieldOnLabel(labelId, LabelBaseQueryParameters.COLOR, "KEK123");
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePut, expectedResponse);
     }
