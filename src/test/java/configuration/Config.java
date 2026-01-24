@@ -40,11 +40,11 @@ public class Config {
             if (input != null) {
                 properties.load(input);
             } else {
-                System.err.println("[ERROR] File {config.properties} not found in resources.");
+                System.err.println("(CONFIG) File {config.properties} not found in resources.");
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("[ERROR] Unable to load file {config.properties}", e);
+            throw new RuntimeException("(CONFIG) Unable to load file {config.properties}", e);
         }
     }
 
@@ -87,7 +87,7 @@ public class Config {
 
         // 5. {missing} – Get error if property is missing
         throw new IllegalStateException(
-                "[ERROR] (CONFIG) Missing required configuration key: '" + key +
+                "(CONFIG) Missing required configuration key: '" + key +
                         "'. Checked {system environment}, {.env} and {config.properties}."
         );
     }
@@ -111,7 +111,7 @@ public class Config {
             return Integer.parseInt(raw);
         } catch (NumberFormatException e) {
             throw new IllegalStateException(
-                    "[ERROR] (CONFIG) Invalid integer value for key '" + key + "': " + raw
+                    "(CONFIG) Invalid integer value for key '" + key + "': " + raw
             );
         }
     }
@@ -126,7 +126,7 @@ public class Config {
             return Long.parseLong(raw);
         } catch (NumberFormatException e) {
             throw new IllegalStateException(
-                    "[ERROR] (CONFIG) Invalid long value for key '" + key + "': " + raw
+                    "(CONFIG) Invalid long value for key '" + key + "': " + raw
             );
         }
     }
@@ -141,7 +141,7 @@ public class Config {
             return Double.parseDouble(raw);
         } catch (NumberFormatException e) {
             throw new IllegalStateException(
-                    "[ERROR] (CONFIG) Invalid double value for key '" + key + "': " + raw
+                    "(CONFIG) Invalid double value for key '" + key + "': " + raw
             );
         }
     }
@@ -198,11 +198,6 @@ public class Config {
     // ----
 
     // LOGS MANAGEMENT
-
-    // Get Logs {when Fail}
-    public static boolean getLogsWhenFail() {
-        return getProperty("LOGS_WHEN_FAIL", true);
-    }
 
     // Get Logs {always}
     public static boolean getLogsAlways() {

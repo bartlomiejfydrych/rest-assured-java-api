@@ -74,9 +74,5 @@ public class TestBase {
                     new ResponseLoggingFilter()
             );
         }
-        // Only when test fail print in console all request and response data
-        if (Config.getLogsWhenFail()) {
-            RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        }
     }
 }
