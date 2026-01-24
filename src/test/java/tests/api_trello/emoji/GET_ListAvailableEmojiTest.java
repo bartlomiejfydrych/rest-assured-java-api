@@ -1,4 +1,4 @@
-package tests.emoji;
+package tests.api_trello.emoji;
 
 import base.TestBase;
 import dto.emoji.GET_ListAvailableEmojiDto;

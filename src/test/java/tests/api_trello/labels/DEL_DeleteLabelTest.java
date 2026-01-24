@@ -1,4 +1,4 @@
-package tests.labels;
+package tests.api_trello.labels;
 
 import base.TestBase;
 import io.restassured.response.Response;

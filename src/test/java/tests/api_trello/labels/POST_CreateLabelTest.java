@@ -1,4 +1,4 @@
-package tests.labels;
+package tests.api_trello.labels;
 
 import base.TestBase;
 import dto.labels.POST_CreateLabelDto;

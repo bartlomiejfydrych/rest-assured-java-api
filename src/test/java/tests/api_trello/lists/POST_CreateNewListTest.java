@@ -1,4 +1,4 @@
-package tests.lists;
+package tests.api_trello.lists;
 
 import base.TestBase;
 import dto.lists.POST_CreateNewListDto;

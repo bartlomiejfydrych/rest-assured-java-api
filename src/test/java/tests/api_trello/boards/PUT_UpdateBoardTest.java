@@ -1,4 +1,4 @@
-package tests.boards;
+package tests.api_trello.boards;
 
 import base.TestBase;
 import configuration.Config;
