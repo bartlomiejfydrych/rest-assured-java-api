@@ -16,9 +16,8 @@ public class UtilsResponseValidatorTest {
 
     @Test
     void validate_whenDtoIsValid_shouldNotThrowException() {
-        // GIVEN
         TestDto dto = new TestDto("valid name");
-        // WHEN/THEN
+
         assertDoesNotThrow(() ->
                 UtilsResponseValidator.validateDto(dto)
         );
@@ -26,13 +25,12 @@ public class UtilsResponseValidatorTest {
 
     @Test
     void validate_whenDtoIsInvalid_shouldThrowExceptionDtoValidation() {
-        // GIVEN
         TestDto dto = new TestDto(null);
-        // WHEN
+
         ExceptionDtoValidation exception =
                 assertThrows(ExceptionDtoValidation.class,
                         () -> UtilsResponseValidator.validateDto(dto));
-        // THEN
+
         assertTrue(exception.getMessage().contains("Validation failed"));
         assertTrue(exception.getMessage().contains("name"));
     }
@@ -43,12 +41,11 @@ public class UtilsResponseValidatorTest {
 
     @Test
     void validateAll_whenAllDtosAreValid_shouldNotThrowException() {
-        // GIVEN
         List<TestDto> dtos = List.of(
                 new TestDto("one"),
                 new TestDto("two")
         );
-        // WHEN/THEN
+
         assertDoesNotThrow(() ->
                 UtilsResponseValidator.validateDtoList(dtos)
         );
@@ -56,12 +53,11 @@ public class UtilsResponseValidatorTest {
 
     @Test
     void validateAll_whenOneDtoIsInvalid_shouldThrowException() {
-        // GIVEN
         List<TestDto> dtos = List.of(
                 new TestDto("ok"),
                 new TestDto(null)
         );
-        // WHEN/THEN
+
         assertThrows(ExceptionDtoValidation.class,
                 () -> UtilsResponseValidator.validateDtoList(dtos));
     }
@@ -72,13 +68,12 @@ public class UtilsResponseValidatorTest {
 
     @Test
     void validate_whenDtoHasMultipleViolations_shouldContainAllInMessage() {
-        // GIVEN
         TestDto dto = new TestDto(null);
-        // WHEN
+
         ExceptionDtoValidation exception =
                 assertThrows(ExceptionDtoValidation.class,
                         () -> UtilsResponseValidator.validateDto(dto));
-        // THEN
+
         String message = exception.getMessage();
         assertTrue(message.startsWith("Validation failed"));
         assertTrue(message.contains("name"));

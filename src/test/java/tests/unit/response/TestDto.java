@@ -2,20 +2,36 @@ package tests.unit.response;
 
 import jakarta.validation.constraints.NotNull;
 
-public class TestDto {
+class TestDto {
 
     // ==========================================================================================================
     // FIELDS – VALIDATION CONSTRAINTS
     // ==========================================================================================================
 
     @NotNull
-    private final String name;
+    private String name;
 
     // ==========================================================================================================
     // CONSTRUCTORS
     // ==========================================================================================================
 
+    // Required by Jackson
+    public TestDto() {
+    }
+
     TestDto(String name) {
+        this.name = name;
+    }
+
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 }

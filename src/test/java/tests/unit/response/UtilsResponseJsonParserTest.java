@@ -28,10 +28,9 @@ public class UtilsResponseJsonParserTest {
 
     @Test
     void parseStringToJsonNode_whenValidJson_shouldReturnJsonNode() {
-        // GIVEN/WHEN
         JsonNode node = UtilsResponseJsonParser
                 .parseStringToJsonNode("{\"name\":\"board\"}");
-        // THEN
+
         assertEquals("board", node.get("name").asText());
     }
 }
