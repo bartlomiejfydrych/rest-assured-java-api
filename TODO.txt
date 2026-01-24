@@ -2,18 +2,20 @@
 TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
+- Usunąć logger przy failach z REST Assured
 - Napisać testy jednostkowe dla moich metod w Utils
 - Opisać w notatkach wszystkie sposoby pisania testów, jakich nauczono mnie na kursie (czyli te podstawowe testy)
 - Do dokumentacji requestów i opisu repo napisać, że jeśli w requestach brakuje jakichś testów, lub czymś się różnią od
 tego, co jest w głównej dokumentacji Trello, to znaczy, że Trello coś zmieniło lub dodało i nie było tego, gdy to pisałem
 - Testy negatywne, które okazały się pozytywne odkomentować i przenieść do testów pozytywnych
 - Do testów PUT'ów dodać GET'y dla większej pewności i niezależności
+- Napisać wrapper z mini-logami dla wszystkich metod HTTP
 - Napisać własny logger
 - Refaktor testów w ich aktualnym stanie i ilości
-- Dopisać kolejne testy
 - Dodać raport Allure (Allure pod REST: https://allurereport.org/docs/restassured/)
 - Przeanalizować i zapisać sobie, co można zrobić w przypadku różnych base URL (np. /api/, /admin/, /mobile/)
 - Dodać zapisywanie i odczytywanie tokena oraz jego odświeżanie za pomocą API od Dawida (lub napisać suchą metodę)
+- Dopisać kolejne testy
 - Dokładnie rozpisać w opisie repozytorium czego się nauczyłem
 - Rozpisać w opisie repozytorium statystyki testów, czyli ich ilość i czas (całość, każdy endpoint, podział na pozytywne
 i negatywne)
