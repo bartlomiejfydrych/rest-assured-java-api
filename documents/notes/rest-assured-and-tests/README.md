@@ -43,7 +43,7 @@
 - [REST Assured – asercja dla pustego obiektu](#rest_assured_assert_empty_object)
 - [JUnit – tagi dla testów](#junit_test_tags)
 - [Junit – TestInstance.Lifecycle](#junit_testinstance_lifecycle)
-- [AssertJ – porównywanie obiektów](#assertj_object_compare)
+- [AssertJ – porównywanie obiektów i list](#assertj_object_compare)
 - [AssertJ – dodawanie komentarzy/logów do testów](#assertj_comments_logs)
 - [AssertJ – soft assertions](#assertj_soft_assertions)
 - [Zmienne – podstawianie pod String/Text Block](#variables_string_text_block)
@@ -2821,7 +2821,7 @@ After all tests
 
 ---
 
-## 📄AssertJ – porównywanie obiektów <a name="assertj_object_compare"></a>
+## 📄AssertJ – porównywanie obiektów i list <a name="assertj_object_compare"></a>
 
 Mamy 2 prawie identyczne obiekty.  
 Różnią się tym, że jeden ma dodatkowe pole o nazwie `"limits"`.  
@@ -2930,6 +2930,162 @@ public static void assertSameFields(Class<?> class1, Class<?> class2) {
 | `compareObjects()` nie zgłasza błędu | AssertJ porównuje tylko wspólne pola               |
 | Pole `limits` jest ignorowane        | Bo nie istnieje w obu klasach                      |
 | Jak wymusić błąd                     | Porównaj JSON-y lub napisz dodatkowy walidator pól |
+
+### Porównywanie list
+
+Tak 🙂 — **już teraz masz taką możliwość**.  
+I to jest dobra wiadomość, bo **nic nie musisz zmieniać**, żeby porównywać **listy obiektów**.
+
+Poniżej rozbijmy to na konkrety, żeby nie było wątpliwości.
+
+#### ✅ Krótka odpowiedź
+
+> **Tak — `compareObjects(...)` i `compareObjectsSoft(...)` działają również dla list obiektów.**
+
+Dlaczego?  
+Bo **AssertJ `usingRecursiveComparison()` obsługuje kolekcje natywnie**.
+
+#### 🧠 Jak to działa pod spodem
+
+Gdy wywołasz:
+
+```java
+assertThat(actualList)
+        .usingRecursiveComparison(...)
+        .isEqualTo(expectedList);
+```
+
+AssertJ:
+1. Sprawdza, że oba obiekty są kolekcjami
+2. Porównuje:
+    * rozmiar list
+    * elementy **indeks po indeksie**
+3. Każdy element listy:
+    * porównuje **rekurencyjnie**
+    * stosuje `ignoreFields(...)` do **każdego elementu**
+
+Czyli masz:
+* ✔ listy
+* ✔ listy DTO
+* ✔ listy zagnieżdżone
+* ✔ ignorowanie pól wewnątrz elementów listy
+
+#### 🧪 Przykład — LISTA DTO
+
+##### DTO
+
+```java
+class UserDto {
+    String id;
+    String name;
+}
+```
+
+#### Test
+
+```java
+List<UserDto> actual = List.of(
+        new UserDto("1", "Alice"),
+        new UserDto("2", "Bob")
+);
+
+List<UserDto> expected = List.of(
+        new UserDto("X", "Alice"),
+        new UserDto("Y", "Bob")
+);
+
+UtilsCompare.compareObjects(actual, expected, "id");
+```
+
+✔ Test przejdzie  
+✔ `id` ignorowane w każdym elemencie listy
+
+#### ⚠️ WAŻNE ograniczenia (świadome)
+
+##### 1️⃣ Kolejność MA znaczenie
+
+```java
+List.of(A, B) ≠ List.of(B, A)
+```
+
+Jeśli API nie gwarantuje kolejności → test się wywali.
+
+➡️ Rozwiązanie:
+* sortowanie przed porównaniem
+* albo comparator bez kolejności (za chwilę)
+
+##### 2️⃣ Listy różnej długości = FAIL
+
+To jest **pożądane zachowanie** w testach API.
+
+##### 3️⃣ Ignorowanie działa po nazwach pól, nie po ścieżkach
+
+```java
+ignoreFields("id")
+```
+
+ignoruje:
+* `id` w każdym obiekcie
+* również zagnieżdżonym
+
+#### 🚀 Jeśli chcesz porównywać listy BEZ kolejności
+
+Masz **dwie bardzo dobre opcje**.
+
+##### 🟢 OPCJA 1 — AssertJ `ignoringCollectionOrder()`
+
+```java
+assertThat(actualList)
+        .usingRecursiveComparison()
+        .ignoringCollectionOrder()
+        .isEqualTo(expectedList);
+```
+
+Możesz to łatwo dodać jako nową metodę utila:
+
+```java
+public static void compareObjectsIgnoringOrder(
+        Object actual,
+        Object expected,
+        String... fieldsToIgnore) {
+
+    assertThat(actual)
+            .usingRecursiveComparison(configWithIgnoredFields(fieldsToIgnore))
+            .ignoringCollectionOrder()
+            .isEqualTo(expected);
+}
+```
+
+##### 🟡 OPCJA 2 — Sortowanie przed porównaniem (często lepsze)
+
+```java
+actual.sort(comparing(UserDto::getName));
+expected.sort(comparing(UserDto::getName));
+```
+
+✔ czytelniejsze  
+✔ lepsze błędy  
+✔ pełna kontrola
+
+#### 🧠 Rekomendacja architektoniczna
+
+Dla testów API:
+* **domyślnie** → kolejność ma znaczenie
+* **opcjonalnie** → osobna metoda „ignore order”
+
+Czyli:
+
+```java
+compareObjects(...)
+compareObjectsIgnoringOrder(...)
+```
+
+#### TL;DR
+
+✔ Twoje metody **już obsługują listy obiektów**  
+✔ Ignorowanie pól działa dla każdego elementu listy  
+⚠️ Kolejność elementów ma znaczenie  
+🚀 Możesz łatwo dodać wersję „ignore order”
 
 ---
 
