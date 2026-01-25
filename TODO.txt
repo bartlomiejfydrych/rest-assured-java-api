@@ -3,6 +3,7 @@ TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
 - Napisać testy jednostkowe dla moich metod w Utils
+- Dowiedzieć się jak rozdzielić uruchamianie testów API od testów jednostkowych
 - Opisać w notatkach wszystkie sposoby pisania testów, jakich nauczono mnie na kursie (czyli te podstawowe testy)
 - Do dokumentacji requestów i opisu repo napisać, że jeśli w requestach brakuje jakichś testów, lub czymś się różnią od
 tego, co jest w głównej dokumentacji Trello, to znaczy, że Trello coś zmieniło lub dodało i nie było tego, gdy to pisałem
@@ -18,6 +19,7 @@ tego, co jest w głównej dokumentacji Trello, to znaczy, że Trello coś zmieni
 - Dokładnie rozpisać w opisie repozytorium czego się nauczyłem
 - Rozpisać w opisie repozytorium statystyki testów, czyli ich ilość i czas (całość, każdy endpoint, podział na pozytywne
 i negatywne)
+- Zaktualizować notatki pod nowy kod, a stare przenieść do archiwum
 
 ########################################################################################################################
 NOTATKI – PROJEKT
