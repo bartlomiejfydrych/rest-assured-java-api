@@ -2,7 +2,6 @@
 TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
-- Napisać testy jednostkowe dla moich metod w Utils
 - Dowiedzieć się jak rozdzielić uruchamianie testów API od testów jednostkowych
 - Opisać w notatkach wszystkie sposoby pisania testów, jakich nauczono mnie na kursie (czyli te podstawowe testy)
 - Do dokumentacji requestów i opisu repo napisać, że jeśli w requestach brakuje jakichś testów, lub czymś się różnią od
@@ -25,5 +24,5 @@ i negatywne)
 NOTATKI – PROJEKT
 ########################################################################################################################
 
-- Mam na ten moment 93 testy
-- TODO: Dopisać ilość testów jednostkowych po ich zrobieniu
+– Mam na ten moment 93 testy API
+– Mam 45 testów jednostkowych (CZAS: 2 sec 747 ms)
