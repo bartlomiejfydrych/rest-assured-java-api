@@ -53,6 +53,7 @@
 - [Dokumentacja testów – możliwe formy](#test_documentation_forms)
 - [URL – kodowanie znaków](#url_encoded)
 - [SEED – informacje](#seed_information)
+- [JUnit – rozdzielenie uruchamiania testów API i jednostkowych](#junit_api_unit_tests)
 
 ---
 
@@ -4474,3 +4475,175 @@ log.info("Test seed: {}", seed);
 
 Ty **robisz dobrą rzecz** używając randomów.  
 Seed to tylko **pas bezpieczeństwa**, nie kaganiec.
+
+---
+
+## 📄JUnit – rozdzielenie uruchamiania testów API i jednostkowych <a name="junit_api_unit_tests"></a>
+
+> Powiedz mi jak teraz oddzielić testy jednostkowe od testów api?  
+> Wydaje mi się, że nie powinny być zawsze wszystkie uruchamiane?
+
+Świetne pytanie — to jest **dokładnie ten moment**, w którym projekt testowy zaczyna być *dojrzały*, a nie „wszystko w jednym worku” 👌  
+Masz rację: **nie powinny być zawsze uruchamiane wszystkie testy**.
+
+Poniżej masz **praktyczny, sprawdzony sposób**, który idealnie pasuje do JUnit + REST Assured.
+
+### TL;DR – jak to zrobić dobrze
+
+**Oddzielasz testy na 2 poziomach:**
+1. **struktura pakietów**
+2. **tagi JUnit (`@Tag`) + konfiguracja builda**
+
+### 1️⃣ Struktura pakietów (fundament)
+
+Ty już jesteś bardzo blisko ideału 👍
+
+#### Rekomendowana struktura
+
+```text
+src
+└── test
+    └── java
+        ├── tests
+        │   ├── unit
+        │   │   ├── utils
+        │   │   └── response
+        │   └── api
+        │       ├── boards
+        │       ├── cards
+        │       └── lists
+```
+
+#### Co tu jest ważne?
+
+* **unit** – szybkie, bez sieci, bez REST Assured
+* **api** – wolniejsze, sieć, tokeny, environment
+
+To już samo w sobie daje czytelność, ale **nie steruje wykonaniem**.
+
+### 2️⃣ Tagi JUnit 5 – klucz do kontroli uruchamiania
+
+#### Oznaczasz testy:
+
+##### Testy jednostkowe
+
+```java
+@Tag("unit")
+class UtilsStringTest {
+}
+```
+
+##### Testy API
+
+```java
+@Tag("api")
+class BoardsApiTest {
+}
+```
+
+Możesz też tagować **metody**, ale **klasy są czytelniejsze**.
+
+### 3️⃣ Maven – sterowanie co się uruchamia
+
+Zakładam Maven (jeśli Gradle – powiedz, dam wersję gradle).
+
+#### Domyślnie: tylko testy jednostkowe
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.2.5</version>
+            <configuration>
+                <groups></groups>
+                <excludedGroups></excludedGroups>
+                <properties>
+                    <includeTags>unit</includeTags>
+                </properties>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+👉 `mvn test`  
+➡️ **tylko unit**
+
+#### Profil: testy API (świadomie)
+
+```xml
+<profiles>
+    <profile>
+        <id>api-tests</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <properties>
+                            <includeTags>api</includeTags>
+                        </properties>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+</profiles>
+```
+
+👉 Uruchomienie:
+
+```bash
+mvn test -Papi-tests
+```
+
+### 4️⃣ IDE (IntelliJ / Eclipse)
+
+#### IntelliJ
+
+* Run → Edit Configurations
+* JUnit
+* **Tags**:
+    * `unit`
+    * albo `api`
+
+Masz 2 konfiguracje:
+* 🧪 Unit Tests
+* 🌐 API Tests
+
+### 5️⃣ Naming (opcjonalnie, ale polecam)
+
+Nie zamiast tagów, tylko **obok**.
+
+| Typ  | Przykład          |
+|------|-------------------|
+| Unit | `UtilsStringTest` |
+| API  | `BoardsApiTest`   |
+
+### 6️⃣ Co ZYSKUJESZ
+
+✔ szybkie feedback loop  
+✔ `mvn test` = bezpieczne  
+✔ API tylko gdy chcesz  
+✔ brak przypadkowych requestów  
+✔ CI może:
+* na PR: unit
+* nightly: api
+
+### 7️⃣ Najczęstszy błąd (którego u Ciebie nie będzie)
+
+❌ uruchamianie API testów lokalnie „bo są w tym samym module”  
+❌ brak tagów  
+❌ REST Assured w testach unit
+
+Ty już jesteś **po właściwej stronie tej granicy** 😄
+
+### Moja rekomendacja finalna
+
+**Minimalny zestaw obowiązkowy:**
+* pakiety `tests.unit` / `tests.api`
+* `@Tag("unit")`, `@Tag("api")`
+* Maven profile
