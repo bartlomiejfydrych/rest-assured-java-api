@@ -3,6 +3,8 @@ TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
 - Dowiedzieć się jak rozdzielić uruchamianie testów API od testów jednostkowych
+- Zaktualizować dependencies
+- Ogarnąć uruchamianie testów z Maven'a
 - Opisać w notatkach wszystkie sposoby pisania testów, jakich nauczono mnie na kursie (czyli te podstawowe testy)
 - Do dokumentacji requestów i opisu repo napisać, że jeśli w requestach brakuje jakichś testów, lub czymś się różnią od
 tego, co jest w głównej dokumentacji Trello, to znaczy, że Trello coś zmieniło lub dodało i nie było tego, gdy to pisałem
