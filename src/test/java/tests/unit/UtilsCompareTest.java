@@ -1,5 +1,6 @@
 package tests.unit;
 
+import base.UnitTestBase;
 import io.restassured.builder.ResponseBuilder;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class UtilsCompareTest {
+class UtilsCompareTest extends UnitTestBase {
 
     // ==========================================================================================================
     // OBJECT COMPARISON – HARD

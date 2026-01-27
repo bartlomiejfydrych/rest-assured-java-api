@@ -1,5 +1,6 @@
 package tests.unit;
 
+import base.UnitTestBase;
 import org.junit.jupiter.api.Test;
 import utils.UtilsString;
 
@@ -9,7 +10,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UtilsStringTest {
+class UtilsStringTest extends UnitTestBase {
 
     // ==========================================================================================================
     // getRandomSingleChar(String)

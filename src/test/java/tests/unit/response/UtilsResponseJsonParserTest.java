@@ -1,5 +1,6 @@
 package tests.unit.response;
 
+import base.UnitTestBase;
 import com.fasterxml.jackson.databind.JsonNode;
 import exceptions.ExceptionJsonParsing;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,7 @@ import utils.response.UtilsResponseJsonParser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class UtilsResponseJsonParserTest {
+class UtilsResponseJsonParserTest extends UnitTestBase {
 
     // ==========================================================================================================
     // TESTS

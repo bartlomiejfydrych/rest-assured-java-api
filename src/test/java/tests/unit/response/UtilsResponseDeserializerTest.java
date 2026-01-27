@@ -1,5 +1,6 @@
 package tests.unit.response;
 
+import base.UnitTestBase;
 import com.fasterxml.jackson.core.type.TypeReference;
 import exceptions.ExceptionDtoValidation;
 import exceptions.ExceptionJsonDeserialization;
@@ -10,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UtilsResponseDeserializerTest {
+class UtilsResponseDeserializerTest extends UnitTestBase {
 
     // ==========================================================================================================
     // TESTS

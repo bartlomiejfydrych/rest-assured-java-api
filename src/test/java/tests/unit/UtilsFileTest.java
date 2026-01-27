@@ -1,12 +1,13 @@
 package tests.unit;
 
+import base.UnitTestBase;
 import org.junit.jupiter.api.Test;
 import utils.UtilsFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class UtilsFileTest {
+class UtilsFileTest extends UnitTestBase {
 
     // ==========================================================================================================
     // SUCCESS

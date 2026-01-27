@@ -1,5 +1,6 @@
 package tests.unit;
 
+import base.UnitTestBase;
 import org.junit.jupiter.api.Test;
 import utils.UtilsRandom;
 
@@ -7,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UtilsRandomTest {
+class UtilsRandomTest extends UnitTestBase {
 
     // ==========================================================================================================
     // pickRandom(T...)

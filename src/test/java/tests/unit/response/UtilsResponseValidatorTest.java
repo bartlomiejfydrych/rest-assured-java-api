@@ -1,5 +1,6 @@
 package tests.unit.response;
 
+import base.UnitTestBase;
 import exceptions.ExceptionDtoValidation;
 import org.junit.jupiter.api.Test;
 import utils.response.UtilsResponseValidator;
@@ -8,7 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UtilsResponseValidatorTest {
+class UtilsResponseValidatorTest extends UnitTestBase {
 
     // ==========================================================================================================
     // SINGLE DTO
