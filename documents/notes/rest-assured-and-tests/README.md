@@ -53,7 +53,9 @@
 - [Dokumentacja testów – możliwe formy](#test_documentation_forms)
 - [URL – kodowanie znaków](#url_encoded)
 - [SEED – informacje](#seed_information)
-- [JUnit – rozdzielenie uruchamiania testów API i jednostkowych](#junit_api_unit_tests)
+- [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (1)](#junit_api_unit_tests_1)
+- [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (2)](#junit_api_unit_tests_2)
+- [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (3)](#junit_api_unit_tests_3)
 
 ---
 
@@ -4478,7 +4480,7 @@ Seed to tylko **pas bezpieczeństwa**, nie kaganiec.
 
 ---
 
-## 📄JUnit – rozdzielenie uruchamiania testów API i jednostkowych <a name="junit_api_unit_tests"></a>
+## 📄JUnit – rozdzielenie uruchamiania testów API i jednostkowych (1) <a name="junit_api_unit_tests_1"></a>
 
 > Powiedz mi jak teraz oddzielić testy jednostkowe od testów api?  
 > Wydaje mi się, że nie powinny być zawsze wszystkie uruchamiane?
@@ -4647,3 +4649,312 @@ Ty już jesteś **po właściwej stronie tej granicy** 😄
 * pakiety `tests.unit` / `tests.api`
 * `@Tag("unit")`, `@Tag("api")`
 * Maven profile
+
+## 📄JUnit – rozdzielenie uruchamiania testów API i jednostkowych (2) <a name="junit_api_unit_tests_2"></a>
+
+> Wolałbym, aby testy API działały domyślnie bez taga, a na testy unit był tag,
+> dzięki któremu mógłbym je wykluczyć z uruchamiania za każdym razem.
+
+To bardzo sensowna decyzja — **API jako domyślne, unit jako opcjonalne / wykluczane** to świetny wybór w projektach testów integracyjnych 👍
+Zrobimy to **czysto, skalowalnie i bez powielania tagów**.
+
+### 🎯 Twój cel
+
+* ✅ **Testy API uruchamiają się domyślnie**
+* ✅ **Testy UNIT mają tag**
+* ✅ Możesz je **łatwo wykluczyć**
+* ✅ Tagi są **zcentralizowane**
+
+### 1️⃣ Tworzymy `UnitTestBase` z tagiem
+
+```java
+package tests.unit;
+
+import org.junit.jupiter.api.Tag;
+
+@Tag("unit")
+public abstract class UnitTestBase {
+}
+```
+
+### 2️⃣ Testy unit dziedziczą po `UnitTestBase`
+
+```java
+class UtilsStringTest extends UnitTestBase {
+}
+```
+
+✔ unit zawsze oznaczone  
+✔ nie trzeba pamiętać o `@Tag`  
+✔ API testy NIC nie dziedziczą → są domyślne
+
+### 3️⃣ Testy API nie mają taga
+
+```java
+package tests.api.boards;
+
+class BoardsApiTest {
+}
+```
+
+👉 To oznacza: **API = default execution**
+
+### 4️⃣ Maven – domyślnie wykluczamy unit
+
+#### `pom.xml`
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.2.5</version>
+            <configuration>
+                <properties>
+                    <excludeTags>unit</excludeTags>
+                </properties>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+### 5️⃣ Jeśli chcesz uruchomić WSZYSTKO
+
+#### Profil:
+
+```xml
+<profiles>
+    <profile>
+        <id>all-tests</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <properties>
+                            <excludeTags></excludeTags>
+                        </properties>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+</profiles>
+```
+
+#### Uruchamiasz:
+
+```bash
+mvn test -Pall-tests
+```
+
+### 6️⃣ Jeśli chcesz uruchomić tylko UNIT
+
+```xml
+<profile>
+    <id>unit-only</id>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <properties>
+                        <includeTags>unit</includeTags>
+                    </properties>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</profile>
+```
+
+```bash
+mvn test -Punit-only
+```
+
+### 7️⃣ IntelliJ – dwie konfiguracje Run
+
+#### API default
+
+* no tags filter
+
+#### UNIT only
+
+* Tags: `unit`
+
+### 8️⃣ Efekt końcowy
+
+| Scenariusz             | Co się odpala    |
+|------------------------|------------------|
+| `mvn test`             | 🌐 API           |
+| `mvn test -Punit-only` | 🧪 UNIT          |
+| `mvn test -Pall-tests` | 🌐 API + 🧪 UNIT |
+
+### 9️⃣ Dlaczego to architektonicznie dobre?
+
+✔ API = główna wartość projektu  
+✔ UNIT = wsparcie / szybka walidacja  
+✔ CI może odpalać:
+
+* PR → API  
+* nightly → ALL  
+  ✔ brak ryzyka przypadkowego uruchamiania unit  
+  ✔ tag tylko tam, gdzie ma sens
+
+## 📄JUnit – rozdzielenie uruchamiania testów API i jednostkowych (3) <a name="junit_api_unit_tests_3"></a>
+
+> Dostosuj treść mojego `pom.xml` pod te zmiany, które zaproponowałeś wyżej.
+
+Super, dzięki za pełny `pom.xml` 👍  
+Poniżej masz **konkretnie dostosowaną wersję pod założenia**:
+
+> ✅ **API testy = domyślne (bez taga)**  
+> 🧪 **Unit testy = `@Tag("unit")` i domyślnie WYKLUCZONE**  
+> 🔁 **Profile do włączania unit / wszystkich testów**
+
+### 1️⃣ Co dodajemy / zmieniamy – TL;DR
+
+* ➕ konfigurację **`maven-surefire-plugin`**
+* ➕ **profile**:
+    * `unit-only`
+    * `all-tests`
+* ❌ nie zmieniamy dependencies (są OK)
+
+### 2️⃣ Docelowa konfiguracja `pom.xml`
+
+Poniżej **TYLKO to, co trzeba dodać** – wklejasz **pod `<dependencies>`**.
+
+#### 🔹 Domyślne zachowanie – API ONLY (exclude `unit`)
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.2.5</version>
+            <configuration>
+                <useModulePath>false</useModulePath>
+                <properties>
+                    <!-- Domyślnie: NIE uruchamiamy unit -->
+                    <excludeTags>unit</excludeTags>
+                </properties>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+📌 Efekt:
+
+```bash
+mvn test
+```
+
+➡ uruchamia **tylko API**
+
+### 3️⃣ Profile testowe
+
+Dodaj **poniżej `<build>`**:
+
+```xml
+<profiles>
+
+    <!-- 🧪 TYLKO testy jednostkowe -->
+    <profile>
+        <id>unit-only</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <properties>
+                            <includeTags>unit</includeTags>
+                        </properties>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+
+    <!-- 🌐 API + 🧪 UNIT -->
+    <profile>
+        <id>all-tests</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <properties>
+                            <!-- nic nie wykluczamy -->
+                            <excludeTags></excludeTags>
+                        </properties>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+
+</profiles>
+```
+
+### 4️⃣ Jak tego używać w praktyce
+
+#### ▶ Domyślnie (API)
+
+```bash
+mvn test
+```
+
+#### ▶ Tylko UNIT
+
+```bash
+mvn test -Punit-only
+```
+
+#### ▶ Wszystko
+
+```bash
+mvn test -Pall-tests
+```
+
+### 5️⃣ Jak to spina się z kodem
+
+#### `UnitTestBase`
+
+```java
+@Tag("unit")
+public abstract class UnitTestBase {
+}
+```
+
+#### Test unit
+
+```java
+class UtilsStringTest extends UnitTestBase {
+}
+```
+
+#### Test API
+
+```java
+class BoardsApiTest {
+}
+```
+
+✔ zero tagów w API  
+✔ zero ryzyka przypadkowego uruchomienia unit  
+✔ bardzo czytelny setup pod CI
+
+### 6️⃣ Architektoniczna ocena (krótko)
+
+To, co teraz masz:
+* 🟢 **czytelne**
+* 🟢 **zgodne z JUnit 5**
+* 🟢 **skalowalne**
+* 🟢 **CI-friendly**
+* 🟢 **bez magicznych flag**
+
+To dokładnie tak się robi w **dojrzałych projektach testowych**.
