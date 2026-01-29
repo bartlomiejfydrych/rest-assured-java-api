@@ -22,6 +22,7 @@
   - [Test – ostateczny](#start_wt_test_final)
   - [Dokumentacja](#start_wt_documentation)
 - [TestBase – dlaczego lepiej nie deklarować w nim zmiennych 'response' i innych rzeczy](#test_base_variables)
+- [Kurs Sii – sposoby pisania testów/requestów](#sii_course_tests_requests)
 - [Boolean – testy](#boolean_tests)
 - [RequestSpecification](#request_specification)
 - [RestAssured.filters()](#rest_assured_filters)
@@ -622,6 +623,338 @@ UtilsCommon.pickRandom(...);
 
 ❓ *Czy rozumiem, dlaczego tak zrobiłeś?*  
 👉 **100% tak**
+
+---
+
+## 📄Kurs Sii – sposoby pisania testów/requestów <a name="sii_course_tests_requests"></a>
+
+Poniżej zebrałem i opisałem różne podejścia do budowania body requestu i walidacji odpowiedzi w testach API z użyciem
+**REST Assured + Java**. Wszystkie przykłady robią w praktyce to samo (POST /users), ale różnią się
+**czytelnością, skalowalnością i utrzymaniem testów**.
+
+### V1 – Surowy JSON jako String (hardcoded body)
+
+```java
+    private String body = """
+            {
+                    "name": "Mateusz Tadla",
+                    "username": "mtadla",
+                    "email": "mtadl@april.biz",
+                    "address": {
+                        "street": "Kulas Light",
+                        "suite": "Apt. 556",
+                        "city": "Lublin",
+                        "zipcode": "92998-3874",
+                        "geo": {
+                            "lat": "-37.3159",
+                            "lng": "81.1496"
+                        }
+                    },
+                    "phone": "1-770-736-8031 x56442",
+                    "website": "hildegard.org",
+                    "company": {
+                        "name": "Romaguera-Crona",
+                        "catchPhrase": "Multi-layered client-server neural-net",
+                        "bs": "harness real-time e-markets"
+                    }
+            }
+            """;
+
+    @Test
+    public void shouldCreateNewUser() {
+        given().
+                        body(body).
+                        contentType(ContentType.JSON).
+                        baseUri(baseUrl).
+                when().
+                        post(users).
+                then().
+                        statusCode(201)
+                        .body("id", equalTo(11))
+                        .body("address.city", equalTo("Lublin"));
+    }
+```
+
+**Charakterystyka:**
+
+* Body requestu zapisane jako `String` (tekstowy JSON)
+* Najbardziej "manualne" podejście
+* Brak typowania i walidacji na poziomie Javy
+
+**Zalety:**
+
+* Bardzo szybkie do napisania
+* Idealne na początek nauki lub szybki proof‑of‑concept
+* 1:1 widać JSON wysyłany do API
+
+**Wady:**
+
+* Brak bezpieczeństwa typów (literówki, brakujące pola)
+* Duplikacja danych
+* Trudne utrzymanie przy większych strukturach
+* Brak reużywalności
+
+**Kiedy używać:**
+
+* Szybkie testy ad‑hoc
+* Nauka REST Assured
+* Sprawdzanie niestandardowych payloadów
+
+### V2 – Mapy (`Map<String, Object>`) → automatyczna serializacja
+
+```java
+    @Test
+    public void shouldCreateNewUserV2() {
+        //https://github.com/rest-assured/rest-assured/wiki/Usage#content-type-based-serialization
+        //  body(user) -> zamiana mapy na json (serializacja) działa dlatego, że dodaliśmy bilioteke jackson
+        // do pom.xml -> wyjaśnienie w linku wyżej
+        Map<String, Object> address = new HashMap<>();
+        address.put("street", "Warszawska");
+        address.put("city", "Lublin");
+        
+        Map<String, Object> user = new HashMap<>();
+        user.put("name", "Mateusz Tadla");
+        user.put("username", "mtadla");
+        user.put("email", "mtadl@april.biz");
+        user.put("address", address);
+        
+        given().
+                        body(user).
+                        contentType(ContentType.JSON).
+                        baseUri(baseUrl).
+                when().
+                        post(users).
+                then().
+                        statusCode(201).
+                        body("id", equalTo(11)).
+                        body("username", equalTo("mtadla")).
+                        body("address.city", equalTo("Lublin"));
+    }
+```
+
+**Charakterystyka:**
+
+* Body budowane jako `Map` / zagnieżdżone mapy
+* REST Assured + Jackson serializuje mapę do JSON
+
+**Zalety:**
+
+* Brak ręcznego pisania JSONa
+* Mniej literówek niż w Stringu
+* Dynamiczne budowanie danych
+
+**Wady:**
+
+* Nadal brak silnego typowania
+* Mało czytelne przy dużych obiektach
+* Trudne refaktoryzowanie
+
+**Kiedy używać:**
+
+* Gdy struktura jest prosta
+* Gdy payload dynamicznie się zmienia
+* Jako krok przejściowy przed POJO
+
+### V3 – POJO (klasy modelowe) + Builder
+
+```java
+    @Test
+    public void shouldCreateNewUserV3() {
+        //https://github.com/rest-assured/rest-assured/wiki/Usage#content-type-based-serialization
+        //  body(user) -> zamiana obiektu klasy User na json (serializacja) działa dlatego, że dodaliśmy bilioteke jackson
+        // do pom.xml -> wyjaśnienie w linku wyżej
+        Address address = Address.builder()
+                .city("Lublin")
+                .street("Warszawska")
+                .build();
+
+        User user = User.builder()
+                .name("Mateusz Tadla")
+                .email("mtadl@april.biz")
+                .username("mtadla")
+                .address(address)
+                .build();
+        
+        given().
+                        body(user).
+                        contentType(ContentType.JSON).
+                        baseUri(baseUrl).
+                when().
+                        post(users).
+                then().
+                        statusCode(201).
+                        body("id", equalTo(11)).
+                        body("username", equalTo("mtadla")).
+                        body("address.city", equalTo("Lublin"));
+    }
+```
+
+**Charakterystyka:**
+
+* Body tworzone jako obiekt klasy (`User`, `Address`)
+* Serializacja do JSON przez Jacksona
+* Użycie builderów (czytelność)
+
+**Zalety:**
+
+* Pełne typowanie
+* Bardzo dobra czytelność testów
+* IDE pomaga (autocomplete, refactor)
+* Struktura zgodna z API
+
+**Wady:**
+
+* Trzeba utrzymywać klasy modelowe
+* Więcej kodu na start
+
+**Kiedy używać:**
+
+* Projekty długoterminowe
+* Większe API
+* Testy regresji
+
+👉 **To jest jedno z najbardziej polecanych podejść w testach API**
+
+### V5 – Provider danych (`UserProvider`)
+
+```java
+    @Test
+    public void shouldCreateNewUserV5() {
+        given().
+                        body(UserProvider.getFullUserData()).
+                        contentType(ContentType.JSON).
+                        baseUri(baseUrl).
+                when().
+                        post(users).
+                then().
+                        statusCode(201);
+    }
+```
+
+**Charakterystyka:**
+
+* Dane testowe wyniesione do osobnej klasy
+* Test skupia się tylko na logice testu
+
+**Zalety:**
+
+* Brak duplikacji danych
+* Lepsza czytelność testów
+* Jedno miejsce do zmiany danych
+
+**Wady:**
+
+* Trzeba pilnować, żeby provider nie był "Bogiem"
+
+**Kiedy używać:**
+
+* Gdy te same dane są używane w wielu testach
+* Przy testach parametryzowanych
+
+### V6 – Deserializacja response → obiekt + pełne porównanie
+
+```java
+    @Test
+    public void shouldCreateNewUserV6() {
+        User expectedUser = UserProvider.getFullUserData();
+
+        User reponseUser =
+                given().
+                                body(expectedUser).
+                                contentType(ContentType.JSON).
+                                baseUri(baseUrl).
+                        when().
+                                post(users).
+                        then().
+                                statusCode(201)
+                                .extract()
+                                .as(User.class);
+
+        expectedUser.setId(reponseUser.getId());
+        assertThat(reponseUser, equalTo(expectedUser));
+    }
+```
+
+**Charakterystyka:**
+
+* Response mapowany na obiekt `User`
+* Porównanie `expected` vs `actual`
+* Dynamiczne ustawienie `id`
+
+**Zalety:**
+
+* Bardzo silna walidacja odpowiedzi
+* Test sprawdza całą strukturę
+* Idealne do testów regresji
+
+**Wady:**
+
+* Wymaga poprawnie zaimplementowanego `equals()` / `hashCode()`
+* Bardziej wrażliwe na zmiany API
+
+**Kiedy używać:**
+
+* Krytyczne endpointy
+* Sprawdzanie kompletności response
+
+### V7 – Porównanie obiektów z customową logiką
+
+```java
+    @Test
+    public void shouldCreateNewUserV7() {
+        User expectedUser = UserProvider.getFullUserData();
+
+        User reponseUser =
+                given().
+                                body(expectedUser).
+                                contentType(ContentType.JSON).
+                                baseUri(baseUrl).
+                        when().
+                                post(users).
+                        then().
+                                statusCode(201)
+                                .extract()
+                                .as(User.class);
+
+
+        // poniżej 3 linijki specjalnie edytują reponseUser aby sfailować compare
+        reponseUser.getAddress().getGeo().setLat("123123123312123");
+        reponseUser.setName("qweqewqe");
+        reponseUser.getCompany().setName("qwe");
+        compareObjectWithoutId(reponseUser, expectedUser);
+    }
+```
+
+**Charakterystyka:**
+
+* Celowe modyfikacje response
+* Własna metoda porównująca obiekty (np. bez `id`)
+
+**Zalety:**
+
+* Elastyczne porównania
+* Możliwość ignorowania pól technicznych
+* Bardzo precyzyjne asercje
+
+**Wady:**
+
+* Więcej kodu do utrzymania
+* Większa złożoność
+
+**Kiedy używać:**
+
+* Gdy API generuje pola dynamiczne
+* Gdy `equals()` nie wystarcza
+
+### Podsumowanie (od najprostszego do najbardziej profesjonalnego)
+
+1. String JSON (V1)
+2. Mapy (V2)
+3. POJO + Builder (V3)
+4. Provider danych (V5)
+5. Deserializacja i porównania obiektów (V6–V7)
+
+➡️ **Im dalej, tym lepsza jakość testów, ale większy narzut początkowy**
 
 ---
 
