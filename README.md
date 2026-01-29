@@ -33,6 +33,11 @@ understand what a given piece of code was about.
 There are also comments in English to explain to you (recruiters) what a given piece of code is about and why I wrote
 a certain method/test this way and not another.
 
+### Note for recruiters
+
+If any tests seem incomplete, outdated, or different from what is in the Trello documentation,
+it may mean that the developers may have changed something over time and it's different from what I wrote the tests for.
+
 ## 🌐API covered with tests
 
 ### Link

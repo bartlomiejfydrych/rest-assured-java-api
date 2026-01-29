@@ -26,6 +26,9 @@ Forge and OAuth2 apps cannot access this REST resource.
 
 ## 📌Important notes <a name="important_notes"></a>
 
+If any tests seem incomplete, outdated, or different from what is in the Trello documentation,
+it may mean that the developers may have changed something over time and it's different from what I wrote the tests for.
+
 To update a label, we first need to have a **board** created and have its `ID`.  
 Next, we need to create for that board a label that we will edit.
 

@@ -27,7 +27,8 @@ Forge and OAuth2 apps cannot access this REST resource.
 
 ## 📌Important notes <a name="important_notes"></a>
 
-None.
+If any tests seem incomplete, outdated, or different from what is in the Trello documentation,
+it may mean that the developers may have changed something over time and it's different from what I wrote the tests for.
 
 ---
 
