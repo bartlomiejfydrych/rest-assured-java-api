@@ -56,6 +56,7 @@
 - [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (1)](#junit_api_unit_tests_1)
 - [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (2)](#junit_api_unit_tests_2)
 - [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (3)](#junit_api_unit_tests_3)
+- [Maven – do uruchamiania testów](#maven_tests_runner)
 
 ---
 
@@ -4958,3 +4959,136 @@ To, co teraz masz:
 * 🟢 **bez magicznych flag**
 
 To dokładnie tak się robi w **dojrzałych projektach testowych**.
+
+---
+
+## 📄Maven – do uruchamiania testów <a name="maven_tests_runner"></a>
+
+> Jak rozwiązać problem z tym?  
+> The term 'mvn' is not recognized as the name of a cmdlet
+
+Spokojnie 🙂 To **klasyczny problem środowiskowy**, nie Maven ani projekt.  
+Windows po prostu **nie widzi Mavena w PATH**.
+
+Przeprowadźmy to **krok po kroku**, najkrócej jak się da 👇
+
+### 1️⃣ Sprawdź, czy Maven w ogóle jest zainstalowany
+
+W **CMD / PowerShell** wpisz:
+
+```bash
+where mvn
+```
+
+#### Jeśli:
+
+* ❌ **nic nie zwróci** → Maven **nie jest zainstalowany** lub nie jest w PATH
+* ✅ pokaże ścieżkę → PATH jest OK (rzadki przypadek przy tym błędzie)
+
+### 2️⃣ Najszybsza opcja (POLECAM) – Maven Wrapper 🚀
+
+👉 **najlepsze rozwiązanie** – bez instalowania Mavena globalnie.
+
+W katalogu projektu uruchom:
+
+```bash
+mvn -N wrapper:wrapper
+```
+
+ALE… skoro `mvn` nie działa, to **zrób tak**:
+
+#### 🔹 Pobierz wrapper ręcznie
+
+1. Pobierz:  
+   [https://github.com/takari/maven-wrapper](https://github.com/takari/maven-wrapper)
+2. Skopiuj do projektu:
+   ```
+   mvnw
+   mvnw.cmd
+   .mvn/wrapper/*
+   ```
+
+Potem uruchamiaj:
+```bash
+./mvnw test
+```
+
+lub w Windows:
+```cmd
+mvnw test
+```
+
+✅ działa zawsze  
+✅ CI-friendly  
+✅ zero konfiguracji PATH
+
+### 3️⃣ Klasyczna instalacja Mavena (jeśli chcesz globalnie)
+
+#### 🔹 Krok 1 – pobierz Maven
+
+[https://maven.apache.org/download.cgi](https://maven.apache.org/download.cgi)  
+➡ **Binary zip archive**
+
+#### 🔹 Krok 2 – rozpakuj
+
+Np.:
+```
+C:\Program Files\Apache\maven
+```
+
+Struktura:
+```
+C:\Program Files\Apache\maven\bin\mvn.cmd
+```
+
+#### 🔹 Krok 3 – ustaw zmienne środowiskowe
+
+##### 🟢 `MAVEN_HOME`
+
+```
+C:\Program Files\Apache\maven
+```
+
+##### 🟢 `PATH` (DODAJ):
+
+```
+%MAVEN_HOME%\bin
+```
+
+📌 **Restart terminala** (bardzo ważne)
+
+### 4️⃣ Sprawdź czy działa
+
+```bash
+mvn -version
+```
+
+Powinieneś zobaczyć coś w stylu:
+
+```
+Apache Maven 3.9.x
+Java version: 21
+```
+
+### 5️⃣ Najczęstsze pułapki ❌
+
+| Problem              | Rozwiązanie                  |
+|----------------------|------------------------------|
+| Terminal był otwarty | Zamknij i otwórz ponownie    |
+| Zła ścieżka          | `bin` musi być w PATH        |
+| Brak JDK             | `java -version` musi działać |
+| Tylko JRE            | Maven **wymaga JDK**         |
+
+### 6️⃣ Co JA bym zrobił na Twoim miejscu?
+
+👉 **Maven Wrapper + zero globalnych instalacji**
+
+```bash
+mvnw test
+```
+
+To jest:
+
+* 💯 standard w projektach
+* 🧠 mniej problemów
+* 🤝 idealne pod CI / GitHub Actions / GitLab
