@@ -14,15 +14,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- VARIABLES FOR PROJECT DEPENDENCIES VERSIONS -->
         <!-- UNIVERSAL -->
-        <junitJupiter.version>5.12.0</junitJupiter.version>
-        <junitSuite.version>1.12.0</junitSuite.version>
+        <junitJupiter.version>6.0.2</junitJupiter.version>
+        <junitSuite.version>6.0.2</junitSuite.version>
         <javafaker.version>1.0.2</javafaker.version>
-        <assertjCore.version>3.27.3</assertjCore.version>
+        <assertjCore.version>3.27.7</assertjCore.version>
         <dotenvJava.version>3.2.0</dotenvJava.version>
         <!-- BACKEND -->
-        <restAssured.version>5.5.1</restAssured.version>
-        <jacksonDatabind.version>2.19.0</jacksonDatabind.version>
-        <hibernateValidator.version>8.0.2.Final</hibernateValidator.version>
+        <restAssured.version>6.0.0</restAssured.version>
+        <jacksonDatabind.version>2.21.0</jacksonDatabind.version>
+        <hibernateValidator.version>9.1.0.Final</hibernateValidator.version>
         <jakartaValidationApi.version>3.1.1</jakartaValidationApi.version>
         <jakartaEl.version>4.0.2</jakartaEl.version>
         <jakartaElApi.version>6.0.1</jakartaElApi.version>
