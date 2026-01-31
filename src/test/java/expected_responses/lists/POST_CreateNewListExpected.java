@@ -125,6 +125,23 @@ public class POST_CreateNewListExpected {
                 }
             }
             """;
+    public static final String P6ExpectedPostNewListResponse = """
+            {
+                "id": "697e17e35b42445ea9997274",
+                "name": "List - Cole Inc | Number: 10413870141900",
+                "closed": false,
+                "color": null,
+                "idBoard": "697e17e1ab308565bc964594",
+                "pos": 140737488322560,
+                "type": null,
+                "datasource": {
+                    "filter": false
+                },
+                "limits": {
+            
+                }
+            }
+            """;
 
     // --------------
     // NEGATIVE TESTS

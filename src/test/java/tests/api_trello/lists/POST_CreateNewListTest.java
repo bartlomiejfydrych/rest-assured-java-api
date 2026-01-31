@@ -266,6 +266,37 @@ public class POST_CreateNewListTest extends TestBase {
         validateGetAgainstPost(responsePostDto);
     }
 
+    @Test
+    public void P6_shouldCreateNewListWhenPosIsNumberAsString() {
+        /*
+        NOTE:
+        According to the documentation, the specific position of list should be of type Number.
+        A String value will also work.
+        */
+
+        listName = generateRandomListName();
+        listPos = "140737488322560";
+
+        POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
+                .setPos(listPos)
+                .build();
+
+        // POST
+        responsePost = postCreateNewList(boardId, listName, payload);
+        assertThat(responsePost.statusCode()).isEqualTo(200);
+        POST_CreateNewListDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateNewListDto.class);
+        POST_CreateNewListDto expectedResponsePostDto = prepareExpectedResponsePost(
+                P6ExpectedPostNewListResponse,
+                responsePostDto,
+                listName,
+                boardId,
+                Long.parseLong(listPos)
+        );
+        compareObjects(responsePostDto, expectedResponsePostDto);
+        // GET
+        validateGetAgainstPost(responsePostDto);
+    }
+
     // --------------
     // NEGATIVE TESTS
     // --------------
@@ -410,25 +441,4 @@ public class POST_CreateNewListTest extends TestBase {
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePost, N11ExpectedPostNewListResponse);
     }
-
-    /*
-    NOTE:
-    According to the documentation, the specific position of list should be of type Number.
-    A String value will also work.
-
-    @Test
-    public void N12_shouldNotCreateNewListWhenPosIsNumberAsString() {
-
-        listName = generateRandomListName();
-        listPos = "140737488322560";
-
-        POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
-                .setPos(listPos)
-                .build();
-
-        responsePost = CreateNewList(boardId, listName, payload);
-        assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareObjectsJsonNode(responsePost, N11ExpectedPostNewListResponse);
-    }
-    */
 }

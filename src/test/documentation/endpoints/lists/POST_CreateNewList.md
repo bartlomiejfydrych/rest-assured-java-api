@@ -70,9 +70,9 @@ it may mean that the developers may have changed something over time and it's di
     - **[P1|P3]** Missing
     - **[P2]** null
     - **[P5]** Empty string ("")
+    - **[P6->🟢]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.
   - ❌Negative:
     - **[N11]** Incorrect
-    - **[N12->💥]** Number as string -> According to the documentation, the specific position of list should be of type Number. A String value will also work.
 
 ---
 
