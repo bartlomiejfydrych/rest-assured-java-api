@@ -61,9 +61,9 @@ Next, we need to create for that board a label that fields we will edit.
     - **[rP4]** lime
     - **[P5]** null
     - **[P6]** Empty string ("")
+    - **[P7->🐞]** Missing (0 characters) -> If we don't provide a value, it changes to 'null', and it probably shouldn't be changed.
   - ❌Negative:
-    - **[💥N2]** Missing (0 characters) -> Request passes without changing value
-    - **[N3]** Incorrect (other value)
+    - **[N2]** Incorrect (other value)
 
 ---
 

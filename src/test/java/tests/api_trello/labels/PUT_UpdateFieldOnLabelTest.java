@@ -160,6 +160,20 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         validateGetAgainstPut(responsePutDto);
     }
 
+    @Test
+    public void P7_shouldUpdateLabelFieldColorWithoutValue() {
+        // NOTE: If we don't provide a value, it changes to 'null', and it probably shouldn't be changed.
+        // PUT
+        responsePut = putUpdateFieldOnLabelWithoutFieldValue(labelId, LabelBaseQueryParameters.COLOR);
+        assertThat(responsePut.statusCode()).isEqualTo(200);
+        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
+        POST_CreateLabelDto expectedResponsePostDto = responsePostDto;
+        expectedResponsePostDto.color = null;
+        compareObjects(responsePutDto, expectedResponsePostDto);
+        // GET
+        validateGetAgainstPut(responsePutDto);
+    }
+
     // --------------
     // NEGATIVE TESTS
     // --------------
@@ -176,30 +190,8 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
 
     // color
 
-    /*
-    // NOTE: Request passes without changing value
-
     @Test
-    public void N2_shouldNotUpdateLabelFieldColorWithoutValue() {
-        // PUT
-        responsePut = putUpdateFieldOnLabelWithoutValue(labelId, LabelBaseQueryParameters.COLOR);
-        assertThat(responsePut.statusCode()).isEqualTo(400);
-        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for value");
-
-        String actualResponse = """
-                {
-                    "id": "6903d70cf60dce2dc344e24f",
-                    "idBoard": "6903d70b363c3fe37f468c4c",
-                    "name": "Ryan Group label 22756030059000",
-                    "color": null,
-                    "uses": 0
-                }
-                """;
-    }
-    */
-
-    @Test
-    public void N3_shouldNotUpdateLabelFieldColorWithIncorrectValue() {
+    public void N2_shouldNotUpdateLabelFieldColorWithIncorrectValue() {
 
         String expectedResponse = """
                 {
