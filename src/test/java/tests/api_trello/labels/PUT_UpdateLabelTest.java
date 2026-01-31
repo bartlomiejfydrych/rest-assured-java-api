@@ -154,15 +154,11 @@ public class PUT_UpdateLabelTest extends TestBase {
     }
 
     /*
-
-    NOTE:
-    Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
-
     @Test
     public void P5_shouldUpdateLabelWhenNameAndColorAreEmptyString() {
+        // NOTE: Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
 
-        // NOTE:
-        // When we insert empty strings directly in parameters, REST Assured ignores them. When we insert them using variables, it does not.
+        // NOTE: When we insert empty strings directly in parameters, REST Assured ignores them. When we insert them using variables, it does not.
         labelName = "";
         labelColor = "";
 
@@ -171,19 +167,22 @@ public class PUT_UpdateLabelTest extends TestBase {
                 .setColor(labelColor)
                 .build();
 
+        // GET (We need to retrieve the current state of the label)
+        responseGet = getGetLabel(labelId);
+        assertThat(responseGet.statusCode()).isEqualTo(200);
+        GET_GetLabelDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetLabelDto.class);
         // PUT
         responsePut = putUpdateLabel(labelId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateLabelDto responsePutDto = deserializeAndValidate(responsePut, PUT_UpdateLabelDto.class);
-        PUT_UpdateLabelDto expectedResponsePutDto = deserializeJson(P5ExpectedPutLabelResponse, PUT_UpdateLabelDto.class);
-        expectedResponsePutDto.idBoard = boardId;
-        expectedResponsePutDto.id = labelId;
-        expectedResponsePutDto.color = null;
-        compareObjects(responsePutDto, expectedResponsePutDto);
+        PUT_UpdateLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateLabelDto.class);
+        GET_GetLabelDto expectedResponseGetDto = responseGetDto;
+        expectedResponseGetDto.id = responsePutDto.id;
+        expectedResponseGetDto.name = "";
+        expectedResponseGetDto.color = null;
+        compareObjects(responsePutDto, expectedResponseGetDto);
         // GET
         validateGetAgainstPut(responsePutDto);
     }
-
     */
 
     // --------------

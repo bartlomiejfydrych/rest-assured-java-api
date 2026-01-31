@@ -42,7 +42,7 @@ Next, we need to create for that board a label that we will edit.
     - **[P2]** 1 character
     - **[P3]** Missing (0 characters)
     - **[P4]** null
-    - **[💥]** Empty string ("") -> Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
+    - **[P5->💥]** Empty string ("") -> Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
     - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
   - ❌Negative:
     - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
