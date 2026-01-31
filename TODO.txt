@@ -2,7 +2,6 @@
 TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
-– Testy negatywne, które okazały się pozytywne odkomentować i przenieść do testów pozytywnych
 – Do testów PUT'ów dodać GET'y dla większej pewności i niezależności
 – Napisać wrapper z mini–logami dla wszystkich metod HTTP
 – Napisać własny logger
