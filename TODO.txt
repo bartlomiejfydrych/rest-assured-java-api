@@ -2,9 +2,8 @@
 TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
-– Do testów PUT'ów dodać GET'y dla większej pewności i niezależności
-– Napisać wrapper z mini–logami dla wszystkich metod HTTP
 – Napisać własny logger
+– Do testów PUT'ów dodać GET'y dla większej pewności i niezależności
 – Refaktor testów w ich aktualnym stanie i ilości
 – Dodać raport Allure (Allure pod REST: https://allurereport.org/docs/restassured/)
 – Przeanalizować i zapisać sobie, co można zrobić w przypadku różnych base URL (np. /api/, /admin/, /mobile/)
