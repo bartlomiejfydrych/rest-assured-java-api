@@ -199,9 +199,14 @@ public class Config {
 
     // LOGS MANAGEMENT
 
-    // Get Logs {always}
-    public static boolean getLogsAlways() {
-        return getProperty("LOGS_ALWAYS", false);
+    // Get Logs {FULL}
+    public static boolean getLogsFull() {
+        return getProperty("LOGS_FULL", false);
+    }
+
+    // Get Logs {SHORT}
+    public static boolean getLogsShort() {
+        return getProperty("LOGS_SHORT", true);
     }
 
     // TRELLO API KEY & TOKEN
