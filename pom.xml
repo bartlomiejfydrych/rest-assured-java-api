@@ -19,6 +19,7 @@
         <javafaker.version>1.0.2</javafaker.version>
         <assertjCore.version>3.27.7</assertjCore.version>
         <dotenvJava.version>3.2.0</dotenvJava.version>
+        <jansi.version>2.4.2</jansi.version>
         <!-- BACKEND -->
         <restAssured.version>6.0.0</restAssured.version>
         <jacksonDatabind.version>2.21.0</jacksonDatabind.version>
@@ -64,6 +65,13 @@
             <groupId>io.github.cdimascio</groupId>
             <artifactId>dotenv-java</artifactId>
             <version>${dotenvJava.version}</version>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.fusesource.jansi/jansi -->
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>${jansi.version}</version>
+            <scope>compile</scope>
         </dependency>
         <!-- Allure Report - dodać i skonfigurować później -->
         <!-- Logback Classic - dodać i skonfigurować później -->

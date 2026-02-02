@@ -9,6 +9,7 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import loggers.ResponseLogFilterShort;
+import loggers.custom.ResponseLogFilterCustom;
 import org.junit.jupiter.api.BeforeAll;
 import providers.ProviderRandom;
 
@@ -68,13 +69,12 @@ public class TestBase {
     // --------------------
 
     private static void configureLogging() {
-        boolean logsFull = Config.getLogsFull();
-        boolean logsShort = Config.getLogsShort();
 
         // We clean the filters at the start (important for several test runs)
         RestAssured.filters();
 
-        if (logsFull) {
+        // LOGS – FULL
+        if (Config.getLogsFull()) {
             RestAssured.filters(
                     new RequestLoggingFilter(),
                     new ResponseLoggingFilter()
@@ -82,7 +82,19 @@ public class TestBase {
             return;
         }
 
-        if (logsShort) {
+        // LOGS – CUSTOM
+        if (Config.getLogsCustomBase()) {
+            RestAssured.filters(
+                    new ResponseLogFilterCustom(
+                            Config.getLogsCustomOptional(),
+                            Config.getLogsCustomColor()
+                    )
+            );
+            return;
+        }
+
+        // LOGS – SHORT
+        if (Config.getLogsShort()) {
             RestAssured.filters(
                     new ResponseLogFilterShort()
             );

@@ -209,6 +209,21 @@ public class Config {
         return getProperty("LOGS_SHORT", true);
     }
 
+    // [CUSTOM] Get Logs {BASE}
+    public static boolean getLogsCustomBase() {
+        return getProperty("LOGS_CUSTOM_BASE", false);
+    }
+
+    // [CUSTOM] Get Logs {OPTIONAL}
+    public static boolean getLogsCustomOptional() {
+        return getProperty("LOGS_CUSTOM_OPTIONAL", false);
+    }
+
+    // [CUSTOM] Get Logs {COLOR}
+    public static boolean getLogsCustomColor() {
+        return getProperty("LOGS_CUSTOM_COLOR", false);
+    }
+
     // TRELLO API KEY & TOKEN
 
     // Get Trello {API key}
