@@ -11,18 +11,18 @@ public class ResponseLogFilterCustom implements Filter {
     private final boolean logOptional;
     private final boolean colorEnabled;
 
-    // =====================================================================
+    // ==========================================================================================================
     // CONSTRUCTOR
-    // =====================================================================
+    // ==========================================================================================================
 
     public ResponseLogFilterCustom(boolean logOptional, boolean colorEnabled) {
         this.logOptional = logOptional;
         this.colorEnabled = colorEnabled;
     }
 
-    // =====================================================================
+    // ==========================================================================================================
     // FILTER
-    // =====================================================================
+    // ==========================================================================================================
 
     @Override
     public Response filter(
@@ -36,60 +36,62 @@ public class ResponseLogFilterCustom implements Filter {
 
         logBase(request, response, elapsedTime);
 
-        if (logOptional) {
-            logOptional(request);
-        }
-
         return response;
     }
 
-    // =====================================================================
+    // ==========================================================================================================
     // BASE LOGGING
-    // =====================================================================
+    // ==========================================================================================================
 
     private void logBase(
             FilterableRequestSpecification request,
             Response response,
             long elapsedTimeMs) {
 
-        System.out.println("\n==================== API CALL ====================");
+        System.out.println("\n=============================================================================================================");
+        System.out.println("NEW REQUEST!");
+        System.out.println("=============================================================================================================");
+
+        if (logOptional) {
+            logOptional(request);
+        }
+
+        System.out.println("\n-----------------");
+        System.out.println("BASIC INFORMATION");
+        System.out.println("-----------------\n");
 
         // REQUEST META
-        System.out.println("REQUEST:");
-        System.out.println("  Method: " + request.getMethod());
-        System.out.println("  URL:    " + request.getURI());
+        System.out.println("Method: " + request.getMethod());
+        System.out.println("URL:    " + request.getURI());
 
         // RESPONSE META
-        ConsoleColors.green(
-                "\nStatus: " + response.getStatusCode() + " " + response.getStatusLine(),
-                colorEnabled
-        );
+        ConsoleColors.green("Status: " + response.getStatusCode() + " " + response.getStatusLine(), colorEnabled);
         System.out.println("Time:   " + elapsedTimeMs + " ms");
         System.out.println("Size:   " + response.getBody().asByteArray().length + " bytes");
 
         // BODIES
         logRequestBody(request);
         logResponseBody(response);
-
-        System.out.println("=================================================");
     }
 
-    // =====================================================================
+    // ==========================================================================================================
     // OPTIONAL LOGGING
-    // =====================================================================
+    // ==========================================================================================================
 
     private void logOptional(FilterableRequestSpecification request) {
 
-        ConsoleColors.purple("\nOPTIONAL REQUEST DATA:", colorEnabled);
+        ConsoleColors.purple("\n-----------------------------", colorEnabled);
+        ConsoleColors.purple("OPTIONAL REQUEST DATA – IS ON", colorEnabled);
+        ConsoleColors.purple("-----------------------------", colorEnabled);
 
         printPretty("Query params", request.getQueryParams());
         printPretty("Headers", request.getHeaders().asList());
         printPretty("Cookies", request.getCookies());
     }
 
-    // =====================================================================
+    // ==========================================================================================================
     // BODY HANDLING
-    // =====================================================================
+    // ==========================================================================================================
 
     private void logRequestBody(FilterableRequestSpecification request) {
         Object body = request.getBody();
@@ -97,18 +99,22 @@ public class ResponseLogFilterCustom implements Filter {
             return;
         }
 
-        ConsoleColors.cyan("\nRequest body:", colorEnabled);
+        System.out.println("\n------------");
+        ConsoleColors.cyan("REQUEST BODY", colorEnabled);
+        System.out.println("------------\n");
         JsonColorPrinter.print(body.toString(), colorEnabled);
     }
 
     private void logResponseBody(Response response) {
-        System.out.println("\nResponse body:");
+        System.out.println("\n-------------");
+        System.out.println("RESPONSE BODY");
+        System.out.println("-------------\n");
         JsonColorPrinter.print(response.getBody().asString(), colorEnabled);
     }
 
-    // =====================================================================
+    // ==========================================================================================================
     // HELPERS
-    // =====================================================================
+    // ==========================================================================================================
 
     private void printPretty(String title, Object data) {
         if (data == null || data.toString().isEmpty()) {
