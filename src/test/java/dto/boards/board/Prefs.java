@@ -96,7 +96,8 @@ public class Prefs {
     @NotNull
     public List<SwitcherView> switcherViews;
 
-    @Valid // <-- validates nested fields if object exists
+    // The @Valid annotation returns warnings for unspecified objects. It should only be uncommented once we have a specified object type.
+    // @Valid // <-- validates nested fields if object exists
     public Object autoArchive;
 
     @NotNull

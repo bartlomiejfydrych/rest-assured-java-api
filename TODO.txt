@@ -2,7 +2,6 @@
 TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
-- Dla @Valid przy niewiadomych Objecy w DTO zakomentować je z wyjaśnieniem
 – Do testów PUT'ów dodać GET'y dla większej pewności i niezależności
 – Refaktor testów w ich aktualnym stanie i ilości
 – Dodać raport Allure (Allure pod REST: https://allurereport.org/docs/restassured/)
@@ -11,7 +10,7 @@ TODO – LISTA RZECZY DO ZROBIENIA
 – Dopisać kolejne testy
 – Dokładnie rozpisać w opisie repozytorium czego się nauczyłem
 – Rozpisać w opisie repozytorium statystyki testów, czyli ich ilość i czas (całość, każdy endpoint, podział na pozytywne i negatywne)
-– Zaktualizować notatki pod nowy kod, a stare przenieść do archiwum
+– Zaktualizować notatki pod nowy kod, a stare przenieść do archiwum lub wyjaśnienie kodu opisać w osobnych notatkach
 
 ########################################################################################################################
 NOTATKI – PROJEKT

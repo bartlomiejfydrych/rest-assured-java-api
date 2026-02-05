@@ -60,7 +60,8 @@ public class BoardBaseDto {
     @Pattern(regexp = "^[0-9a-fA-F]{24}$")
     public String idOrganization;
 
-    @Valid // <-- validates nested fields if object exists
+    // The @Valid annotation returns warnings for unspecified objects. It should only be uncommented once we have a specified object type.
+    // @Valid // <-- validates nested fields if object exists
     public Object idEnterprise;
 
     @NotNull
