@@ -2,9 +2,31 @@ package expected_responses.lists;
 
 public class POST_CreateNewListExpected {
 
-    // --------------
+    // ==========================================================================================================
+    // BASE EXPECTED RESPONSE
+    // ==========================================================================================================
+
+    public static final String BaseExpectedPostNewListResponse = """
+            {
+                "id": "6911e9efe126090464690389",
+                "name": "List - Hane, Connelly and Kassulke | Number: 10683416399700",
+                "closed": false,
+                "color": null,
+                "idBoard": "6911e9ecafaaf88ac20110e3",
+                "pos": 140737488404480,
+                "type": null,
+                "datasource": {
+                    "filter": false
+                },
+                "limits": {
+            
+                }
+            }
+            """;
+
+    // ==========================================================================================================
     // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
     public static final String P1ExpectedPostNewListResponse = """
             {
@@ -143,19 +165,38 @@ public class POST_CreateNewListExpected {
             }
             """;
 
-    // --------------
+    // ==========================================================================================================
     // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
+
+    // ----
+    // name
+    // ----
 
     public static final String expectedPostNewListResponseInvalidName = "invalid value for name";
+
+    // -------
+    // idBoard
+    // -------
+
     public static final String expectedPostNewListResponseInvalidIdBoard = "invalid value for idBoard";
-    public static final String N10ExpectedPostNewListResponse = """
+
+    // ------------
+    // idListSource
+    // ------------
+
+    public static final String expectedPostNewListResponseInvalidIdListSource = """
             {
                 "message": "Invalid objectId",
                 "error": "ERROR"
             }
             """;
-    public static final String N11ExpectedPostNewListResponse = """
+
+    // ---
+    // pos
+    // ---
+
+    public static final String expectedPostNewListResponseInvalidPos = """
             {
                 "message": "Invalid position.",
                 "error": "ERROR"

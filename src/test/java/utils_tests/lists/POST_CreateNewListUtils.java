@@ -13,6 +13,22 @@ import static utils.response.UtilsResponseDeserializer.deserializeJson;
 
 public class POST_CreateNewListUtils extends TestBase {
 
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
+
+    // -------------------------
+    // GENERATE RANDOM LIST NAME
+    // -------------------------
+
+    public static String generateRandomListName() {
+        return "List - " + faker.company().name() + " | Number: " + System.nanoTime();
+    }
+
+    // -------------------------
+    // PREPARE EXPECTED RESPONSE
+    // -------------------------
+
     public static POST_CreateNewListDto prepareExpectedResponsePost(
             String expectedResponse,
             POST_CreateNewListDto responsePostDto,
@@ -28,15 +44,15 @@ public class POST_CreateNewListUtils extends TestBase {
         return expectedResponsePostDto;
     }
 
+    // -------------------------
+    // VALIDATE GET AGAINST POST
+    // -------------------------
+
     public static void validateGetAgainstPost(POST_CreateNewListDto responsePostDto) {
         Response responseGet = getGetList(responsePostDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
         GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
         compareObjects(responsePostDto, responseGetDto, POST_CreateNewListDto.FIELD_LIMITS);
-    }
-
-    public static String generateRandomListName() {
-        return "List - " + faker.company().name() + " | Number: " + System.nanoTime();
     }
 }

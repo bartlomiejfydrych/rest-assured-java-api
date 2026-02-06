@@ -26,15 +26,35 @@ import static utils_tests.lists.POST_CreateNewListUtils.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class POST_CreateNewListTest extends TestBase {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // --------
+    // RESPONSE
+    // --------
+
     private Response responsePost;
-    private Response responsePut;
-    private Response responseGet;
     private Response responseDelete;
 
+    // ---------------
+    // CLASS VARIABLES
+    // ---------------
+
+    // BOARD
     private String boardId;
+    // LIST
     private String listName;
     private String listIdListSource;
     private String listPos;
+
+    // ==========================================================================================================
+    // SETUP & TEARDOWN
+    // ==========================================================================================================
+
+    // ----------
+    // BEFORE ALL
+    // ----------
 
     @BeforeAll
     public void setUpCreateBoard() {
@@ -42,6 +62,10 @@ public class POST_CreateNewListTest extends TestBase {
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
     }
+
+    // ---------
+    // AFTER ALL
+    // ---------
 
     @AfterAll
     public void tearDownDeleteBoard() {
@@ -52,11 +76,9 @@ public class POST_CreateNewListTest extends TestBase {
         }
     }
 
-    // --------------
+    // ==========================================================================================================
     // POSITIVE TESTS
-    // --------------
-
-    // name
+    // ==========================================================================================================
 
     @Test
     public void P1_shouldCreateNewListWhereNameIsWithSpecialCharactersAndNumbers() {
@@ -106,8 +128,6 @@ public class POST_CreateNewListTest extends TestBase {
         validateGetAgainstPost(responsePostDto);
     }
 
-    // idListSource
-
     @Test
     public void P3_shouldCreateNewListWithCorrectIdListSource() {
 
@@ -138,8 +158,6 @@ public class POST_CreateNewListTest extends TestBase {
         // GET
         validateGetAgainstPost(responsePostDto2);
     }
-
-    // pos
 
     @Test
     public void P4_shouldCreateThreeNewListsWithPosTopBottomAndNumber() {
@@ -237,8 +255,6 @@ public class POST_CreateNewListTest extends TestBase {
                 .isLessThan(responsePostPos1);
     }
 
-    // Other test cases
-
     @Test
     public void P5_shouldCreateNewListWhereOtherParametersAreEmptyStrings() {
 
@@ -297,11 +313,13 @@ public class POST_CreateNewListTest extends TestBase {
         validateGetAgainstPost(responsePostDto);
     }
 
-    // --------------
+    // ==========================================================================================================
     // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
+    // ----
     // name
+    // ----
 
     @Test
     public void N1_shouldNotCreateNewListWhenNameIsMissing() {
@@ -335,7 +353,9 @@ public class POST_CreateNewListTest extends TestBase {
         assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidName);
     }
 
+    // -------
     // idBoard
+    // -------
 
     @Test
     public void N4_shouldNotCreateNewListWhenIdBoardIsMissing() {
@@ -393,7 +413,9 @@ public class POST_CreateNewListTest extends TestBase {
         assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
     }
 
+    // ------------
     // idListSource
+    // ------------
 
     @Test
     public void N9_shouldNotCreateNewListWhenIdListSourceIsNonExistent() {
@@ -422,10 +444,12 @@ public class POST_CreateNewListTest extends TestBase {
 
         responsePost = postCreateNewList(boardId, listName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareResponseWithJson(responsePost, N10ExpectedPostNewListResponse);
+        compareResponseWithJson(responsePost, expectedPostNewListResponseInvalidIdListSource);
     }
 
+    // ---
     // pos
+    // ---
 
     @Test
     public void N11_shouldNotCreateNewListWhenPosIsIncorrect() {
@@ -439,6 +463,6 @@ public class POST_CreateNewListTest extends TestBase {
 
         responsePost = postCreateNewList(boardId, listName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareResponseWithJson(responsePost, N11ExpectedPostNewListResponse);
+        compareResponseWithJson(responsePost, expectedPostNewListResponseInvalidPos);
     }
 }
