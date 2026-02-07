@@ -2,6 +2,7 @@ package tests.api_trello.lists;
 
 import base.TestBase;
 import dto.lists.POST_CreateNewListDto;
+import expected_responses.lists.POST_CreateNewListExpected;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -89,13 +90,13 @@ public class POST_CreateNewListTest extends TestBase {
         responsePost = postCreateNewList(boardId, listName, null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateNewListDto.class);
-        POST_CreateNewListDto expectedResponsePostDto = prepareExpectedResponsePost(
-                P1ExpectedPostNewListResponse,
-                responsePostDto,
-                listName,
-                boardId,
-                responsePostDto.pos
-        );
+        POST_CreateNewListDto expectedResponsePostDto =
+                POST_CreateNewListExpected.base()
+                        .withId(responsePostDto.id)
+                        .withName(listName)
+                        .withBoardId(boardId)
+                        .withPos(responsePostDto.pos)
+                        .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
@@ -107,6 +108,7 @@ public class POST_CreateNewListTest extends TestBase {
         listName = UtilsString.getRandomSingleCharAlphanumeric();
         listIdListSource = null;
         listPos = null;
+
         POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
                 .setIdListSource(listIdListSource)
                 .setPos(listPos)
@@ -116,13 +118,13 @@ public class POST_CreateNewListTest extends TestBase {
         responsePost = postCreateNewList(boardId, listName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateNewListDto.class);
-        POST_CreateNewListDto expectedResponsePostDto = prepareExpectedResponsePost(
-                P2ExpectedPostNewListResponse,
-                responsePostDto,
-                listName,
-                boardId,
-                responsePostDto.pos
-        );
+        POST_CreateNewListDto expectedResponsePostDto =
+                POST_CreateNewListExpected.base()
+                        .withId(responsePostDto.id)
+                        .withName(listName)
+                        .withBoardId(boardId)
+                        .withPos(responsePostDto.pos)
+                        .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
@@ -134,26 +136,25 @@ public class POST_CreateNewListTest extends TestBase {
         String listName1 = generateRandomListName();
         String listName2 = generateRandomListName();
 
-        // POST (add list 1)
+        // POST (Add {LIST 1})
         Response responsePost1 = postCreateNewList(boardId, listName1, null);
         assertThat(responsePost1.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto1 = deserializeAndValidateJson(responsePost1, POST_CreateNewListDto.class);
 
-        // POST (add list 2)
+        // POST (Add {LIST 2} and assign it {idListSource} from {LIST 1})
         POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
                 .setIdListSource(responsePostDto1.id)
                 .build();
-
         Response responsePost2 = postCreateNewList(boardId, listName2, payload);
         assertThat(responsePost2.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto2 = deserializeAndValidateJson(responsePost2, POST_CreateNewListDto.class);
-        POST_CreateNewListDto expectedResponsePostDto2 = prepareExpectedResponsePost(
-                P3ExpectedPostNewListResponse,
-                responsePostDto2,
-                listName2,
-                boardId,
-                responsePostDto2.pos
-        );
+        POST_CreateNewListDto expectedResponsePostDto2 =
+                POST_CreateNewListExpected.base()
+                        .withId(responsePostDto2.id)
+                        .withName(listName2)
+                        .withBoardId(boardId)
+                        .withPos(responsePostDto2.pos)
+                        .build();
         compareObjects(responsePostDto2, expectedResponsePostDto2);
         // GET
         validateGetAgainstPost(responsePostDto2);
@@ -188,53 +189,56 @@ public class POST_CreateNewListTest extends TestBase {
         // ACT
         // ---
 
-        // POST (add list 1)
+        // POST (Add {LIST 1})
         Response responsePost1 = postCreateNewList(boardId, listName1, null);
         assertThat(responsePost1.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto1 = deserializeAndValidateJson(responsePost1, POST_CreateNewListDto.class);
         Long responsePostPos1 = responsePostDto1.pos;
-        // POST (add list 2)
+
+        // POST (Add {LIST 2})
         Response responsePost2 = postCreateNewList(boardId, listName2, payload2);
         assertThat(responsePost2.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto2 = deserializeAndValidateJson(responsePost2, POST_CreateNewListDto.class);
         Long responsePostPos2 = responsePostDto2.pos;
-        POST_CreateNewListDto expectedResponsePostDto2 = prepareExpectedResponsePost(
-                P4ExpectedPostNewListResponse2,
-                responsePostDto2,
-                listName2,
-                boardId,
-                responsePostDto2.pos
-        );
+        POST_CreateNewListDto expectedResponsePostDto2 =
+                POST_CreateNewListExpected.base()
+                        .withId(responsePostDto2.id)
+                        .withName(listName2)
+                        .withBoardId(boardId)
+                        .withPos(responsePostDto2.pos)
+                        .build();
         compareObjects(responsePostDto2, expectedResponsePostDto2);
         // GET
         validateGetAgainstPost(responsePostDto2);
-        // POST (add list 3)
+
+        // POST (Add {LIST 3})
         Response responsePost3 = postCreateNewList(boardId, listName3, payload3);
         assertThat(responsePost3.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto3 = deserializeAndValidateJson(responsePost3, POST_CreateNewListDto.class);
         Long responsePostPos3 = responsePostDto3.pos;
-        POST_CreateNewListDto expectedResponsePostDto3 = prepareExpectedResponsePost(
-                P4ExpectedPostNewListResponse3,
-                responsePostDto3,
-                listName3,
-                boardId,
-                responsePostDto3.pos
-        );
+        POST_CreateNewListDto expectedResponsePostDto3 =
+                POST_CreateNewListExpected.base()
+                        .withId(responsePostDto3.id)
+                        .withName(listName3)
+                        .withBoardId(boardId)
+                        .withPos(responsePostDto3.pos)
+                        .build();
         compareObjects(responsePostDto3, expectedResponsePostDto3);
         // GET
         validateGetAgainstPost(responsePostDto3);
-        // POST (add list 4)
+
+        // POST (Add {LIST 4})
         Response responsePost4 = postCreateNewList(boardId, listName4, payload4);
         assertThat(responsePost4.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto4 = deserializeAndValidateJson(responsePost4, POST_CreateNewListDto.class);
         Long responsePostPos4 = responsePostDto4.pos;
-        POST_CreateNewListDto expectedResponsePostDto4 = prepareExpectedResponsePost(
-                P4ExpectedPostNewListResponse4,
-                responsePostDto4,
-                listName4,
-                boardId,
-                responsePostDto4.pos
-        );
+        POST_CreateNewListDto expectedResponsePostDto4 =
+                POST_CreateNewListExpected.base()
+                        .withId(responsePostDto4.id)
+                        .withName(listName4)
+                        .withBoardId(boardId)
+                        .withPos(responsePostDto4.pos)
+                        .build();
         compareObjects(responsePostDto4, expectedResponsePostDto4);
         // GET
         validateGetAgainstPost(responsePostDto4);
@@ -261,6 +265,7 @@ public class POST_CreateNewListTest extends TestBase {
         listName = generateRandomListName();
         listIdListSource = "";
         listPos = "";
+
         POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
                 .setIdListSource(listIdListSource)
                 .setPos(listPos)
@@ -270,13 +275,13 @@ public class POST_CreateNewListTest extends TestBase {
         responsePost = postCreateNewList(boardId, listName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateNewListDto.class);
-        POST_CreateNewListDto expectedResponsePostDto = prepareExpectedResponsePost(
-                P5ExpectedPostNewListResponse,
-                responsePostDto,
-                listName,
-                boardId,
-                responsePostDto.pos
-        );
+        POST_CreateNewListDto expectedResponsePostDto =
+                POST_CreateNewListExpected.base()
+                        .withId(responsePostDto.id)
+                        .withName(listName)
+                        .withBoardId(boardId)
+                        .withPos(responsePostDto.pos)
+                        .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
@@ -291,7 +296,7 @@ public class POST_CreateNewListTest extends TestBase {
         */
 
         listName = generateRandomListName();
-        listPos = "140737488322560";
+        listPos = "140737488326656";
 
         POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
                 .setPos(listPos)
@@ -301,13 +306,13 @@ public class POST_CreateNewListTest extends TestBase {
         responsePost = postCreateNewList(boardId, listName, payload);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateNewListDto.class);
-        POST_CreateNewListDto expectedResponsePostDto = prepareExpectedResponsePost(
-                P6ExpectedPostNewListResponse,
-                responsePostDto,
-                listName,
-                boardId,
-                Long.parseLong(listPos)
-        );
+        POST_CreateNewListDto expectedResponsePostDto =
+                POST_CreateNewListExpected.base()
+                        .withId(responsePostDto.id)
+                        .withName(listName)
+                        .withBoardId(boardId)
+                        .withPos(Long.parseLong(listPos))
+                        .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
