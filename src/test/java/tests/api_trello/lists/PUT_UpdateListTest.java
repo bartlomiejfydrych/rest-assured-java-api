@@ -5,13 +5,13 @@ import dto.lists.GET_GetListDto;
 import dto.lists.ListBaseDto;
 import dto.lists.POST_CreateNewListDto;
 import dto.lists.PUT_UpdateListDto;
+import expected_responses.lists.PUT_UpdateListExpected;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import payloads.lists.PUT_UpdateListPayload;
-import utils.UtilsString;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareResponseWithJson;
 import static utils.UtilsString.getAllCharactersSetInRandomOrder;
+import static utils.UtilsString.getRandomSingleCharAlphanumeric;
 import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
 import static utils.response.UtilsResponseDeserializer.deserializeJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
@@ -32,40 +33,61 @@ import static utils_tests.lists.PUT_UpdateListUtils.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateListTest extends TestBase {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // --------
+    // RESPONSE
+    // --------
+
     private Response responsePost;
     private Response responsePut;
     private Response responseGet;
     private Response responseDelete;
 
-    /*
-    NOTES:
-    – Some variables are intentionally taken from POST to expected response to check whether PUT has accidentally changed them when it was not supposed to.
-    */
+    // ---------------
+    // CLASS VARIABLES
+    // ---------------
 
     // BOARD
     private String boardId;
     private String boardIdN;
-    // LIST - COMMON
+    // LIST – COMMON
     private String listId;
-    // LIST - POST
+    // LIST – POST | Some variables are intentionally taken from POST to expected response to check whether PUT has accidentally changed them when it was not supposed to.
     private POST_CreateNewListDto responsePostDto;
-    // LIST - PUT
+    // LIST – PUT
     private String listName;
     private Boolean listClosed;
     private Long listPosAsLong;
     private String listPosAsString;
     private Boolean listSubscribed;
 
+    // ==========================================================================================================
+    // SETUP & TEARDOWN
+    // ==========================================================================================================
+
+    // ----------
+    // BEFORE ALL
+    // ----------
+
     @BeforeAll
     public void setUpCreateBoardAndList() {
+        // Create board
         responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
-        boardId = responsePost.getBody().jsonPath().getString("id" );
+        boardId = responsePost.getBody().jsonPath().getString("id");
+        // Create list
         responsePost = postCreateNewList(boardId, generateRandomListName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateNewListDto.class);
         listId = responsePostDto.id;
     }
+
+    // ---------
+    // AFTER ALL
+    // ---------
 
     @AfterAll
     public void tearDownDeleteBoardAndList() {
@@ -77,9 +99,9 @@ public class PUT_UpdateListTest extends TestBase {
         }
     }
 
-    // --------------
+    // ==========================================================================================================
     // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
     @Test
     public void P1_shouldUpdateListWhereNameSpecialCharactersAndNumbersClosedTrueSubscribedTrue() {
@@ -94,7 +116,7 @@ public class PUT_UpdateListTest extends TestBase {
                 .setSubscribed(listSubscribed)
                 .build();
 
-        // GET (current status of the list)
+        // GET (Get current status of {LIST})
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
@@ -102,13 +124,15 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
-        PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
-                P1ExpectedPutUpdateListResponse,
-                listId,
-                listName,
-                boardId,
-                responseGetDto.pos
-        );
+        PUT_UpdateListDto expectedResponsePutDto =
+                PUT_UpdateListExpected.base()
+                        .withId(listId)
+                        .withName(listName)
+                        .withClosed(listClosed)
+                        .withBoardId(boardId)
+                        .withPos(responseGetDto.pos)
+                        .withSubscribed(listSubscribed)
+                        .build();
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -117,7 +141,7 @@ public class PUT_UpdateListTest extends TestBase {
     @Test
     public void P2_shouldUpdateListWhereNameOneCharacterAndClosedFalseSubscribedFalsePosNull() {
 
-        listName = UtilsString.getRandomSingleCharAlphanumeric();
+        listName = getRandomSingleCharAlphanumeric();
         listClosed = false;
         listPosAsLong = null;
         listSubscribed = false;
@@ -129,7 +153,7 @@ public class PUT_UpdateListTest extends TestBase {
                 .setSubscribed(listSubscribed)
                 .build();
 
-        // GET (current status of the list)
+        // GET (Get current status of {LIST})
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
@@ -137,13 +161,15 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
-        PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
-                P2ExpectedPutUpdateListResponse,
-                listId,
-                listName,
-                boardId,
-                responseGetDto.pos
-        );
+        PUT_UpdateListDto expectedResponsePutDto =
+                PUT_UpdateListExpected.base()
+                        .withId(listId)
+                        .withName(listName)
+                        .withClosed(listClosed)
+                        .withBoardId(boardId)
+                        .withPos(responseGetDto.pos)
+                        .withSubscribed(listSubscribed)
+                        .build();
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -167,7 +193,7 @@ public class PUT_UpdateListTest extends TestBase {
                 .setPos(listPosAsString)
                 .build();
 
-        // GET (current status of the list)
+        // GET (Get current status of {LIST})
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
@@ -175,15 +201,16 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
-        PUT_UpdateListDto expectedResponsePutDto = prepareUniversalExpectedResponsePut(
-                listId,
-                responseGetDto.name,
-                responseGetDto.closed,
-                null,
-                boardId,
-                responseGetDto.pos,
-                null
-        );
+        PUT_UpdateListDto expectedResponsePutDto =
+                PUT_UpdateListExpected.base()
+                        .withId(listId)
+                        .withName(responseGetDto.name)
+                        .withClosed(responseGetDto.closed)
+                        .withColor(null)
+                        .withBoardId(boardId)
+                        .withPos(responseGetDto.pos)
+                        .withSubscribed(null)
+                        .build();
         compareObjects(responsePutDto, expectedResponsePutDto, ListBaseDto.FIELD_POS);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -202,7 +229,7 @@ public class PUT_UpdateListTest extends TestBase {
                 .setSubscribed(listSubscribed)
                 .build();
 
-        // GET (current status of the list)
+        // GET (Get current status of {LIST})
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
@@ -210,13 +237,13 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
-        PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
-                P4ExpectedPutUpdateListResponse,
-                listId,
-                responseGetDto.name,
-                boardId,
-                responseGetDto.pos
-        );
+        PUT_UpdateListDto expectedResponsePutDto =
+                PUT_UpdateListExpected.base()
+                        .withId(listId)
+                        .withName(responseGetDto.name)
+                        .withBoardId(boardId)
+                        .withPos(responseGetDto.pos)
+                        .build();
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -230,7 +257,7 @@ public class PUT_UpdateListTest extends TestBase {
         // -------
 
         // POST
-        // List (1) is created in '@BeforeAll' | Base list against which the position of the remaining lists will be checked
+        // {LIST 1} is created in [@BeforeAll] | Base list against which the position of the remaining lists will be checked
         String listName2 = generateRandomListName();
         String listName3 = generateRandomListName();
         String listName4 = generateRandomListName();
@@ -253,70 +280,77 @@ public class PUT_UpdateListTest extends TestBase {
         // ACT
         // ---
 
-        // POST (add list 2)
+        // POST (Add {LIST 2})
         Response responsePost2 = postCreateNewList(boardId, listName2, null);
         assertThat(responsePost2.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto2 = deserializeJson(responsePost2, POST_CreateNewListDto.class);
         String listId2 = responsePostDto2.id;
-        // POST (add list 3)
+
+        // POST (Add {LIST 3})
         Response responsePost3 = postCreateNewList(boardId, listName3, null);
         assertThat(responsePost3.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto3 = deserializeJson(responsePost3, POST_CreateNewListDto.class);
         String listId3 = responsePostDto3.id;
-        // POST (add list 4)
+
+        // POST (Add {LIST 4})
         Response responsePost4 = postCreateNewList(boardId, listName4, null);
         assertThat(responsePost4.statusCode()).isEqualTo(200);
         POST_CreateNewListDto responsePostDto4 = deserializeJson(responsePost4, POST_CreateNewListDto.class);
         String listId4 = responsePostDto4.id;
 
-        // PUT (edit list 2 -> POS: top)
+        // PUT (Edit {LIST 2} -> POS: top)
         Response responsePut2 = putUpdateList(listId2, payload2);
         assertThat(responsePut2.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto2 = deserializeAndValidateJson(responsePut2, PUT_UpdateListDto.class);
         Long responsePutPos2 = responsePutDto2.pos;
-        PUT_UpdateListDto expectedResponsePutDto2 = prepareUniversalExpectedResponsePut(
-                listId2,
-                responsePostDto2.name,
-                responsePostDto2.closed,
-                null,
-                boardId,
-                responsePutPos2,
-                null
-        );
+        PUT_UpdateListDto expectedResponsePutDto2 =
+                PUT_UpdateListExpected.base()
+                        .withId(listId2)
+                        .withName(responsePostDto2.name)
+                        .withClosed(responsePostDto2.closed)
+                        .withColor(null)
+                        .withBoardId(boardId)
+                        .withPos(responsePutPos2)
+                        .withSubscribed(null)
+                        .build();
         compareObjects(responsePutDto2, expectedResponsePutDto2);
         // GET
         validateGetAgainstPut(responsePutDto2);
-        // PUT (edit list 3 -> POS: bottom)
+
+        // PUT (Edit {LIST 3} -> POS: bottom)
         Response responsePut3 = putUpdateList(listId3, payload3);
         assertThat(responsePut3.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto3 = deserializeAndValidateJson(responsePut3, PUT_UpdateListDto.class);
         Long responsePutPos3 = responsePutDto3.pos;
-        PUT_UpdateListDto expectedResponsePutDto3 = prepareUniversalExpectedResponsePut(
-                listId3,
-                responsePostDto3.name,
-                responsePostDto3.closed,
-                null,
-                boardId,
-                responsePutPos3,
-                null
-        );
+        PUT_UpdateListDto expectedResponsePutDto3 =
+                PUT_UpdateListExpected.base()
+                        .withId(listId3)
+                        .withName(responsePostDto3.name)
+                        .withClosed(responsePostDto3.closed)
+                        .withColor(null)
+                        .withBoardId(boardId)
+                        .withPos(responsePutPos3)
+                        .withSubscribed(null)
+                        .build();
         compareObjects(responsePutDto3, expectedResponsePutDto3);
         // GET
         validateGetAgainstPut(responsePutDto3);
-        // PUT (edit list 4 -> POS: 140737488322560L)
+
+        // PUT (Edit {LIST 4} -> POS: 140737488322560L)
         Response responsePut4 = putUpdateList(listId4, payload4);
         assertThat(responsePut4.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto4 = deserializeAndValidateJson(responsePut4, PUT_UpdateListDto.class);
         Long responsePutPos4 = responsePutDto4.pos;
-        PUT_UpdateListDto expectedResponsePutDto4 = prepareUniversalExpectedResponsePut(
-                listId4,
-                responsePostDto4.name,
-                responsePostDto4.closed,
-                null,
-                boardId,
-                responsePutPos4,
-                null
-        );
+        PUT_UpdateListDto expectedResponsePutDto4 =
+                PUT_UpdateListExpected.base()
+                        .withId(listId4)
+                        .withName(responsePostDto4.name)
+                        .withClosed(responsePostDto4.closed)
+                        .withColor(null)
+                        .withBoardId(boardId)
+                        .withPos(responsePutPos4)
+                        .withSubscribed(null)
+                        .build();
         compareObjects(responsePutDto4, expectedResponsePutDto4);
         // GET
         validateGetAgainstPut(responsePutDto4);
@@ -327,13 +361,13 @@ public class PUT_UpdateListTest extends TestBase {
 
         // POSITION VALIDATION
         assertThat(responsePutPos2)
-                .as("The list with the \"top\" position should be higher (i.e. have a lower numerical value) than the first list." )
+                .as("The list with the \"top\" position should be higher (i.e. have a lower numerical value) than the first list.")
                 .isLessThan(responsePostDto.pos);
         assertThat(responsePutPos3)
-                .as("The list with the \"bottom\" position should be lower (i.e. have a higher numerical value) than the first list." )
+                .as("The list with the \"bottom\" position should be lower (i.e. have a higher numerical value) than the first list.")
                 .isGreaterThan(responsePostDto.pos);
         assertThat(responsePutPos4)
-                .as("The list with the \"numeric\" item should be higher (i.e. have a lower numerical value) than the first list." )
+                .as("The list with the \"numeric\" item should be higher (i.e. have a lower numerical value) than the first list.")
                 .isLessThan(responsePostDto.pos);
     }
 
@@ -349,17 +383,18 @@ public class PUT_UpdateListTest extends TestBase {
         something that shouldn't change it, such as null or an empty String, the initial value of "Pos" still changes.
         */
 
-        // POST (add {board 2})
+        // POST (Add {BOARD 2})
         responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
-        String boardId2 = responsePost.getBody().jsonPath().getString("id" );
+        String boardId2 = responsePost.getBody().jsonPath().getString("id");
         try {
-            // POST (add second list into {board 1} | so that the list used in other tests is not transferred)
+            // POST (Add {LIST 2} into {BOARD 1} | So that the list used in other tests is not transferred)
             responsePost = postCreateNewList(boardId, generateRandomListName(), null);
             assertThat(responsePost.statusCode()).isEqualTo(200);
             POST_CreateNewListDto responsePostDto = deserializeJson(responsePost, POST_CreateNewListDto.class);
             String listId2 = responsePostDto.id;
-            // PUT (move {list 2} from {board 1} to {board 2})
+
+            // PUT (Move {LIST 2} from {BOARD 1} to {BOARD 2})
             PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
                     .setIdBoard(boardId2)
                     .build();
@@ -367,26 +402,27 @@ public class PUT_UpdateListTest extends TestBase {
             responsePut = putUpdateList(listId2, payload);
             assertThat(responsePut.statusCode()).isEqualTo(200);
             PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
-            PUT_UpdateListDto expectedResponsePutDto = prepareUniversalExpectedResponsePut(
-                    listId2,
-                    responsePostDto.name,
-                    responsePostDto.closed,
-                    responsePostDto.color,
-                    boardId2,
-                    responsePostDto.pos,
-                    null
-            );
+            PUT_UpdateListDto expectedResponsePutDto =
+                    PUT_UpdateListExpected.base()
+                            .withId(listId2)
+                            .withName(responsePostDto.name)
+                            .withClosed(responsePostDto.closed)
+                            .withColor(responsePostDto.color)
+                            .withBoardId(boardId2)
+                            .withPos(responsePostDto.pos)
+                            .withSubscribed(null)
+                            .build();
             compareObjects(responsePutDto, expectedResponsePutDto, ListBaseDto.FIELD_POS);
             // GET
             validateGetAgainstPut(responsePutDto);
         } finally {
-            // DELETE (delete {board 2})
+            // DELETE (Delete {BOARD 2})
             if (boardId2 != null) {
                 try {
                     responseDelete = deleteDeleteBoard(boardId2);
                     assertThat(responseDelete.statusCode()).isEqualTo(200);
                 } catch (Exception e) {
-                    System.err.println("ERROR: Failed to delete {board2}: " + boardId2);
+                    System.err.println("Failed to delete {BOARD 2}: " + boardId2);
                     e.printStackTrace();
                 }
             }
@@ -453,11 +489,13 @@ public class PUT_UpdateListTest extends TestBase {
         validateGetAgainstPut(responsePutDto);
     }
 
-    // --------------
+    // ==========================================================================================================
     // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
-    // {id}
+    // --
+    // id
+    // --
 
     @Test
     public void N1_shouldNotUpdateListWhenIdNonExistent() {
@@ -473,7 +511,9 @@ public class PUT_UpdateListTest extends TestBase {
         assertThat(responsePut.getBody().asString()).isEqualTo(expectedPutUpdateListResponseInvalidId);
     }
 
-    // {name}
+    // ----
+    // name
+    // ----
 
     @Test
     public void N3_shouldNotUpdateListWhenNameEmptyString() {
@@ -486,10 +526,12 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
-        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for name" );
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for name");
     }
 
-    // {idBoard}
+    // -------
+    // idBoard
+    // -------
 
     @Test
     public void N4_shouldNotUpdateListWhenIdBoardEmptyString() {
@@ -536,7 +578,9 @@ public class PUT_UpdateListTest extends TestBase {
         compareResponseWithJson(responsePut, expectedPutUpdateListResponseInvalidBoardId);
     }
 
-    // {pos}
+    // ---
+    // pos
+    // ---
 
     @Test
     public void N7_shouldNotUpdateListWhenPosIncorrect() {
