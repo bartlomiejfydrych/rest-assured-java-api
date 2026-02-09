@@ -58,6 +58,7 @@
 - [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (2)](#junit_api_unit_tests_2)
 - [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (3)](#junit_api_unit_tests_3)
 - [Maven – do uruchamiania testów](#maven_tests_runner)
+- [JSON – podstawianie zmiennych pod niego](#json_variable_replace)
 
 ---
 
@@ -5425,3 +5426,43 @@ To jest:
 * 💯 standard w projektach
 * 🧠 mniej problemów
 * 🤝 idealne pod CI / GitHub Actions / GitLab
+
+---
+
+## 📄JSON – podstawianie zmiennych pod niego <a name="json_variable_replace"></a>
+
+### Java Text Block + replace()
+
+```java
+public static PUT_UpdateListDto prepareUniversalExpectedResponsePut(
+        String id,
+        String name,
+        Boolean closed,
+        String color,
+        String idBoard,
+        String pos,
+        Boolean subscribed
+) {
+    String expectedResponse = """
+            {
+                "id": "{id}",
+                "name": "{name}",
+                "closed": {closed},
+                "color": "{color}",
+                "idBoard": "{idBoard}",
+                "pos": "{pos}",
+                "subscribed": {subscribed}
+            }
+            """
+            .replace("{id}", id)
+            .replace("{name}", name)
+            .replace("{closed}", String.valueOf(closed))
+            .replace("{color}", color)
+            .replace("{idBoard}", idBoard)
+            .replace("{pos}", pos)
+            .replace("{subscribed}", String.valueOf(subscribed));
+
+    PUT_UpdateListDto expectedResponsePutDto = deserializeJson(expectedResponse, PUT_UpdateListDto.class);
+    return expectedResponsePutDto;
+}
+```
