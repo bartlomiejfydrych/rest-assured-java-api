@@ -17,15 +17,36 @@ import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 
 public class DEL_DeleteLabelTest extends TestBase {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // --------
+    // RESPONSE
+    // --------
+
     private Response responsePost;
-    private Response responsePut;
     private Response responseGet;
     private Response responseDelete;
 
+    // ---------------
+    // CLASS VARIABLES
+    // ---------------
+
+    // BOARD
     private String boardId;
+    // LABEL
     private String labelId;
     private String labelName;
     private String labelColor;
+
+    // ==========================================================================================================
+    // SETUP & TEARDOWN
+    // ==========================================================================================================
+
+    // ----------
+    // BEFORE ALL
+    // ----------
 
     @BeforeEach
     public void setUpCreateBoard() {
@@ -33,6 +54,10 @@ public class DEL_DeleteLabelTest extends TestBase {
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
     }
+
+    // ---------
+    // AFTER ALL
+    // ---------
 
     @AfterEach
     public void tearDownDeleteBoard() {
@@ -43,9 +68,9 @@ public class DEL_DeleteLabelTest extends TestBase {
         }
     }
 
-    // --------------
+    // ==========================================================================================================
     // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
     @Test
     public void P1_shouldDeleteLabel() {
