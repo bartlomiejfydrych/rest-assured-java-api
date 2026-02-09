@@ -7,8 +7,8 @@ TODO – LISTA RZECZY DO ZROBIENIA
 – Dodać raport Allure (Allure pod REST: https://allurereport.org/docs/restassured/)
 – Przeanalizować i zapisać sobie, co można zrobić w przypadku różnych base URL (np. /api/, /admin/, /mobile/)
 – Dodać zapisywanie i odczytywanie tokena oraz jego odświeżanie za pomocą API od Dawida (lub napisać suchą metodę)
-– Dopisać kolejne testy
 – Dokładnie rozpisać w opisie repozytorium czego się nauczyłem
+– Dopisać kolejne testy
 – Rozpisać w opisie repozytorium statystyki testów, czyli ich ilość i czas (całość, każdy endpoint, podział na pozytywne i negatywne)
 – Zaktualizować notatki pod nowy kod, a stare przenieść do archiwum lub wyjaśnienie kodu opisać w osobnych notatkach
 
