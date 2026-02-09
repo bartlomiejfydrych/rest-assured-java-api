@@ -98,46 +98,6 @@ public class PUT_UpdateListExpected {
         return dto;
     }
 
-    // ----------------------
-    // BASE EXPECTED RESPONSE
-    // ----------------------
-
-    public static final String BaseExpectedPutUpdateListResponse = """
-            {
-                "id": "6918c0e928328bf5ad423af0",
-                "name": "Updated list name",
-                "closed": true,
-                "color": null,
-                "idBoard": "6918c0e725eebf9505f994b3",
-                "pos": 140737488338944
-            }
-            """;
-
-    // --------------
-    // POSITIVE TESTS
-    // --------------
-
-    public static final String P7ExpectedPutUpdateListResponse = """
-            {
-                "id": "6927625ef7931f7df1313da3",
-                "name": "List - Oberbrunner, VonRueden and Steuber | Number: 15265030532500",
-                "closed": false,
-                "color": null,
-                "idBoard": "6927625cc73d3c914a1a24e8",
-                "pos": 140737488338944
-            }
-            """;
-    public static final String P8ExpectedPutUpdateListResponse = """
-            {
-                "id": "692ae4dc742d02cf373a5c28",
-                "name": "List - Bednar-Russel | Number: 9665276693600",
-                "closed": false,
-                "color": null,
-                "idBoard": "692ae4db022068085ee83d6e",
-                "pos": 140737488322560
-            }
-            """;
-
     // ==========================================================================================================
     // NEGATIVE TESTS (expected responses)
     // ==========================================================================================================

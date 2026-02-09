@@ -440,7 +440,7 @@ public class PUT_UpdateListTest extends TestBase {
                 .setIdBoard(boardId2)
                 .build();
 
-        // GET (current status of the list)
+        // GET (Get current status of {LIST})
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
@@ -448,13 +448,13 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
-        PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
-                P7ExpectedPutUpdateListResponse,
-                listId,
-                listName,
-                boardId,
-                responseGetDto.pos
-        );
+        PUT_UpdateListDto expectedResponsePutDto =
+                PUT_UpdateListExpected.base()
+                        .withId(listId)
+                        .withName(listName)
+                        .withBoardId(boardId)
+                        .withPos(responseGetDto.pos)
+                        .build();
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -469,7 +469,7 @@ public class PUT_UpdateListTest extends TestBase {
                 .setPos(listPosAsString)
                 .build();
 
-        // GET (current status of the list)
+        // GET (Get current status of {LIST})
         responseGet = getGetList(listId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
@@ -477,13 +477,13 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
-        PUT_UpdateListDto expectedResponsePutDto = prepareExpectedResponsePut(
-                P8ExpectedPutUpdateListResponse,
-                listId,
-                responseGetDto.name,
-                boardId,
-                listPosAsString
-        );
+        PUT_UpdateListDto expectedResponsePutDto =
+                PUT_UpdateListExpected.base()
+                        .withId(listId)
+                        .withName(responseGetDto.name)
+                        .withBoardId(boardId)
+                        .withPos(Long.parseLong(listPosAsString))
+                        .build();
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
