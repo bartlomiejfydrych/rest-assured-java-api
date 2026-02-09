@@ -2,6 +2,7 @@ package tests.api_trello.labels;
 
 import base.TestBase;
 import dto.labels.POST_CreateLabelDto;
+import expected_responses.labels.POST_CreateLabelExpected;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import payloads.labels.POST_CreateLabelPayload;
@@ -19,20 +20,39 @@ import static utils.UtilsString.getAllCharactersSetInRandomOrder;
 import static utils.UtilsString.getRandomSingleCharAlphanumeric;
 import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
-import static utils_tests.labels.POST_CreateLabelUtils.prepareExpectedResponsePost;
 import static utils_tests.labels.POST_CreateLabelUtils.validateGetAgainstPost;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class POST_CreateLabelTest extends TestBase {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // --------
+    // RESPONSE
+    // --------
+
     private Response responsePost;
-    private Response responsePut;
-    private Response responseGet;
     private Response responseDelete;
 
+    // ---------------
+    // CLASS VARIABLES
+    // ---------------
+
+    // BOARD
     private String boardId;
+    // LABEL
     private String labelName;
     private String labelColor;
+
+    // ==========================================================================================================
+    // SETUP & TEARDOWN
+    // ==========================================================================================================
+
+    // ----------
+    // BEFORE ALL
+    // ----------
 
     @BeforeAll
     public void setUpCreateBoard() {
@@ -40,6 +60,10 @@ public class POST_CreateLabelTest extends TestBase {
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
     }
+
+    // ---------
+    // AFTER ALL
+    // ---------
 
     @AfterAll
     public void tearDownDeleteBoard() {
@@ -50,9 +74,9 @@ public class POST_CreateLabelTest extends TestBase {
         }
     }
 
-    // --------------
+    // ==========================================================================================================
     // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
     @Test
     public void P1_shouldCreateLabelWithCorrectValuesAndNameWithSpecialCharactersAndNumbers() {
@@ -64,13 +88,13 @@ public class POST_CreateLabelTest extends TestBase {
         responsePost = postCreateLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateLabelDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateLabelDto.class);
-        POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
-                P1ExpectedPostLabelResponse,
-                responsePostDto,
-                boardId,
-                labelName,
-                labelColor
-        );
+        POST_CreateLabelDto expectedResponsePostDto =
+                POST_CreateLabelExpected.base()
+                        .withId(responsePostDto.id)
+                        .withBoardId(boardId)
+                        .withName(labelName)
+                        .withColor(labelColor)
+                        .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
@@ -86,19 +110,17 @@ public class POST_CreateLabelTest extends TestBase {
         responsePost = postCreateLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateLabelDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateLabelDto.class);
-        POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
-                P2ExpectedPostLabelResponse,
-                responsePostDto,
-                boardId,
-                labelName,
-                labelColor
-        );
+        POST_CreateLabelDto expectedResponsePostDto =
+                POST_CreateLabelExpected.base()
+                        .withId(responsePostDto.id)
+                        .withBoardId(boardId)
+                        .withName(labelName)
+                        .withColor(labelColor)
+                        .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
     }
-
-    // name
 
     @Test
     public void P3_shouldCreateLabelWhenLabelNameIsNull() {
@@ -111,13 +133,13 @@ public class POST_CreateLabelTest extends TestBase {
         responsePost = postCreateLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateLabelDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateLabelDto.class);
-        POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
-                P3ExpectedPostLabelResponse,
-                responsePostDto,
-                boardId,
-                "",
-                labelColor
-        );
+        POST_CreateLabelDto expectedResponsePostDto =
+                POST_CreateLabelExpected.base()
+                        .withId(responsePostDto.id)
+                        .withBoardId(boardId)
+                        .withName("")
+                        .withColor(labelColor)
+                        .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
@@ -134,19 +156,17 @@ public class POST_CreateLabelTest extends TestBase {
         responsePost = postCreateLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateLabelDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateLabelDto.class);
-        POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
-                P4ExpectedPostLabelResponse,
-                responsePostDto,
-                boardId,
-                labelName,
-                labelColor
-        );
+        POST_CreateLabelDto expectedResponsePostDto =
+                POST_CreateLabelExpected.base()
+                        .withId(responsePostDto.id)
+                        .withBoardId(boardId)
+                        .withName(labelName)
+                        .withColor(labelColor)
+                        .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
     }
-
-    // color
 
     @Test
     public void P5_shouldCreateLabelWhenLabelColorIsMissing() {
@@ -163,13 +183,13 @@ public class POST_CreateLabelTest extends TestBase {
         responsePost = postCreateLabelWithAnyParams(payload);
         assertThat(responsePost.getStatusCode()).isEqualTo(200);
         POST_CreateLabelDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateLabelDto.class);
-        POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
-                P5ExpectedPostLabelResponse,
-                responsePostDto,
-                boardId,
-                labelName,
-                null
-        );
+        POST_CreateLabelDto expectedResponsePostDto =
+                POST_CreateLabelExpected.base()
+                        .withId(responsePostDto.id)
+                        .withBoardId(boardId)
+                        .withName(labelName)
+                        .withColor(null)
+                        .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
@@ -186,33 +206,36 @@ public class POST_CreateLabelTest extends TestBase {
         responsePost = postCreateLabel(boardId, labelName, labelColor);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         POST_CreateLabelDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateLabelDto.class);
-        POST_CreateLabelDto expectedResponsePostDto = prepareExpectedResponsePost(
-                P6ExpectedPostLabelResponse,
-                responsePostDto,
-                boardId,
-                labelName,
-                null
-        );
+        POST_CreateLabelDto expectedResponsePostDto =
+                POST_CreateLabelExpected.base()
+                        .withId(responsePostDto.id)
+                        .withBoardId(boardId)
+                        .withName(labelName)
+                        .withColor(null)
+                        .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
     }
 
-    // --------------
+    // ==========================================================================================================
     // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
+    // -------
     // idBoard
+    // -------
 
     @Test
     public void N1_shouldNotCreateLabelWhenBoardIdIsMissing() {
-
+        // ARRANGE
         POST_CreateLabelPayload payload = new POST_CreateLabelPayload.Builder()
                 .setName("N1 Label Name")
                 .setColor("yellow")
                 .build();
-
+        // ACT
         responsePost = postCreateLabelWithAnyParams(payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
     }
@@ -245,22 +268,27 @@ public class POST_CreateLabelTest extends TestBase {
         compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
     }
 
+    // ----
     // name
+    // ----
 
     @Test
     public void N6_shouldNotCreateLabelWhenLabelNameIsMissing() {
-
+        // ARRANGE
         POST_CreateLabelPayload payload = new POST_CreateLabelPayload.Builder()
                 .setIdBoard(boardId)
                 .setColor("purple")
                 .build();
-
+        // ACT
         responsePost = postCreateLabelWithAnyParams(payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for name");
     }
 
+    // -----
     // color
+    // -----
 
     @Test
     public void N7_shouldNotCreateLabelWhenLabelColorIsIncorrect() {

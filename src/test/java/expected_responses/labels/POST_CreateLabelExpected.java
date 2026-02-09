@@ -1,87 +1,92 @@
 package expected_responses.labels;
 
+import dto.labels.POST_CreateLabelDto;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class POST_CreateLabelExpected {
 
-    // --------------
-    // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
 
-    public static final String P1ExpectedPostLabelResponse = """
-            {
-                "id": "68bb100769a92fde56039562",
-                "idBoard": "68bb10066ce03d7024e867e1",
-                "name": "D=ż1Ńhd6Knq;'ńv40<pć2]łX~/*ŁśĆ+3o^C,&mlAy7\\\\L{są:W|iŚzTjÓxŹUfRk>(H}a- bVIóĄęOu!$wr8N.YEeG\\"?Ż\\\\F[`S_g#%MZ9Pt)\\\\cĘ@5BJźQ",
-                "color": "green",
-                "uses": 0,
-                "limits": {
-            
-                }
-            }
-            """;
-    public static final String P2ExpectedPostLabelResponse = """
-            {
-                "id": "68bb2ecf631f201252419d75",
-                "idBoard": "68bb2ece4db17d2ecf779986",
-                "name": "7",
-                "color": null,
-                "uses": 0,
-                "limits": {
-            
-                }
-            }
-            """;
-    public static final String P3ExpectedPostLabelResponse = """
-            {
-                "id": "697e0526af1c81809e9fd9fb",
-                "idBoard": "697e0526af1c81809e9fd9c7",
-                "name": "",
-                "color": "purple",
-                "uses": 0,
-                "limits": {
-            
-                }
-            }
-            """;
-    public static final String P4ExpectedPostLabelResponse = """
-            {
-                "id": "697e0526af1c81809e9fd9fb",
-                "idBoard": "697e0526af1c81809e9fd9c7",
-                "name": "",
-                "color": "purple",
-                "uses": 0,
-                "limits": {
-            
-                }
-            }
-            """;
-    public static final String P5ExpectedPostLabelResponse = """
-            {
-                "id": "697e0ba5ddc9cc71e60b8919",
-                "idBoard": "697e0ba4623b0dc258c9d096",
-                "name": "A",
-                "color": null,
-                "uses": 0,
-                "limits": {
-            
-                }
-            }
-            """;
-    public static final String P6ExpectedPostLabelResponse = """
-            {
-                "id": "697e0cb3d47bb67363ba51b1",
-                "idBoard": "697e0cb20c544abcb92df180",
-                "name": "L",
-                "color": null,
-                "uses": 0,
-                "limits": {
-            
-                }
-            }
-            """;
+    private String id = "DEFAULT_ID";
+    private String idBoard = "DEFAULT_BOARD_ID";
+    private String name = "DEFAULT_NAME";
+    private String color = null;
+    private Integer uses = 0;
+    private Map<String, Object> limits = new HashMap<>(); // new Object(); <- This broke the comparison to the empty object ({})
 
-    // --------------
-    // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
+    // CONSTRUCTORS
+    // ==========================================================================================================
+
+    // ----
+    // BASE
+    // ----
+
+    public static POST_CreateLabelExpected base() {
+        return new POST_CreateLabelExpected();
+    }
+
+    // ==========================================================================================================
+    // METHODS (replacing data)
+    // ==========================================================================================================
+
+    public POST_CreateLabelExpected withId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public POST_CreateLabelExpected withBoardId(String idBoard) {
+        this.idBoard = idBoard;
+        return this;
+    }
+
+    public POST_CreateLabelExpected withName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public POST_CreateLabelExpected withColor(String color) {
+        this.color = color;
+        return this;
+    }
+
+    public POST_CreateLabelExpected withUses(Integer uses) {
+        this.uses = uses;
+        return this;
+    }
+
+    // Rather for the future, when limits will no longer be empty
+    public POST_CreateLabelExpected withLimits(Map<String, Object> limits) {
+        this.limits = limits;
+        return this;
+    }
+
+    // ==========================================================================================================
+    // BUILDER
+    // ==========================================================================================================
+
+    public POST_CreateLabelDto build() {
+        return new POST_CreateLabelDto(
+                id,
+                idBoard,
+                name,
+                color,
+                uses,
+                limits
+        );
+    }
+
+    // ==========================================================================================================
+    // NEGATIVE TESTS (expected responses)
+    // ==========================================================================================================
+
+    // -------
+    // idBoard
+    // -------
 
     public static final String expectedPostLabelResponseInvalidId = """
             {
@@ -89,6 +94,11 @@ public class POST_CreateLabelExpected {
                 "error": "ERROR"
             }
             """;
+
+    // -----
+    // color
+    // -----
+
     public static final String expectedPostLabelResponseInvalidColor = """
             {
                 "message": "invalid value for color",
