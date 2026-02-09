@@ -328,32 +328,35 @@ public class POST_CreateNewListTest extends TestBase {
 
     @Test
     public void N1_shouldNotCreateNewListWhenNameIsMissing() {
-
+        // ARRANGE
         POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
                 .setIdBoard(boardId)
                 .build();
-
+        // ACT
         responsePost = postCreateNewListWithAnyParams(payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidName);
     }
 
     @Test
     public void N2_shouldNotCreateNewListWhenNameIsNull() {
-
+        // ARRANGE
         listName = null;
-
+        // ACT
         responsePost = postCreateNewList(boardId, listName, null);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidName);
     }
 
     @Test
     public void N3_shouldNotCreateNewListWhenNameIsEmptyString() {
-
+        // ARRANGE
         listName = "";
-
+        // ACT
         responsePost = postCreateNewList(boardId, listName, null);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidName);
     }
@@ -364,56 +367,61 @@ public class POST_CreateNewListTest extends TestBase {
 
     @Test
     public void N4_shouldNotCreateNewListWhenIdBoardIsMissing() {
-
+        // ARRANGE
         POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
                 .setName(generateRandomListName())
                 .build();
-
+        // ACT
         responsePost = postCreateNewListWithAnyParams(payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
     }
 
     @Test
     public void N5_shouldNotCreateNewListWhenIdBoardIsNull() {
-
+        // ARRANGE
         String idBoard = null;
         listName = generateRandomListName();
-
+        // ACT
         responsePost = postCreateNewList(idBoard, listName, null);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
     }
 
     @Test
     public void N6_shouldNotCreateNewListWhenIdBoardIsEmptyString() {
-
+        // ARRANGE
         String idBoard = "";
         listName = generateRandomListName();
-
+        // ACT
         responsePost = postCreateNewList(idBoard, listName, null);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
     }
 
     @Test
     public void N7_shouldNotCreateNewListWhenIdBoardIsNonExistent() {
-
+        // ARRANGE
         String idBoard = "999999999999999999999999";
         listName = generateRandomListName();
-
+        // ACT
         responsePost = postCreateNewList(idBoard, listName, null);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(401);
         assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized board list requested " + idBoard);
     }
 
     @Test
     public void N8_shouldNotCreateNewListWhenIdBoardIsIncorrect() {
-
+        // ARRANGE
         String idBoard = "KeK 123";
         listName = generateRandomListName();
-
+        // ACT
         responsePost = postCreateNewList(idBoard, listName, null);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
     }
@@ -424,30 +432,32 @@ public class POST_CreateNewListTest extends TestBase {
 
     @Test
     public void N9_shouldNotCreateNewListWhenIdListSourceIsNonExistent() {
-
+        // ARRANGE
         listName = generateRandomListName();
         listIdListSource = "999999999999999999999999";
 
         POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
                 .setIdListSource(listIdListSource)
                 .build();
-
+        // ACT
         responsePost = postCreateNewList(boardId, listName, payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(404);
         assertThat(responsePost.getBody().asString()).isEqualTo("List not found");
     }
 
     @Test
     public void N10_shouldNotCreateNewListWhenIdListSourceIsIncorrect() {
-
+        // ARRANGE
         listName = generateRandomListName();
         listIdListSource = "KeK 123";
 
         POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
                 .setIdListSource(listIdListSource)
                 .build();
-
+        // ACT
         responsePost = postCreateNewList(boardId, listName, payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePost, expectedPostNewListResponseInvalidIdListSource);
     }
@@ -458,15 +468,16 @@ public class POST_CreateNewListTest extends TestBase {
 
     @Test
     public void N11_shouldNotCreateNewListWhenPosIsIncorrect() {
-
+        // ARRANGE
         listName = generateRandomListName();
         listPos = "Kek 123";
 
         POST_CreateNewListPayload payload = new POST_CreateNewListPayload.Builder()
                 .setPos(listPos)
                 .build();
-
+        // ACT
         responsePost = postCreateNewList(boardId, listName, payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePost, expectedPostNewListResponseInvalidPos);
     }
