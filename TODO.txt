@@ -2,6 +2,7 @@
 TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
+- Kontynuować od labels -> del, post, put
 – Do testów PUT'ów dodać GET'y dla większej pewności i niezależności
 – Refaktor testów w ich aktualnym stanie i ilości
 – Dodać raport Allure (Allure pod REST: https://allurereport.org/docs/restassured/)
