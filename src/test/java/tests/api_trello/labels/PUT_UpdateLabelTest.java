@@ -3,6 +3,7 @@ package tests.api_trello.labels;
 import base.TestBase;
 import dto.labels.GET_GetLabelDto;
 import dto.labels.PUT_UpdateLabelDto;
+import expected_responses.labels.PUT_UpdateLabelExpected;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import payloads.labels.PUT_UpdateLabelPayload;
@@ -23,21 +24,42 @@ import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJso
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 import static utils_tests.labels.POST_CreateLabelUtils.generateRandomLabelColor;
 import static utils_tests.labels.POST_CreateLabelUtils.generateRandomLabelName;
-import static utils_tests.labels.PUT_UpdateLabelUtils.prepareExpectedResponsePut;
 import static utils_tests.labels.PUT_UpdateLabelUtils.validateGetAgainstPut;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateLabelTest extends TestBase {
+
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // --------
+    // RESPONSE
+    // --------
 
     private Response responsePost;
     private Response responsePut;
     private Response responseGet;
     private Response responseDelete;
 
+    // ---------------
+    // CLASS VARIABLES
+    // ---------------
+
+    // BOARD
     private String boardId;
+    // LABEL
     private String labelId;
     private String labelName;
     private String labelColor;
+
+    // ==========================================================================================================
+    // SETUP & TEARDOWN
+    // ==========================================================================================================
+
+    // ----------
+    // BEFORE ALL
+    // ----------
 
     @BeforeAll
     public void setUpCreateBoardAndLabel() {
@@ -49,6 +71,10 @@ public class PUT_UpdateLabelTest extends TestBase {
         labelId = responsePost.getBody().jsonPath().getString("id");
     }
 
+    // ---------
+    // AFTER ALL
+    // ---------
+
     @AfterAll
     public void tearDownDeleteBoardAndLabel() {
         if (boardId != null) {
@@ -59,9 +85,9 @@ public class PUT_UpdateLabelTest extends TestBase {
         }
     }
 
-    // --------------
+    // ==========================================================================================================
     // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
     @Test
     public void P1_shouldUpdateLabelWithCorrectValuesAndNameWithSpecialCharactersAndNumbers() {
@@ -78,13 +104,13 @@ public class PUT_UpdateLabelTest extends TestBase {
         responsePut = putUpdateLabel(labelId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateLabelDto.class);
-        PUT_UpdateLabelDto expectedResponsePutDto = prepareExpectedResponsePut(
-                P1ExpectedPutLabelResponse,
-                responsePutDto,
-                boardId,
-                labelName,
-                labelColor
-        );
+        PUT_UpdateLabelDto expectedResponsePutDto =
+                PUT_UpdateLabelExpected.base()
+                        .withId(responsePutDto.id)
+                        .withBoardId(boardId)
+                        .withName(labelName)
+                        .withColor(labelColor)
+                        .build();
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -105,13 +131,13 @@ public class PUT_UpdateLabelTest extends TestBase {
         responsePut = putUpdateLabel(labelId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateLabelDto.class);
-        PUT_UpdateLabelDto expectedResponsePutDto = prepareExpectedResponsePut(
-                P2ExpectedPutLabelResponse,
-                responsePutDto,
-                boardId,
-                labelName,
-                labelColor
-        );
+        PUT_UpdateLabelDto expectedResponsePutDto =
+                PUT_UpdateLabelExpected.base()
+                        .withId(responsePutDto.id)
+                        .withBoardId(boardId)
+                        .withName(labelName)
+                        .withColor(labelColor)
+                        .build();
         compareObjects(responsePutDto, expectedResponsePutDto);
         // GET
         validateGetAgainstPut(responsePutDto);
@@ -119,7 +145,7 @@ public class PUT_UpdateLabelTest extends TestBase {
 
     @Test
     public void P3_shouldUpdateLabelWhenNameAndColorAreMissing() {
-        // GET (We need to retrieve the current state of the label)
+        // GET (Get current status of {LABEL})
         responseGet = getGetLabel(labelId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetLabelDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetLabelDto.class);
@@ -140,7 +166,7 @@ public class PUT_UpdateLabelTest extends TestBase {
                 .setColor(null)
                 .build();
 
-        // GET (We need to retrieve the current state of the label)
+        // GET (Get current status of {LABEL})
         responseGet = getGetLabel(labelId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetLabelDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetLabelDto.class);
@@ -175,30 +201,48 @@ public class PUT_UpdateLabelTest extends TestBase {
         responsePut = putUpdateLabel(labelId, payload);
         assertThat(responsePut.statusCode()).isEqualTo(200);
         PUT_UpdateLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateLabelDto.class);
-        GET_GetLabelDto expectedResponseGetDto = responseGetDto;
-        expectedResponseGetDto.id = responsePutDto.id;
-        expectedResponseGetDto.name = "";
-        expectedResponseGetDto.color = null;
-        compareObjects(responsePutDto, expectedResponseGetDto);
+        // IF DATA NOT CHANGE (Except label {id})
+        responseGetDto.id =  responsePutDto.id;
+        // IF DATA CHANGE
+        PUT_UpdateLabelDto expectedResponsePutDto =
+                PUT_UpdateLabelExpected.base()
+                        .withId(responsePutDto.id)
+                        .withBoardId(boardId)
+                        .withName(labelName)
+                        .withColor(null)
+                        .build();
+        assertThat(responsePutDto).satisfiesAnyOf(
+                dto -> compareObjects(dto, expectedResponsePutDto),   // IF DATA CHANGE
+                dto -> compareObjects(dto, responseGetDto)            // IF DATA NOT CHANGE (Except label {id})
+        );
         // GET
-        validateGetAgainstPut(responsePutDto);
+        Response responseGetAfterPut = getGetLabel(labelId);
+        assertThat(responseGetAfterPut.statusCode()).isEqualTo(200);
+        GET_GetLabelDto responseGetDtoAfterPut = deserializeAndValidateJson(responseGet, GET_GetLabelDto.class);
+        assertThat(responseGetDtoAfterPut).satisfiesAnyOf(
+                dto -> compareObjects(dto, expectedResponsePutDto),   // IF DATA CHANGE
+                dto -> compareObjects(dto, responseGetDto)            // IF DATA NOT CHANGE (Except label {id})
+        );
     }
     */
 
-    // --------------
+    // ==========================================================================================================
     // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
+    // -----
     // color
+    // -----
 
     @Test
     public void N1_shouldNotUpdateLabelWhenLabelColorIsIncorrect() {
-
+        // ARRANGE
         PUT_UpdateLabelPayload payload = new PUT_UpdateLabelPayload.Builder()
                 .setColor("N1KeK123")
                 .build();
-
+        // ACT
         responsePut = putUpdateLabel(boardId, payload);
+        // ASSERT
         assertThat(responsePut.getStatusCode()).isEqualTo(400);
         compareResponseWithJson(responsePut, expectedPutLabelResponseInvalidColor);
     }

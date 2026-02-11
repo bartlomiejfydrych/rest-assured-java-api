@@ -1,42 +1,81 @@
 package expected_responses.labels;
 
+import dto.labels.PUT_UpdateLabelDto;
+
 public class PUT_UpdateLabelExpected {
 
-    // --------------
-    // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
 
-    public static final String P1ExpectedPutLabelResponse = """
-            {
-                "id": "68f3727ceca87e58e1db7f37",
-                "idBoard": "68f3727b519a2a57cdf7fec1",
-                "name": "QćJsŃY4źwEv<Wf;DĄ:VL )TF?!0OoŁaNĘ68Ic(iC\\"hx\\\\śn+*u5K7ZŻUH1ÓŚ]Ćq^AlbSr{9\\\\|-',jŹ3ąg$%_>2}dmz@&X~łń#peę=P\\\\RóB[`Gkżty./M",
-                "color": "black",
-                "uses": 0
-            }
-            """;
-    public static final String P2ExpectedPutLabelResponse = """
-            {
-                "id": "68f37e9768df3435f3db8e68",
-                "idBoard": "68f37e9660e11c1df0d5f798",
-                "name": "G",
-                "color": "purple",
-                "uses": 0
-            }
-            """;
-    public static final String P5ExpectedPutLabelResponse = """
-            {
-                "id": "68f382a218087e7c6c962fcb",
-                "idBoard": "68f382a1ac7a71ed4bd69d4a",
-                "name": "",
-                "color": null,
-                "uses": 0
-            }
-            """;
+    private String id = "DEFAULT_ID";
+    private String idBoard = "DEFAULT_BOARD_ID";
+    private String name = "DEFAULT_NAME";
+    private String color = null;
+    private Integer uses = 0;
 
-    // --------------
-    // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
+    // CONSTRUCTORS
+    // ==========================================================================================================
+
+    // ----
+    // BASE
+    // ----
+
+    public static PUT_UpdateLabelExpected base() {
+        return new PUT_UpdateLabelExpected();
+    }
+
+    // ==========================================================================================================
+    // METHODS (replacing data)
+    // ==========================================================================================================
+
+    public PUT_UpdateLabelExpected withId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public PUT_UpdateLabelExpected withBoardId(String idBoard) {
+        this.idBoard = idBoard;
+        return this;
+    }
+
+    public PUT_UpdateLabelExpected withName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public PUT_UpdateLabelExpected withColor(String color) {
+        this.color = color;
+        return this;
+    }
+
+    public PUT_UpdateLabelExpected withUses(Integer uses) {
+        this.uses = uses;
+        return this;
+    }
+
+    // ==========================================================================================================
+    // BUILDER
+    // ==========================================================================================================
+
+    public PUT_UpdateLabelDto build() {
+        return new PUT_UpdateLabelDto(
+                id,
+                idBoard,
+                name,
+                color,
+                uses
+        );
+    }
+
+    // ==========================================================================================================
+    // NEGATIVE TESTS (expected responses)
+    // ==========================================================================================================
+
+    // -----
+    // color
+    // -----
 
     public static final String expectedPutLabelResponseInvalidColor = """
             {

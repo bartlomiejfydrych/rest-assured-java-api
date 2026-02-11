@@ -9,24 +9,12 @@ import static endpoints.labels.GET_GetLabelEndpoint.getGetLabel;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
-import static utils.response.UtilsResponseDeserializer.deserializeJson;
 
 public class PUT_UpdateLabelUtils extends TestBase {
 
-    public static PUT_UpdateLabelDto prepareExpectedResponsePut(
-            String expectedResponse,
-            PUT_UpdateLabelDto responsePutDto,
-            String boardId,
-            String labelName,
-            String labelColor
-    ) {
-        PUT_UpdateLabelDto expectedResponsePutDto = deserializeJson(expectedResponse, PUT_UpdateLabelDto.class);
-        expectedResponsePutDto.id = responsePutDto.id;
-        expectedResponsePutDto.idBoard = boardId;
-        expectedResponsePutDto.name = labelName;
-        expectedResponsePutDto.color = labelColor;
-        return expectedResponsePutDto;
-    }
+    // ------------------------
+    // VALIDATE GET AGAINST PUT
+    // ------------------------
 
     public static void validateGetAgainstPut(PUT_UpdateLabelDto responsePutDto) {
         Response responseGet = getGetLabel(responsePutDto.id);
