@@ -74,11 +74,11 @@ public class PUT_UpdateListTest extends TestBase {
 
     @BeforeAll
     public void setUpCreateBoardAndList() {
-        // Create board
+        // BOARD
         responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
-        // Create list
+        // LIST
         responsePost = postCreateNewList(boardId, generateRandomListName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateNewListDto.class);
