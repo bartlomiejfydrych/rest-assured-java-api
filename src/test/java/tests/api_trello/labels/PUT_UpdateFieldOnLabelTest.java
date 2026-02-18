@@ -30,27 +30,54 @@ import static utils_tests.labels.PUT_UpdateFieldOnLabelUtils.validateGetAgainstP
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateFieldOnLabelTest extends TestBase {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // --------
+    // RESPONSE
+    // --------
+
     private Response responsePost;
     private Response responsePut;
-    private Response responseGet;
     private Response responseDelete;
 
+    // ---------------
+    // CLASS VARIABLES
+    // ---------------
+
+    // BOARD
     private String boardId;
+    // LABEL
     private String labelId;
     private String labelFieldValue;
-    // NOTE: Created label object will act as our "expected response"
+    // NOTE: The label object you create will act as our "expected response." We'll substitute the changed data into it.
     private POST_CreateLabelDto responsePostDto;
+
+    // ==========================================================================================================
+    // SETUP & TEARDOWN
+    // ==========================================================================================================
+
+    // ----------
+    // BEFORE ALL
+    // ----------
 
     @BeforeAll
     public void setUpCreateBoardAndLabel() {
+        // BOARD
         responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
+        // LABEL
         responsePost = postCreateLabel(boardId, generateRandomLabelName(), generateRandomLabelColor());
         assertThat(responsePost.statusCode()).isEqualTo(200);
         responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateLabelDto.class);
         labelId = responsePostDto.id;
     }
+
+    // ---------
+    // AFTER ALL
+    // ---------
 
     @AfterAll
     public void tearDownDeleteBoardAndLabel() {
@@ -62,11 +89,13 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         }
     }
 
-    // --------------
+    // ==========================================================================================================
     // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
+    // ----
     // name
+    // ----
 
     @Test
     public void P1_shouldUpdateLabelFieldNameWithSpecialCharactersAndNumbers() {
@@ -113,7 +142,9 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         validateGetAgainstPut(responsePutDto);
     }
 
+    // -----
     // color
+    // -----
 
     @Test
     public void P4_shouldUpdateLabelFieldColorWithOneOfCorrectColors() {
@@ -174,11 +205,13 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         validateGetAgainstPut(responsePutDto);
     }
 
-    // --------------
+    // ==========================================================================================================
     // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
+    // ----
     // name
+    // ----
 
     @Test
     public void N1_shouldNotUpdateLabelFieldNameWithoutValue() {
@@ -188,7 +221,9 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for value");
     }
 
+    // -----
     // color
+    // -----
 
     @Test
     public void N2_shouldNotUpdateLabelFieldColorWithIncorrectValue() {

@@ -12,6 +12,10 @@ import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJso
 
 public class PUT_UpdateFieldOnLabelUtils extends TestBase {
 
+    // ------------------------
+    // VALIDATE GET AGAINST PUT
+    // ------------------------
+
     public static void validateGetAgainstPut(PUT_UpdateFieldOnLabelDto responsePutDto) {
         Response responseGet = getGetLabel(responsePutDto.id);
         assertThat(responseGet.statusCode()).isEqualTo(200);
