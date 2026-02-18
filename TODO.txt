@@ -2,9 +2,8 @@
 TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
-- Kontynuować od labels -> del, post, put
-– Do testów PUT'ów dodać GET'y dla większej pewności i niezależności
 – Refaktor testów w ich aktualnym stanie i ilości
+– Puścić każdy test osobno, a następnie całą klasę
 – Dodać raport Allure (Allure pod REST: https://allurereport.org/docs/restassured/)
 – Przeanalizować i zapisać sobie, co można zrobić w przypadku różnych base URL (np. /api/, /admin/, /mobile/)
 – Dodać zapisywanie i odczytywanie tokena oraz jego odświeżanie za pomocą API od Dawida (lub napisać suchą metodę)
