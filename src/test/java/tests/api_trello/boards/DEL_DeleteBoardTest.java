@@ -13,12 +13,28 @@ import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 
 public class DEL_DeleteBoardTest extends TestBase {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // --------
+    // RESPONSE
+    // --------
+
     private Response responsePost;
-    private Response responsePut;
     private Response responseGet;
     private Response responseDelete;
 
+    // ---------------
+    // CLASS VARIABLES
+    // ---------------
+
+    // BOARD
     private String boardId;
+
+    // ==========================================================================================================
+    // POSITIVE TESTS
+    // ==========================================================================================================
 
     @Test
     public void P1_shouldDeleteBoard() {
