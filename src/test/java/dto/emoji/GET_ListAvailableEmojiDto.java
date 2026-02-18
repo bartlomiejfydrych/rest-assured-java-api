@@ -33,8 +33,7 @@ public class GET_ListAvailableEmojiDto {
     public SpriteSheets spriteSheets;
 
     @NotNull
-    @Valid // <-- validates nested fields if object exists
-    public List<Trello> trello;
+    public List<@Valid Trello> trello; // NOTE: From newer versions of Hibernate Validator 7+ / 8 / 9 the annotation goes inside the generic.
 
     // ==========================================================================================================
     // CONSTRUCTORS

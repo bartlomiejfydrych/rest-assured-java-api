@@ -24,7 +24,6 @@ public class SpriteSheetEntry {
     // ==========================================================================================================
 
     @NotNull
-    @Valid // <-- validates nested fields if object exists
     @JsonProperty(FIELD_URL)
     public URL url;
 

@@ -15,21 +15,25 @@ import static utils.response.UtilsResponseDeserializer.deserializeJson;
 
 public class GET_ListAvailableEmojiTest extends TestBase {
 
-    private Response responsePost;
-    private Response responsePut;
-    private Response responseGet;
-    private Response responseDelete;
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
 
-    // --------------
+    // --------
+    // RESPONSE
+    // --------
+
+    private Response responseGet;
+
+    // ==========================================================================================================
     // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
     @Test
     public void P1_shouldGetListAvailableEmojiWhenQueryParametersAreMissing() {
 
-        String expectedResponseJsonFile = readResourceFileAsString(
-                "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json"
-        );
+        String resourcePath = "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json";
+        String expectedResponseJsonFile = readResourceFileAsString(resourcePath);
 
         // GET
         responseGet = getListAvailableEmoji(null);
@@ -42,9 +46,8 @@ public class GET_ListAvailableEmojiTest extends TestBase {
     @Test
     public void P2_shouldGetListAvailableEmojiWhenQueryParametersAreNull() {
 
-        String expectedResponseJsonFile = readResourceFileAsString(
-                "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json"
-        );
+        String resourcePath = "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json";
+        String expectedResponseJsonFile = readResourceFileAsString(resourcePath);
 
         GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
                 .setLocale(null)
@@ -62,9 +65,8 @@ public class GET_ListAvailableEmojiTest extends TestBase {
     @Test
     public void P3_shouldGetListAvailableEmojiWhenSpritesheetsIsFalse() {
 
-        String expectedResponseJsonFile = readResourceFileAsString(
-                "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json"
-        );
+        String resourcePath = "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json";
+        String expectedResponseJsonFile = readResourceFileAsString(resourcePath);
 
         GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
                 .setSpritesheets(false)
@@ -81,9 +83,8 @@ public class GET_ListAvailableEmojiTest extends TestBase {
     @Test
     public void P4_shouldGetListAvailableEmojiWithOtherLocaleAndWhenSpritesheetsIsTrue() {
 
-        String expectedResponseJsonFile = readResourceFileAsString(
-                "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/P4_ExpectedGetListAvailableEmojiResponse.json"
-        );
+        String resourcePath = "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/P4_ExpectedGetListAvailableEmojiResponse.json";
+        String expectedResponseJsonFile = readResourceFileAsString(resourcePath);
 
         GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
                 .setLocale("en-US")
@@ -98,9 +99,9 @@ public class GET_ListAvailableEmojiTest extends TestBase {
         compareObjects(responseGetDto, expectedResponseGetDto);
     }
 
-    // --------------
+    // ==========================================================================================================
     // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
     @Test
     public void N1_shouldNotGetListAvailableEmojiWhenLocaleHasIncorrectValue() {
