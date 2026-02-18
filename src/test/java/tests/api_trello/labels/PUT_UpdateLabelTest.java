@@ -63,9 +63,11 @@ public class PUT_UpdateLabelTest extends TestBase {
 
     @BeforeAll
     public void setUpCreateBoardAndLabel() {
+        // BOARD
         responsePost = postCreateBoard(generateRandomBoardName(), null);
         assertThat(responsePost.statusCode()).isEqualTo(200);
         boardId = responsePost.getBody().jsonPath().getString("id");
+        // LABEL
         responsePost = postCreateLabel(boardId, generateRandomLabelName(), generateRandomLabelColor());
         assertThat(responsePost.statusCode()).isEqualTo(200);
         labelId = responsePost.getBody().jsonPath().getString("id");
