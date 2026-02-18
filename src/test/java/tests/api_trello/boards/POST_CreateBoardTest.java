@@ -22,13 +22,31 @@ import static utils_tests.boards.POST_CreateBoardUtils.*;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class POST_CreateBoardTest extends TestBase {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // --------
+    // RESPONSE
+    // --------
+
     private Response responsePost;
-    private Response responsePut;
-    private Response responseGet;
     private Response responseDelete;
+
+    // ---------------
+    // CLASS VARIABLES
+    // ---------------
 
     private String boardId;
     private String trelloId = Config.getTrelloId();
+
+    // ==========================================================================================================
+    // SETUP & TEARDOWN
+    // ==========================================================================================================
+
+    // ----------
+    // AFTER EACH
+    // ----------
 
     @AfterEach
     public void tearDownDeleteBoard() {
@@ -38,9 +56,20 @@ public class POST_CreateBoardTest extends TestBase {
         }
     }
 
-    // --------------
+    // ==========================================================================================================
+    // DEBUG
+    // ==========================================================================================================
+
+    // @Test
+    public void deleteBoard() {
+        String yourBoardId = "68724f5bfffa6577a4dc0dbb";
+        responseDelete = DEL_DeleteBoardEndpoint.deleteDeleteBoard(yourBoardId);
+        assertThat(responseDelete.statusCode()).isEqualTo(200);
+    }
+
+    // ==========================================================================================================
     // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
     @Test
     public void P1_shouldCreateBoardWhoseNameContainsSpecialCharactersAndNumbers() {
@@ -203,11 +232,13 @@ public class POST_CreateBoardTest extends TestBase {
         validateGetAgainstPost(responsePostDto);
     }
 
-    // --------------
+    // ==========================================================================================================
     // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
+    // ----
     // name
+    // ----
 
     @Test
     public void N1_shouldNotCreateBoardWhenNameWasNotGiven() {
@@ -230,49 +261,56 @@ public class POST_CreateBoardTest extends TestBase {
         compareResponseWithJson(responsePost, expectedPostBoardResponseInvalidName);
     }
 
+    // --------------
     // idOrganization
+    // --------------
 
     @Test
     public void N4_shouldNotCreateBoardWhenIdOrganizationNonExist() {
-
+        // ARRANGE
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setIdOrganization("123456789098765432123456")
                 .build();
-
+        // ACT
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(401);
         assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized org access");
     }
 
     @Test
     public void N5_shouldNotCreateBoardWhenIdOrganizationIsIncompatibleWithRegEx() {
-
+        // ARRANGE
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setIdOrganization("123abc")
                 .build();
-
+        // ACT
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(401);
         assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized organization.");
     }
 
+    // -------------
     // idBoardSource
+    // -------------
 
     @Test
     public void N6_shouldNotCreateBoardWhenIdBoardSourceNonExist() {
-
+        // ARRANGE
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setIdBoardSource("123456789098765432123456")
                 .build();
-
+        // ACT
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(404);
         assertThat(responsePost.getBody().asString()).isEqualTo("source board not found");
     }
 
     @Test
     public void N7_shouldNotCreateBoardWhenIdBoardSourceIsIncompatibleWithRegEx() {
-
+        // ARRANGE
         String expectedResponse = """
                 {
                     "message": "Invalid objectId",
@@ -283,89 +321,95 @@ public class POST_CreateBoardTest extends TestBase {
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setIdBoardSource("123abc")
                 .build();
-
+        // ACT
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePost, expectedResponse);
     }
 
+    // ---------------------
     // prefs_permissionLevel
+    // ---------------------
 
     @Test
     public void N8_shouldNotCreateBoardWhenPrefsPermissionLevelIsOtherString() {
-
+        // ARRANGE
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setPrefsPermissionLevel("other")
                 .build();
-
+        // ACT
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_permissionLevel");
     }
 
+    // ------------
     // prefs_voting
+    // ------------
 
     @Test
     public void N9_shouldNotCreateBoardWhenPrefsVotingIsOtherString() {
-
+        // ARRANGE
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setPrefsVoting("other")
                 .build();
-
+        // ACT
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_voting");
     }
 
+    // --------------
     // prefs_comments
+    // --------------
 
     @Test
     public void N10_shouldNotCreateBoardWhenPrefsCommentsIsOtherString() {
-
+        // ARRANGE
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setPrefsComments("other")
                 .build();
-
+        // ACT
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_comments");
     }
 
+    // -----------------
     // prefs_invitations
+    // -----------------
 
     @Test
     public void N11_shouldNotCreateBoardWhenPrefsInvitationsIsOtherString() {
-
+        // ARRANGE
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setPrefsInvitations("other")
                 .build();
-
+        // ACT
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_invitations");
     }
 
+    // ---------------
     // prefs_cardAging
+    // ---------------
 
     @Test
     public void N12_shouldNotCreateBoardWhenPrefsCardAgingIsOtherString() {
-
+        // ARRANGE
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setPrefsCardAging("other")
                 .build();
-
+        // ACT
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for prefs_cardAging");
-    }
-
-    // -----
-    // DEBUG
-    // -----
-
-    //@Test
-    public void deleteBoard() {
-        responseDelete = DEL_DeleteBoardEndpoint.deleteDeleteBoard("68724f5bfffa6577a4dc0dbb");
-        assertThat(responseDelete.statusCode()).isEqualTo(200);
     }
 }
