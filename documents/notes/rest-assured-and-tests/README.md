@@ -44,6 +44,7 @@
 - [REST Assured – asercja dla pustego obiektu](#rest_assured_assert_empty_object)
 - [JUnit – tagi dla testów](#junit_test_tags)
 - [Junit – TestInstance.Lifecycle](#junit_testinstance_lifecycle)
+- [Response – duży vs. mały](#response_big_vs_small)
 - [AssertJ – porównywanie obiektów i list](#assertj_object_compare)
 - [AssertJ – dodawanie komentarzy/logów do testów](#assertj_comments_logs)
 - [AssertJ – soft assertions](#assertj_soft_assertions)
@@ -3156,6 +3157,224 @@ After all tests
 | `@BeforeAll` / `@AfterAll` | Muszą być static przy `PER_METHOD`, nie muszą przy `PER_CLASS` |
 | Użycie `PER_CLASS`         | Gdy testy mają współdzielony stan lub setup jest kosztowny     |
 | Użycie `PER_METHOD`        | Gdy testy mają być w pełni izolowane                           |
+
+---
+
+## 📄Response – duży vs. mały <a name="response_big_vs_small"></a>
+
+### Response – mały
+
+Dla małych responsów najlepiej używać takich builderów:
+
+```java
+package expected_responses.lists;
+
+import dto.lists.POST_CreateNewListDto;
+import dto.lists.list.DataSource;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class POST_CreateNewListExpected {
+
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    private String id = "DEFAULT_ID";
+    private String name = "DEFAULT_NAME";
+    private Boolean closed = false;
+    private String color = null;
+    private String idBoard = "DEFAULT_BOARD_ID";
+    private Long pos = 1L;
+    private String type = null;
+    private DataSource datasource = new DataSource(false);
+    private Map<String, Object> limits = new HashMap<>(); // new Object(); <- This broke the comparison to the empty object ({})
+
+    // ==========================================================================================================
+    // CONSTRUCTORS
+    // ==========================================================================================================
+
+    // ----
+    // BASE
+    // ----
+
+    public static POST_CreateNewListExpected base() {
+        return new POST_CreateNewListExpected();
+    }
+
+    // ==========================================================================================================
+    // METHODS (replacing data)
+    // ==========================================================================================================
+
+    public POST_CreateNewListExpected withId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public POST_CreateNewListExpected withName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public POST_CreateNewListExpected withBoardId(String idBoard) {
+        this.idBoard = idBoard;
+        return this;
+    }
+
+    public POST_CreateNewListExpected withPos(Long pos) {
+        this.pos = pos;
+        return this;
+    }
+
+    // ==========================================================================================================
+    // BUILDER
+    // ==========================================================================================================
+
+    public POST_CreateNewListDto build() {
+        return new POST_CreateNewListDto(
+                id,
+                name,
+                closed,
+                color,
+                idBoard,
+                pos,
+                type,
+                datasource,
+                limits
+        );
+    }
+
+    // ==========================================================================================================
+    // NEGATIVE TESTS (expected responses)
+    // ==========================================================================================================
+
+    // ----
+    // name
+    // ----
+
+    public static final String expectedPostNewListResponseInvalidName = "invalid value for name";
+
+    // -------
+    // idBoard
+    // -------
+
+    public static final String expectedPostNewListResponseInvalidIdBoard = "invalid value for idBoard";
+
+    // ------------
+    // idListSource
+    // ------------
+
+    public static final String expectedPostNewListResponseInvalidIdListSource = """
+            {
+                "message": "Invalid objectId",
+                "error": "ERROR"
+            }
+            """;
+
+    // ---
+    // pos
+    // ---
+
+    public static final String expectedPostNewListResponseInvalidPos = """
+            {
+                "message": "Invalid position.",
+                "error": "ERROR"
+            }
+            """;
+}
+```
+
+Zastosowanie w testch:
+
+```java
+@Test
+public void P1_shouldCreateNewListWhereNameIsWithSpecialCharactersAndNumbers() {
+
+    listName = getAllCharactersSetInRandomOrder();
+
+    // POST
+    responsePost = postCreateNewList(boardId, listName, null);
+    assertThat(responsePost.statusCode()).isEqualTo(200);
+    POST_CreateNewListDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateNewListDto.class);
+    POST_CreateNewListDto expectedResponsePostDto =
+            POST_CreateNewListExpected.base()
+                    .withId(responsePostDto.id)
+                    .withName(listName)
+                    .withBoardId(boardId)
+                    .withPos(responsePostDto.pos)
+                    .build();
+    compareObjects(responsePostDto, expectedResponsePostDto);
+    // GET
+    validateGetAgainstPost(responsePostDto);
+}
+```
+
+### Response – duży
+
+1. Duże responsy po prostu kopiujemy/zapisujemy jako JSON/String.
+2. Następnie zamieniamy je na obiekt według wzorcowego DTO.
+3. Tworzymy metodę pomocniczą, która sprawdza i podmienia dynamiczne pola, aby oba responsy były spójne.
+4. Następnie wykorzystujemy te rzeczy w testach.
+
+#### Metoda pomocnicza
+
+❗Przed podmianą warto zawsze najpierw sprawdzać, czy dane pole istnieje!
+
+```java
+public static POST_CreateBoardDto prepareExpectedResponsePost(String expectedResponse, POST_CreateBoardDto responsePostDto, String boardName) {
+    // Converting JSON String to DTO Object
+    POST_CreateBoardDto expectedResponsePostDto = deserializeJson(expectedResponse, POST_CreateBoardDto.class);
+    // Before replacing, it is always a good idea to first check whether a field exists!
+    assertThat(responsePostDto.id).isNotNull();
+    assertThat(responsePostDto.name).isNotNull();
+    assertThat(responsePostDto.url).isNotNull();
+    assertThat(responsePostDto.shortUrl).isNotNull();
+    // Value replacement
+    expectedResponsePostDto.id = responsePostDto.id;
+    expectedResponsePostDto.name = boardName;
+    expectedResponsePostDto.url = responsePostDto.url;
+    expectedResponsePostDto.shortUrl = responsePostDto.shortUrl;
+    return expectedResponsePostDto;
+}
+```
+
+#### Zastosowanie w teście
+
+```java
+@Test
+public void P2_shouldCreateBoardWhenMostParametersAreGiven() {
+
+    String boardName = "F";
+
+    POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
+            .setDefaultLabels(true)
+            .setDefaultLists(true)
+            .setDesc("!\"#$%&\\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ęĘóÓąĄśŚłŁżŻźŹćĆńŃ")
+            .setIdOrganization(trelloId)
+            .setKeepFromSource("none")
+            .setPowerUps("all")
+            .setPrefsPermissionLevel("private")
+            .setPrefsVoting("disabled")
+            .setPrefsComments("members")
+            .setPrefsInvitations("members")
+            .setPrefsSelfJoin(true)
+            .setPrefsCardCovers(true)
+            .setPrefsBackground("blue")
+            .setPrefsCardAging("regular")
+            .build();
+
+    // POST
+    responsePost = postCreateBoard(boardName, payload);
+    assertThat(responsePost.statusCode()).isEqualTo(200);
+    boardId = responsePost.jsonPath().getString("id");
+    POST_CreateBoardDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateBoardDto.class);
+    POST_CreateBoardDto expectedResponsePostDto = prepareExpectedResponsePost(P2ExpectedPostBoardResponse, responsePostDto, boardName);
+    compareObjects(responsePostDto, expectedResponsePostDto);
+    // GET
+    validateGetAgainstPost(responsePostDto);
+}
+```
 
 ---
 
