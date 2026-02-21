@@ -12,9 +12,9 @@ import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJso
 
 public class PUT_UpdateLabelUtils extends TestBase {
 
-    // ------------------------
-    // VALIDATE GET AGAINST PUT
-    // ------------------------
+    // --------------------------------------
+    // VALIDATE GET AGAINST PREVIOUS RESPONSE
+    // --------------------------------------
 
     public static void validateGetAgainstPut(PUT_UpdateLabelDto responsePutDto) {
         Response responseGet = getGetLabel(responsePutDto.id);

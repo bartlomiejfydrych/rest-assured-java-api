@@ -16,9 +16,9 @@ public class PUT_UpdateListUtils extends TestBase {
     // METHODS – MAIN
     // ==========================================================================================================
 
-    // ------------------------
-    // VALIDATE GET AGAINST PUT
-    // ------------------------
+    // --------------------------------------
+    // VALIDATE GET AGAINST PREVIOUS RESPONSE
+    // --------------------------------------
 
     public static void validateGetAgainstPut(PUT_UpdateListDto responsePutDto) {
         Response responseGet = getGetList(responsePutDto.id);

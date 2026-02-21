@@ -24,9 +24,9 @@ public class POST_CreateNewListUtils extends TestBase {
         return "List - " + faker.company().name() + " | Number: " + System.nanoTime();
     }
 
-    // -------------------------
-    // VALIDATE GET AGAINST POST
-    // -------------------------
+    // --------------------------------------
+    // VALIDATE GET AGAINST PREVIOUS RESPONSE
+    // --------------------------------------
 
     public static void validateGetAgainstPost(POST_CreateNewListDto responsePostDto) {
         Response responseGet = getGetList(responsePostDto.id);

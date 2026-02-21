@@ -33,9 +33,9 @@ public class POST_CreateLabelUtils extends TestBase {
         return pickRandom("yellow", "purple", "blue", "red", "green", "orange", "black", "sky", "pink", "lime");
     }
 
-    // -------------------------
-    // VALIDATE GET AGAINST POST
-    // -------------------------
+    // --------------------------------------
+    // VALIDATE GET AGAINST PREVIOUS RESPONSE
+    // --------------------------------------
 
     public static void validateGetAgainstPost(POST_CreateLabelDto responsePostDto) {
         Response responseGet = getGetLabel(responsePostDto.id);
