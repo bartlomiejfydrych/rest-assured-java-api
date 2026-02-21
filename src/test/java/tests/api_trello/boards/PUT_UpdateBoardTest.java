@@ -5,6 +5,7 @@ import configuration.Config;
 import dto.boards.GET_GetBoardDto;
 import dto.boards.POST_CreateBoardDto;
 import dto.boards.PUT_UpdateBoardDto;
+import endpoints.boards.DEL_DeleteBoardEndpoint;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import payloads.boards.PUT_UpdateBoardPayload;
@@ -30,17 +31,37 @@ import static utils_tests.boards.PUT_UpdateBoardUtils.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PUT_UpdateBoardTest extends TestBase {
 
+    // ==========================================================================================================
+    // FIELDS
+    // ==========================================================================================================
+
+    // --------
+    // RESPONSE
+    // --------
+
     private Response responsePost;
     private Response responsePut;
     private Response responseGet;
     private Response responseDelete;
 
+    // ---------------
+    // CLASS VARIABLES
+    // ---------------
+
     private String trelloId = Config.getTrelloId();
-    // POST changing variables
+    // BOARD (POST) – changing variables
     private String boardId;
     private String boardName;
     private URL boardUrl;
     private URL boardShortUrl;
+
+    // ==========================================================================================================
+    // SETUP & TEARDOWN
+    // ==========================================================================================================
+
+    // ----------
+    // BEFORE ALL
+    // ----------
 
     @BeforeAll
     public void setUpCreateBoard() {
@@ -53,6 +74,10 @@ public class PUT_UpdateBoardTest extends TestBase {
         boardShortUrl = responsePostDto.shortUrl;
     }
 
+    // ---------
+    // AFTER ALL
+    // ---------
+
     @AfterAll
     public void tearDownDeleteBoard() {
         if (boardId != null) {
@@ -62,9 +87,20 @@ public class PUT_UpdateBoardTest extends TestBase {
         }
     }
 
-    // --------------
+    // ==========================================================================================================
+    // DEBUG
+    // ==========================================================================================================
+
+    // @Test
+    public void deleteBoard() {
+        String yourBoardId = "68724f5bfffa6577a4dc0dbb";
+        responseDelete = DEL_DeleteBoardEndpoint.deleteDeleteBoard(yourBoardId);
+        assertThat(responseDelete.statusCode()).isEqualTo(200);
+    }
+
+    // ==========================================================================================================
     // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
     @Test
     public void P1_shouldUpdateBoardWhenMostStringParametersHaveSpecialCharactersAndBooleansAreTrue() {
@@ -137,9 +173,7 @@ public class PUT_UpdateBoardTest extends TestBase {
 
     @Test
     public void P3_shouldUpdateBoardWhenAllParametersAreMissing() {
-        // (We need to retrieve the current state of the previously created board to have something to compare it with,
-        // to ensure that nothing has changed in this test after editing.)
-        // GET
+        // GET (Get current status of {BOARD})
         responseGet = getGetBoard(boardId);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_GetBoardDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetBoardDto.class);
@@ -225,141 +259,150 @@ public class PUT_UpdateBoardTest extends TestBase {
         validateGetAgainstPut(responsePutDto);
     }
 
-    // --------------
+    // ==========================================================================================================
     // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
 
+    // ----
     // name
+    // ----
 
     @Test
     public void N1_shouldNotUpdateBoardWhenNameIsEmptyString() {
-
+        // ARRANGE
         String expectedResponse = """
                 {
                     "message": "invalid value for name",
                     "error": "ERROR"
                 }
                 """;
-
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setName("")
                 .build();
-
-        // PUT
+        // ACT
         responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePut, expectedResponse);
     }
 
+    // ----------
     // subscribed
+    // ----------
 
     @Test
     public void N2_shouldNotUpdateBoardWhenSubscribedNotExist() {
-
+        // ARRANGE
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setSubscribed("123456789098765432123456")
                 .build();
-
-        // PUT
+        // ACT
         responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
     }
 
     @Test
     public void N3_shouldNotUpdateBoardWhenSubscribedIsIncompatibleWithRegEx() {
-
+        // ARRANGE
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setSubscribed("123abc")
                 .build();
-
-        // PUT
+        // ACT
         responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
     }
 
+    // --------------
     // idOrganization
+    // --------------
 
     @Test
     public void N4_shouldNotUpdateBoardWhenIdOrganizationNotExist() {
-
+        // ARRANGE
         String expectedResponse = """
                 {
                     "message": "unauthorized organization access"
                 }
                 """;
-
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setIdOrganization("123456789098765432123456")
                 .build();
-
-        // PUT
+        // ACT
         responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(401);
         compareResponseWithJson(responsePut, expectedResponse);
     }
 
     @Test
     public void N5_shouldNotUpdateBoardWhenIdOrganizationIsIncompatibleWithRegEx() {
-
+        // ARRANGE
         String expectedResponse = """
                 {
                     "message": "unauthorized organization."
                 }
                 """;
-
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setIdOrganization("123abc")
                 .build();
-
-        // PUT
+        // ACT
         responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(401);
         compareResponseWithJson(responsePut, expectedResponse);
     }
 
+    // ---------------------
     // prefs/permissionLevel
+    // ---------------------
 
     @Test
     public void N6_shouldNotUpdateBoardWhenPrefsPermissionLevelIsOtherString() {
-
+        // ARRANGE
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsPermissionLevel("KeK")
                 .build();
-
-        // PUT
+        // ACT
         responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/permissionLevel");
     }
 
+    // -----------------
     // prefs/invitations
+    // -----------------
 
     @Test
     public void N7_shouldNotUpdateBoardWhenPrefsInvitationsIsOtherString() {
-
+        // ARRANGE
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsInvitations("KeK")
                 .build();
-
-        // PUT
+        // ACT
         responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/invitations");
     }
 
+    // ------------
     // prefs/voting
+    // ------------
 
     @Test
     public void N8_shouldNotUpdateBoardWhenPrefsVotingIsOtherString() {
-
+        // ARRANGE
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsVoting("KeK")
                 .build();
-
-        // PUT
+        // ACT
         responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/voting");
     }
@@ -368,50 +411,53 @@ public class PUT_UpdateBoardTest extends TestBase {
 
     @Test
     public void N9_shouldNotUpdateBoardWhenPrefsCommentsIsOtherString() {
-
+        // ARRANGE
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsComments("KeK")
                 .build();
-
-        // PUT
+        // ACT
         responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/comments");
     }
 
+    // ----------------
     // prefs/background
+    // ----------------
 
     @Test
     public void N10_shouldNotUpdateBoardWhenPrefsBackgroundIsOtherString() {
-
+        // ARRANGE
         String expectedResponse = """
                 {
                     "message": "Invalid background",
                     "error": "ERROR"
                 }
                 """;
-
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsBackground("KeK")
                 .build();
-
-        // PUT
+        // ACT
         responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePut, expectedResponse);
     }
 
+    // ---------------
     // prefs/cardAging
+    // ---------------
 
     @Test
     public void N11_shouldNotUpdateBoardWhenPrefsCardAgingIsOtherString() {
-
+        // ARRANGE
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setPrefsCardAging("KeK")
                 .build();
-
-        // PUT
+        // ACT
         responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/cardAging");
     }

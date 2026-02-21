@@ -15,18 +15,33 @@ import static utils.response.UtilsResponseDeserializer.deserializeJson;
 
 public class PUT_UpdateBoardUtils extends TestBase {
 
-    // ------------
-    // MAIN METHODS
-    // ------------
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
+
+    // -------------------------
+    // PREPARE EXPECTED RESPONSE
+    // -------------------------
 
     public static PUT_UpdateBoardDto prepareExpectedResponsePut(String expectedResponse, String boardId, String boardName, URL boardUrl, URL boardShortUrl) {
+        // Converting JSON String to DTO Object
         PUT_UpdateBoardDto expectedResponsePutDto = deserializeJson(expectedResponse, PUT_UpdateBoardDto.class);
+        // Before replacing, it is always a good idea to first check whether a field exists!
+        assertThat(boardId).isNotNull();
+        assertThat(boardName).isNotNull();
+        assertThat(boardUrl).isNotNull();
+        assertThat(boardShortUrl).isNotNull();
+        // Value replacement
         expectedResponsePutDto.id = boardId;
         expectedResponsePutDto.name = boardName;
         expectedResponsePutDto.url = boardUrl;
         expectedResponsePutDto.shortUrl = boardShortUrl;
         return expectedResponsePutDto;
     }
+
+    // --------------------------------------
+    // VALIDATE GET AGAINST PREVIOUS RESPONSE
+    // --------------------------------------
 
     public static void validateGetAgainstPut(PUT_UpdateBoardDto responsePutDto) {
         Response responseGet = getGetBoard(responsePutDto.id);
@@ -36,11 +51,9 @@ public class PUT_UpdateBoardUtils extends TestBase {
         compareObjects(responsePutDto, responseGetDto, PUT_UpdateBoardDto.FIELD_ORGANIZATION);
     }
 
-    // -----------
-    // SUB METHODS
-    // -----------
-
-    // URL
+    // -------------------------
+    // STRIP BOARD NAME FROM URL
+    // -------------------------
 
     public static String stripBoardNameFromUrl(URL url) {
         String[] parts = url.getPath().split("/");
