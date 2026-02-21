@@ -2,9 +2,9 @@ package expected_responses.boards;
 
 public class POST_CreateBoardExpected {
 
-    // --------------
-    // POSITIVE TESTS
-    // --------------
+    // ==========================================================================================================
+    // POSITIVE TESTS (expected responses)
+    // ==========================================================================================================
 
     public static final String P1ExpectedPostBoardResponse = """
             {
@@ -552,9 +552,13 @@ public class POST_CreateBoardExpected {
             }
             """;
 
-    // --------------
-    // NEGATIVE TESTS
-    // --------------
+    // ==========================================================================================================
+    // NEGATIVE TESTS (expected responses)
+    // ==========================================================================================================
+
+    // ----
+    // name
+    // ----
 
     public static final String expectedPostBoardResponseInvalidName = """
             {

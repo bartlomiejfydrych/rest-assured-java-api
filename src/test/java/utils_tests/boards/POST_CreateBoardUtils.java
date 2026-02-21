@@ -13,14 +13,33 @@ import static utils.response.UtilsResponseDeserializer.deserializeJson;
 
 public class POST_CreateBoardUtils extends TestBase {
 
+    // ==========================================================================================================
+    // METHODS – MAIN
+    // ==========================================================================================================
+
+    // -------------------------
+    // PREPARE EXPECTED RESPONSE
+    // -------------------------
+
     public static POST_CreateBoardDto prepareExpectedResponsePost(String expectedResponse, POST_CreateBoardDto responsePostDto, String boardName) {
+        // Converting JSON String to DTO Object
         POST_CreateBoardDto expectedResponsePostDto = deserializeJson(expectedResponse, POST_CreateBoardDto.class);
+        // Before replacing, it is always a good idea to first check whether a field exists!
+        assertThat(responsePostDto.id).isNotNull();
+        assertThat(responsePostDto.name).isNotNull();
+        assertThat(responsePostDto.url).isNotNull();
+        assertThat(responsePostDto.shortUrl).isNotNull();
+        // Value replacement
         expectedResponsePostDto.id = responsePostDto.id;
         expectedResponsePostDto.name = boardName;
         expectedResponsePostDto.url = responsePostDto.url;
         expectedResponsePostDto.shortUrl = responsePostDto.shortUrl;
         return expectedResponsePostDto;
     }
+
+    // --------------------------------------
+    // VALIDATE GET AGAINST PREVIOUS RESPONSE
+    // --------------------------------------
 
     public static void validateGetAgainstPost(POST_CreateBoardDto responsePostDto) {
         Response responseGet = getGetBoard(responsePostDto.id);
@@ -30,9 +49,17 @@ public class POST_CreateBoardUtils extends TestBase {
         compareObjects(responsePostDto, responseGetDto, POST_CreateBoardDto.FIELD_LIMITS);
     }
 
+    // --------------------------
+    // GENERATE RANDOM BOARD NAME
+    // --------------------------
+
     public static String generateRandomBoardName() {
         return faker.company().name() + " borad " + System.nanoTime(); // Before: faker.number().randomNumber();
     }
+
+    // ---------------------------
+    // GENERATE RANDOM DESCRIPTION
+    // ---------------------------
 
     public static String generateRandomDesc() {
         return faker.lorem().characters(1, 200, true, true);
