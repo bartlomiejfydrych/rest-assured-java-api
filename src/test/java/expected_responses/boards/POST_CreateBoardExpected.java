@@ -3,7 +3,7 @@ package expected_responses.boards;
 public class POST_CreateBoardExpected {
 
     // ==========================================================================================================
-    // POSITIVE TESTS (expected responses)
+    // POSITIVE TESTS
     // ==========================================================================================================
 
     public static final String P1ExpectedPostBoardResponse = """
@@ -553,7 +553,7 @@ public class POST_CreateBoardExpected {
             """;
 
     // ==========================================================================================================
-    // NEGATIVE TESTS (expected responses)
+    // NEGATIVE TESTS
     // ==========================================================================================================
 
     // ----
