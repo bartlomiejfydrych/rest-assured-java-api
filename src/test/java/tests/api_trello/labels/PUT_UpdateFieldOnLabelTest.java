@@ -129,6 +129,7 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
 
     @Test
     public void P3_shouldUpdateLabelFieldNameWithEmptyString() {
+        // WARNING: Flaky test – Data shouldn't change, but sometimes it does.
 
         labelFieldValue = "";
         responsePostDto.name = labelFieldValue;
