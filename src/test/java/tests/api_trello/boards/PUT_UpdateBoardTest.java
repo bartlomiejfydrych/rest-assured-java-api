@@ -104,14 +104,16 @@ public class PUT_UpdateBoardTest extends TestBase {
 
     @Test
     public void P1_shouldUpdateBoardWhenMostStringParametersHaveSpecialCharactersAndBooleansAreTrue() {
-
+        // POST
+        String boardId = null;
+        // PUT
         boardName = getAllCharactersSetInRandomOrder();
         String desc = getAllCharactersSetInRandomOrder();
 
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
                 .setName(boardName)
                 .setDesc(desc)
-                .setClosed(true)
+                .setClosed(true) // NOTE: Closed boards cannot edit. Discussed with Trello.
                 .setIdOrganization(trelloId)
                 .setPrefsPermissionLevel("org")
                 .setPrefsSelfJoin(true)
@@ -125,19 +127,35 @@ public class PUT_UpdateBoardTest extends TestBase {
                 .setPrefsCalendarFeedEnabled(true)
                 .build();
 
-        // TODO: Czekać na poprawkę lub podczas refactoru dodać GET'a
-        // PUT
-        responsePut = putUpdateBoard(boardId, payload);
-        assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateBoardDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateBoardDto.class);
-        assertThat(responsePutDto.url).isNotEqualTo(boardUrl);
-        assertThat(stripBoardNameFromUrl(responsePutDto.url)).isEqualTo(stripBoardNameFromUrl(boardUrl));
-        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P1ExpectedPutBoardResponse, boardId, boardName, responsePutDto.url, boardShortUrl);
-        expectedResponsePutDto.desc = desc;
-        expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
-        compareObjects(responsePutDto, expectedResponsePutDto);
-        // GET
-        validateGetAgainstPut(responsePutDto);
+        // POST (We need to create a separate, independent board because it should not be editable once closed, so this step breaks the rest of the tests.)
+        Response responsePost = postCreateBoard(generateRandomBoardName(), null);
+        assertThat(responsePost.statusCode()).isEqualTo(200);
+        try {
+            POST_CreateBoardDto responsePostDto = deserializeJson(responsePost, POST_CreateBoardDto.class);
+            boardId = responsePostDto.id;
+            String postBoardName = responsePostDto.name;
+            URL postBoardUrl = responsePostDto.url;
+            URL postBoardShortUrl = responsePostDto.shortUrl;
+            // PUT
+            responsePut = putUpdateBoard(boardId, payload);
+            assertThat(responsePut.statusCode()).isEqualTo(200);
+            PUT_UpdateBoardDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateBoardDto.class);
+            assertThat(responsePutDto.url).isNotEqualTo(postBoardUrl);
+            assertThat(stripBoardNameFromUrl(responsePutDto.url)).isEqualTo(stripBoardNameFromUrl(postBoardUrl));
+            PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P1ExpectedPutBoardResponse, boardId, boardName, responsePutDto.url, postBoardShortUrl);
+            expectedResponsePutDto.desc = desc;
+            expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
+            compareObjects(responsePutDto, expectedResponsePutDto);
+            // GET
+            validateGetAgainstPut(responsePutDto);
+        } finally {
+            // DELETE
+            if (boardId != null) {
+                responseDelete = deleteDeleteBoard(boardId);
+                assertThat(responseDelete.statusCode()).isEqualTo(200);
+                boardId = null;
+            }
+        }
     }
 
     @Test
