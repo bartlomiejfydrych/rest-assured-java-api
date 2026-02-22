@@ -40,8 +40,7 @@ public class Organization {
 
     @NotNull
     @NotEmpty
-    @Valid // <-- validates nested fields if object exists
-    public List<OrganizationMemberships> memberships;
+    public List<@Valid OrganizationMemberships> memberships;
 
     // ==========================================================================================================
     // CONSTRUCTORS
