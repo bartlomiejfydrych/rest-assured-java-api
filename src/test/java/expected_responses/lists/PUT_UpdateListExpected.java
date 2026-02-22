@@ -108,6 +108,17 @@ public class PUT_UpdateListExpected {
 
     public static final String expectedPutUpdateListResponseInvalidId = "invalid id";
 
+    // ----
+    // name
+    // ----
+
+    public static final String expectedPutUpdateListResponseInvalidName = """
+            {
+              "message": "invalid value for name",
+              "error": "BAD_REQUEST_ERROR"
+            }
+            """;
+
     // -------
     // idBoard
     // -------

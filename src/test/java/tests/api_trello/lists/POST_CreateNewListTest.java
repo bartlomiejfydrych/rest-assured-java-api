@@ -336,7 +336,7 @@ public class POST_CreateNewListTest extends TestBase {
         responsePost = postCreateNewListWithAnyParams(payload);
         // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidName);
+        compareResponseWithJson(responsePost, expectedPostNewListResponseInvalidName);
     }
 
     @Test
@@ -347,7 +347,7 @@ public class POST_CreateNewListTest extends TestBase {
         responsePost = postCreateNewList(boardId, listName, null);
         // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidName);
+        compareResponseWithJson(responsePost, expectedPostNewListResponseInvalidName);
     }
 
     @Test
@@ -358,7 +358,7 @@ public class POST_CreateNewListTest extends TestBase {
         responsePost = postCreateNewList(boardId, listName, null);
         // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidName);
+        compareResponseWithJson(responsePost, expectedPostNewListResponseInvalidName);
     }
 
     // -------

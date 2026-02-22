@@ -526,7 +526,7 @@ public class PUT_UpdateListTest extends TestBase {
         responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
-        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for name");
+        compareResponseWithJson(responsePut, expectedPutUpdateListResponseInvalidName);
     }
 
     // -------

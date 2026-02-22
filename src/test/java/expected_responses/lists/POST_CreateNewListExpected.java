@@ -84,7 +84,12 @@ public class POST_CreateNewListExpected {
     // name
     // ----
 
-    public static final String expectedPostNewListResponseInvalidName = "invalid value for name";
+    public static final String expectedPostNewListResponseInvalidName = """
+            {
+              "message": "invalid value for name",
+              "error": "BAD_REQUEST_ERROR"
+            }
+            """;
 
     // -------
     // idBoard
