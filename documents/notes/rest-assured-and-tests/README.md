@@ -60,6 +60,7 @@
 - [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (3)](#junit_api_unit_tests_3)
 - [Maven – do uruchamiania testów](#maven_tests_runner)
 - [JSON – podstawianie zmiennych pod niego](#json_variable_replace)
+- [Allure Report – konfiguracja](#allure_report)
 
 ---
 
@@ -5685,3 +5686,147 @@ public static PUT_UpdateListDto prepareUniversalExpectedResponsePut(
     return expectedResponsePutDto;
 }
 ```
+
+---
+
+## 📄Allure Report – konfiguracja <a name="allure_report"></a>
+
+### Podstawowa konfiguracja
+
+1. Dodajemy **dependencies**:
+    ```xml
+            <!-- Source: https://mvnrepository.com/artifact/io.qameta.allure/allure-junit5 -->
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-junit5</artifactId>
+                <version>${allure.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- Source: https://mvnrepository.com/artifact/io.qameta.allure/allure-rest-assured -->
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-rest-assured</artifactId>
+                <version>${allureRest.version}</version>
+                <scope>test</scope>
+            </dependency>
+    ```
+   Na stronie Maven dla `allure-rest-assured` jest `<scope>compile</scope>`, a powinno być `test`, ponieważ testy korzystają
+   z Allure, a nie produkcyjny kod aplikacji.
+2. I **surefire**:
+    ```xml
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${mavenSurefirePlugin.version}</version>
+    </plugin>
+    ```
+    Aczkolwiek AI zalecało go w takiej konfiguracji:  
+   (możemy tu podawać ścieżkę, gdzie raport ma być generowany przy odpalaniu za pomocą Maven)
+    ```xml
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    ```
+3. Dodajemy do **filtrów od REST Assured**:
+    ```java
+        private static void configureLogging() {
+    
+            // We clean the filters at the start (important for several test runs)
+            RestAssured.filters();
+    
+            List<Filter> filters = new ArrayList<>();
+    
+            // ALLURE REPORT
+            if (Config.getAllureReport()) {
+                filters.add(new AllureRestAssured());
+            }
+    ```
+   Mając już ustawione loggery, musisz dodać Allure jako jeden z filtrów razem z loggerami, a nie osobno.  
+   I najlepiej w `Config` zrobić możliwość ustawiania czy chcemy mieć włączone Allure czy nie.
+4. INFORMACJE:
+   - Po uruchomieniu testów za pomocą polecenia w konsoli: `mvn clean test`
+   - Powinien powstać katalog: `target/allure-results`
+   - Wtedy tym poleceniem możemy wygenerować raport: `allure serve target/allure-results`
+   - Dzięki temu, że pliki te pojawiają się w katalogu `target`, to nie trzeba ich dodawać do `.gitignore`, bo powinny
+     tam być domyślnie
+   - A najlepiej pobrać plugin/wtyczkę o nazwie: `Allure Report`
+     - Hamburger menu -> Settings -> Plugins
+     - Dzięki niej możemy kliknąć prawym na katalog z plikami Allure -> `Allure` -> `Serve`
+5. UWAGA:
+   - Jak uruchamiamy testy w IDE, za pomocą "play", to raport nie pojawia się w katalogu `target`, tylko głównym katalogu projektu
+   - Żeby to zmienić, musimy w poniższej lokalizacji utworzyć plik konfiguracyjny:
+     - `src/test/resources/allure.properties`
+     - I wpisać w nim: `allure.results.directory=target/allure-results`
+     - Nie może być w żadnym pod-katalogu, ponieważ Allure go nie znajdzie!
+6. OPCJONALNE: W `TestBase`:
+   - Definiujemy ścieżkę do tego katalogu:
+    ```java
+        // -----
+        // FILES
+        // -----
+    
+        private static final Path ALLURE_RESULTS_DIR = Paths.get("target", "allure-results");
+    ```
+   - Dodajemy metodę pomocniczą, która będzie czyścić zawartość tego katalogu przed wszystkimi testami:
+    ```java
+        // -------------------------------------------------------
+        // ALLURE – a method for cleaning data from previous tests
+        // -------------------------------------------------------
+    
+        private static void cleanAllureResultsDirectory() {
+    
+            try {
+                if (Files.exists(ALLURE_RESULTS_DIR)) {
+    
+                    try (var paths = Files.walk(ALLURE_RESULTS_DIR)) {
+    
+                        paths.sorted(Comparator.reverseOrder())
+                                .forEach(path -> {
+                                    try {
+                                        Files.delete(path);
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(
+                                                "Failed to delete: " + path, e);
+                                    }
+                                });
+                    }
+                }
+    
+                Files.createDirectories(ALLURE_RESULTS_DIR);
+    
+            } catch (IOException e) {
+                throw new RuntimeException(
+                        "Failed to clean Allure results directory", e);
+            }
+        }
+    ```
+   - Wywołujemy ją w `@BeforeAll` o ile raporty są włączone:
+    ```java
+        @BeforeAll
+        public static void setUpAll() {
+            // ALLURE – Set directory location and delete data from previous tests
+            if (Config.getAllureReport()) {
+                cleanAllureResultsDirectory();
+            }
+            // LOGS
+            configureLogging();
+            // CONFIGURATION – REQUEST
+            // Class that allows you to configure API requests in a readable and reusable way
+            requestSpecificationCommon = ConfigRequestSpec.getRequestSpecification();
+        }
+    ```
+
+### Kolorowe formatowanie 80% danych
+
+TODO
