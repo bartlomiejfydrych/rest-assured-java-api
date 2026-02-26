@@ -2,8 +2,9 @@
 TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
-– Poprawić błędy; Dodać zabezpieczenie, że jeśli response jest bardzo duży, to ma być zwykły tekst; Sprawdzić Allure;
-– Dodać raport Allure (Allure pod REST: https://allurereport.org/docs/restassured/)
+- Ustalić co z rejestrowaniem requestów z Before i After
+– Zrobić notatki z Allure
+– Pozbyć się warningów SLF4J(W)
 – Przeanalizować i zapisać sobie, co można zrobić w przypadku różnych base URL (np. /api/, /admin/, /mobile/)
 – Dodać zapisywanie i odczytywanie tokena oraz jego odświeżanie za pomocą API od Dawida (lub napisać suchą metodę)
 – Dokładnie rozpisać w opisie repozytorium czego się nauczyłem
