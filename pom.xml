@@ -20,6 +20,8 @@
         <assertjCore.version>3.27.7</assertjCore.version>
         <dotenvJava.version>3.2.0</dotenvJava.version>
         <jansi.version>2.4.2</jansi.version>
+        <allure.version>2.33.0</allure.version>
+        <allureRest.version>2.33.0</allureRest.version>
         <!-- BACKEND -->
         <restAssured.version>6.0.0</restAssured.version>
         <jacksonDatabind.version>2.21.0</jacksonDatabind.version>
@@ -73,8 +75,20 @@
             <version>${jansi.version}</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Allure Report - dodać i skonfigurować później -->
-        <!-- Logback Classic - dodać i skonfigurować później -->
+        <!-- Source: https://mvnrepository.com/artifact/io.qameta.allure/allure-junit5 -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <version>${allure.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/io.qameta.allure/allure-rest-assured -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-rest-assured</artifactId>
+            <version>${allureRest.version}</version>
+            <scope>test</scope>
+        </dependency>
         <!-- BACKEND -->
         <!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
         <dependency>

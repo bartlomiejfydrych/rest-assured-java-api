@@ -154,6 +154,13 @@ public class Config {
     // config.properties
     // -----------------
 
+    // ALLURE REPORT
+
+    // Get report inclusion {Allure}
+    public static boolean getAllureReport() {
+        return getProperty("allureReport", true);
+    }
+
     // BASE URL
 
     // Get API base {URL}
