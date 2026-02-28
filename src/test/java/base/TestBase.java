@@ -9,7 +9,6 @@ import io.restassured.filter.Filter;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
-import loggers.AllureRestAssuredEnhanced;
 import loggers.ResponseLogFilterShort;
 import loggers.custom.ResponseLogFilterCustom;
 import org.junit.jupiter.api.BeforeAll;
@@ -74,25 +73,17 @@ public class TestBase {
 
     private static void configureLogging() {
 
-        // We clean the filters at the start (important for several test runs)
-        RestAssured.filters();
-
-        List<Filter> filters = new ArrayList<>();
-
-        // ALLURE REPORT
-        if (Config.getAllureReport()) {
-            filters.add(new AllureRestAssuredEnhanced());
-        }
+        List<Filter> additionalFilters = new ArrayList<>();
 
         // LOGS – FULL
         if (Config.getLogsFull()) {
-            filters.add(new RequestLoggingFilter());
-            filters.add(new ResponseLoggingFilter());
+            additionalFilters.add(new RequestLoggingFilter());
+            additionalFilters.add(new ResponseLoggingFilter());
         }
 
         // LOGS – CUSTOM
         else if (Config.getLogsCustomBase()) {
-            filters.add(
+            additionalFilters.add(
                     new ResponseLogFilterCustom(
                             Config.getLogsCustomOptional(),
                             Config.getLogsCustomColor()
@@ -102,12 +93,19 @@ public class TestBase {
 
         // LOGS – SHORT
         else if (Config.getLogsShort()) {
-            filters.add(new ResponseLogFilterShort());
+            additionalFilters.add(new ResponseLogFilterShort());
         }
 
-        // We set everything up once
-        if (!filters.isEmpty()) {
-            RestAssured.filters(filters);
+        if (!additionalFilters.isEmpty()) {
+
+            // Get current filters (e.g. Allure added globally)
+            List<Filter> currentFilters = new ArrayList<>(RestAssured.filters());
+
+            // Add new
+            currentFilters.addAll(additionalFilters);
+
+            // Set everything up again
+            RestAssured.filters(currentFilters);
         }
     }
 }
