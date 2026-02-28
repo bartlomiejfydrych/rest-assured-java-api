@@ -62,10 +62,10 @@ public class AllureRestAssuredEnhanced implements Filter {
         String endpoint = extractEndpoint(url);
 
         if (isError) {
-            return "❌ Response – " + method + " | " + statusCode + " | " + endpoint;
+            return "❌ Response – " + statusCode + " | " + method + " | " + endpoint;
         }
 
-        return "✅ Response – " + method + " | " + statusCode + " | " + endpoint;
+        return "✅ Response – " + statusCode + " | " + method + " | " + endpoint;
     }
 
     // ----------------
