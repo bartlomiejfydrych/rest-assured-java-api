@@ -22,6 +22,7 @@
         <jansi.version>2.4.2</jansi.version>
         <allure.version>2.33.0</allure.version>
         <allureRest.version>2.33.0</allureRest.version>
+        <logbackClassicModule.version>1.5.32</logbackClassicModule.version>
         <!-- BACKEND -->
         <restAssured.version>6.0.0</restAssured.version>
         <jacksonDatabind.version>2.21.0</jacksonDatabind.version>
@@ -88,6 +89,13 @@
             <artifactId>allure-rest-assured</artifactId>
             <version>${allureRest.version}</version>
             <scope>test</scope>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logbackClassicModule.version}</version>
+            <scope>compile</scope>
         </dependency>
         <!-- BACKEND -->
         <!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
