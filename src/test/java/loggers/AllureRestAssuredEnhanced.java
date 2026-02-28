@@ -8,6 +8,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.FilterableResponseSpecification;
 
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -28,12 +29,13 @@ public class AllureRestAssuredEnhanced implements Filter {
 
         Response response = ctx.next(requestSpec, responseSpec);
 
+        String url = requestSpec.getURI();
         String method = requestSpec.getMethod();
         int statusCode = response.getStatusCode();
 
         boolean isError = statusCode >= 400;
 
-        String title = buildTitle(method, statusCode, isError);
+        String title = buildTitle(method, statusCode, isError, url);
 
         String content = buildContent(requestSpec, response);
 
@@ -55,11 +57,44 @@ public class AllureRestAssuredEnhanced implements Filter {
     // TITLE
     // -----
 
-    private String buildTitle(String method, int statusCode, boolean isError) {
+    private String buildTitle(String method, int statusCode, boolean isError, String url) {
+
+        String endpoint = extractEndpoint(url);
+
         if (isError) {
-            return "❌ Response – " + method + " | " + statusCode;
+            return "❌ Response – " + method + " | " + statusCode + " | " + endpoint;
         }
-        return "Response – " + method + " | " + statusCode;
+
+        return "✅ Response – " + method + " | " + statusCode + " | " + endpoint;
+    }
+
+    // ----------------
+    // EXTRACT ENDPOINT
+    // ----------------
+
+    private String extractEndpoint(String url) {
+
+        try {
+            URI uri = new URI(url);
+
+            String path = uri.getPath();
+
+            if (path == null || path.isBlank()) {
+                return "/";
+            }
+
+            // Opcjonalnie: usuń pierwszy segment wersji API (/1)
+            String[] parts = path.split("/");
+
+            if (parts.length > 2) {
+                return ".../" + parts[2] + "/...";
+            }
+
+            return path;
+
+        } catch (Exception e) {
+            return "[unknown-endpoint]";
+        }
     }
 
     // -------
