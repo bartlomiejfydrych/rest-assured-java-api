@@ -5769,64 +5769,160 @@ public static PUT_UpdateListDto prepareUniversalExpectedResponsePut(
      - `src/test/resources/allure.properties`
      - I wpisać w nim: `allure.results.directory=target/allure-results`
      - Nie może być w żadnym pod-katalogu, ponieważ Allure go nie znajdzie!
-6. OPCJONALNE: W `TestBase`:
-   - Definiujemy ścieżkę do tego katalogu:
+
+### Czyszczenie plików Allure
+
+Wskażę tu samą metodę. Jej zastosowanie będzie w dalszych sekcjach.
+
+1. W katalogu `utils` tworzymy katalog `allure`
+2. W nim tworzymy plik `UtilsAllure.java`
+3. Podajemy w nim ścieżkę do katalogu z danymi oraz definiujemy metodę czyszczącą.  
+   (Nie wklejam tu kodu. Można otworzyć sobie ten plik).
+
+### Definiowanie własnego wyglądu raportów
+
+1. W katalogu `loggers` tworzymy plik `AllureRestAssuredEnhanced.java`
+2. W nim definiujemy metodę, która będzie te ustawienia dokładać do filtrów REST Assured.
+3. Nagłówki raportów:
+   - Czerwone emoji dla wszystkich 400 i 500
+   - Zielone emoji dla pozostałych
+4. Nazwa endpointa w nagłówku
+5. HTTP Call:
+   - Status
+   - Metoda
+   - Czas
+   - Rozmiar
+6. Request:
+   - Nagłówki
+   - Path parametry
+   - Query parametry
+   - Form parametry
+   - Body
+7. Response:
+   - Body
+   - Nagłówki
+8. Przeliczanie rozmiaru
+9. Kolorowanie JSON'ów
+10. (Opcjonalne) Maskowanie tokenów i innych danych wrażliwych
+
+### Zastosowanie dla wszystkich testów
+
+W JUnit adnotacja `@BeforeAll` nie działa na wszystkie testy ogólnie, tylko "przed każdą klasą z testami".  
+W związku z tym trzeba zastosować globalne obejście.
+
+1. W katalogu `configuration` tworzymy plik `GlobalTestExecutionListener.java`
+2. W nim wywołujemy nasze czyszczenie i własne wyglądy raportów:
     ```java
-        // -----
-        // FILES
-        // -----
+    package configuration;
     
-        private static final Path ALLURE_RESULTS_DIR = Paths.get("target", "allure-results");
-    ```
-   - Dodajemy metodę pomocniczą, która będzie czyścić zawartość tego katalogu przed wszystkimi testami:
-    ```java
-        // -------------------------------------------------------
-        // ALLURE – a method for cleaning data from previous tests
-        // -------------------------------------------------------
+    import io.restassured.RestAssured;
+    import loggers.AllureRestAssuredEnhanced;
+    import org.jspecify.annotations.NonNull;
+    import org.junit.platform.launcher.LauncherSession;
+    import org.junit.platform.launcher.LauncherSessionListener;
+    import utils.allure.UtilsAllure;
     
-        private static void cleanAllureResultsDirectory() {
+    public class GlobalTestExecutionListener implements LauncherSessionListener {
     
-            try {
-                if (Files.exists(ALLURE_RESULTS_DIR)) {
+        // ==========================================================================================================
+        // METHODS – MAIN
+        // ==========================================================================================================
     
-                    try (var paths = Files.walk(ALLURE_RESULTS_DIR)) {
+        @Override
+        public void launcherSessionOpened(@NonNull LauncherSession session) {
     
-                        paths.sorted(Comparator.reverseOrder())
-                                .forEach(path -> {
-                                    try {
-                                        Files.delete(path);
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(
-                                                "Failed to delete: " + path, e);
-                                    }
-                                });
-                    }
-                }
+            RestAssured.reset();
     
-                Files.createDirectories(ALLURE_RESULTS_DIR);
-    
-            } catch (IOException e) {
-                throw new RuntimeException(
-                        "Failed to clean Allure results directory", e);
-            }
-        }
-    ```
-   - Wywołujemy ją w `@BeforeAll` o ile raporty są włączone:
-    ```java
-        @BeforeAll
-        public static void setUpAll() {
-            // ALLURE – Set directory location and delete data from previous tests
             if (Config.getAllureReport()) {
-                cleanAllureResultsDirectory();
+                UtilsAllure.cleanAllureResultsDirectory();
+                RestAssured.filters(new AllureRestAssuredEnhanced());
             }
-            // LOGS
-            configureLogging();
-            // CONFIGURATION – REQUEST
-            // Class that allows you to configure API requests in a readable and reusable way
-            requestSpecificationCommon = ConfigRequestSpec.getRequestSpecification();
         }
+    }
     ```
+3. W `resources` dodajemy katalog o nazwie `META-INF.services`.
+4. W katalogu `META-INF.services` dodajemy plik o nazwie `org.junit.platform.launcher.LauncherSessionListener`.
+5. Umieszczamy w nim taką treść `configuration.GlobalTestExecutionListener`.  
+   (Jak widać, jest to nazwa katalogu i nazwa pliku, który chcemy, aby był wykonywany przed wszystkimi testami)
+6. Teraz przed wszystkimi będą reserowane filtry, wykonywane czyszczenie i zastosowanie naszych zmienionych wyglądów raportów.
 
-### Kolorowe formatowanie 80% danych
+### Warningi SLF4J – po instalacji Allure Report
 
-TODO
+https://github.com/bartlomiejfydrych/selenium-java-frontend/tree/master/documents/notes/solved-problems#warnings_slf4j
+
+Po instalacji Allure Report po każdym uruchomieniu testów zaczęły w konsoli pojawiać się poniższe warningi:
+```
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+```
+
+Dodatkowo jeszcze wcześniej ciągle pojawia się warning z uruchamiania walidatora Hydrator.
+
+Nie robią one nic złego, ale mogą denerwować.
+
+Te warningi oznaczają, że biblioteka SLF4J (Simple Logging Facade for Java) została poprawnie dodana do projektu,
+ale brak jest odpowiedniego providera (implementacji logowania), który obsługiwałby wywołania logowania.
+
+SLF4J działa jako interfejs dla różnych frameworków logowania, takich jak Logback, Log4j, czy java.util.logging.
+Jeśli nie dostarczysz implementacji logowania, SLF4J domyślnie przełącza się na "NOP" (no-operation), co oznacza,
+że wszystkie komunikaty logowania będą ignorowane.
+
+#### Rozwiązanie
+
+1. Musimy dodać odpowiedni provider do swojego projektu:  
+   Wybierz implementację logowania, której chcesz używać (np. Logback, Log4j, java.util.logging) i dodaj ją do swojego
+   menedżera zależności (np. Maven, Gradle). Najczęściej stosowaną implementacją jest Logback.
+   - W repozytorium Maven wyszukujemy **Logback Classic Module**
+   - Dodajemy do naszego `pom.xml`
+   - Przeładowujemy projekt
+2. Inicjujemy konfigurację logowania:
+   - W przypadku korzystania z **Logback** gdzieś w katalogu `resources` tworzymy plik `logback.xml`
+   - Wklejamy w niego poniższą konfigurację i zapisujemy:
+     ```xml
+     <configuration>
+         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+             <encoder>
+                 <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+             </encoder>
+         </appender>
+     
+         <root level="INFO">
+             <appender-ref ref="STDOUT"/>
+         </root>
+         <logger name="io.restassured" level="DEBUG"/>
+     </configuration>
+     ```
+3. Sprawdzamy, czy SLF4J jest prawidłowo skonfigurowane:
+   - Uruchamiamy ponownie jakiś test
+   - Warningi powinny zniknąć, a logi zaczną być wyświetlane na konsoli (lub w plikach, w zależności od konfiguracji).
+
+#### Hibernate Validator – wyjaśnienie
+
+*Dlaczego jego logi się pojawiały nawet po zainstalowaniu **Logback'a**?*  
+Masz ustawiony poziom logowania DEBUG globalnie (root logger), więc Hibernate wypisuje swoje boot-logi.
+
+Mieliśmy wcześniej ustawione coś takiego:  
+`<root level="DEBUG">`
+
+Wystarczyło zmienić na to:  
+`<root level="INFO">`
+
+I wtedy DEBUG pojawi się tylko tam, gdzie jawnie ustawisz.
+
+Debug warto głównie włączać dla:  
+`<logger name="io.restassured" level="DEBUG"/>`  
+Jeśli będziemy potrzebować.
+
+*Dlaczego to pojawia się tylko przy niektórych testach?*  
+Bo Hibernate Validator inicjalizuje się dopiero przy pierwszym:  
+`deserializeAndValidateJson(...)`  
+czyli przy pierwszej walidacji DTO.  
+W testach bez walidacji — nie zobaczysz tych logów.
+
+#### Komentarz
+
+Jeśli nie planujesz używać logowania, możesz po prostu zignorować te warningi, ale jeśli w przyszłości będziesz
+potrzebować logowania, najlepiej skonfigurować jedną z popularnych implementacji.  
+Jeśli chcesz pozbyć się warningów bez dodawania providera, usuń zależność SLF4J z projektu (niezalecane w przypadku
+bibliotek, które wymagają logowania).
