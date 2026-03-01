@@ -2,11 +2,10 @@
 TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
-– Zrobić notatki z Allure i SLF4J(W)
 – Przeanalizować i zapisać sobie, co można zrobić w przypadku różnych base URL (np. /api/, /admin/, /mobile/)
 – Dodać zapisywanie i odczytywanie tokena oraz jego odświeżanie za pomocą API od Dawida (lub napisać suchą metodę)
-– Dokładnie rozpisać w opisie repozytorium czego się nauczyłem
 – Poprosić Dawida o Code Review
+– Dokładnie rozpisać w opisie repozytorium czego się nauczyłem
 – Rozpisać w opisie repozytorium statystyki testów, czyli ich ilość i czas (całość, każdy endpoint, podział na pozytywne i negatywne)
 – Dopisać kolejne testy
 – Rozpisać w opisie repozytorium statystyki testów, czyli ich ilość i czas (całość, każdy endpoint, podział na pozytywne i negatywne)
