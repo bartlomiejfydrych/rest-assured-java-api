@@ -17,3 +17,4 @@ NOTATKI – PROJEKT
 
 – Testy API: 99 (52 sec 675 ms)
 – Testy jednostkowe: 45 (2 sec 747 ms)
+
