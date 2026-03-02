@@ -62,6 +62,7 @@
 - [JSON – podstawianie zmiennych pod niego](#json_variable_replace)
 - [Allure Report – konfiguracja](#allure_report)
 - [Endpoint – różne scope'y](#endpoint_scope)
+- [Autoryzacja – zachowanie ważności](#auth_scope)
 
 ---
 
@@ -6165,3 +6166,194 @@ Bo w prawdziwych projektach:
 * staging ≠ prod
 * admin ≠ public
 * mobile ≠ backend
+
+---
+
+## 📄Autoryzacja – zachowanie ważności <a name="auth_scope"></a>
+
+Twoje podejście w Pythonie jest **technicznie poprawne**, ale w świecie testów automatycznych
+(szczególnie Java + REST Assured) robi się to trochę inaczej — głównie dlatego, że:
+* testy nie powinny zależeć od plików
+* token nie powinien być współdzielony między procesami
+* zarządzanie autoryzacją najlepiej scentralizować
+* framework testowy (JUnit/TestNG) daje lepsze mechanizmy lifecycle niż ręczne sprawdzanie JWT
+
+### ✅ Jak robi się to poprawnie w Java + REST Assured
+
+W Javie najczęściej stosuje się jeden z 3 wzorców:
+
+### 🔹 OPCJA 1 (Najczęstsza): Token cache + sprawdzanie ważności
+
+Tworzysz klasę `AuthManager`, która:
+* przechowuje token w pamięci (static field)
+* zapisuje timestamp wygaśnięcia
+* odświeża token tylko gdy trzeba
+
+Czyli **bez plików**, bez dekodowania JWT w testach.
+
+#### 🔹 Przykład – AuthManager
+
+```java
+public class AuthManager {
+
+    private static String accessToken;
+    private static long expirationTime;
+
+    private static final String USERNAME = System.getenv("USER_USERNAME");
+    private static final String PASSWORD = System.getenv("USER_PASSWORD");
+
+    public static String getToken() {
+        if (accessToken == null || isTokenExpired()) {
+            refreshToken();
+        }
+        return accessToken;
+    }
+
+    private static void refreshToken() {
+        Response response =
+                given()
+                        .contentType("application/json")
+                        .body(Map.of(
+                                "username", USERNAME,
+                                "password", PASSWORD
+                        ))
+                .when()
+                        .post("/token")
+                .then()
+                        .statusCode(200)
+                        .extract()
+                        .response();
+
+        accessToken = response.jsonPath().getString("access_token");
+
+        // jeśli API zwraca expires_in (np. 300 sekund)
+        int expiresIn = response.jsonPath().getInt("expires_in");
+
+        expirationTime = System.currentTimeMillis() + (expiresIn * 1000L);
+    }
+
+    private static boolean isTokenExpired() {
+        return System.currentTimeMillis() >= expirationTime;
+    }
+}
+```
+
+#### 🔹 Użycie w testach
+
+```java
+given()
+    .header("Authorization", "Bearer " + AuthManager.getToken())
+.when()
+    .get("/users")
+.then()
+    .statusCode(200);
+```
+
+### 🔹 OPCJA 2 (Bardziej elegancka): RequestSpecification + Filter
+
+To jest **bardziej enterprise / clean** podejście.
+
+Tworzysz `Filter`, który automatycznie:
+* dodaje header Authorization
+* jeśli dostanie 401 → odświeża token i powtarza request
+
+To jest najbardziej odporne rozwiązanie.
+
+#### 🔹 Przykład filtra
+
+```java
+public class AuthFilter implements Filter {
+
+    @Override
+    public Response filter(FilterableRequestSpecification requestSpec,
+                           FilterableResponseSpecification responseSpec,
+                           FilterContext ctx) {
+
+        requestSpec.header("Authorization", "Bearer " + AuthManager.getToken());
+
+        Response response = ctx.next(requestSpec, responseSpec);
+
+        if (response.statusCode() == 401) {
+            // token mógł wygasnąć wcześniej
+            AuthManager.refreshToken();
+            requestSpec.header("Authorization", "Bearer " + AuthManager.getToken());
+            response = ctx.next(requestSpec, responseSpec);
+        }
+
+        return response;
+    }
+}
+```
+
+#### 🔹 Rejestracja filtra
+
+```java
+RestAssured.filters(new AuthFilter());
+```
+
+I gotowe — wszystkie requesty mają autoryzację.
+
+### 🔹 OPCJA 3: @BeforeAll / @BeforeSuite
+
+Najprostsza wersja (jeśli token ważny długo):
+
+```java
+@BeforeAll
+static void login() {
+    token = AuthManager.getToken();
+}
+```
+
+Ale przy 5 minutach ważności — to NIE wystarczy.
+
+### ❌ Czego raczej się nie robi w Java
+
+Twoje podejście z Python:
+* zapisywanie tokenu do pliku ❌
+* ręczne dekodowanie JWT w testach ❌
+* sprawdzanie exp przez jwt.decode ❌
+
+Dlaczego?
+1. Testy powinny być niezależne
+2. Token może się zmienić między uruchomieniami
+3. Framework powinien zarządzać stanem, nie pliki
+
+### 🧠 Co jest najlepszą praktyką?
+
+W środowisku komercyjnym:
+
+| Poziom projektu | Rozwiązanie                       |
+|-----------------|-----------------------------------|
+| Mały projekt    | AuthManager z cache               |
+| Średni projekt  | RequestSpecification              |
+| Duży projekt    | Custom Filter + auto-retry na 401 |
+
+### 🔥 Najbardziej profesjonalne rozwiązanie
+
+👉 AuthManager + Filter + retry na 401  
+👉 Token trzymany tylko w pamięci  
+👉 Zero plików  
+👉 Zero ręcznego parsowania JWT
+
+### 🎯 Różnica między Python a Java w tym kontekście
+
+W `pytest` fixture jest naturalnym miejscem na to.
+
+W Javie:
+* lifecycle kontroluje JUnit/TestNG
+* masz statyczne klasy
+* masz filtry w REST Assured
+* możesz centralizować konfigurację
+
+### 📌 Odpowiedź na Twoje główne pytanie
+
+> Czy tak powinno się robić?
+
+W Pythonie – tak, jest OK.  
+W Javie – robi się to inaczej i czyściej.
+
+Najlepszy wzorzec w REST Assured to:
+
+```
+AuthManager + Filter + auto-refresh na 401
+```
