@@ -61,6 +61,7 @@
 - [Maven – do uruchamiania testów](#maven_tests_runner)
 - [JSON – podstawianie zmiennych pod niego](#json_variable_replace)
 - [Allure Report – konfiguracja](#allure_report)
+- [Endpoint – różne scope'y](#endpoint_scope)
 
 ---
 
@@ -5926,3 +5927,241 @@ Jeśli nie planujesz używać logowania, możesz po prostu zignorować te warnin
 potrzebować logowania, najlepiej skonfigurować jedną z popularnych implementacji.  
 Jeśli chcesz pozbyć się warningów bez dodawania providera, usuń zależność SLF4J z projektu (niezalecane w przypadku
 bibliotek, które wymagają logowania).
+
+---
+
+## 📄Endpoint – różne scope'y <a name="endpoint_scope"></a>
+
+Przy API podzielonym na scope typu:
+* `/api/...`
+* `/admin/...`
+* `/mobile/...`
+
+najważniejsze jest **oddzielenie:**
+
+1. 🔹 bazowego hosta (protocol + domain)
+2. 🔹 scope (api/admin/mobile)
+3. 🔹 konkretnego endpointa (boards/users/etc.)
+4. 🔹 wersji (jeśli występuje)
+
+Poniżej masz kilka sprawdzonych strategii, które stosuje się w większych projektach testów API.
+
+### ✅ STRATEGIA 1 (najbardziej elegancka): BaseUri + BasePath
+
+REST Assured ma bardzo dobre wsparcie dla `baseUri` i `basePath`.  
+Możesz je wykorzystać zamiast sklejania wszystkiego w jednym stringu.
+
+#### 🔹 config.properties
+
+```properties
+baseProtocol=https
+baseHost=example.com
+apiBasePath=/api
+adminBasePath=/admin
+mobileBasePath=/mobile
+```
+
+#### 🔹 ConfigRequestSpec (tylko host!)
+
+```java
+private static final RequestSpecification requestSpecification =
+        new RequestSpecBuilder()
+                .setBaseUri(String.format("%s://%s",
+                        Config.getBaseProtocol(),
+                        Config.getBaseHost()))
+                .setContentType(ContentType.JSON)
+                .build();
+```
+
+#### 🔹 Scope jako enum (🔥 najlepsza praktyka)
+
+```java
+public enum ApiScope {
+    API("/api"),
+    ADMIN("/admin"),
+    MOBILE("/mobile");
+
+    private final String basePath;
+
+    ApiScope(String basePath) {
+        this.basePath = basePath;
+    }
+
+    public String getBasePath() {
+        return basePath;
+    }
+}
+```
+
+#### 🔹 BaseEndpoint z obsługą scope
+
+```java
+protected static RequestSpecification getSpecification(ApiScope scope) {
+    return given()
+            .spec(ConfigRequestSpec.getRequestSpecification())
+            .basePath(scope.getBasePath());
+}
+```
+
+#### 🔹 Użycie w endpointach
+
+```java
+RequestSpecification requestSpecification =
+        getSpecification(ApiScope.API)
+                .queryParam(NAME.key(), boardName);
+```
+
+A potem:
+
+```java
+post("/boards");
+```
+
+👉 I gotowe.  
+Zmiana `/api` → `/v2/api`?  
+Zmieniasz tylko enum.
+
+### ✅ STRATEGIA 2: Oddzielne RequestSpec per scope
+
+Jeżeli:
+* różne scope mają inne nagłówki
+* inne autoryzacje
+* inne certyfikaty
+* inne wersje API
+
+to lepiej mieć osobne specyfikacje:
+
+```java
+public class RequestSpecs {
+
+    public static RequestSpecification apiSpec() {
+        return given()
+                .spec(baseSpec())
+                .basePath("/api");
+    }
+
+    public static RequestSpecification adminSpec() {
+        return given()
+                .spec(baseSpec())
+                .basePath("/admin");
+    }
+
+    public static RequestSpecification mobileSpec() {
+        return given()
+                .spec(baseSpec())
+                .basePath("/mobile");
+    }
+
+    private static RequestSpecification baseSpec() {
+        return new RequestSpecBuilder()
+                .setBaseUri(Config.getBaseUrl())
+                .setContentType(ContentType.JSON)
+                .build();
+    }
+}
+```
+
+### ✅ STRATEGIA 3: Endpoint Registry (dla bardzo dużych projektów)
+
+Przy dużych systemach stosuje się coś w stylu:
+
+```java
+public final class Endpoints {
+
+    public static final String BOARDS = "/boards";
+    public static final String USERS = "/users";
+
+    public static String boardById(String id) {
+        return BOARDS + "/" + id;
+    }
+}
+```
+
+A scope ustawiasz tylko przez `basePath`.
+
+To daje:
+* zero duplikacji
+* centralne zarządzanie
+* łatwe przejście na v2
+
+### 🔥 STRATEGIA 4 (enterprise-level): wersjonowanie jako osobny poziom
+
+Jeśli masz:
+
+```
+/api/v1/...
+/api/v2/...
+```
+
+Zrób enum:
+
+```java
+public enum ApiVersion {
+    V1("/v1"),
+    V2("/v2");
+
+    private final String versionPath;
+
+    ApiVersion(String versionPath) {
+        this.versionPath = versionPath;
+    }
+
+    public String getVersionPath() {
+        return versionPath;
+    }
+}
+```
+
+I buduj:
+
+```java
+.basePath(scope.getBasePath() + version.getVersionPath())
+```
+
+### 🚀 Co bym zrobił na Twoim miejscu
+
+Biorąc pod uwagę Twoją obecną architekturę:
+
+#### ✔ zostawiłbym:
+
+* BaseEndpoint
+* klasy per feature (boards, users itd.)
+
+#### ✔ zmieniłbym:
+
+* usunął ręczne budowanie pełnego URL
+* przeniósł scope do `basePath`
+* zrobił enum `ApiScope`
+
+### 💡 Dlaczego to lepsze?
+
+Bo:
+* nie sklejasz stringów ręcznie
+* możesz dynamicznie zmieniać scope
+* możesz mieć różne autoryzacje per scope
+* testy są czytelniejsze
+* przejście na nowe API = zmiana w jednym miejscu
+
+### 🧠 Pro tip (bardzo ważne)
+
+Nie trzymaj:
+
+```
+https://api.trello.com/1
+```
+
+jako jeden string.
+
+Trzymaj:
+
+* protocol
+* host
+* opcjonalnie port
+* scope
+* wersję
+
+Bo w prawdziwych projektach:
+
+* staging ≠ prod
+* admin ≠ public
+* mobile ≠ backend
