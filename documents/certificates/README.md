@@ -6,9 +6,9 @@ I have placed here certificates of completion of the test automation course cond
 
 The course consisted of 3 parts:
 
-- **Part 1:** Basics of programming in `Java`
-- **Part 2:** Writing frontend tests in `Selenium`
-- **Part 3:** Writing API tests in `REST Assured`
+- **Part 1:** Basics of programming in `Java` – [Test Automation Certificate (Sii) - Part 1.pdf](Test%20Automation%20Certificate%20%28Sii%29%20-%20Part%201.pdf)
+- **Part 2:** Writing frontend tests in `Selenium` – [Test Automation Certificate (Sii) - Part 2.pdf](Test%20Automation%20Certificate%20%28Sii%29%20-%20Part%202.pdf)
+- **Part 3:** Writing API tests in `REST Assured` – [Test Automation Certificate (Sii) - Part 3.pdf](Test%20Automation%20Certificate%20%28Sii%29%20-%20Part%203.pdf)
 
 This repository was created to structure and reinforce the knowledge I acquired during **the test automation course
 conducted by "Sii Poland"**.  
