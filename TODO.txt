@@ -5,6 +5,8 @@ TODO – LISTA RZECZY DO ZROBIENIA
 [✅] Poprosić Dawida o Code Review
 [❌] Dokładnie rozpisać w opisie repozytorium czego się nauczyłem
 [❌] Rozpisać w opisie repozytorium statystyki testów, czyli ich ilość i czas (całość, każdy endpoint, podział na pozytywne i negatywne)
+[❌] Usunąć napis, że repo w budowie
+[❌] Dopisać kolejne testy – wygenerować dla lists, zaktualizować dokumentacje endpointów najlepiej wraz z przykładami
 [❌] Dopisać kolejne testy
 [❌] Rozpisać w opisie repozytorium statystyki testów, czyli ich ilość i czas (całość, każdy endpoint, podział na pozytywne i negatywne)
 [❌] Zaktualizować notatki pod nowy kod, a stare przenieść do archiwum lub wyjaśnienie kodu opisać w osobnych notatkach
