@@ -62,15 +62,15 @@ I won't copy here what mechanisms their API consists of. Everything is in the do
 
 In the catalogue:  
 &emsp;📁documents  
-&emsp;&emsp;📁certificates
+&emsp;&emsp;📁[certificates](documents/certificates)
 
 The catalogue contains certificates of completion of the test automation course conducted by "Sii Poland".
 
 The course consisted of 3 parts:
 
-- **Part 1:** Basics of programming in `Java`
-- **Part 2:** Writing frontend tests in `Selenium`
-- **Part 3:** Writing API tests in `REST Assured`
+- **Part 1:** Basics of programming in `Java` – [Test Automation Certificate (Sii) - Part 1.pdf](documents/certificates/Test%20Automation%20Certificate%20%28Sii%29%20-%20Part%201.pdf)
+- **Part 2:** Writing frontend tests in `Selenium` – [Test Automation Certificate (Sii) - Part 2.pdf](documents/certificates/Test%20Automation%20Certificate%20%28Sii%29%20-%20Part%202.pdf)
+- **Part 3:** Writing API tests in `REST Assured` – [Test Automation Certificate (Sii) - Part 3.pdf](documents/certificates/Test%20Automation%20Certificate%20%28Sii%29%20-%20Part%203.pdf)
 
 ## 🧰Frameworks and technologies used
 
@@ -78,80 +78,106 @@ The course consisted of 3 parts:
 
 - IntelliJ IDEA
 - Java
-- JDK - Amazon Corretto 21.0.6
+- JDK - Amazon Corretto
 - Dotenv Java
 - ChatGPT (for refactor and complicated methods)
+- Logback Classic (In order to get rid of excess logs/warnings)
 
 ### Backend (API tests)
 
 - REST Assured
-- Hibernate Validator Engine
-- Jakarta Validation API
-- JSONassert
-- JSON Schema Validator (From REST Assured)
+- To validate response:
+  - Jackson Databind
+  - Hibernate Validator Engine
+  - Jakarta Validation API
+  - Jakarta Expression Language Implementation
+  - Jakarta Expression Language API
 
 ### Tests
 
-- JUnit
-- JUnit Platform Suite
+- Test runner:
+  - JUnit Jupiter
+  - JUnit Platform Suite
 - Java Faker
 - AssertJ
-- Allure Report
+- Allure Report:
+  - Allure Junit5
+  - Allure Rest Assured
+- Jansi (Colored JSON in the console)
 
 ## 🎯What I learned and what I practiced
 
 ### General
 
-#### Project
+- Managing your work by writing a list of steps/goals to accomplish
+- Generating the project structure in the console using the `tree` command
+- Refactor and optimize code with `ChatGPT`
+- Noting down information that I consider important, both in notes (README)
+  and in the code (sometimes it's necessary)
+
+### Project
 
 - Project setup (JDK etc.)
 - Setting `.gitignore` file for Java files and more
 - Adding dependencies from Maven repository to `pom.xml` file
 - Setting variables to dependency versions in Maven
 - Finding out what each framework/dependencies is responsible for
-- Generating the project structure in the console using the `tree` command
-- Refactor and optimize code with `ChatGPT`
-- Installing and using plugins for IDE:
-    - .ignore
-    - Rainbow Brackets
-    - Key Promoter X
-    - Allure Report
-
-#### Java
-
 - Using environment variables (`.env`) with Dotenv Java
-- Using `Builder`
 - Using `config.properties` file
-- Using `Enum` variables
-- Managing file paths with `Paths.get()` methods
-- Directory and class naming convention
-- How to declare a variable of type `Long`
+- Installing and using plugins for IDE:
+  - .ignore
+  - Rainbow Brackets
+  - Key Promoter X
+  - Allure Report
 
-#### Tests
+### Java
+
+- Using `Builder`
+- Using `Enum`
+- Managing file paths with `Paths.get()` methods
+- Directory and class naming convention  
+  - I know my file names don't indicate this, but I think it's clearer and the AI said that if it's just tests,
+    there's no problem with it
+- How to declare a variable of type `Long`  
+  - It's about adding `L` to the end of the number and that underlining can be added to large numbers to improve
+    readability, e.g.`140_737_488_322_560L`)
+- Reading data from configuration and .env files
+- Creating my own exceptions
+
+### Tests
 
 - Generating random test data with `JavaFaker`
-- ✏Tagi testów
-- ✏Kolejność testów
-- ✏Enums
-- 🟡(check)Configuring `Allure Report` and generating a test report
-- 🟡(check)Setting tests to run in a specific order with `JUnit Suite`
-- 🟡(check)Using assertions from the `AssertJ` framework
-- 🟡(check)Adding comments/logs to assertions in `AssertJ` framework
+- Using tags in `JUnit` to run specific groups of tests or in a specific order
+- Running tests in a specific order using the "suite" class in `JUnit`
+- Where possible, extract request parameters and their values into `enums`
+- Configuring `Allure Report` and generating a test report
+- Changing the look of the `Allure Report`
+- JSON Coloring in `Allure Report`
+- Setting certain things to be done before ALL tests, e.g. changing the appearance of the `Allure Report`
+- Using assertions from the `AssertJ` framework
+- Adding comments/logs to assertions in `AssertJ` framework
+- Writing unit tests
+- Separating API tests from unit tests
+- Organization of tests for positive and negative
+- Managing supporting resources in tests using `@BeforeAll`, `@BeforeEach`, `@AfterAll`, `@AfterEach` annotations
+- Getting rid of redundant logs and warnings in the console using `Logback Classic` and its configuration
+- Test documentation management:
+  - Basic information about the endpoint
+  - Test coverage tracking
+  - Payload example
+  - Response example
 
 ### API tests (REST Assured)
 
 - Splitting `base URL` into configurable variables
 - Configuring common settings for all requests with `RequestSpecBuilder()`
-- Configuring logging only for failed tests with `RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();`
 - Configuring logging of all request data (e.g. for debugging) with `RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());`
-- Comparing objects with omitting ID and other parameters with `RecursiveComparisonConfiguration();`
+- Creating my own logger and colorizing JSON in the console
+- Comparing objects (responses) with omitting ID and other parameters with `RecursiveComparisonConfiguration();` from `Assertj`
 - Creating methods that call requests with the option of passing parameters or payload as an argument
-- Organize your file structure to be as consistent as possible with your organization's API documentation format
-- Test Documentation management
-- Creating classes/builders to manage payload/queryParameters
-- Declaring a common resource for negative tests and separate resources for positive tests using `@Tag(testTagPositive)`
-- 🔴SOON
-
-### Solved problems
-
-- 🔴SOON
+- Organize my file structure to be as consistent as possible with your organization's API documentation format
+- Creating classes/builders to manage payload/queryParameters/small expected responses
+- Converting response to `DTO`
+- Validating response fields using `Jackson` and `Jakarta` validation instead of JsonSchema
+- Comparing two responses/JSONs without having to create objects for them in the code (mainly for negative tests)
+- Reading and comparing the expected response from a file (for large JSONs)
