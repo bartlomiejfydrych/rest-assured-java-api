@@ -3,12 +3,13 @@ TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
 [✅] Poprosić Dawida o Code Review
-[❌] Rozpisać w opisie repozytorium statystyki testów, czyli ich ilość i czas (całość, każdy endpoint, podział na pozytywne i negatywne) i przykładowe kroki testu pozytywnego
+[❌] Przywrócić starsze wersje dokumentacji dla board
+[❌] Zastosować nowy styl dokumentacji dla wszystkich endpointów
 [❌] Usunąć napis, że repo w budowie
+
 [❌] Dopisać kolejne testy – zaktualizować dokumentacje endpointów najlepiej wraz z przykładami
 [❌] Dopisać kolejne testy
 [❌] Rozpisać w opisie repozytorium statystyki testów, czyli ich ilość i czas (całość, każdy endpoint, podział na pozytywne i negatywne)
-[❌] Zaktualizować notatki pod nowy kod, a stare przenieść do archiwum lub wyjaśnienie kodu opisać w osobnych notatkach
 
 ########################################################################################################################
 NOTATKI – PROJEKT
