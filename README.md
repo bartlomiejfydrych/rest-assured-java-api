@@ -53,10 +53,91 @@ I won't copy here what mechanisms their API consists of. Everything is in the do
 
 ## 📊Test Statistics
 
-**Summary:**
-  - Number of tests: 🔴SOON
-  - Average test execution time: 🔴SOON
-  - 🔴\<dodać opis gdzie jest rozpisane pokrycie\>
+I know I could do more, but I also don't want to stay on this project too long because I also want to learn other
+things/languages/technologies.
+
+### Summary
+
+| Tests type   | Quantity | Average execution time |
+|--------------|----------|------------------------|
+| API (Trello) | 99       | 52 sec 675 ms          |
+| Unit tests   | 45       | 2 sec 747 ms           |
+
+### Details (tests structure) 
+
+```
+├───📁tests
+│   ├───📁api_trello
+│   │   ├───📂boards
+│   │   │   ├───©️DEL_DeleteBoardTest
+│   │   │   │   ├───✅Positive: (1)
+│   │   │   │   └───❌Negative: (0)
+│   │   │   ├───©️POST_CreateBoardTest
+│   │   │   │   ├───✅Positive: (5)
+│   │   │   │   └───❌Negative: (12)
+│   │   │   └───©️PUT_UpdateBoardTest
+│   │   │   │   ├───✅Positive: (5)
+│   │   │   │   └───❌Negative: (11)
+│   │   ├───📂emoji
+│   │   │   └───©️GET_ListAvailableEmojiTest
+│   │   │   │   ├───✅Positive: (4)
+│   │   │   │   └───❌Negative: (1)
+│   │   ├───📂labels
+│   │   │   ├───©️DEL_DeleteLabelTest
+│   │   │   │   ├───✅Positive: (1)
+│   │   │   │   └───❌Negative: (0)
+│   │   │   ├───©️POST_CreateLabelTest
+│   │   │   │   ├───✅Positive: (6)
+│   │   │   │   └───❌Negative: (7)
+│   │   │   ├───©️PUT_UpdateFieldOnLabelTest
+│   │   │   │   ├───✅Positive: (7)
+│   │   │   │   └───❌Negative: (2)
+│   │   │   └───©️PUT_UpdateLabelTest
+│   │   │   │   ├───✅Positive: (4)
+│   │   │   │   └───❌Negative: (1)
+│   │   └───📂lists
+│   │       ├───©️POST_CreateNewListTest
+│   │       │   ├───✅Positive: (6)
+│   │       │   └───❌Negative: (11)
+│   │       └───©️PUT_UpdateListTest
+│   │           ├───✅Positive: (8)
+│   │           └───❌Negative: (7)
+```
+
+### Coverage and endpoint documentation
+
+- 📁[documentation](src/test/documentation)
+    - 📁[endpoints](src/test/documentation/endpoints)
+        - 📂[boards](src/test/documentation/endpoints/boards)
+            - ©️[POST_CreateBoard.md](src/test/documentation/endpoints/boards/POST_CreateBoard.md)
+            - ©️[PUT_UpdateBoard.md](src/test/documentation/endpoints/boards/PUT_UpdateBoard.md)
+        - 📂[emoji](src/test/documentation/endpoints/emoji)
+            - ©️[GET_ListAvailableEmoji.md](src/test/documentation/endpoints/emoji/GET_ListAvailableEmoji.md)
+        - 📂[labels](src/test/documentation/endpoints/labels)
+            - ©️[POST_CreateLabel.md](src/test/documentation/endpoints/labels/POST_CreateLabel.md)
+            - ©️[PUT_UpdateFieldOnLabel.md](src/test/documentation/endpoints/labels/PUT_UpdateFieldOnLabel.md)
+            - ©️[PUT_UpdateLabel.md](src/test/documentation/endpoints/labels/PUT_UpdateLabel.md)
+        - 📂[lists](src/test/documentation/endpoints/lists)
+            - ©️[POST_CreateNewList.md](src/test/documentation/endpoints/lists/POST_CreateNewList.md)
+            - ©️[PUT_UpdateList.md](src/test/documentation/endpoints/lists/PUT_UpdateList.md)
+
+### Sample test steps (positive)
+
+1. Resources from the `@BeforeAll` section are added.
+2. Resources from the `@BeforeEach` section are added.
+3. **TEST – START**
+4. We define `variables, data, parameters/payload`.
+5. `POST request` is called.
+6. We check if it has status `200`.
+7. We convert the response to a `DTO object` and validate all its fields at the same time (something like `JsonSchema`).
+8. We are checking some `unique, unusual data` over which we have no influence.
+9. We prepare the `expected response` object and substitute it with the data we used.
+10. We `compare` the data from the request with our expected response, excluding unique fields.
+11. We call a `GET request` and convert it into a DTO object with field validation.
+12. We `compare` the previously sent response with the GET response.
+13. **TEST – END**
+14. Created resources are cleaned/deleted in the `@AfterEach` section.
+15. Created resources are cleaned/deleted in the `@AfterAll` section.
 
 ## 🏆Certificates - test automation course (Sii Poland)
 
