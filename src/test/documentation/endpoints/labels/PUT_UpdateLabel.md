@@ -2,27 +2,27 @@
 
 # 📑Contents
 
-- [🌐Endpoint](#endpoint)
-- [📄Description](#description)
-- [📌Important notes](#important_notes)
+- [📔Basic information](#basic_information)
+  - [🌐Endpoint](#endpoint)
+  - [📗Description](#description)
+  - [📌Important notes](#important_notes)
 - [☑Test coverage](#test_coverage)
-- [📦Query parameters / Payload](#query_parameters_payload)
-- [📩Response](#response)
+  - [🔗Path parameters](#path_parameters)
+  - [🧵Query parameters](#query_parameters)
+- [📜Response](#response)
 
 ---
+
+# 📔Basic information <a name="basic_information"></a>
 
 ## 🌐Endpoint <a name="endpoint"></a>
 
 /labels/{id}
 
----
-
-## 📄Description <a name="description"></a>
+## 📗Description <a name="description"></a>
 
 Update a label by ID.  
 Forge and OAuth2 apps cannot access this REST resource.
-
----
 
 ## 📌Important notes <a name="important_notes"></a>
 
@@ -34,53 +34,103 @@ Next, we need to create for that board a label that we will edit.
 
 ---
 
-## ☑Test coverage <a name="test_coverage"></a>
+# ☑Test coverage <a name="test_coverage"></a>
 
-- 💠name `string`
-  - ✅Positive:
-    - **[P1]** Special characters and numbers
-    - **[P2]** 1 character
-    - **[P3]** Missing (0 characters)
-    - **[P4]** null
-    - **[P5->💥]** Empty string ("") -> Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
-    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
-  - ❌Negative:
-    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
-- 💠color `Color`
-  - ✅Positive:
-    - **[rP1|rP2]** yellow
-    - **[rP1|rP2]** purple
-    - **[rP1|rP2]** blue
-    - **[rP1|rP2]** red
-    - **[rP1|rP2]** green
-    - **[rP1|rP2]** orange
-    - **[rP1|rP2]** black
-    - **[rP1|rP2]** sky
-    - **[rP1|rP2]** pink
-    - **[rP1|rP2]** lime
-    - **[P3]** Missing (0 characters)
-    - **[P4]** Null
-    - **[💥]** Empty string ("") -> Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
-  - ❌Negative:
-    - **[N1]** Incorrect (other value)
+## 🔗Path parameters <a name="path_parameters"></a>
 
----
+### 💠id `TrelloID` 🔴REQUIRED🔴
 
-## 📦Query parameters / Payload <a name="query_parameters_payload"></a>
+#### 📄Description
+
+The ID of the Label.  
+Pattern: `^[0-9a-fA-F]{24}$`
+
+#### 📋Summary
+
+| Property | Value               |
+|----------|---------------------|
+| Required | ✔                   |
+| Type     | 24-hex string       |
+| Pattern  | `^[0-9a-fA-F]{24}$` |
+
+#### ✅Positive
+
+- **[ PX ]** Correct
+
+#### ❌Negative
+
+🔴TODO🔴
+- **[ N ]** Non-existent
+- **[ N ]** Incorrect
+
+## 🧵Query parameters <a name="query_parameters"></a>
 
 ### 💠name `string`
 
+#### 📄Description
+
 The new name for the label.
 
+#### 📋Summary
+
+| Property   | Value                             |
+|------------|-----------------------------------|
+| Required   | ❌                                 |
+| Type       | string                            |
+| Max length | 16384 (practical ~2000 via query) |
+
+#### ✅Positive
+
+- **[ P1 ]** Special characters and numbers
+- **[ P2 ]** 1 character
+- **[ P3 ]** Missing (0 characters)
+- **[ P4 ]** null
+- **[ P5💥 ]** Empty string ("") → Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
+- **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
+
+#### ❌Negative
+
+- **[ 💥 ]** 16385 characters → Can't test it because max URI size is ~2000 characters
+
 ### 💠color `Color`
+
+#### 📄Description
 
 The new color for the label.  
 Nullable: `true`  
 Valid values: `yellow`, `purple`, `blue`, `red`, `green`, `orange`, `black`, `sky`, `pink`, `lime`
 
+#### 📋Summary
+
+| Property | Value |
+|----------|-------|
+| Required | ❌     |
+| Type     | enum  |
+| Nullable | ✔     |
+
+#### ✅Positive
+
+- **[ rP1 | rP2 ]** yellow
+- **[ rP1 | rP2 ]** purple
+- **[ rP1 | rP2 ]** blue
+- **[ rP1 | rP2 ]** red
+- **[ rP1 | rP2 ]** green
+- **[ rP1 | rP2 ]** orange
+- **[ rP1 | rP2 ]** black
+- **[ rP1 | rP2 ]** sky
+- **[ rP1 | rP2 ]** pink
+- **[ rP1 | rP2 ]** lime
+- **[ P3 ]** Missing (0 characters)
+- **[ P4 ]** Null
+- **[ 💥 ]** Empty string ("") → Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
+
+#### ❌Negative
+
+- **[ N1 ]** Incorrect (other value)
+
 ---
 
-## 📩Response <a name="response"></a>
+# 📜Response <a name="response"></a>
 
 ```json
 {
