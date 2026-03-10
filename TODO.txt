@@ -5,15 +5,5 @@ TODO – LISTA RZECZY DO ZROBIENIA
 [✅] Poprosić Dawida o Code Review
 [❌] Przywrócić starsze wersje dokumentacji dla board
 [❌] Zastosować nowy styl dokumentacji dla wszystkich endpointów
+[❌] Dopisać dla PUT_UpdateLabel przypadki dla ID labela w path parameters i zaktualizować jego dokumentację i liczbę testów
 [❌] Usunąć napis, że repo w budowie
-
-[❌] Dopisać kolejne testy – zaktualizować dokumentacje endpointów najlepiej wraz z przykładami
-[❌] Dopisać kolejne testy
-[❌] Rozpisać w opisie repozytorium statystyki testów, czyli ich ilość i czas (całość, każdy endpoint, podział na pozytywne i negatywne)
-
-########################################################################################################################
-NOTATKI – PROJEKT
-########################################################################################################################
-
-Testy API: 99 (52 sec 675 ms)
-Testy jednostkowe: 45 (2 sec 747 ms)
