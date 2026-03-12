@@ -2,28 +2,27 @@
 
 # 📑Contents
 
-- [🌐Endpoint](#endpoint)
-- [📄Description](#description)
-- [📌Important notes](#important_notes)
+- [📔Basic information](#basic_information)
+  - [🌐Endpoint](#endpoint)
+  - [📗Description](#description)
+  - [📌Important notes](#important_notes)
 - [☑Test coverage](#test_coverage)
-- [🔗Path parameters](#path_parameters)
-- [📦Query parameters / Payload](#query_parameters_payload)
-- [📩Response](#response)
+  - [🔗Path parameters](#path_parameters)
+  - [🧵Query parameters](#query_parameters)
+- [📜Response](#response)
 
 ---
+
+# 📔Basic information <a name="basic_information"></a>
 
 ## 🌐Endpoint <a name="endpoint"></a>
 
 /labels/{id}/{field}
 
----
-
-## 📄Description <a name="description"></a>
+## 📗Description <a name="description"></a>
 
 Update a field on a label.  
 Forge and OAuth2 apps cannot access this REST resource.
-
----
 
 ## 📌Important notes <a name="important_notes"></a>
 
@@ -35,61 +34,107 @@ Next, we need to create for that board a label that fields we will edit.
 
 ---
 
-## ☑Test coverage <a name="test_coverage"></a>
-
-- 💠name `string`
-  - ✅Positive:
-    - **[P1]** Special characters and numbers
-    - **[P2]** 1 character
-    - **[P3]** Empty string ("")
-    - **[💥]** null -> Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
-    - **[💥]** 16384 characters -> Can't test it because max URI size is ~2000 characters
-  - ❌Negative:
-    - **[N1]** Missing (0 characters)
-    - **[💥]** 16385 characters -> Can't test it because max URI size is ~2000 characters
-- 💠color `Color`
-  - ✅Positive:
-    - **[rP4]** yellow
-    - **[rP4]** purple
-    - **[rP4]** blue
-    - **[rP4]** red
-    - **[rP4]** green
-    - **[rP4]** orange
-    - **[rP4]** black
-    - **[rP4]** sky
-    - **[rP4]** pink
-    - **[rP4]** lime
-    - **[P5]** null
-    - **[P6]** Empty string ("")
-    - **[P7->🐞]** Missing (0 characters) -> If we don't provide a value, it changes to 'null', and it probably shouldn't be changed.
-  - ❌Negative:
-    - **[N2]** Incorrect (other value)
-
----
+# ☑Test coverage <a name="test_coverage"></a>
 
 ## 🔗Path parameters <a name="path_parameters"></a>
 
 ### 💠id `string` 🔴REQUIRED🔴
 
+#### 📄Description
+
 The id of the label.
 
+#### 📋Summary
+
+| Property | Value  |
+|----------|--------|
+| Required | ✔      |
+| Type     | string |
+
+#### ✅Positive
+
+- **[ PX ]** Correct
+
+#### ❌Negative
+
+🔴TODO🔴
+- **[ N ]** Non-existent
+- **[ N ]** Incorrect
+
 ### 💠field `string` 🔴REQUIRED🔴
+
+#### 📄Description
 
 The field on the Label to update.  
 Valid values: `color`, `name`
 
----
+#### 📋Summary
 
-## 📦Query parameters / Payload <a name="query_parameters_payload"></a>
+| Property | Value                  |
+|----------|------------------------|
+| Required | ✔                      |
+| Type     | enum (`color`, `name`) |
+
+#### ✅Positive
+
+- **[ PX ]** Correct
+
+#### ❌Negative
+
+🔴TODO🔴
+- **[ N ]** Incorrect
+
+## 🧵Query parameters <a name="query_parameters"></a>
 
 ### 💠value `TrelloID (string)` 🔴REQUIRED🔴
+
+#### 📄Description
 
 The new value for the field.  
 Pattern: `^[0-9a-fA-F]{24}$`
 
+#### 📋Summary
+
+| Property | Value               |
+|----------|---------------------|
+| Required | ✔                   |
+| Type     | 24-hex string       |
+| Pattern  | `^[0-9a-fA-F]{24}$` |
+
+#### ✅Positive
+
+- 💠name `string`
+  - **[ P1 ]** Special characters and numbers
+  - **[ P2 ]** 1 character
+  - **[ P3 ]** Empty string ("")
+  - **[ 💥 ]** null → Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
+  - **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
+- 💠color `Color`
+  - **[ rP4 ]** yellow
+  - **[ rP4 ]** purple
+  - **[ rP4 ]** blue
+  - **[ rP4 ]** red
+  - **[ rP4 ]** green
+  - **[ rP4 ]** orange
+  - **[ rP4 ]** black
+  - **[ rP4 ]** sky
+  - **[ rP4 ]** pink
+  - **[ rP4 ]** lime
+  - **[ P5 ]** null
+  - **[ P6 ]** Empty string ("")
+  - **[ P7🐞 ]** Missing (0 characters) → If we don't provide a value, it changes to 'null', and it probably shouldn't be changed.
+
+#### ❌Negative
+
+- 💠name `string`
+  - **[ N1 ]** Missing (0 characters)
+  - **[ 💥 ]** 16385 characters → Can't test it because max URI size is ~2000 characters
+- 💠color `Color`
+  - **[ N2 ]** Incorrect (other value)
+
 ---
 
-## 📩Response <a name="response"></a>
+# 📜Response <a name="response"></a>
 
 ```json
 {
