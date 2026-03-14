@@ -275,6 +275,12 @@ public class POST_CreateLabelTest extends TestBase {
     @Test
     public void N6_shouldNotCreateLabelWhenLabelNameIsMissing() {
         // ARRANGE
+        String expectedResponse = """
+                {
+                  "message": "invalid value for name",
+                  "error": "BAD_REQUEST_ERROR"
+                }
+                """;
         POST_CreateLabelPayload payload = new POST_CreateLabelPayload.Builder()
                 .setIdBoard(boardId)
                 .setColor("purple")
@@ -283,7 +289,7 @@ public class POST_CreateLabelTest extends TestBase {
         responsePost = postCreateLabelWithAnyParams(payload);
         // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        assertThat(responsePost.getBody().asString()).isEqualTo("invalid value for name");
+        compareResponseWithJson(responsePost, expectedResponse);
     }
 
     // -----
