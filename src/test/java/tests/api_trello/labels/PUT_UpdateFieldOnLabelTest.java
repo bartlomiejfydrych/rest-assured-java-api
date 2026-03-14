@@ -14,8 +14,7 @@ import utils.UtilsString;
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
-import static endpoints.labels.PUT_UpdateFieldOnLabelEndpoint.putUpdateFieldOnLabel;
-import static endpoints.labels.PUT_UpdateFieldOnLabelEndpoint.putUpdateFieldOnLabelWithoutFieldValue;
+import static endpoints.labels.PUT_UpdateFieldOnLabelEndpoint.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
 import static utils.UtilsCompare.compareResponseWithJson;
@@ -210,16 +209,65 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
     // NEGATIVE TESTS
     // ==========================================================================================================
 
+    // --
+    // id
+    // --
+
+    @Test
+    public void N3_shouldNotUpdateLabelFieldWithNonExistentId() {
+        // ARRANGE
+        String labelId = "999999999999999999999999";
+        // ACT
+        responsePut = putUpdateFieldOnLabel(labelId, LabelBaseQueryParameters.NAME, "Update Label Field – negative test");
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(404);
+        assertThat(responsePut.getBody().asString()).isEqualTo("The requested resource was not found.");
+    }
+
+    @Test
+    public void N4_shouldNotUpdateLabelFieldWithIncorrectId() {
+        // ARRANGE
+        String labelId = "Kek123";
+        // ACT
+        responsePut = putUpdateFieldOnLabel(labelId, LabelBaseQueryParameters.NAME, "Update Label Field – negative test");
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid id");
+    }
+
+    // -----
+    // field
+    // -----
+
+    @Test
+    public void N5_shouldNotUpdateLabelFieldWithIncorrectFieldName() {
+        // ARRANGE
+        String incorrectFieldName = "uses";
+        // ACT
+        responsePut = putUpdateFieldOnLabelCustomField(labelId, incorrectFieldName, "Update Label Field – negative test");
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(404);
+        assertThat(responsePut.getBody().asString()).startsWith("Cannot PUT /1/labels/" + labelId + "/");
+    }
+
     // ----
     // name
     // ----
 
     @Test
     public void N1_shouldNotUpdateLabelFieldNameWithoutValue() {
-        // PUT
+        // ARRANGE
+        String expectedResponse = """
+                {
+                  "message": "invalid value for value",
+                  "error": "BAD_REQUEST_ERROR"
+                }
+                """;
+        // ACT
         responsePut = putUpdateFieldOnLabelWithoutFieldValue(labelId, LabelBaseQueryParameters.NAME);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
-        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for value");
+        compareResponseWithJson(responsePut, expectedResponse);
     }
 
     // -----
@@ -228,16 +276,16 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
 
     @Test
     public void N2_shouldNotUpdateLabelFieldColorWithIncorrectValue() {
-
+        // ARRANGE
         String expectedResponse = """
                 {
                     "message": "invalid value for value",
                     "error": "ERROR"
                 }
                 """;
-
-        // PUT
+        // ACT
         responsePut = putUpdateFieldOnLabel(labelId, LabelBaseQueryParameters.COLOR, "KEK123");
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePut, expectedResponse);
     }

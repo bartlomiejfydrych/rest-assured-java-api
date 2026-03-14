@@ -59,6 +59,10 @@ public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
     // NEGATIVE
     // --------
 
+    public static Response putUpdateFieldOnLabelCustomField(String labelId, String labelField, String fieldValue) {
+        return put(labelById(labelId) + "/" + labelField, fieldValue);
+    }
+
     public static Response putUpdateFieldOnLabelWithoutFieldValue(String labelId, LabelBaseQueryParameters labelField) {
         return put(labelFieldById(labelId, labelField), null);
     }

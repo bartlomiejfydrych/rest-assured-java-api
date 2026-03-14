@@ -57,9 +57,8 @@ The id of the label.
 
 #### ❌Negative
 
-🔴TODO🔴
-- **[ N ]** Non-existent
-- **[ N ]** Incorrect
+- **[ N3 ]** Non-existent
+- **[ N4 ]** Incorrect
 
 ### 💠field `string` 🔴REQUIRED🔴
 
@@ -81,8 +80,7 @@ Valid values: `color`, `name`
 
 #### ❌Negative
 
-🔴TODO🔴
-- **[ N ]** Incorrect
+- **[ N5 ]** Incorrect
 
 ## 🧵Query parameters <a name="query_parameters"></a>
 
