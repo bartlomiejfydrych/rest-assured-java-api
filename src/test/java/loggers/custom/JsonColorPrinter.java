@@ -32,7 +32,10 @@ public class JsonColorPrinter {
         if (node.isObject()) {
             System.out.println("{");
 
-            node.properties().forEach(entry -> {
+            int size = node.properties().size();
+            int index = 0;
+
+            for (var entry : node.properties()) {
                 indent(indent + 1);
 
                 String key = color
@@ -45,7 +48,14 @@ public class JsonColorPrinter {
 
                 System.out.print(key + ": ");
                 printNode(entry.getValue(), indent + 1, color);
-            });
+
+                if (index < size - 1) {
+                    System.out.print(",");
+                }
+                System.out.println();
+
+                index++;
+            }
 
             indent(indent);
             System.out.println("}");
@@ -54,10 +64,17 @@ public class JsonColorPrinter {
 
         if (node.isArray()) {
             System.out.println("[");
-            for (JsonNode element : node) {
+
+            for (int i = 0; i < node.size(); i++) {
                 indent(indent + 1);
-                printNode(element, indent + 1, color);
+                printNode(node.get(i), indent + 1, color);
+
+                if (i < node.size() - 1) {
+                    System.out.print(",");
+                }
+                System.out.println();
             }
+
             indent(indent);
             System.out.println("]");
             return;
@@ -84,7 +101,7 @@ public class JsonColorPrinter {
             value = node.asText();
         }
 
-        System.out.println(value);
+        System.out.print(value);
     }
 
     private static void indent(int level) {
