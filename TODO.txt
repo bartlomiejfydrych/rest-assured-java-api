@@ -3,6 +3,5 @@ TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
 [✅] Poprosić Dawida o Code Review
-[❌] Dopisać dla PUT_UpdateLabel przypadki dla ID labela w path parameters i zaktualizować jego dokumentację i liczbę testów
 [❌] Dopisać dla PUT_UpdateFieldOnLabel przypadki dla ID labela w path parameters i zaktualizować jego dokumentację i liczbę testów
 [❌] Usunąć napis, że repo w budowie
