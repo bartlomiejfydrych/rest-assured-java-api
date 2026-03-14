@@ -232,6 +232,32 @@ public class PUT_UpdateLabelTest extends TestBase {
     // NEGATIVE TESTS
     // ==========================================================================================================
 
+    // --
+    // id
+    // --
+
+    @Test
+    public void N3_shouldNotUpdateLabelWithNonExistentId() {
+        // ARRANGE
+        String labelId = "999999999999999999999999";
+        // ACT
+        responsePut = putUpdateLabel(labelId, null);
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(404);
+        assertThat(responsePut.getBody().asString()).isEqualTo("The requested resource was not found.");
+    }
+
+    @Test
+    public void N4_shouldNotUpdateLabelWithIncorrectId() {
+        // ARRANGE
+        String labelId = "Kek123";
+        // ACT
+        responsePut = putUpdateLabel(labelId, null);
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid id");
+    }
+
     // -----
     // color
     // -----

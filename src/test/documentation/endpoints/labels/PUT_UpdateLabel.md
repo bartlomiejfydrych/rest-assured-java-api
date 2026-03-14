@@ -59,9 +59,8 @@ Pattern: `^[0-9a-fA-F]{24}$`
 
 #### ❌Negative
 
-🔴TODO🔴
-- **[ N ]** Non-existent
-- **[ N ]** Incorrect
+- **[ N3 ]** Non-existent
+- **[ N4 ]** Incorrect
 
 ## 🧵Query parameters <a name="query_parameters"></a>
 
