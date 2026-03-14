@@ -57,9 +57,8 @@ The `ID` of the Board to edit.
 
 #### ❌Negative
 
-🔴TODO🔴
-- **[ N ]** Non-existent
-- **[ N ]** Incorrect
+- **[ N12 ]** Non-existent
+- **[ N13 ]** Incorrect
 
 ## 🧵Query parameters <a name="query_parameters"></a>
 

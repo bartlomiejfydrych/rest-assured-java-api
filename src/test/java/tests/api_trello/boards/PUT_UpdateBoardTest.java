@@ -281,6 +281,38 @@ public class PUT_UpdateBoardTest extends TestBase {
     // NEGATIVE TESTS
     // ==========================================================================================================
 
+    // --
+    // id
+    // --
+
+    @Test
+    public void N12_shouldNotUpdateBoardWithNonExistentId() {
+        // ARRANGE
+        String boardId = "999999999999999999999999";
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setName("Board name – negative test")
+                .build();
+        // ACT
+        responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(404);
+        assertThat(responsePut.getBody().asString()).isEqualTo("The requested resource was not found.");
+    }
+
+    @Test
+    public void N13_shouldNotUpdateBoardWithIncorrectId() {
+        // ARRANGE
+        String boardId = "Kek123";
+        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
+                .setName("Board name – negative test")
+                .build();
+        // ACT
+        responsePut = putUpdateBoard(boardId, payload);
+        // ASSERT
+        assertThat(responsePut.statusCode()).isEqualTo(400);
+        assertThat(responsePut.getBody().asString()).isEqualTo("invalid id");
+    }
+
     // ----
     // name
     // ----
