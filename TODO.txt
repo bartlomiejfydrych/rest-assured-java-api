@@ -3,8 +3,6 @@ TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
 [✅] Poprosić Dawida o Code Review
-[❌] Przywrócić starsze wersje dokumentacji dla board
-[❌] Zastosować nowy styl dokumentacji dla wszystkich endpointów
 [❌] Dopisać dla PUT_UpdateLabel przypadki dla ID labela w path parameters i zaktualizować jego dokumentację i liczbę testów
 [❌] Dopisać dla PUT_UpdateFieldOnLabel przypadki dla ID labela w path parameters i zaktualizować jego dokumentację i liczbę testów
 [❌] Dopisać dla PUT_UpdateBoard przypadki dla ID boarda w path parameters i zaktualizować jego dokumentację i liczbę testów
