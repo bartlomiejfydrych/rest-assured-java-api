@@ -3,6 +3,5 @@ TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
 [✅] Poprosić Dawida o Code Review
-– Naprawić logger
 – Puścić wszystkie testy z wyłączonymi logami i zaktualizować czas
 – Usunąć napis, że repo w budowie
