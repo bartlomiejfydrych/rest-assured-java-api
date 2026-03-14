@@ -3,3 +3,5 @@ TODO – LISTA RZECZY DO ZROBIENIA
 ########################################################################################################################
 
 [✅] Poprosić Dawida o Code Review
+– Zrobić ewentualne poprawki po CR
+– Usunąć plik TODO.txt
