@@ -2,8 +2,6 @@
   <img src="project_banner.jpeg" alt="project banner, rest assured and java logo, project name">
 </div>
 
-# 🚧DO NOT ENTER! – Repository under construction🚧
-
 # 📑Information about this repository (for recruiters)
 
 ## 📄Description
@@ -60,7 +58,7 @@ things/languages/technologies.
 
 | Tests type   | Quantity | Average execution time |
 |--------------|----------|------------------------|
-| API (Trello) | 106      | 52 sec 675 ms          |
+| API (Trello) | 106      | 1 min 8 sec            |
 | Unit tests   | 45       | 2 sec 747 ms           |
 
 ### Details (tests structure) 
