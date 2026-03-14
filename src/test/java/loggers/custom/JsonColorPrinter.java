@@ -15,6 +15,7 @@ public class JsonColorPrinter {
         try {
             JsonNode node = getObjectMapper().readTree(json);
             printNode(node, 0, colorEnabled);
+            System.out.println();
         } catch (Exception e) {
             if (colorEnabled) {
                 ConsoleColors.yellow("Invalid JSON. Display as text:", colorEnabled);
@@ -30,12 +31,13 @@ public class JsonColorPrinter {
     private static void printNode(JsonNode node, int indent, boolean color) {
 
         if (node.isObject()) {
-            System.out.println("{");
+            System.out.print("{\n");
 
             int size = node.properties().size();
             int index = 0;
 
             for (var entry : node.properties()) {
+
                 indent(indent + 1);
 
                 String key = color
@@ -52,35 +54,38 @@ public class JsonColorPrinter {
                 if (index < size - 1) {
                     System.out.print(",");
                 }
-                System.out.println();
 
+                System.out.print("\n");
                 index++;
             }
 
             indent(indent);
-            System.out.println("}");
+            System.out.print("}");
             return;
         }
 
         if (node.isArray()) {
-            System.out.println("[");
+            System.out.print("[\n");
 
             for (int i = 0; i < node.size(); i++) {
+
                 indent(indent + 1);
                 printNode(node.get(i), indent + 1, color);
 
                 if (i < node.size() - 1) {
                     System.out.print(",");
                 }
-                System.out.println();
+
+                System.out.print("\n");
             }
 
             indent(indent);
-            System.out.println("]");
+            System.out.print("]");
             return;
         }
 
         String value;
+
         if (node.isTextual()) {
             value = color
                     ? Ansi.ansi().fgCyan().a("\"" + node.asText() + "\"").reset().toString()
