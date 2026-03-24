@@ -2,20 +2,20 @@
 
 # 📑Spis treści
 
-- [ENV — Zmienne środowiskowe](#env)
+- [ENV — Zmienne środowiskowe](#env--zmienne-środowiskowe)
 - [Enum](#enum)
-- [Typ zmiennej – Long](#long)
-- [Set Up (setUp) czy Setup? – prawidłowe nazewnictwo](#set_up_or_setup)
-- [Interfejsy – metody abstrakcyjne](#interface_abstract_methods)
-- [Interfejsy znacznikowe – co to jest?](#interface_marker)
-- [Static initialization block – blok statycznej inicjalizacji](#static_initialization_block)
-- [Resources vs. ścieżki plików](#resources_vs_path)
+- [Typ zmiennej – Long](#typ-zmiennej--long)
+- [Set Up (setUp) czy Setup? – prawidłowe nazewnictwo](#set-up-setup-czy-setup--prawidłowe-nazewnictwo)
+- [Interfejsy – metody abstrakcyjne](#interfejsy--metody-abstrakcyjne)
+- [Interfejsy znacznikowe – co to jest?](#interfejsy-znacznikowe--co-to-jest)
+- [Static initialization block – blok statycznej inicjalizacji](#static-initialization-block--blok-statycznej-inicjalizacji)
+- [Resources vs. ścieżki plików](#resources-vs-ścieżki-plików)
 
 ---
 
 # 📝Opis
 
-## 📄ENV — Zmienne środowiskowe <a name="env"></a>
+## 📄ENV — Zmienne środowiskowe
 
 Do ustawiania i zarządzania zmiennymi środowiskowymi możemy użyć biblioteki `dotenv-java`.
 
@@ -85,7 +85,7 @@ https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java
 
 ---
 
-## 📄Enum <a name="enum"></a>
+## 📄Enum
 
 Stosowaną praktyką dla enumów jest zapisywanie ich wielkimi literami jako stałe.  
 Czasami jednak potrzebujemy je podawać z konkretną wielkością znaków.  
@@ -138,7 +138,7 @@ responsePut = putUpdateFieldOnLabel(labelId, LabelField.COLOR, labelFieldValue);
 
 ---
 
-## 📄Typ zmiennej – Long <a name="long"></a>
+## 📄Typ zmiennej – Long
 
 ### Problem
 
@@ -184,7 +184,7 @@ To nie zmienia wartości, ale poprawia czytelność.
 
 ---
 
-## 📄Set Up (setUp) czy Setup? – prawidłowe nazewnictwo <a name="set_up_or_setup"></a>
+## 📄Set Up (setUp) czy Setup? – prawidłowe nazewnictwo
 
 W programowaniu piszemy:  
 `Set up` czy `Setup`?
@@ -278,7 +278,7 @@ Ale **nie** dla metod wykonujących akcję.
 
 ---
 
-## 📄Interfejsy – metody abstrakcyjne <a name="interface_abstract_methods"></a>
+## 📄Interfejsy – metody abstrakcyjne
 
 Co oznacza ta linia:  
 `String key();`
@@ -426,7 +426,7 @@ To wszystko 🙂
 
 ---
 
-## 📄Interfejsy znacznikowe – co to jest? <a name="interface_marker"></a>
+## 📄Interfejsy znacznikowe – co to jest?
 
 Już tłumaczę **DLACZEGO zaproponowałem**:
 
@@ -635,7 +635,7 @@ bo one:
 
 ---
 
-## 📄Static initialization block – blok statycznej inicjalizacji <a name="static_initialization_block"></a>
+## 📄Static initialization block – blok statycznej inicjalizacji
 
 Świetnie, że o to pytasz — bo to **bardzo ważny, ale często niezrozumiały element Javy**.  
 Wyjaśnię to jasno i „testersko”, bez akademickiego bełkotu.
@@ -784,7 +784,7 @@ log.info("Using test.seed = {}", SEED);
 
 ---
 
-## 📄Resources vs. ścieżki plików <a name="resources_vs_path"></a>
+## 📄Resources vs. ścieżki plików
 
 ### 🧠 O co chodzi: *resources* vs *ścieżki plików*
 

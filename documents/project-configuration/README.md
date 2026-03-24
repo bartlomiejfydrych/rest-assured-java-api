@@ -2,49 +2,49 @@
 
 # 📑Spis treści
 
-1. [🔧Konfiguracja](#configuration)
-   - [Tworzenie nowego projektu](#create_new_project)
-   - [Instalacja pluginów](#plugin_installation)
-   - [Dodawanie projektu do GitHub](#adding_project_to_github)
-   - [Dodawanie dependencies do Maven](#adding_dependencies_to_maven)
-   - [Dalsze kroki — rozpoczęcie pisania testów](#next_steps_writing_tests)
-2. [🧩Dodatkowe](#additional)
-   - [Typo — poprawienie błędów w tekście dla plików (głównie Markdown) pisanych w języku polskim](#typo_pl)
-   - [Markdown — wyłączenie podkreślania błędów we fragmentach kodu](#markdown_code_errors)
-   - [Maven dependencies — ustawianie zmiennych dla numerów wersji](#maven_dependencies_variables)
-   - [Jackson Databind vs. Jakarta JSON Processing API (JSON-P) – porównanie](#jackson_vs_jakarta)
-3. [🔌Pluginy do IDE — opis](#plugins_description)
+1. [🔧Konfiguracja](#konfiguracja)
+   - [Tworzenie nowego projektu](#tworzenie-nowego-projektu)
+   - [Instalacja pluginów](#instalacja-pluginów)
+   - [Dodawanie projektu do GitHub](#dodawanie-projektu-do-github)
+   - [Dodawanie dependencies do Maven](#dodawanie-dependencies-do-maven)
+   - [Dalsze kroki — rozpoczęcie pisania testów](#dalsze-kroki--rozpoczęcie-pisania-testów)
+2. [🧩Dodatkowe](#dodatkowe)
+   - [Typo — poprawienie błędów w tekście dla plików (głównie Markdown) pisanych w języku polskim](#typo--poprawienie-błędów-w-tekście-dla-plików-głównie-markdown-pisanych-w-języku-polskim)
+   - [Markdown — wyłączenie podkreślania błędów we fragmentach kodu](#markdown--wyłączenie-podkreślania-błędów-we-fragmentach-kodu)
+   - [Maven dependencies — ustawianie zmiennych dla numerów wersji](#ⓜmaven-dependencies--ustawianie-zmiennych-dla-numerów-wersji)
+   - [Jackson Databind vs. Jakarta JSON Processing API (JSON-P) – porównanie](#jackson-databind-vs-jakarta-json-processing-api-json-p--porównanie)
+3. [🔌Pluginy do IDE — opis](#pluginy-do-ide--opis)
    - [.ignore](#ignore)
-   - [Rainbow Brackets](#rainbow_brackets)
-   - [Key Promoter X](#key_promoter_x)
+   - [Rainbow Brackets](#rainbow-brackets)
+   - [Key Promoter X](#key-promoter-x)
    - [Lombok](#lombok)
-   - [Allure Report](#allure_report_plugin)
-4. [📚Dependencies — opis](#dependencies_description)
-   - [⭐Uniwersalne](#universal)
-     - [JUnit Jupiter (Aggregator)](#junit_jupiter_aggregator)
-     - [JUnit Platform Suite (Aggregator)](#junit_platform_suite_aggregator)
-     - [AssertJ Core](#assertj_core)
-     - [Java Faker](#java_faker)
-     - [Dotenv Java](#dotenv_java)
-     - [Allure Report](#allure_report_dependency)
-     - [Project Lombok](#project_lombok)
+   - [Allure Report](#allure-report)
+4. [📚Dependencies — opis](#dependencies--opis)
+   - [⭐Uniwersalne](#uniwersalne)
+     - [JUnit Jupiter (Aggregator)](#junit-jupiter-aggregator)
+     - [JUnit Platform Suite (Aggregator)](#junit-platform-suite-aggregator)
+     - [AssertJ Core](#assertj-core)
+     - [Java Faker](#java-faker)
+     - [Dotenv Java](#dotenv-java)
+     - [Allure Report](#allure-report)
+     - [Project Lombok](#project-lombok)
    - [🌐Backend](#backend)
-     - [REST Assured](#rest_assured)
-     - [Hibernate Validator Engine](#dto_hibernate_validator)
-     - [Jakarta Validation API](#dto_jakarta_validation)
-     - [Jakarta Expression Language Implementation](#dto_jakarta_el)
-     - [Jakarta Expression Language API](#dto_jakarta_el)
-     - [JSONassert](#json_assert)
-     - [JSON Schema Validator](#json_schema_validator)
-     - [Project Lombok](#project_lombok)
-     - [Jackson Databind](#jackson_databind)
-     - [Jakarta JSON Processing API](#jakarta_json_processing_api)
+     - [REST Assured](#rest-assured)
+     - [Hibernate Validator Engine](#hibernate-validator-engine)
+     - [Jakarta Validation API](#jakarta-validation-api)
+     - [Jakarta Expression Language Implementation](#jakarta-expression-language-implementation)
+     - [Jakarta Expression Language API](#jakarta-expression-language-api)
+     - [JSONassert](#jsonassert)
+     - [JSON Schema Validator](#json-schema-validator)
+     - [Project Lombok](#project-lombok)
+     - [Jackson Databind](#jackson-databind)
+     - [Jakarta JSON Processing API (JSON-P)](#jakarta-json-processing-api-json-p)
 
 ---
 
-# 🔧Konfiguracja <a name="configuration"></a>
+# 🔧Konfiguracja
 
-## Tworzenie nowego projektu <a name="create_new_project"></a>
+## Tworzenie nowego projektu
 
 1. Instalujemy `IntelliJ IDEA`
     - `JDK` — Jest już wbudowane w IDE. Nie trzeba go pobierać osobno tak jak kiedyś
@@ -74,7 +74,7 @@
     - Stworzymy za chwilę własny za pomocą pluginu `.ignore`
     - Możemy też zostawić i wkleić do niego gotowy szablon z internetu
 
-## Instalacja pluginów <a name="plugin_installation"></a>
+## Instalacja pluginów
 
 11. Instalujemy **pluginy**:
     - Klikamy `Hamburger Menu`
@@ -92,7 +92,7 @@
         - Lombok
         - Key Promoter X
 
-## Dodawanie projektu do GitHub <a name="adding_project_to_github"></a>
+## Dodawanie projektu do GitHub
 
 12. Generujemy plik `.gitignore` za pomocą pluginu `.ignore`
     - Klikamy `prawym na katalog z projektem`
@@ -116,7 +116,7 @@
 14. Po tym wszystkim Git może chcieć pushować nieśledzony plik o nazwie `vcs.xml`
     - Zaznaczamy/Dodajemy go i pushujemy
 
-## Dodawanie dependencies do Maven <a name="adding_dependencies_to_maven"></a>
+## Dodawanie dependencies do Maven
 
 15. Wpisujemy w google `maven repository` lub wchodzimy na stronę:  
     https://mvnrepository.com/
@@ -166,7 +166,7 @@
     - Patrzymy czy są wszystkie, które podaliśmy w `pom.xml`
 21. Możemy **rozpocząć pisanie testów**
 
-## Dalsze kroki — rozpoczęcie pisania testów <a name="next_steps_writing_tests"></a>
+## Dalsze kroki — rozpoczęcie pisania testów
 
 Dalsze kroki opisujące jak rozpocząć pisanie testów znajdują się w:  
 📁rest-assured-java-api (projekt)  
@@ -176,9 +176,9 @@ Dalsze kroki opisujące jak rozpocząć pisanie testów znajdują się w:
 
 ---
 
-# 🧩Dodatkowe <a name="additional"></a>
+# 🧩Dodatkowe
 
-## ✔Typo — poprawienie błędów w tekście dla plików (głównie Markdown) pisanych w języku polskim <a name="typo_pl"></a>
+## ✔Typo — poprawienie błędów w tekście dla plików (głównie Markdown) pisanych w języku polskim
 
 1. Klikamy `Hamburger Menu` w lewym, górnym rogu
 2. Klikamy `File`
@@ -190,14 +190,15 @@ Dalsze kroki opisujące jak rozpocząć pisanie testów znajdują się w:
 8. Klikamy `Apply`
 9. Klikamy `OK`
 
-## ⬇Markdown — wyłączenie podkreślania błędów we fragmentach kodu <a name="markdown_code_errors"></a>
+## ⬇Markdown — wyłączenie podkreślania błędów we fragmentach kodu
 
 1. Najeżdżamy kursorem na czerwone podkreślenie
 2. Powinna pojawić się ikonka (żarówka chyba)
 3. Szukamy w niej opcji wyłączenia podkreślania błędów kodu dla Markdown
 4. Git będzie chciał, żeby dodać i pushnąć plik `markdown.xml`. Dodajemy i pushujemy
 
-## ⓂMaven dependencies — ustawianie zmiennych dla numerów wersji <a name="maven_dependencies_variables"></a>
+## ⓂMaven dependencies — ustawianie zmiennych dla numerów wersji
+
 
 1. W sekcji z `<properties>` dodajemy coś zgodnie z poniższym przykładem:
     ```Java
@@ -229,7 +230,7 @@ Dalsze kroki opisujące jak rozpocząć pisanie testów znajdują się w:
     </dependency>
     ```
 
-## 🏆Jackson Databind vs. Jakarta JSON Processing API (JSON-P) – porównanie <a name="jackson_vs_jakarta"></a>
+## 🏆Jackson Databind vs. Jakarta JSON Processing API (JSON-P) – porównanie
 
 Obie biblioteki służą do przetwarzania JSON w Java, ale mają różne zastosowania i poziomy popularności.
 
@@ -284,9 +285,9 @@ JsonObject json = Json.createObjectBuilder()
 
 ---
 
-# 🔌Pluginy do IDE — opis <a name="plugins_description"></a>
+# 🔌Pluginy do IDE — opis
 
-## .ignore <a name="ignore"></a>
+## .ignore
 
 ### **.ignore – Wtyczka do zarządzania plikami ignorowanymi w projektach**
 
@@ -322,7 +323,7 @@ czy **Android Studio**, ułatwiająca zarządzanie plikami ignorowanymi przez sy
 🔹 Automatyzuje tworzenie reguł dla różnych technologii.  
 🔹 Przyspiesza workflow w repozytorium Git.
 
-## Rainbow Brackets <a name="rainbow_brackets"></a>
+## Rainbow Brackets
 
 ### **🌈 Rainbow Brackets – Wtyczka do podświetlania nawiasów w IDE**
 
@@ -366,7 +367,7 @@ Możesz edytować kolory w **File → Settings → Editor → Color Scheme → R
 🔹 Przyspiesza **debugowanie** i **analizę kodu**.  
 🔹 Jest **prosta w użyciu** i nie wpływa na wydajność IDE.
 
-## Key Promoter X <a name="key_promoter_x"></a>
+## Key Promoter X
 
 ### **⌨️ Key Promoter X – Wtyczka do nauki skrótów klawiszowych w IDE**
 
@@ -399,7 +400,7 @@ Im częściej ignorujesz skróty, tym bardziej wtyczka przypomina, aby z nich ko
 
 Chcesz szybciej nauczyć się skrótów klawiszowych i pracować wydajniej? **Key Promoter X to must-have!** 🔥
 
-## Lombok <a name="lombok"></a>
+## Lombok
 
 ### **🍃 Lombok – Wtyczka do IntelliJ IDEA i JetBrains IDEs**
 
@@ -450,7 +451,7 @@ public class User {
 
 Jeśli chcesz **przyspieszyć pracę i uprościć kod w Javie**, **Lombok Plugin** to **must-have**! 🔥
 
-## Allure Report <a name="allure_report_plugin"></a>
+## Allure Report
 
 ### **📊 Allure Report – Wtyczka do IntelliJ IDEA**
 
@@ -488,11 +489,11 @@ Jeśli pracujesz z Allure, ta wtyczka **znacznie ułatwia życie**! 🔥
 
 ---
 
-# 📚Dependencies — opis <a name="dependencies_description"></a>
+# 📚Dependencies — opis
 
-## ⭐Uniwersalne <a name="universal"></a>
+## ⭐Uniwersalne
 
-### 📕JUnit Jupiter (Aggregator) <a name="junit_jupiter_aggregator"></a>
+### 📕JUnit Jupiter (Aggregator)
 
 `JUnit Jupiter (Aggregator)` to zależność dla **JUnit 5**, która zapewnia pełną funkcjonalność silnika testowego
 **JUnit Jupiter**. Jest to **główna implementacja testów** w JUnit 5, zawierająca **adnotacje, asercje i mechanizmy
@@ -585,7 +586,7 @@ Jeśli chcesz korzystać z **JUnit 5**, to `JUnit Jupiter` jest absolutnie klucz
 
 ---
 
-### 📕JUnit Platform Suite (Aggregator) <a name="junit_platform_suite_aggregator"></a>
+### 📕JUnit Platform Suite (Aggregator)
 
 `JUnit Platform Suite (Aggregator)` to zależność używana do uruchamiania testów w **JUnit 5**, pozwalająca na
 konfigurację i uruchamianie testów z różnych pakietów i klas w ramach jednej **suity testowej**.
@@ -646,7 +647,7 @@ Jeśli potrzebujesz **zbiorczego uruchamiania testów w JUnit 5**, to `JUnit Pla
 
 ---
 
-### 📕AssertJ Core <a name="assertj_core"></a>
+### 📕AssertJ Core
 
 🔹 **AssertJ Core** to biblioteka do **asercji w testach jednostkowych**, która **rozszerza możliwości JUnit**.
 Jest nowoczesną alternatywą dla wbudowanych asercji w **JUnit** i **Hamcrest**, oferując **bardziej czytelną, płynną
@@ -739,7 +740,7 @@ class AssertJTest {
 
 ---
 
-### 📕Java Faker <a name="java_faker"></a>
+### 📕Java Faker
 
 🔹 **Java Faker** to biblioteka do generowania **losowych danych testowych** w języku Java. Umożliwia tworzenie
 **fikcyjnych nazw, adresów, numerów telefonów, dat, tekstów i wielu innych typów danych**. Jest często używana
@@ -818,7 +819,7 @@ public class FakerExample {
 
 ---
 
-### 📕Dotenv Java <a name="dotenv_java"></a>
+### 📕Dotenv Java
 
 🔹 **Dotenv Java** to biblioteka umożliwiająca **wczytywanie zmiennych środowiskowych z pliku `.env`** do aplikacji
 Java. Jest szczególnie przydatna w celu **przechowywania konfiguracji aplikacji** (np. kluczy API, adresów baz danych)
@@ -888,7 +889,7 @@ public class DotenvExample {
 
 ---
 
-### 📕Allure Report <a name="allure_report_dependency"></a>
+### 📕Allure Report
 
 🔹 **Allure Report** to biblioteka służąca do **generowania atrakcyjnych i szczegółowych raportów z testów** w Java.
 Współpracuje z popularnymi frameworkami testowymi, takimi jak **JUnit 5, TestNG, Cucumber, Serenity BDD**, a także
@@ -978,7 +979,7 @@ public class AllureExampleTest {
 
 ---
 
-### 📕Project Lombok <a name="project_lombok"></a>
+### 📕Project Lombok
 
 #### 🚨 UWAGA!
 
@@ -1056,9 +1057,9 @@ Aby IDE (np. IntelliJ IDEA, Eclipse) prawidłowo obsługiwało Lomboka:
 * Może wymagać wsparcia IDE / build toola (np. Maven, Gradle).
 * Potencjalne trudności przy debugowaniu i refleksji.
 
-## 🌐Backend <a name="backend"></a>
+## 🌐Backend
 
-### 📘REST Assured <a name="rest_assured"></a>
+### 📘REST Assured
 
 🔹 **REST Assured** to biblioteka Java ułatwiająca **testowanie API REST**. Pozwala na **wysyłanie żądań HTTP**
 i **walidację odpowiedzi** w sposób prosty i czytelny, przypominający składnię BDD (Behavior-Driven Development).
@@ -1163,7 +1164,7 @@ given()
 
 ---
 
-### 📘Hibernate Validator Engine <a name="dto_hibernate_validator"></a>
+### 📘Hibernate Validator Engine
 
 **Hibernate Validator Engine** to biblioteka do **walidacji danych** w Javie, stanowiąca **referencyjną implementację
 specyfikacji Bean Validation** (JSR 380 – Bean Validation 2.0).
@@ -1245,7 +1246,7 @@ for (ConstraintViolation<User> v : violations) {
 
 ---
 
-### 📘Jakarta Validation API <a name="dto_jakarta_validation"></a>
+### 📘Jakarta Validation API
 
 **Jakarta Validation API** to oficjalna specyfikacja (API) dla walidacji danych w Javie – wcześniej znana jako
 **Bean Validation API** (JSR 303/349/380), a obecnie pod marką **Jakarta EE**.
@@ -1360,7 +1361,116 @@ Hibernate Validator **implementuje** `jakarta.validation-api`.
 
 ---
 
-### 📘Jakarta Expression Language API <a name="dto_jakarta_el"></a>
+### 📘Jakarta Expression Language Implementation
+
+Świetny temat — **Jakarta Expression Language Implementation** to coś, co często pojawia się „w tle” i wiele osób myli
+go z API. Wyjaśnię to jasno, praktycznie i bez zbędnej teorii.
+
+#### 🧠 **Czym jest Jakarta Expression Language Implementation?**
+
+To **konkretna implementacja (czyli działający kod)** dla **Jakarta Expression Language (EL)**.
+
+👉 Czyli:
+
+* **API (`jakarta.el-api`)** → tylko interfejsy (co można robić)
+* **Implementation (`jakarta.el`)** → realna logika (jak to działa)
+
+#### 📦 Podział (bardzo ważny)
+
+##### 1️⃣ **API**
+
+```xml
+jakarta.el:jakarta.el-api
+```
+
+* definiuje:
+    * `ExpressionFactory`
+    * `ValueExpression`
+    * `ELContext`
+* NIE działa samodzielnie
+
+##### 2️⃣ **Implementation (to, o co pytasz)**
+
+Najczęściej:
+
+```xml
+org.glassfish:jakarta.el
+```
+
+👉 To jest:
+* rzeczywisty silnik EL
+* parser i evaluator wyrażeń
+
+#### 🔥 Co robi implementation?
+
+Pozwala na wykonanie takich rzeczy jak:
+
+```java
+ExpressionFactory factory = ExpressionFactory.newInstance();
+ELContext context = new StandardELContext(factory);
+
+ValueExpression expr = factory.createValueExpression(context, "${1 + 2}", int.class);
+Object result = expr.getValue(context);
+
+System.out.println(result); // 3
+```
+
+#### ⚙️ Co jest „pod maską”?
+
+Implementation zajmuje się:
+
+##### ✔ Parsowaniem wyrażeń
+
+```
+${user.name}
+${order.total > 100}
+${list[0]}
+```
+
+##### ✔ Dostępem do obiektów
+
+* refleksja
+* gettery/settery
+
+##### ✔ Operacjami:
+
+* matematyka (`+ - * /`)
+* logika (`&& || !`)
+* porównania (`==`, `>`, `<`)
+
+##### ✔ Wywoływaniem metod:
+
+```java
+${user.getName()}
+```
+
+#### 🧩 Gdzie się tego używa?
+
+##### 🔹 1. **JSF (JavaServer Faces)**
+
+```xml
+<h:outputText value="#{user.name}" />
+```
+
+##### 🔹 2. **JSP**
+
+```jsp
+${user.name}
+```
+
+##### 🔹 3. **CDI / Dependency Injection**
+
+##### 🔹 4. **Hibernate Validator**
+
+```java
+@ELAssert(expression = "this.age > 18")
+```
+
+##### 🔹 5. Frameworki backendowe / custom DSL
+
+---
+
+### 📘Jakarta Expression Language API
 
 **`jakarta.el:jakarta.el-api`** to biblioteka definiująca **Expression Language (EL)**, czyli **język wyrażeń**
 używany w aplikacjach Java do dynamicznego wiązania danych (np. w JSP, JSF, CDI, beanach).
@@ -1434,7 +1544,7 @@ public String name;
 
 ---
 
-### 📘JSONassert <a name="json_assert"></a>
+### 📘JSONassert
 
 **JSONassert** to lekkie **Java dependency** (biblioteka), która umożliwia łatwe i **precyzyjne porównywanie dwóch
 dokumentów JSON** podczas pisania testów jednostkowych lub integracyjnych.
@@ -1753,7 +1863,7 @@ Przy `strict = true` **JSONy muszą być identyczne**.
 
 ---
 
-### 📘JSON Schema Validator <a name="json_schema_validator"></a>
+### 📘JSON Schema Validator
 
 🔹 **JSON Schema Validator** to biblioteka do **walidacji odpowiedzi JSON** na podstawie schematu **JSON Schema**.
 Jest często używana w połączeniu z **REST Assured**, aby sprawdzać, czy odpowiedzi API są zgodne z oczekiwanym formatem.
@@ -1854,7 +1964,7 @@ body("$", everyItem(matchesJsonSchemaInClasspath("schemas/user-schema.json")));
 
 ---
 
-### 📘Project Lombok <a name="project_lombok"></a>
+### 📘Project Lombok
 
 🔹 **Project Lombok** to biblioteka do **automatycznego generowania kodu** w Javie. Pozwala **usunąć boilerplate code**,
 taki jak **gettery, settery, konstruktory, `toString()`, `equals()` itp.**, dzięki wykorzystaniu **adnotacji**.
@@ -2017,7 +2127,7 @@ public class LoggerExample {
 
 ---
 
-### 📘Jackson Databind <a name="jackson_databind"></a>
+### 📘Jackson Databind
 
 🔹 **Jackson Databind** to biblioteka do **mapowania obiektów Java na JSON i odwrotnie**. Jest częścią ekosystemu
 **Jackson** i zapewnia prostą obsługę konwersji danych.
@@ -2129,7 +2239,7 @@ System.out.println(json);
 
 ---
 
-### 📘Jakarta JSON Processing API (JSON-P) <a name="jakarta_json_processing_api"></a>
+### 📘Jakarta JSON Processing API (JSON-P)
 
 🔹 **Jakarta JSON Processing API (JSON-P)** to **standardowa biblioteka do przetwarzania JSON** w języku Java. Pozwala
 na **parsowanie, generowanie i manipulację JSON-em** zarówno w sposób strumieniowy (streaming API), jak i w modelu

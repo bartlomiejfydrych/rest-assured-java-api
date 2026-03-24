@@ -2,14 +2,14 @@
 
 # 📑Spis treści
 
-- [JsonSchema Validation](#json_schema_validation)
-- [DTO – pierwsze słabe próby deserializacji i walidacji](#dto_first)
-- [JSON – porównywanie Stringów](#json_compare_as_string)
-- [Obiekty – porównywanie z pomijaniem pól-getterów](#object_comparator)
+- [JsonSchema Validation](#jsonschema-validation)
+- [DTO – pierwsze słabe próby deserializacji i walidacji](#dto--pierwsze-słabe-próby-deserializacji-i-walidacji)
+- [JSON – porównywanie Stringów](#json--porównywanie-stringów)
+- [Obiekty – porównywanie z pomijaniem pól-getterów](#obiekty--porównywanie-z-pomijaniem-pól-getterów)
 
 # 📝Opis
 
-## 📄JsonSchema Validation <a name="json_schema_validation"></a>
+## 📄JsonSchema Validation
 
 1. Pobieramy dependency **Json Schema Validator** od **Rest Assured**:
     ```xml
@@ -167,7 +167,7 @@
 
 ---
 
-## 📄DTO – pierwsze słabe próby deserializacji i walidacji <a name="dto_first"></a>
+## 📄DTO – pierwsze słabe próby deserializacji i walidacji
 
 Kod ten znajdował się w `scr/test/java/utils` w pliku o nazwie `DtoUtils`.
 
@@ -431,7 +431,7 @@ DtoUtils.validateDto(user);
 
 ---
 
-## 📄JSON – porównywanie Stringów <a name="json_compare_as_string"></a>
+## 📄JSON – porównywanie Stringów
 
 Kod ten znajdował się w `scr/test/java/utils` w pliku o nazwie `JsonUtils`.
 
@@ -750,7 +750,7 @@ W powyższym przykładzie:
 
 ---
 
-## 📄Obiekty – porównywanie z pomijaniem pól-getterów <a name="object_comparator"></a>
+## 📄Obiekty – porównywanie z pomijaniem pól-getterów
 
 Kod ten znajdował się w `scr/test/java/utils` w pliku o nazwie `ObjectComparator`.
 

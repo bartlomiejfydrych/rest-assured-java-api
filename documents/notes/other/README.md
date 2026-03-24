@@ -2,17 +2,17 @@
 
 # 📑Spis treści
 
-- [🗃Repozytorium z kursu](#repository_from_the_course)
-- [🐱GIT – treść commitów (dywagacje)](#git_commit_messages)
+- [🗃Repozytorium z kursu](#repozytorium-z-kursu)
+- [🐱GIT – treść commitów (dywagacje)](#git--treść-commitów-dywagacje)
 
 ---
 
-## 🗃Repozytorium z kursu <a name="repository_from_the_course"></a>
+## 🗃Repozytorium z kursu
 
 **Link:**  
 https://github.com/simplelogic2023szkolenie
 
-## 🐱GIT – treść commitów (dywagacje) <a name="git_commit_messages"></a>
+## 🐱GIT – treść commitów (dywagacje)
 
 > Powiedz mi, jak powinny wyglądać treści commitów w Git po polsku.
 > 

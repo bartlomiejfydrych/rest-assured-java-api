@@ -2,81 +2,81 @@
 
 # 📑Spis treści
 
-- [START – rozpoczęcie pisania testów](#start_writing_tests)
-  - [Dostępy](#start_wt_accesses)
-  - [config.properties](#start_wt_config_p)
-  - [.env](#start_wt_env)
-  - [Config](#start_wt_config)
-  - [BaseUrlBuilder](#start_wt_base_url)
-  - [RequestSpecConfig](#start_wt_request_spec)
-  - [TestBase](#start_wt_test_base)
-  - [UtilsCompare (compare objects)](#start_wt_utils_compare)
-  - [Endpoints](#start_wt_endpoints)
-  - [Payloads](#start_wt_payloads)
-  - [Endpoints – pozostałe](#start_wt_endpoints_others)
-  - [Test – mały](#start_wt_test_small)
-  - [Expected responses](#start_wt_expected_responses)
-  - [UtilsResponse (DTO)](#start_wt_utils_response)
-  - [DTO](#start_wt_dto)
-  - [Utils Tests](#start_wt_utils_tests)
-  - [Test – ostateczny](#start_wt_test_final)
-  - [Dokumentacja](#start_wt_documentation)
-- [TestBase – dlaczego lepiej nie deklarować w nim zmiennych 'response' i innych rzeczy](#test_base_variables)
-- [Kurs Sii – sposoby pisania testów/requestów](#sii_course_tests_requests)
-- [Boolean – testy](#boolean_tests)
-- [RequestSpecification](#request_specification)
-- [RestAssured.filters()](#rest_assured_filters)
-- [RequestSpecBuilder](#request_spec_builder)
-- [RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()](#enable_log_fail)
-- [REST Assured – przesyłanie pustych Stringów](#rest_assured_send_empty_string)
-- [RecursiveComparisonConfiguration()](#assertj_recursive_comparison_configuration)
-- [Rest Assured – przykłady pisania testów z kursu Sii](#rest_assured_test_examples_from_course)
-- [ID – czyszczenie zmiennej po wysłaniu DELETE](#id_clean_after_delete)
-- [UtilsCompare.java – opis kodu](#utils_compare_java)
-- [UtilsResponse.java – opis kodu](#utils_response_java)
-- [DTO – opcjonalne parametry](#dto_optional_parameters)
-- [DTO – opcjonalne parametry 2](#dto_optional_parameters_2)
-- [DTO – (value = ...)](#dto_value)
-- [Struktura JSON – JsonSchema vs. DTO/POJO](#json_schema_dto_pojo)
-- [Porównywanie JSON'ów – wyzwania, podejścia, praktyki](#json_compare_intro)
-- [Porównywanie JSON'ów – ObjectMapper](#json_compare_object_mapper)
-- [Porównywanie JSON'ów – JsonNode](#json_compare_json_node)
-- [REST Assured – asercja dla pustego obiektu](#rest_assured_assert_empty_object)
-- [JUnit – tagi dla testów](#junit_test_tags)
-- [Junit – TestInstance.Lifecycle](#junit_testinstance_lifecycle)
-- [Response – duży vs. mały](#response_big_vs_small)
-- [AssertJ – porównywanie obiektów i list](#assertj_object_compare)
-- [AssertJ – dodawanie komentarzy/logów do testów](#assertj_comments_logs)
-- [AssertJ – soft assertions](#assertj_soft_assertions)
-- [Zmienne – podstawianie pod String/Text Block](#variables_string_text_block)
-- [Response (expected, universal) – opcjonalne parametry](#response_expected_universal_optional_parameters)
-- [Number/Liczba jako String – czy powinna przechodzić (Query Params vs. JSON body)](#number_as_string)
-- [Long vs. long (prymitywy) – autoboxing, czyli automatyczne pakowanie prymitywu w obiekt](primitives_long)
-- [Dokumentacja testów – możliwe formy](#test_documentation_forms)
-- [URL – kodowanie znaków](#url_encoded)
-- [SEED – informacje](#seed_information)
-- [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (1)](#junit_api_unit_tests_1)
-- [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (2)](#junit_api_unit_tests_2)
-- [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (3)](#junit_api_unit_tests_3)
-- [Maven – do uruchamiania testów](#maven_tests_runner)
-- [JSON – podstawianie zmiennych pod niego](#json_variable_replace)
-- [Allure Report – konfiguracja](#allure_report)
-- [Endpoint – różne scope'y](#endpoint_scope)
-- [Autoryzacja – zachowanie ważności](#auth_scope)
+- [START – rozpoczęcie pisania testów](#start--rozpoczęcie-pisania-testów)
+  - [Dostępy](#dostępy)
+  - [config.properties](#configproperties)
+  - [.env](#env)
+  - [Config](#config)
+  - [BaseUrlBuilder](#baseurlbuilder)
+  - [RequestSpecConfig](#requestspecconfig)
+  - [TestBase](#testbase)
+  - [UtilsCompare (compare objects)](#utilscompare-compare-objects)
+  - [Endpoints](#endpoints)
+  - [Payloads](#payloads)
+  - [Endpoints – pozostałe](#endpoints--pozostałe)
+  - [Test – mały](#test--mały)
+  - [Expected responses](#expected-responses)
+  - [UtilsResponse (DTO)](#utilsresponse-dto)
+  - [DTO](#dto)
+  - [Utils Tests](#utils-tests)
+  - [Test – ostateczny](#test--ostateczny)
+  - [Dokumentacja](#dokumentacja)
+- [TestBase – dlaczego lepiej nie deklarować w nim zmiennych 'response' i innych rzeczy](#testbase--dlaczego-lepiej-nie-deklarować-w-nim-zmiennych-response-i-innych-rzeczy)
+- [Kurs Sii – sposoby pisania testów/requestów](#kurs-sii--sposoby-pisania-testówrequestów)
+- [Boolean – testy](#boolean--testy)
+- [RequestSpecification](#requestspecification)
+- [RestAssured.filters()](#restassuredfilters)
+- [RequestSpecBuilder](#requestspecbuilder)
+- [RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()](#restassuredenableloggingofrequestandresponseifvalidationfails)
+- [REST Assured – przesyłanie pustych Stringów](#rest-assured--przesyłanie-pustych-stringów)
+- [RecursiveComparisonConfiguration()](#recursivecomparisonconfiguration)
+- [Rest Assured – przykłady pisania testów z kursu Sii](#rest-assured--przykłady-pisania-testów-z-kursu-sii)
+- [ID – czyszczenie zmiennej po wysłaniu DELETE](#id--czyszczenie-zmiennej-po-wysłaniu-delete)
+- [UtilsCompare.java – opis kodu](#utilscomparejava--opis-kodu)
+- [UtilsResponse.java – opis kodu](#utilsresponsejava--opis-kodu)
+- [DTO – opcjonalne parametry](#dto--opcjonalne-parametry)
+- [DTO – opcjonalne parametry 2](#dto--opcjonalne-parametry-2)
+- [DTO – (value = ...)](#dto--value--)
+- [Struktura JSON – JsonSchema vs. DTO/POJO](#struktura-json--jsonschema-vs-dtopojo)
+- [Porównywanie JSON'ów – wyzwania, podejścia, praktyki](#porównywanie-jsonów--wyzwania-podejścia-praktyki)
+- [Porównywanie JSON'ów – ObjectMapper](#porównywanie-jsonów--objectmapper)
+- [Porównywanie JSON'ów – JsonNode](#porównywanie-jsonów--jsonnode)
+- [REST Assured – asercja dla pustego obiektu](#rest-assured--asercja-dla-pustego-obiektu)
+- [JUnit – tagi dla testów](#junit--tagi-dla-testów)
+- [Junit – TestInstance.Lifecycle](#junit--testinstancelifecycle)
+- [Response – duży vs. mały](#response--duży-vs-mały)
+- [AssertJ – porównywanie obiektów i list](#assertj--porównywanie-obiektów-i-list)
+- [AssertJ – dodawanie komentarzy/logów do testów](#assertj--dodawanie-komentarzylogów-do-testów)
+- [AssertJ – soft assertions](#assertj--soft-assertions)
+- [Zmienne – podstawianie pod String/Text Block](#zmienne--podstawianie-pod-stringtext-block)
+- [Response (expected, universal) – opcjonalne parametry](#response-expected-universal--opcjonalne-parametry)
+- [Number/Liczba jako String – czy powinna przechodzić (Query Params vs. JSON body)](#numberliczba-jako-string--czy-powinna-przechodzić-query-params-vs-json-body)
+- [Long vs. long (prymitywy) – autoboxing, czyli automatyczne pakowanie prymitywu w obiekt](#long-vs-long-prymitywy--autoboxing-czyli-automatyczne-pakowanie-prymitywu-w-obiekt)
+- [Dokumentacja testów – możliwe formy](#dokumentacja-testów--możliwe-formy)
+- [URL – kodowanie znaków](#url--kodowanie-znaków)
+- [SEED – informacje](#seed--informacje)
+- [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (1)](#junit--rozdzielenie-uruchamiania-testów-api-i-jednostkowych-1)
+- [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (2)](#junit--rozdzielenie-uruchamiania-testów-api-i-jednostkowych-2)
+- [JUnit – rozdzielenie uruchamiania testów API i jednostkowych (3)](#junit--rozdzielenie-uruchamiania-testów-api-i-jednostkowych-3)
+- [Maven – do uruchamiania testów](#maven--do-uruchamiania-testów)
+- [JSON – podstawianie zmiennych pod niego](#json--podstawianie-zmiennych-pod-niego)
+- [Allure Report – konfiguracja](#allure-report--konfiguracja)
+- [Endpoint – różne scope'y](#endpoint--różne-scopey)
+- [Autoryzacja – zachowanie ważności](#autoryzacja--zachowanie-ważności)
 
 ---
 
 # 📝Opis
 
-## 📄START – rozpoczęcie pisania testów <a name="start_writing_tests"></a>
+## 📄START – rozpoczęcie pisania testów
 
-### Dostępy <a name="start_wt_accesses"></a>
+### Dostępy
 
 1. Zakładamy `konta` i inne `dostępy`
     - W przypadku tego projektu zakładamy `konto` oraz zdobywamy `API key` oraz `token` na stronie **Trello**
     - Szczegóły w `README` katalogu `📂trello-configuration`
 
-### config.properties <a name="start_wt_config_p"></a>
+### config.properties
 
 2. W katalogu `src/main/resources` tworzymy katalog `configs`, a w nim plik o nazwie `config.properties`  
    Wszelkie ustawienia projektu warto trzymać i odczytywać z osobnego pliku, aby nie musieć nic zmieniać w samym kodzie.  
@@ -89,7 +89,7 @@
       - TLD
       - Numer
 
-### .env <a name="start_wt_env"></a>
+### .env
 
 3. Sprawdzamy, czy mamy w `pom.xml` dodane dependecy o nazwie `Dotenv Java`
 4. Otwieramy plik `.gitignore` i dopisujemy w nim: `environment/.env`
@@ -105,7 +105,7 @@
       - api key
       - token
 
-### Config <a name="start_wt_config"></a>
+### Config
 
 8. W katalogu `src/main/java` tworzymy katalog o nazwie `configuration`
 9. W katalogu `configuration` tworzymy plik java class o nazwie `Config.java`
@@ -132,12 +132,12 @@
       - api key
       - token
 
-### BaseUrlBuilder <a name="start_wt_base_url"></a>
+### BaseUrlBuilder
 
 11. W katalogu `src/main/java/configuration` tworzymy plik `BaseUrlBuilder`
 12. W pliku `BaseUrlBuilder` piszemy budowanie naszego URL ze zmiennych konfiguracyjnych projektu
 
-### RequestSpecConfig <a name="start_wt_request_spec"></a>
+### RequestSpecConfig
 
 13. W katalogu `src/test/java` tworzymy katalog package o nazwie `configuration`
 14. W katalogu `src/test/java/configuration` tworzymy plik `RequestSpecConfig`  
@@ -146,7 +146,7 @@
     Żeby obejść to ograniczenie można też w `pom.xml` usunąć wiersz z `<scope>test</scope>`.
 15. W pliku `RequestSpecConfig` piszemy naszą wspólną konfigurację dla wszystkich requestów oraz metodę ją zwracającą
 
-### TestBase <a name="start_wt_test_base"></a>
+### TestBase
 
 16. W katalogu `src/test/java` tworzymy katalog o nazwie `base`
 17. W katalogu `src/test/java/base` tworzymy plik o nazwie `TestBase`
@@ -164,7 +164,7 @@
       - pobieranie konfiguracji requestów i przypisywanie jej do naszej zmiennej  
         (później klasy z endpointami będą dziedziczyły tą zmienną po klasie `TestBase`)
 
-### UtilsCompare (compare objects) <a name="start_wt_utils_compare"></a>
+### UtilsCompare (compare objects)
 
 19. W katalogu `src/test/java` tworzymy katalog o nazwie `utils`  
     Dlaczego w test? Ponieważ `AssertJ` ma ustawiony <scope> na ten katalog w `pom.xml`.  
@@ -174,7 +174,7 @@
     - porównywać obiekty
     - a jeśli podamy jako `String` parametry np. `"id"` to będą one pomijane przy porównywaniu
 
-### Endpoints <a name="start_wt_endpoints"></a>
+### Endpoints
 
 22. W katalogu `src/test/java` tworzymy katalog o nazwie `endpoints`
 23. W katalogu `src/test/java/endpoints` tworzymy katalog o nazwie `boards` (na wzór dokumentacji)  
@@ -200,7 +200,7 @@
     - Tworzymy metodę lub metody wywołujące ten request i używające jako argumentów podawanych przez nas parametrów, lub
       payloadów
 
-### Payloads <a name="start_wt_payloads"></a>
+### Payloads
 
 26. W katalogu `src/test/java` tworzymy katalog o nazwie `payloads`  
     **Wyjaśnienie:**  
@@ -227,14 +227,14 @@
       Map<String, Object> queryParams = payload.toQueryParams();
       ```
 
-### Endpoints – pozostałe <a name="start_wt_endpoints_others"></a>
+### Endpoints – pozostałe
 
 30. W katalogu z `endpoints` tworzymy plik `GET_GetBoard`  
     Aby sprawdzać, czy dane dodawane przez POST rzeczywiście są prawidłowe
 31. W katalogu z `endpoints` tworzymy plik `DELETE_DeleteBoard`  
     Aby pod koniec testu usuwać zasób dodawany przez POST
 
-### Test – mały <a name="start_wt_test_small"></a>
+### Test – mały
 
 32. Mając przygotowanego naszego pierwszego mini CRUD'a w katalogu `src/test/java` tworzymy katalog o nazwie `tests`
 33. W nim tworzymy katalog o nazwie sekcji/kontrolera z dokumentacji. W tym przypadku `boards`
@@ -260,7 +260,7 @@
     }
     ```
 
-### Expected responses <a name="start_wt_expected_responses"></a>
+### Expected responses
 
 36. W katalogu `src/test/java` tworzymy katalog o nazwie `expected_responses`
 37. W katalogu tym tworzymy pod-katalog zgodny z układem w dokumentacji API, w tym przypadku `boards`
@@ -268,7 +268,7 @@
     w tym przypadku `POST_CreateBoardExpected`
 39. W klasie tej tworzymy zmienną typu String, w której umieszczamy nasz oczekiwany JSON pomiędzy takimi znakami `"""{json}"""`
 
-### UtilsResponse (DTO) <a name="start_wt_utils_response"></a>
+### UtilsResponse (DTO)
 
 40. W katalogu `src/test/java/utils` tworzymy plik `UtilsResponse`
 41. W pliku `UtilsResponse` definiujemy:
@@ -294,7 +294,7 @@
       - metoda do samej deserializacji JSON, który jest listą obiektów (String)
     - Metodę do walidacji obiektów DTO z biblioteki `Jakarta`
 
-### DTO <a name="start_wt_dto"></a>
+### DTO
 
 42. W katalogu `src/test/java` tworzymy katalog o nazwie `dto`
 43. W katalogu `src/test/java/dto` tworzymy katalog zgodny z nazwą grupy endpointów w dokumentacji np. `boards`
@@ -340,7 +340,7 @@
     wywołamy `compareObjects(responsePostDto, responseGetDto, POST_CreateBoardDto.FIELD_LIMITS);` to jak coś się tu zmieni,
     wtedy IDE dokona tej zmiany wszędzie.
 
-### Utils Tests <a name="start_wt_utils_tests"></a>
+### Utils Tests
 
 52. W `src/test/java` tworzymy katalog `utils_tests`  
     Katalog ten będzie służył do zbierania metod pomocniczych dla konkretnych klas z testami.
@@ -360,7 +360,7 @@
     - Metodę generującą losową nazwę tablicy
       - Dzięki `nanoTime()` jest mniejsza szansa na duplikację niż przy użyciu `number().randomNumber()`
 
-### Test – ostateczny <a name="start_wt_test_final"></a>
+### Test – ostateczny
 
 55. W katalogu `src/test/java/tests/boards` otwieramy nasz plik z pierwszymi testami o nazwie `POST_CreateBoardTest`
 56. Nad nazwą klasy piszemy `@TestInstance(TestInstance.Lifecycle.PER_METHOD)`  
@@ -389,7 +389,7 @@
     - Wysyłamy request GET, który jako metoda pomocnicza sprawdza zgodność z responsem POST
     - Metoda `tearDown()` z adnotacją `@AfterEach` automatycznie usuwa stworzony zasób wysyłając request DELETE
 
-### Dokumentacja <a name="start_wt_documentation"></a>
+### Dokumentacja
 
 61. Przygotowujemy sobie dokumentację testową dla danego requesta/ednpointa
 62. W katalogu `src/test` tworzymy katalog o nazwie `documentation`
@@ -414,7 +414,7 @@
 
 ---
 
-## 📄TestBase – dlaczego lepiej nie deklarować w nim zmiennych 'response' i innych rzeczy <a name="test_base_variables"></a>
+## 📄TestBase – dlaczego lepiej nie deklarować w nim zmiennych 'response' i innych rzeczy
 
 To **bardzo dobre pytanie** – i ważne, bo tu nie ma odpowiedzi „czarno-białej”.
 Krótko: **to nie jest „źle”**, ale **ma konkretne konsekwencje**, o których warto świadomie wiedzieć.
@@ -631,7 +631,7 @@ UtilsCommon.pickRandom(...);
 
 ---
 
-## 📄Kurs Sii – sposoby pisania testów/requestów <a name="sii_course_tests_requests"></a>
+## 📄Kurs Sii – sposoby pisania testów/requestów
 
 Poniżej zebrałem i opisałem różne podejścia do budowania body requestu i walidacji odpowiedzi w testach API z użyciem
 **REST Assured + Java**. Wszystkie przykłady robią w praktyce to samo (POST /users), ale różnią się
@@ -963,7 +963,7 @@ Poniżej zebrałem i opisałem różne podejścia do budowania body requestu i w
 
 ---
 
-## 📄Boolean – testy <a name="boolean_tests"></a>
+## 📄Boolean – testy
 
 Jeżeli pole nie jest związane z czymś wrażliwym lub Security, to sprawdzamy wartości:
 - true
@@ -984,7 +984,7 @@ Jeżeli pole jest związane z czymś wrażliwym lub Security, to sprawdzamy wart
 
 ---
 
-## 📄RequestSpecification <a name="request_specification"></a>
+## 📄RequestSpecification
 
 ### **`RequestSpecification` w REST Assured – co to jest?**
 
@@ -1056,7 +1056,7 @@ RequestSpecification requestSpec = new RequestSpecBuilder()
 
 ---
 
-## 📄RestAssured.filters() <a name="rest_assured_filters"></a>
+## 📄RestAssured.filters()
 
 ### **`RestAssured.filters()` – Co to jest i jak działa?**
 
@@ -1146,7 +1146,7 @@ RestAssured.filters(
 
 ---
 
-## 📄RequestSpecBuilder <a name="request_spec_builder"></a>
+## 📄RequestSpecBuilder
 
 ### **🔹 Co to jest `RequestSpecBuilder`?**
 `RequestSpecBuilder` to klasa w bibliotece **REST Assured**, która służy do **konfigurowania requestów HTTP** w sposób
@@ -1258,7 +1258,7 @@ given()
 
 ---
 
-## 📄RestAssured.enableLoggingOfRequestAndResponseIfValidationFails() <a name="enable_log_fail"></a>
+## 📄RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
 
 📌 **Co robi ta metoda?**  
 Metoda **`RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();`** włącza automatyczne logowanie żądań
@@ -1337,7 +1337,7 @@ tylko w przypadku **niepowodzenia testu**.
 
 ---
 
-## 📄REST Assured – przesyłanie pustych Stringów <a name="rest_assured_send_empty_string"></a>
+## 📄REST Assured – przesyłanie pustych Stringów
 
 ### Różnica
 
@@ -1362,7 +1362,7 @@ więc serwer nie ma czego zaktualizować i nie zmienia niczego w zasobie.
 
 ---
 
-## 📄RecursiveComparisonConfiguration() <a name="assertj_recursive_comparison_configuration"></a>
+## 📄RecursiveComparisonConfiguration()
 
 ### **`RecursiveComparisonConfiguration` – Co to jest?**
 
@@ -1454,7 +1454,7 @@ i **uniknąć niepotrzebnych failów** w testach. 🚀🔥
 
 ---
 
-## 📄Rest Assured – przykłady pisania testów z kursu Sii <a name="rest_assured_test_examples_from_course"></a>
+## 📄Rest Assured – przykłady pisania testów z kursu Sii
 
 ### Przykład 1
 
@@ -1741,7 +1741,7 @@ public void shouldCreateNewUserV7() {
 
 ---
 
-## 📄ID – czyszczenie zmiennej po wysłaniu DELETE <a name="id_clean_after_delete"></a>
+## 📄ID – czyszczenie zmiennej po wysłaniu DELETE
 
 **Miałem taki kod:**
 
@@ -1801,7 +1801,7 @@ public void tearDownDeleteBoard() {
 
 ---
 
-## 📄UtilsCompare.java – opis kodu <a name="utils_compare_java"></a>
+## 📄UtilsCompare.java – opis kodu
 
 Poniżej znajduje się **szczegółowe omówienie** działania klasy `UtilsCompare` linia po linii:
 
@@ -1906,7 +1906,7 @@ UtilsCompare.compareObjects(actualDto, expectedDto, "id", "createdAt");
 
 ---
 
-## 📄UtilsResponse.java – opis kodu <a name="utils_response_java"></a>
+## 📄UtilsResponse.java – opis kodu
 
 Poniżej znajduje się **szczegółowe omówienie działania klasy `UtilsResponse` linia po linii**. Klasa ta służy jako
 narzędzie pomocnicze do deserializacji odpowiedzi REST (np. z biblioteki RestAssured) oraz do ich walidacji przy użyciu
@@ -2065,7 +2065,7 @@ public static <T> void validateDto(T dto) {
 
 ---
 
-## 📄DTO – opcjonalne parametry <a name="dto_optional_parameters"></a>
+## 📄DTO – opcjonalne parametry
 
 ### Kontekst
 
@@ -2252,7 +2252,7 @@ public class SkinVariations {
 
 ---
 
-## 📄DTO – opcjonalne parametry 2 <a name="dto_optional_parameters_2"></a>
+## 📄DTO – opcjonalne parametry 2
 
 ### Pytanie
 
@@ -2436,7 +2436,7 @@ a `@JsonProperty` zapewnia jawne mapowanie i walidację tylko wtedy, gdy pole si
 
 ---
 
-## 📄DTO – (value = ...) <a name="dto_value"></a>
+## 📄DTO – (value = ...)
 
 ### Pytanie
 
@@ -2569,7 +2569,7 @@ To bardzo dobrze skaluje się przy:
 
 ---
 
-## 📄Struktura JSON – JsonSchema vs. DTO/POJO <a name="json_schema_dto_pojo"></a>
+## 📄Struktura JSON – JsonSchema vs. DTO/POJO
 
 Świetne pytanie — i odpowiedź zależy głównie od **celu**, jaki chcesz osiągnąć (np. testy, walidacja, serializacja, dokumentacja API itp.).  
 Poniżej przedstawiam **porównanie**: `JsonSchema` vs `DTO/POJO` — co to jest, do czego służy, różnice i kiedy co wybrać.
@@ -2650,7 +2650,7 @@ Można łączyć oba podejścia:
 
 ---
 
-## 📄Porównywanie JSON'ów – wyzwania, podejścia, praktyki <a name="json_compare_intro"></a>
+## 📄Porównywanie JSON'ów – wyzwania, podejścia, praktyki
 
 **Link do źródła:**  
 https://medium.com/@keployio/diff-json-a-complete-guide-to-comparing-json-data-7e536533c514
@@ -2718,7 +2718,7 @@ Przestrzeganie tych zasad pomoże Ci uniknąć typowych pułapek i usprawnić Tw
 
 ---
 
-## 📄Porównywanie JSON'ów – ObjectMapper <a name="json_compare_object_mapper"></a>
+## 📄Porównywanie JSON'ów – ObjectMapper
 
 `ObjectMapper` to **klasa z biblioteki Jackson (`com.fasterxml.jackson.databind`)**, która służy do **konwersji między
 obiektami Java a JSON-em**.
@@ -2767,7 +2767,7 @@ String name = node.get("name").asText();  // => "Test Board"
 
 ---
 
-## 📄Porównywanie JSON'ów – JsonNode <a name="json_compare_json_node"></a>
+## 📄Porównywanie JSON'ów – JsonNode
 
 ### 🔍 `JsonNode` – co to jest?
 
@@ -2890,7 +2890,7 @@ JsonNode jsonFromFile = mapper.readTree(new File("src/test/resources/response.js
 
 ---
 
-## 📄REST Assured – asercja dla pustego obiektu <a name="rest_assured_assert_empty_object"></a>
+## 📄REST Assured – asercja dla pustego obiektu
 
 Response zwraca taki oto pusty obiekt:
 ```json
@@ -2937,7 +2937,7 @@ Używając `equalTo("{}")`, porównujesz `Map` z `String`, co nigdy nie przejdzi
 
 ---
 
-## 📄JUnit – tagi dla testów <a name="junit_test_tags"></a>
+## 📄JUnit – tagi dla testów
 
 Gdy chcemy, aby w zależności od okoliczności lub konfiguracji były uruchamiane różne testy, można je oznaczyć tagami.
 
@@ -2970,7 +2970,7 @@ public void setUpTempBoardForPositiveTests(TestInfo testInfo) {
 
 ---
 
-## 📄Junit – TestInstance.Lifecycle <a name="junit_testinstance_lifecycle"></a>
+## 📄Junit – TestInstance.Lifecycle
 
 ### 🧩 1️⃣ Co to jest `@TestInstance`
 
@@ -3163,7 +3163,7 @@ After all tests
 
 ---
 
-## 📄Response – duży vs. mały <a name="response_big_vs_small"></a>
+## 📄Response – duży vs. mały
 
 ### Response – mały
 
@@ -3381,7 +3381,7 @@ public void P2_shouldCreateBoardWhenMostParametersAreGiven() {
 
 ---
 
-## 📄AssertJ – porównywanie obiektów i list <a name="assertj_object_compare"></a>
+## 📄AssertJ – porównywanie obiektów i list
 
 Mamy 2 prawie identyczne obiekty.  
 Różnią się tym, że jeden ma dodatkowe pole o nazwie `"limits"`.  
@@ -3649,7 +3649,7 @@ compareObjectsIgnoringOrder(...)
 
 ---
 
-## 📄AssertJ – dodawanie komentarzy/logów do testów <a name="assertj_comments_logs"></a>
+## 📄AssertJ – dodawanie komentarzy/logów do testów
 
 W **AssertJ** da się dodawać **własny komunikat błędu**, który zostanie wyświetlony, gdy asercja się wywali 💡.
 
@@ -3709,7 +3709,7 @@ assertThat(responsePostPos2)
 
 ---
 
-## 📄AssertJ – soft assertions <a name="assertj_soft_assertions"></a>
+## 📄AssertJ – soft assertions
 
 ### 🧪 SoftAssertions (AssertJ) – notatka praktyczna
 
@@ -3924,7 +3924,7 @@ Dobrze użyte:
 
 ---
 
-## 📄Zmienne – podstawianie pod String/Text Block <a name="variables_string_text_block"></a>
+## 📄Zmienne – podstawianie pod String/Text Block
 
 ### Problem/Zagadnienie
 
@@ -4052,7 +4052,7 @@ String json = mapper.writeValueAsString(dto);
 
 ---
 
-## 📄Response (expected, universal) – opcjonalne parametry <a name="response_expected_universal_optional_parameters"></a>
+## 📄Response (expected, universal) – opcjonalne parametry
 
 ### Problem/Zagadnienie
 
@@ -4221,7 +4221,7 @@ public static PUT_UpdateListDto prepareUniversalExpectedResponsePut(
 
 ---
 
-## 📄Number/Liczba jako String – czy powinna przechodzić (Query Params vs. JSON body) <a name="number_as_string"></a>
+## 📄Number/Liczba jako String – czy powinna przechodzić (Query Params vs. JSON body)
 
 ### ❓ Pytanie
 
@@ -4397,7 +4397,7 @@ W **JSON body** — tak.
 
 ---
 
-## 📄Long vs. long (prymitywy) – autoboxing, czyli automatyczne pakowanie prymitywu w obiekt <a name="primitives_long"></a>
+## 📄Long vs. long (prymitywy) – autoboxing, czyli automatyczne pakowanie prymitywu w obiekt
 
 Piszę to w notatkach z testów, a nie w JAVIE, ponieważ ma to kluczowe znaczenie przy ewentualnym sprawdzaniu wartości `null`.
 
@@ -4519,7 +4519,7 @@ i autoboxing działa automatycznie.
 
 ---
 
-## 📄Dokumentacja testów – możliwe formy <a name="test_documentation_forms"></a>
+## 📄Dokumentacja testów – możliwe formy
 
 ### ✅ **1. „Ładniejsza” i całkowicie ujednolicona wersja Twojego pliku**
 
@@ -4664,7 +4664,7 @@ Dobry np. dla manualnych testerów.
 
 ---
 
-## 📄URL – kodowanie znaków <a name="url_encoded"></a>
+## 📄URL – kodowanie znaków
 
 Poniżej masz **wszystkie te znaki zakodowane URL-owo** oraz jeden **łączny string zawierający je wszystkie zakodowane po kolei** ✔
 
@@ -4693,7 +4693,7 @@ Poniżej masz **wszystkie te znaki zakodowane URL-owo** oraz jeden **łączny st
 
 ---
 
-## 📄SEED – informacje <a name="seed_information"></a>
+## 📄SEED – informacje
 
 ```text
 Wytłumacz mi dokładniej o co chodzi w tym punkcie:
@@ -5037,7 +5037,7 @@ Seed to tylko **pas bezpieczeństwa**, nie kaganiec.
 
 ---
 
-## 📄JUnit – rozdzielenie uruchamiania testów API i jednostkowych (1) <a name="junit_api_unit_tests_1"></a>
+## 📄JUnit – rozdzielenie uruchamiania testów API i jednostkowych (1)
 
 > Powiedz mi jak teraz oddzielić testy jednostkowe od testów api?  
 > Wydaje mi się, że nie powinny być zawsze wszystkie uruchamiane?
@@ -5207,7 +5207,7 @@ Ty już jesteś **po właściwej stronie tej granicy** 😄
 * `@Tag("unit")`, `@Tag("api")`
 * Maven profile
 
-## 📄JUnit – rozdzielenie uruchamiania testów API i jednostkowych (2) <a name="junit_api_unit_tests_2"></a>
+## 📄JUnit – rozdzielenie uruchamiania testów API i jednostkowych (2)
 
 > Wolałbym, aby testy API działały domyślnie bez taga, a na testy unit był tag,
 > dzięki któremu mógłbym je wykluczyć z uruchamiania za każdym razem.
@@ -5360,7 +5360,7 @@ mvn test -Punit-only
   ✔ brak ryzyka przypadkowego uruchamiania unit  
   ✔ tag tylko tam, gdzie ma sens
 
-## 📄JUnit – rozdzielenie uruchamiania testów API i jednostkowych (3) <a name="junit_api_unit_tests_3"></a>
+## 📄JUnit – rozdzielenie uruchamiania testów API i jednostkowych (3)
 
 > Dostosuj treść mojego `pom.xml` pod te zmiany, które zaproponowałeś wyżej.
 
@@ -5518,7 +5518,7 @@ To dokładnie tak się robi w **dojrzałych projektach testowych**.
 
 ---
 
-## 📄Maven – do uruchamiania testów <a name="maven_tests_runner"></a>
+## 📄Maven – do uruchamiania testów
 
 > Jak rozwiązać problem z tym?  
 > The term 'mvn' is not recognized as the name of a cmdlet
@@ -5651,7 +5651,7 @@ To jest:
 
 ---
 
-## 📄JSON – podstawianie zmiennych pod niego <a name="json_variable_replace"></a>
+## 📄JSON – podstawianie zmiennych pod niego
 
 ### Java Text Block + replace()
 
@@ -5691,7 +5691,7 @@ public static PUT_UpdateListDto prepareUniversalExpectedResponsePut(
 
 ---
 
-## 📄Allure Report – konfiguracja <a name="allure_report"></a>
+## 📄Allure Report – konfiguracja
 
 ### Podstawowa konfiguracja
 
@@ -5931,7 +5931,7 @@ bibliotek, które wymagają logowania).
 
 ---
 
-## 📄Endpoint – różne scope'y <a name="endpoint_scope"></a>
+## 📄Endpoint – różne scope'y
 
 Przy API podzielonym na scope typu:
 * `/api/...`
@@ -6169,7 +6169,7 @@ Bo w prawdziwych projektach:
 
 ---
 
-## 📄Autoryzacja – zachowanie ważności <a name="auth_scope"></a>
+## 📄Autoryzacja – zachowanie ważności
 
 Twoje podejście w Pythonie jest **technicznie poprawne**, ale w świecie testów automatycznych
 (szczególnie Java + REST Assured) robi się to trochę inaczej — głównie dlatego, że:
