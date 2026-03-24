@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import configuration.Config;
 import configuration.ConfigRequestSpec;
+import enums.configuration.LogsMode;
 import io.restassured.RestAssured;
 import io.restassured.filter.Filter;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -73,39 +74,38 @@ public class TestBase {
 
     private static void configureLogging() {
 
+        Config.validateLogsConfig();
+
+        LogsMode logsMode = Config.getLogsMode();
         List<Filter> additionalFilters = new ArrayList<>();
 
-        // LOGS – FULL
-        if (Config.getLogsFull()) {
-            additionalFilters.add(new RequestLoggingFilter());
-            additionalFilters.add(new ResponseLoggingFilter());
+        switch (logsMode) {
+
+            case OFF:
+                break;
+
+            case FULL:
+                additionalFilters.add(new RequestLoggingFilter());
+                additionalFilters.add(new ResponseLoggingFilter());
+                break;
+
+            case CUSTOM:
+                boolean optional = Config.getLogsCustomOptional();
+                boolean color = Config.getLogsCustomColor();
+
+                additionalFilters.add(new ResponseLogFilterCustom(optional, color));
+                break;
+
+            case SHORT:
+                additionalFilters.add(new ResponseLogFilterShort());
+                break;
         }
 
-        // LOGS – CUSTOM
-        else if (Config.getLogsCustomBase()) {
-            additionalFilters.add(
-                    new ResponseLogFilterCustom(
-                            Config.getLogsCustomOptional(),
-                            Config.getLogsCustomColor()
-                    )
-            );
-        }
-
-        // LOGS – SHORT
-        else if (Config.getLogsShort()) {
-            additionalFilters.add(new ResponseLogFilterShort());
-        }
-
-        if (!additionalFilters.isEmpty()) {
-
-            // Get current filters (e.g. Allure added globally)
-            List<Filter> currentFilters = new ArrayList<>(RestAssured.filters());
-
-            // Add new
-            currentFilters.addAll(additionalFilters);
-
-            // Set everything up again
-            RestAssured.filters(currentFilters);
-        }
+        // Get current filters (e.g. Allure added globally)
+        List<Filter> currentFilters = new ArrayList<>(RestAssured.filters());
+        // Add new filters
+        currentFilters.addAll(additionalFilters);
+        // Set everything up again
+        RestAssured.replaceFiltersWith(currentFilters);
     }
 }

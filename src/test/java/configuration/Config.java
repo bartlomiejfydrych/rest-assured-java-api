@@ -1,5 +1,6 @@
 package configuration;
 
+import enums.configuration.LogsMode;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.IOException;
@@ -206,19 +207,23 @@ public class Config {
 
     // LOGS MANAGEMENT
 
-    // Get Logs {FULL}
-    public static boolean getLogsFull() {
-        return getProperty("LOGS_FULL", false);
+    // [LOGS MODE] Get Logs Mode
+    public static LogsMode getLogsMode() {
+        String value = getProperty("LOGS_MODE", "OFF");
+        return LogsMode.from(value);
     }
 
-    // Get Logs {SHORT}
-    public static boolean getLogsShort() {
-        return getProperty("LOGS_SHORT", true);
-    }
+    // [LOGS MODE] Validate Logs Mode
+    public static void validateLogsConfig() {
+        LogsMode logsMode = getLogsMode();
 
-    // [CUSTOM] Get Logs {BASE}
-    public static boolean getLogsCustomBase() {
-        return getProperty("LOGS_CUSTOM_BASE", false);
+        if (logsMode != LogsMode.CUSTOM) {
+            if (getLogsCustomOptional() || getLogsCustomColor()) {
+                System.out.println(
+                        "[WARNING] (CONFIG) LOGS_CUSTOM_* options are ignored when LOGS_MODE != CUSTOM"
+                );
+            }
+        }
     }
 
     // [CUSTOM] Get Logs {OPTIONAL}
