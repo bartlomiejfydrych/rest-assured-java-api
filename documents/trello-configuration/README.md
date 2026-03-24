@@ -16,10 +16,12 @@
      - Podajemy jej `opis`
      - Klikamy przycisk `Kontynuuj`
 4. Na poniższej stronie zapoznajemy się z informacjami z sekcji **Managing your API Key**:  
-   https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/
+   https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/  
+   Po co? Żeby lepiej wiedzieć, jak to wszystko działa oraz jak "na szybko" można puszczać pierwsze requesty do API Trello.
 5. Tworzymy `Trello Power-Up`:
    - Wchodzimy na poniższą stronę i zaczynamy zapoznawać się z informacjami:  
-     https://developer.atlassian.com/cloud/trello/guides/power-ups/managing-power-ups/#adding-a-new-custom-power-up
+     https://developer.atlassian.com/cloud/trello/guides/power-ups/managing-apps/#adding-a-new-custom-power-up  
+     Po co? Jest tu ogólna instrukcja i informacje o tym, jak dodawać **Power Up'y**
    - Zarządzanie `Power-Up'ami` odbywa się za pośrednictwem strony:  
      https://trello.com/power-ups/admin  
      ![Power Up – dodawanie nowego](images/trello_powerup_1.PNG)
@@ -62,4 +64,5 @@ Dalsze kroki opisujące jak rozpocząć pisanie testów znajdują się w:
 📁rest-assured-java-api (projekt)  
 &emsp;📁documents  
 &emsp;&emsp;📁notes  
-&emsp;&emsp;&emsp;📂rest-assured-and-tests
+&emsp;&emsp;&emsp;📂rest-assured-and-tests  
+&emsp;&emsp;&emsp;&emsp;[README.md](../notes/rest-assured-and-tests/README.md)
