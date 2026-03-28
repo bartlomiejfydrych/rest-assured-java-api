@@ -4,4 +4,5 @@ TODO – LISTA RZECZY DO ZROBIENIA
 
 [✅] Poprosić Dawida o Code Review
 – Zrobić ewentualne poprawki po CR
+– Rozważyć przeniesienie [base] do [tests]
 – Usunąć plik TODO.txt
