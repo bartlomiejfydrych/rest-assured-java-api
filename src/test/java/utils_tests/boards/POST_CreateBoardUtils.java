@@ -1,6 +1,6 @@
 package utils_tests.boards;
 
-import base.TestBase;
+import tests.base.TestBase;
 import dto.boards.GET_GetBoardDto;
 import dto.boards.POST_CreateBoardDto;
 import io.restassured.response.Response;

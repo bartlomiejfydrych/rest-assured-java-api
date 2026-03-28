@@ -1,4 +1,4 @@
-package base;
+package tests.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;

@@ -1,6 +1,6 @@
 package tests.unit.response;
 
-import base.UnitTestBase;
+import tests.base.UnitTestBase;
 import com.fasterxml.jackson.core.type.TypeReference;
 import exceptions.ExceptionDtoValidation;
 import exceptions.ExceptionJsonDeserialization;

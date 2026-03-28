@@ -1,6 +1,6 @@
 package tests.unit.response;
 
-import base.UnitTestBase;
+import tests.base.UnitTestBase;
 import com.fasterxml.jackson.databind.JsonNode;
 import exceptions.ExceptionJsonParsing;
 import org.junit.jupiter.api.Test;

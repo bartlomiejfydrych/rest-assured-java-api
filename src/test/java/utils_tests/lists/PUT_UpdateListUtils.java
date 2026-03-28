@@ -1,6 +1,6 @@
 package utils_tests.lists;
 
-import base.TestBase;
+import tests.base.TestBase;
 import dto.lists.GET_GetListDto;
 import dto.lists.PUT_UpdateListDto;
 import io.restassured.response.Response;

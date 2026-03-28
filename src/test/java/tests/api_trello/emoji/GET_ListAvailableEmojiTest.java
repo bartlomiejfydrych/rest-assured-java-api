@@ -1,6 +1,6 @@
 package tests.api_trello.emoji;
 
-import base.TestBase;
+import tests.base.TestBase;
 import dto.emoji.GET_ListAvailableEmojiDto;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;

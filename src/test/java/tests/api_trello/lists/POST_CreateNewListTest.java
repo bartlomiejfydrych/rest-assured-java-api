@@ -1,6 +1,6 @@
 package tests.api_trello.lists;
 
-import base.TestBase;
+import tests.base.TestBase;
 import dto.lists.POST_CreateNewListDto;
 import expected_responses.lists.POST_CreateNewListExpected;
 import io.restassured.response.Response;

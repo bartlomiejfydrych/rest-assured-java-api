@@ -1,4 +1,4 @@
-package base;
+package tests.base;
 
 import org.junit.jupiter.api.Tag;
 

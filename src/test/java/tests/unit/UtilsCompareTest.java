@@ -1,6 +1,6 @@
 package tests.unit;
 
-import base.UnitTestBase;
+import tests.base.UnitTestBase;
 import io.restassured.builder.ResponseBuilder;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;

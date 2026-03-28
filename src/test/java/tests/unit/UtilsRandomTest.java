@@ -1,6 +1,6 @@
 package tests.unit;
 
-import base.UnitTestBase;
+import tests.base.UnitTestBase;
 import org.junit.jupiter.api.Test;
 import utils.UtilsRandom;
 

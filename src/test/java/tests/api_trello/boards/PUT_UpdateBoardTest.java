@@ -1,6 +1,6 @@
 package tests.api_trello.boards;
 
-import base.TestBase;
+import tests.base.TestBase;
 import configuration.Config;
 import dto.boards.GET_GetBoardDto;
 import dto.boards.POST_CreateBoardDto;

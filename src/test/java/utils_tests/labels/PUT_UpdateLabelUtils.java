@@ -1,6 +1,6 @@
 package utils_tests.labels;
 
-import base.TestBase;
+import tests.base.TestBase;
 import dto.labels.GET_GetLabelDto;
 import dto.labels.PUT_UpdateLabelDto;
 import io.restassured.response.Response;

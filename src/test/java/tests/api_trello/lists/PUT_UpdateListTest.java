@@ -1,6 +1,6 @@
 package tests.api_trello.lists;
 
-import base.TestBase;
+import tests.base.TestBase;
 import dto.lists.GET_GetListDto;
 import dto.lists.ListBaseDto;
 import dto.lists.POST_CreateNewListDto;

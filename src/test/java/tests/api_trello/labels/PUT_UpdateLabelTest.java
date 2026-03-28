@@ -1,6 +1,6 @@
 package tests.api_trello.labels;
 
-import base.TestBase;
+import tests.base.TestBase;
 import dto.labels.GET_GetLabelDto;
 import dto.labels.PUT_UpdateLabelDto;
 import expected_responses.labels.PUT_UpdateLabelExpected;

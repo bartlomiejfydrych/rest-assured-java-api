@@ -1,6 +1,6 @@
 package tests.api_trello.labels;
 
-import base.TestBase;
+import tests.base.TestBase;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -148,8 +148,8 @@
 
 ### TestBase
 
-16. W katalogu `src/test/java` tworzymy katalog o nazwie `base`
-17. W katalogu `src/test/java/base` tworzymy plik o nazwie `TestBase`
+16. W katalogu `src/test/java/tests` tworzymy katalog o nazwie `base`
+17. W katalogu `src/test/java/tests/base` tworzymy plik o nazwie `TestBase`
 18. W pliku `TestBase` tworzymy wstępną konfigurację:
     - Deklarujemy zmienne i obiekty:
       - requestSpecificationCommon

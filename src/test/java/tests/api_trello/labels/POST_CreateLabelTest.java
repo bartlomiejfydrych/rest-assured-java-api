@@ -1,6 +1,6 @@
 package tests.api_trello.labels;
 
-import base.TestBase;
+import tests.base.TestBase;
 import dto.labels.POST_CreateLabelDto;
 import expected_responses.labels.POST_CreateLabelExpected;
 import io.restassured.response.Response;

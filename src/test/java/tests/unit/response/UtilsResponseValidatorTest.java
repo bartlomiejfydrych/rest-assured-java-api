@@ -1,6 +1,6 @@
 package tests.unit.response;
 
-import base.UnitTestBase;
+import tests.base.UnitTestBase;
 import exceptions.ExceptionDtoValidation;
 import org.junit.jupiter.api.Test;
 import utils.response.UtilsResponseValidator;
