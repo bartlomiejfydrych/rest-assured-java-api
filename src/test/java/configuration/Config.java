@@ -41,7 +41,7 @@ public class Config {
             if (input != null) {
                 properties.load(input);
             } else {
-                System.err.println("(CONFIG) File {config.properties} not found in resources.");
+                throw new IllegalStateException("(CONFIG) File {config.properties} not found in resources.");
             }
 
         } catch (IOException e) {
@@ -98,8 +98,14 @@ public class Config {
     // -------
 
     private static boolean getProperty(String key, boolean defaultValue) {
-        String raw = getProperty(key, String.valueOf(defaultValue));
-        return Boolean.parseBoolean(raw);
+        String raw = getProperty(key, String.valueOf(defaultValue)).toLowerCase();
+
+        if (raw.equals("true")) return true;
+        if (raw.equals("false")) return false;
+
+        throw new IllegalStateException(
+                "(CONFIG) Invalid boolean value for key '" + key + "': " + raw + ". Allowed: true/false"
+        );
     }
 
     // -------
