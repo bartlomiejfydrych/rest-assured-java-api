@@ -33,19 +33,4 @@ public class PUT_UpdateBoardEndpoint extends BoardsBaseEndpoint {
                     extract().
                     response();
     }
-
-    // -------------------
-    // WITHOUT ID & PARAMS
-    // -------------------
-
-    public static Response putUpdateBoardWithoutIdAndParams() {
-
-        return given().
-                    spec(getSpecification()).
-                when().
-                    put(ENDPOINT_BOARDS).
-                then().
-                    extract().
-                    response();
-    }
 }
