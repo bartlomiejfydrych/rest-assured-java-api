@@ -70,8 +70,4 @@ public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
     public static Response putUpdateFieldOnLabelWithoutLabelField(String labelId) {
         return put(labelById(labelId), null);
     }
-
-    public static Response putUpdateFieldOnLabelWithoutLabelId() {
-        return put(ENDPOINT_LABELS, null);
-    }
 }
