@@ -7,21 +7,31 @@ import io.restassured.specification.RequestSpecification;
 public class ConfigRequestSpec {
 
     // ==========================================================================================================
-    // FIELDS
+    // BUILDERS
     // ==========================================================================================================
 
-    private static final RequestSpecification requestSpecification = new RequestSpecBuilder()
-            .addQueryParam("key", Config.getTrelloApiKey())
-            .addQueryParam("token", Config.getTrelloToken())
-            .setBaseUri(BaseUrlBuilder.buildBaseUrl())
-            .setContentType(ContentType.JSON)
-            .build();
-
-    // ==========================================================================================================
-    // METHODS – MAIN
-    // ==========================================================================================================
+    private static RequestSpecBuilder baseBuilder() {
+        return new RequestSpecBuilder()
+                .setBaseUri(BaseUrlBuilder.buildBaseUrl())
+                .setContentType(ContentType.JSON);
+    }
 
     public static RequestSpecification getRequestSpecification() {
-        return requestSpecification;
+        return baseBuilder()
+                .addQueryParam("key", Config.getTrelloApiKey())
+                .addQueryParam("token", Config.getTrelloToken())
+                .build();
+    }
+
+    public static RequestSpecification getRequestSpecificationWithoutApiKey() {
+        return baseBuilder()
+                .addQueryParam("token", Config.getTrelloToken())
+                .build();
+    }
+
+    public static RequestSpecification getRequestSpecificationWithoutToken() {
+        return baseBuilder()
+                .addQueryParam("key", Config.getTrelloApiKey())
+                .build();
     }
 }

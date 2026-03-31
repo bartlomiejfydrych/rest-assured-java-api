@@ -19,4 +19,24 @@ public class DEL_DeleteBoardEndpoint extends BoardsBaseEndpoint {
                     extract().
                     response();
     }
+
+    public static Response deleteDeleteBoardWithoutApiKey(String boardId) {
+        return given().
+                    spec(getSpecificationWithoutApiKey()).
+                when().
+                    delete(boardById(boardId)).
+                then().
+                    extract().
+                    response();
+    }
+
+    public static Response deleteDeleteBoardWithoutToken(String boardId) {
+        return given().
+                    spec(getSpecificationWithoutToken()).
+                when().
+                    delete(boardById(boardId)).
+                then().
+                    extract().
+                    response();
+    }
 }
