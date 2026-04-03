@@ -4,4 +4,5 @@ TODO – LISTA RZECZY DO ZROBIENIA
 
 [✅] Poprosić Dawida o Code Review
 – Zrobić ewentualne poprawki po CR
+– Zaktualizować czas trwania wszystkich testów API po wszystkich poprawkach
 – Usunąć plik TODO.txt
