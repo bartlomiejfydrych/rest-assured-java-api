@@ -261,3 +261,4 @@ The course consisted of 3 parts:
 - Validating response fields using `Jackson` and `Jakarta` validation instead of JsonSchema
 - Comparing two responses/JSONs without having to create objects for them in the code (mainly for negative tests)
 - Reading and comparing the expected response from a file (for large JSONs)
+- Masking the API key and token in logs and Allure reports
