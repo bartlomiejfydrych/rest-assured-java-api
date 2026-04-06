@@ -7,6 +7,7 @@ import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.FilterableResponseSpecification;
+import utils.loggers.UtilsSensitiveDataMasker;
 
 import java.net.URI;
 import java.util.LinkedHashMap;
@@ -14,6 +15,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static providers.ProviderObjectMapper.getObjectMapper;
+import static utils.loggers.UtilsSensitiveDataMasker.maskAll;
+import static utils.loggers.UtilsSensitiveDataMasker.sanitizeUrl;
 
 public class AllureRestAssuredEnhanced implements Filter {
 
@@ -29,7 +32,7 @@ public class AllureRestAssuredEnhanced implements Filter {
 
         Response response = ctx.next(requestSpec, responseSpec);
 
-        String url = requestSpec.getURI();
+        String url = sanitizeUrl(requestSpec.getURI());
         String method = requestSpec.getMethod();
         int statusCode = response.getStatusCode();
 
@@ -108,9 +111,15 @@ public class AllureRestAssuredEnhanced implements Filter {
         StringBuilder sb = new StringBuilder();
 
         String method = requestSpec.getMethod();
-        String url = requestSpec.getURI();
+        UtilsSensitiveDataMasker.MaskedRequest masked = maskAll(requestSpec);
+
+        String url = masked.url;
         long timeMs = response.getTimeIn(TimeUnit.MILLISECONDS);
         int responseSize = 0;
+
+        Map<String, String> maskedHeaders = masked.headers;
+        Map<String, Object> maskedQueryParams = masked.queryParams;
+        Map<String, String> responseHeaders = headersToMap(response.getHeaders());
 
         if (response.getBody() != null) {
             responseSize = response.getBody().asByteArray().length;
@@ -132,7 +141,7 @@ public class AllureRestAssuredEnhanced implements Filter {
         sb.append("---------------\n");
         sb.append("Request headers\n");
         sb.append("---------------\n\n");
-        sb.append(formatHeaders(maskHeaders(requestSpec))).append("\n\n");
+        sb.append(formatHeaders(maskedHeaders)).append("\n\n");
 
         sb.append("-------------------\n");
         sb.append("Request path params\n");
@@ -142,7 +151,7 @@ public class AllureRestAssuredEnhanced implements Filter {
         sb.append("------------------------\n");
         sb.append("Request query parameters\n");
         sb.append("------------------------\n\n");
-        sb.append(formatQueryParams(requestSpec)).append("\n\n");
+        sb.append(formatQueryParams(maskedQueryParams)).append("\n\n");
 
         sb.append("-------------------\n");
         sb.append("Request form params\n");
@@ -170,7 +179,7 @@ public class AllureRestAssuredEnhanced implements Filter {
         sb.append("----------------\n");
         sb.append("Response headers\n");
         sb.append("----------------\n\n");
-        sb.append(formatHeaders(response));
+        sb.append(formatHeaders(responseHeaders));
 
         return sb.toString();
     }
@@ -202,7 +211,7 @@ public class AllureRestAssuredEnhanced implements Filter {
                     .writeValueAsString(json);
 
         } catch (Exception e) {
-            // fallback jeśli JSON jest zepsuty
+            // Fallback, jeśli JSON jest zepsuty
             return body;
         }
     }
@@ -211,32 +220,31 @@ public class AllureRestAssuredEnhanced implements Filter {
     // FORMAT HEADERS
     // --------------
 
-    private String formatHeaders(FilterableRequestSpecification requestSpec) {
-        try {
-            Map<String, String> map = new LinkedHashMap<>();
-            for (Header h : requestSpec.getHeaders()) {
-                map.put(h.getName(), h.getValue());
-            }
+    private Map<String, String> headersToMap(Iterable<Header> headers) {
 
-            return getObjectMapper()
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(map);
+        Map<String, String> map = new LinkedHashMap<>();
 
-        } catch (Exception e) {
-            return "[FAILED TO FORMAT HEADERS]";
+        if (headers == null) {
+            return map;
         }
+
+        for (Header h : headers) {
+            map.put(h.getName(), h.getValue());
+        }
+
+        return map;
     }
 
-    private String formatHeaders(Response response) {
+    private String formatHeaders(Map<String, String> headers) {
+
         try {
-            Map<String, String> map = new LinkedHashMap<>();
-            for (Header h : response.getHeaders()) {
-                map.put(h.getName(), h.getValue());
+            if (headers == null || headers.isEmpty()) {
+                return "[NO HEADERS]";
             }
 
             return getObjectMapper()
                     .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(map);
+                    .writeValueAsString(headers);
 
         } catch (Exception e) {
             return "[FAILED TO FORMAT HEADERS]";
@@ -269,11 +277,9 @@ public class AllureRestAssuredEnhanced implements Filter {
     // FORMAT QUERY PARAMETERS
     // -----------------------
 
-    private String formatQueryParams(FilterableRequestSpecification requestSpec) {
+    private String formatQueryParams(Map<String, ?> queryParams) {
 
         try {
-            Map<String, ?> queryParams = requestSpec.getQueryParams();
-
             if (queryParams == null || queryParams.isEmpty()) {
                 return "[NO QUERY PARAMETERS]";
             }
@@ -307,23 +313,5 @@ public class AllureRestAssuredEnhanced implements Filter {
         } catch (Exception e) {
             return "[FAILED TO FORMAT FORM PARAMETERS]";
         }
-    }
-
-    // -------------
-    // TOKEN MASKING
-    // -------------
-
-    private FilterableRequestSpecification maskHeaders(FilterableRequestSpecification requestSpec) {
-
-        requestSpec.getHeaders().forEach(header -> {
-            if (header.getName().equalsIgnoreCase("Authorization")
-                    || header.getName().toLowerCase().contains("token")) {
-
-                requestSpec.removeHeader(header.getName());
-                requestSpec.header(header.getName(), "*** MASKED ***");
-            }
-        });
-
-        return requestSpec;
     }
 }

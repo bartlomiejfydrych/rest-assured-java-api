@@ -5,6 +5,10 @@ import io.restassured.filter.FilterContext;
 import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.FilterableResponseSpecification;
+import utils.loggers.UtilsSensitiveDataMasker;
+
+import static utils.loggers.UtilsSensitiveDataMasker.maskAll;
+import static utils.loggers.UtilsSensitiveDataMasker.sanitizeUrl;
 
 public class ResponseLogFilterCustom implements Filter {
 
@@ -62,7 +66,7 @@ public class ResponseLogFilterCustom implements Filter {
 
         // REQUEST META
         System.out.println("Method: " + request.getMethod());
-        System.out.println("URL:    " + request.getURI());
+        System.out.println("URL:    " + sanitizeUrl(request.getURI()));
 
         // RESPONSE META
         ConsoleColors.green("Status: " + response.getStatusCode() + " " + response.getStatusLine(), colorEnabled);
@@ -84,8 +88,10 @@ public class ResponseLogFilterCustom implements Filter {
         ConsoleColors.purple("OPTIONAL REQUEST DATA – IS ON", colorEnabled);
         ConsoleColors.purple("-----------------------------", colorEnabled);
 
-        printPretty("Query params", request.getQueryParams());
-        printPretty("Headers", request.getHeaders().asList());
+        UtilsSensitiveDataMasker.MaskedRequest masked = maskAll(request);
+
+        printPretty("Query params", masked.queryParams);
+        printPretty("Headers", masked.headers);
         printPretty("Cookies", request.getCookies());
     }
 
@@ -117,11 +123,19 @@ public class ResponseLogFilterCustom implements Filter {
     // ==========================================================================================================
 
     private void printPretty(String title, Object data) {
-        if (data == null || data.toString().isEmpty()) {
-            return;
-        }
+        if (data == null) return;
 
         ConsoleColors.purple("\n" + title + ":", colorEnabled);
-        JsonColorPrinter.print(data.toString(), colorEnabled);
+
+        try {
+            String json = new com.fasterxml.jackson.databind.ObjectMapper()
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(data);
+
+            JsonColorPrinter.print(json, colorEnabled);
+
+        } catch (Exception e) {
+            JsonColorPrinter.print(data.toString(), colorEnabled);
+        }
     }
 }

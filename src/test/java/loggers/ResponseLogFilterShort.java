@@ -9,6 +9,8 @@ import io.restassured.specification.FilterableResponseSpecification;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static utils.loggers.UtilsSensitiveDataMasker.sanitizeUrl;
+
 public class ResponseLogFilterShort implements Filter {
 
     // ==========================================================================================================
@@ -42,7 +44,7 @@ public class ResponseLogFilterShort implements Filter {
     private void log(FilterableRequestSpecification requestSpec, Response response) {
         System.out.println("\nTIMESTAMP: " + LocalDateTime.now().format(FORMATTER));
         System.out.println("METHOD: " + requestSpec.getMethod());
-        System.out.println("URL: " + requestSpec.getURI());
+        System.out.println("URL: " + sanitizeUrl(requestSpec.getURI()));
         System.out.println("STATUS CODE: " + response.getStatusCode());
 
         String body = response.getBody().asString();
