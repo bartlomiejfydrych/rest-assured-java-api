@@ -16,11 +16,11 @@ public class PUT_UpdateListEndpoint extends ListsBaseEndpoint {
     // WITH QUERY PARAMS
     // -----------------
 
-    public static Response putUpdateList(String listId, PUT_UpdateListPayload payload) {
+    public static Response updateList(String listId, PUT_UpdateListPayload payload, RequestSpecification spec) {
 
         RequestSpecification requestSpecification =
                 given().
-                    spec(getSpecification());
+                    spec(spec);
 
         if (payload != null) {
             applyQueryParams(requestSpecification, payload.toQueryParams());
@@ -32,6 +32,10 @@ public class PUT_UpdateListEndpoint extends ListsBaseEndpoint {
                 then().
                     extract().
                     response();
+    }
+
+    public static Response putUpdateList(String listId, PUT_UpdateListPayload payload) {
+        return updateList(listId, payload, getSpecification());
     }
 
     // -------------------

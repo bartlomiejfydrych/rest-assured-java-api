@@ -98,6 +98,8 @@ public class DEL_DeleteBoardTest extends TestBase {
     // NEGATIVE TESTS
     // ==========================================================================================================
 
+    // TODO: Usunąć jeśli test parametryzowany na Auth zadziała
+
     @Test
     public void N1_shouldNotDeleteBoardWhenApiKeyIsMissing() {
         // ACT

@@ -17,11 +17,11 @@ public class POST_CreateNewListEndpoint extends ListsBaseEndpoint {
     // WITH QUERY PARAMS
     // -----------------
 
-    public static Response postCreateNewList(String boardId, String listName, POST_CreateNewListPayload payload) {
+    public static Response createNewList(String boardId, String listName, POST_CreateNewListPayload payload, RequestSpecification spec) {
 
         RequestSpecification requestSpecification =
                 given().
-                    spec(getSpecification()).
+                    spec(spec).
                     queryParam(ID_BOARD.key(), boardId).
                     queryParam(NAME.key(), listName);
 
@@ -35,6 +35,10 @@ public class POST_CreateNewListEndpoint extends ListsBaseEndpoint {
                 then().
                     extract().
                     response();
+    }
+
+    public static Response postCreateNewList(String boardId, String listName, POST_CreateNewListPayload payload) {
+        return createNewList(boardId, listName, payload, getSpecification());
     }
 
     // ---------------

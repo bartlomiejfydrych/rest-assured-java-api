@@ -8,7 +8,7 @@ public class EmojiBaseEndpoint extends BaseEndpoint {
     // ENDPOINTS (URL)
     // ==========================================================================================================
 
-    protected static final String ENDPOINT_EMOJI = "/emoji";
+    public static final String ENDPOINT_EMOJI = "/emoji";
 
     // ==========================================================================================================
     // METHODS – MAIN

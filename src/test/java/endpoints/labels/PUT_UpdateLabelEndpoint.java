@@ -16,11 +16,11 @@ public class PUT_UpdateLabelEndpoint extends LabelsBaseEndpoint {
     // WITH QUERY PARAMS
     // -----------------
 
-    public static Response putUpdateLabel(String labelId, PUT_UpdateLabelPayload payload) {
+    public static Response updateLabel(String labelId, PUT_UpdateLabelPayload payload, RequestSpecification spec) {
 
         RequestSpecification requestSpecification =
                 given().
-                    spec(getSpecification());
+                    spec(spec);
 
         if (payload != null) {
             applyQueryParams(requestSpecification, payload.toQueryParams());
@@ -32,6 +32,10 @@ public class PUT_UpdateLabelEndpoint extends LabelsBaseEndpoint {
                 then().
                     extract().
                     response();
+    }
+
+    public static Response putUpdateLabel(String labelId, PUT_UpdateLabelPayload payload) {
+        return updateLabel(labelId, payload, getSpecification());
     }
 
     // -------------------

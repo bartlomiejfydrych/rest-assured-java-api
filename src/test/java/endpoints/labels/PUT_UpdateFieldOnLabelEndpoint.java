@@ -17,11 +17,11 @@ public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
     // CORE METHOD
     // -----------
 
-    private static Response put(String requestPath, String fieldValue) {
+    private static Response updateFieldOnLabel(String requestPath, String fieldValue, RequestSpecification spec) {
 
         RequestSpecification requestSpecification =
                 given().
-                    spec(getSpecification());
+                    spec(spec);
 
         if (fieldValue != null) {
             requestSpecification.queryParam(VALUE.key(), fieldValue);
@@ -52,7 +52,7 @@ public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
     // --------
 
     public static Response putUpdateFieldOnLabel(String labelId, LabelBaseQueryParameters labelField, String fieldValue) {
-        return put(labelFieldById(labelId, labelField), fieldValue);
+        return updateFieldOnLabel(labelFieldById(labelId, labelField), fieldValue, getSpecification());
     }
 
     // --------
@@ -60,14 +60,14 @@ public class PUT_UpdateFieldOnLabelEndpoint extends LabelsBaseEndpoint {
     // --------
 
     public static Response putUpdateFieldOnLabelCustomField(String labelId, String labelField, String fieldValue) {
-        return put(labelById(labelId) + "/" + labelField, fieldValue);
+        return updateFieldOnLabel(labelById(labelId) + "/" + labelField, fieldValue, getSpecification());
     }
 
     public static Response putUpdateFieldOnLabelWithoutFieldValue(String labelId, LabelBaseQueryParameters labelField) {
-        return put(labelFieldById(labelId, labelField), null);
+        return updateFieldOnLabel(labelFieldById(labelId, labelField), null, getSpecification());
     }
 
     public static Response putUpdateFieldOnLabelWithoutLabelField(String labelId) {
-        return put(labelById(labelId), null);
+        return updateFieldOnLabel(labelById(labelId), null, getSpecification());
     }
 }

@@ -16,11 +16,11 @@ public class GET_ListAvailableEmojiEndpoint extends EmojiBaseEndpoint {
     // WITH QUERY PARAMS
     // -----------------
 
-    public static Response getListAvailableEmoji(GET_ListAvailableEmojiPayload payload) {
+    public static Response listAvailableEmoji(GET_ListAvailableEmojiPayload payload, RequestSpecification spec) {
 
         RequestSpecification requestSpecification =
                 given().
-                    spec(getSpecification());
+                    spec(spec);
 
         if (payload != null) {
             applyQueryParams(requestSpecification, payload.toQueryParams());
@@ -32,5 +32,9 @@ public class GET_ListAvailableEmojiEndpoint extends EmojiBaseEndpoint {
                 then().
                     extract().
                     response();
+    }
+
+    public static Response getListAvailableEmoji(GET_ListAvailableEmojiPayload payload) {
+        return listAvailableEmoji(payload, getSpecification());
     }
 }

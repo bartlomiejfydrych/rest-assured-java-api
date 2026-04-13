@@ -8,7 +8,7 @@ public class ListsBaseEndpoint extends BaseEndpoint {
     // ENDPOINTS (URL)
     // ==========================================================================================================
 
-    protected static final String ENDPOINT_LISTS = "/lists";
+    public static final String ENDPOINT_LISTS = "/lists";
 
     // ==========================================================================================================
     // METHODS – MAIN

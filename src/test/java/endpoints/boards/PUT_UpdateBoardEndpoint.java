@@ -16,11 +16,11 @@ public class PUT_UpdateBoardEndpoint extends BoardsBaseEndpoint {
     // WITH QUERY PARAMS
     // -----------------
 
-    public static Response putUpdateBoard(String boardId, PUT_UpdateBoardPayload payload) {
+    public static Response updateBoard(String boardId, PUT_UpdateBoardPayload payload, RequestSpecification spec) {
 
         RequestSpecification requestSpecification =
                 given().
-                    spec(getSpecification());
+                    spec(spec);
 
         if (payload != null) {
             applyQueryParams(requestSpecification, payload.toQueryParams());
@@ -32,5 +32,9 @@ public class PUT_UpdateBoardEndpoint extends BoardsBaseEndpoint {
                 then().
                     extract().
                     response();
+    }
+
+    public static Response putUpdateBoard(String boardId, PUT_UpdateBoardPayload payload) {
+        return updateBoard(boardId, payload, getSpecification());
     }
 }

@@ -8,7 +8,7 @@ public class LabelsBaseEndpoint extends BaseEndpoint {
     // ENDPOINTS (URL)
     // ==========================================================================================================
 
-    protected static final String ENDPOINT_LABELS = "/labels";
+    public static final String ENDPOINT_LABELS = "/labels";
 
     // ==========================================================================================================
     // METHODS – MAIN

@@ -19,11 +19,11 @@ public class POST_CreateLabelEndpoint extends LabelsBaseEndpoint {
     // WITH REQUIRED QUERY PARAMS
     // --------------------------
 
-    public static Response postCreateLabel(String boardId, String labelName, String labelColor) {
+    public static Response createLabel(String boardId, String labelName, String labelColor, RequestSpecification spec) {
 
         RequestSpecification requestSpecification =
                 given().
-                    spec(getSpecification()).
+                    spec(spec).
                     queryParam(ID_BOARD.key(), boardId).
                     queryParam(NAME.key(), labelName).
                     queryParam(COLOR.key(), labelColor);
@@ -34,6 +34,10 @@ public class POST_CreateLabelEndpoint extends LabelsBaseEndpoint {
                 then().
                     extract().
                     response();
+    }
+
+    public static Response postCreateLabel(String boardId, String labelName, String labelColor) {
+        return createLabel(boardId, labelName, labelColor, getSpecification());
     }
 
     // ---------------
