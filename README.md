@@ -246,6 +246,7 @@ The course consisted of 3 parts:
   - Test coverage tracking
   - Payload example
   - Response example
+- Writing parameterized tests
 
 ### API tests (REST Assured)
 
