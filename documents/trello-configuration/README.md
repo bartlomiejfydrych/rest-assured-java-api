@@ -56,7 +56,16 @@
 12. Zostaniemy przeniesieni na stronę, na której będzie wyświetlony nasz `token`.  
     Kopiujemy/Zapisujemy go.  
     ![Power Up – token](images/trello_powerup_8.PNG)
-13. Możemy rozpocząć pisanie `pierwszych requestów do API`
+13. Logujemy się do Trello.  
+    Powinniśmy być na takiej stronie https://trello.com/u/twoja_nazwa_użytkownika/boards
+14. Otwieramy DevTools na zakładce **Network** (Prawym -> Zbadaj lub klawisz `F12`)
+15. Na samej górze powinniśmy mieć taki endpoint:  
+    https://trello.com/1/member/me?...
+16. Klikamy w niego i w jego response rozwijamy parametr `idOrganizations`
+17. Kopiujemy z niego ID, które powinno należeć do naszej przestrzeni roboczej
+18. W naszym pliku `.env` wklejamy je w to miejsce:
+    `TRELLO_ID=yourTrelloID`
+19. Możemy rozpocząć pisanie `pierwszych requestów do API`
 
 # 🧭Dalsze kroki — rozpoczęcie pisania testów <a name="next_steps_writing_tests"></a>
 

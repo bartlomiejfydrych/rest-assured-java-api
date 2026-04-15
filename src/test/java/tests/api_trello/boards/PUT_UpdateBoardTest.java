@@ -144,6 +144,7 @@ public class PUT_UpdateBoardTest extends TestBase {
             assertThat(stripBoardNameFromUrl(responsePutDto.url)).isEqualTo(stripBoardNameFromUrl(postBoardUrl));
             PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P1ExpectedPutBoardResponse, boardId, boardName, responsePutDto.url, postBoardShortUrl);
             expectedResponsePutDto.desc = desc;
+            expectedResponsePutDto.idOrganization = trelloId;
             expectedResponsePutDto.organization.memberships.getFirst().lastActive = responsePutDto.organization.memberships.getFirst().lastActive;
             compareObjects(responsePutDto, expectedResponsePutDto);
             // GET

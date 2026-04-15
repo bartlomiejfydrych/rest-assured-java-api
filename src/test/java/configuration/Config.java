@@ -200,13 +200,6 @@ public class Config {
         return getProperty("baseUrlNumber", "1");
     }
 
-    // OTHER VARIABLES
-
-    // Get {Trello ID}
-    public static String getTrelloId() {
-        return getProperty("trelloId", "67d9d5e34d7b900257deed0e");
-    }
-
     // ----
     // .env
     // ----
@@ -252,6 +245,13 @@ public class Config {
     // Get Trello {token}
     public static String getTrelloToken() {
         return getProperty("TRELLO_TOKEN", null);
+    }
+
+    // OTHER VARIABLES
+
+    // Get {Trello ID}
+    public static String getTrelloId() {
+        return getProperty("TRELLO_ID", "67d9d5e34d7b900257deed0e");
     }
 }
 
