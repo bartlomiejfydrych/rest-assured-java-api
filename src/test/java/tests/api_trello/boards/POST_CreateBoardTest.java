@@ -288,7 +288,7 @@ public class POST_CreateBoardTest extends TestBase {
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
         // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(401);
-        assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized organization.");
+        assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized org access");
     }
 
     // -------------

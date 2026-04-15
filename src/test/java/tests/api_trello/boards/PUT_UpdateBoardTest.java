@@ -393,7 +393,7 @@ public class PUT_UpdateBoardTest extends TestBase {
         // ARRANGE
         String expectedResponse = """
                 {
-                    "message": "unauthorized organization."
+                    "message": "unauthorized organization access"
                 }
                 """;
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()

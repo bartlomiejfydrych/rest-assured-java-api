@@ -14,7 +14,9 @@ public final class UtilsString {
 
     private static final String ALPHANUMERIC = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final String ALL_CHARACTERS =
-            "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ęĘóÓąĄśŚłŁżŻźŹćĆńŃ";
+            "!\"#$&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ęĘóÓąĄśŚłŁżŻźŹćĆńŃ";
+            // NOTE: The "%" character had to be removed because for the "%Y" combination the REST Assured decoder throws an exception:
+            // java.lang.IllegalArgumentException: URLDecoder: Illegal hex characters in escape (%) pattern - not a hexadecimal digit: "Y" = 89
     private static final List<String> ENCODED_SPECIAL_CHARS = List.of(
             "%2F", "%3F", "%23", "%3C", "%3E",
             "%22", "%27", "%7B", "%7D", "%5B", "%5D", "%25"
