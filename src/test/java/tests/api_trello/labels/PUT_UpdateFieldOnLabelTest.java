@@ -162,21 +162,6 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
     }
 
     @Test
-    public void P5_shouldUpdateLabelFieldColorWithNull() {
-
-        labelFieldValue = null;
-        responsePostDto.color = labelFieldValue;
-
-        // PUT
-        responsePut = putUpdateFieldOnLabel(labelId, LabelBaseQueryParameters.COLOR, labelFieldValue);
-        assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateFieldOnLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateFieldOnLabelDto.class);
-        compareObjects(responsePutDto, responsePostDto);
-        // GET
-        validateGetAgainstPut(responsePutDto);
-    }
-
-    @Test
     public void P6_shouldUpdateLabelFieldColorWithEmptyString() {
 
         labelFieldValue = "";

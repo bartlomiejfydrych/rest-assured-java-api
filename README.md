@@ -58,7 +58,7 @@ things/languages/technologies.
 
 | Tests type   | Quantity | Average execution time |
 |--------------|----------|------------------------|
-| API (Trello) | 115      | 1 min 4 sec            |
+| API (Trello) | 114      | 1 min 4 sec            |
 | Unit tests   | 45       | 2 sec 747 ms           |
 
 ### Details (tests structure) 
@@ -91,7 +91,7 @@ things/languages/technologies.
 │   │   │   │   ├───✅Positive: (5)
 │   │   │   │   └───❌Negative: (7)
 │   │   │   ├───©️PUT_UpdateFieldOnLabelTest
-│   │   │   │   ├───✅Positive: (7)
+│   │   │   │   ├───✅Positive: (6)
 │   │   │   │   └───❌Negative: (5)
 │   │   │   └───©️PUT_UpdateLabelTest
 │   │   │   │   ├───✅Positive: (4)

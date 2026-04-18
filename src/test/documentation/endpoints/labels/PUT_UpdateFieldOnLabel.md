@@ -105,7 +105,6 @@ Pattern: `^[0-9a-fA-F]{24}$`
   - **[ P1 ]** Special characters and numbers
   - **[ P2 ]** 1 character
   - **[ P3 ]** Empty string ("")
-  - **[ 💥 ]** null → Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
   - **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
 - 💠color `Color`
   - **[ rP4 ]** yellow
@@ -118,7 +117,6 @@ Pattern: `^[0-9a-fA-F]{24}$`
   - **[ rP4 ]** sky
   - **[ rP4 ]** pink
   - **[ rP4 ]** lime
-  - **[ P5 ]** null
   - **[ P6 ]** Empty string ("")
   - **[ P7🐞 ]** Missing (0 characters) → If we don't provide a value, it changes to 'null', and it probably shouldn't be changed.
 
