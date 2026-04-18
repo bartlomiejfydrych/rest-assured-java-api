@@ -83,7 +83,6 @@ The new name for the label.
 - **[ P1 ]** Special characters and numbers
 - **[ P2 ]** 1 character
 - **[ P3 ]** Missing (0 characters)
-- **[ P4 ]** null
 - **[ P5💥 ]** Empty string ("") → Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
 - **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
 
@@ -120,7 +119,6 @@ Valid values: `yellow`, `purple`, `blue`, `red`, `green`, `orange`, `black`, `sk
 - **[ rP1 | rP2 ]** pink
 - **[ rP1 | rP2 ]** lime
 - **[ P3 ]** Missing (0 characters)
-- **[ P4 ]** Null
 - **[ 💥 ]** Empty string ("") → Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
 
 #### ❌Negative

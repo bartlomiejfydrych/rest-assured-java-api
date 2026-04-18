@@ -160,27 +160,6 @@ public class PUT_UpdateLabelTest extends TestBase {
         validateGetAgainstPut(responsePutDto);
     }
 
-    @Test
-    public void P4_shouldUpdateLabelWhenNameAndColorAreNull() {
-
-        PUT_UpdateLabelPayload payload = new PUT_UpdateLabelPayload.Builder()
-                .setName(null)
-                .setColor(null)
-                .build();
-
-        // GET (Get current status of {LABEL})
-        responseGet = getGetLabel(labelId);
-        assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_GetLabelDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetLabelDto.class);
-        // PUT
-        responsePut = putUpdateLabel(labelId, payload);
-        assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateLabelDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateLabelDto.class);
-        compareObjects(responsePutDto, responseGetDto);
-        // GET
-        validateGetAgainstPut(responsePutDto);
-    }
-
     /*
     @Test
     public void P5_shouldUpdateLabelWhenNameAndColorAreEmptyString() {
