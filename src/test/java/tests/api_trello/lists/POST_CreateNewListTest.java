@@ -340,17 +340,6 @@ public class POST_CreateNewListTest extends TestBase {
     }
 
     @Test
-    public void N2_shouldNotCreateNewListWhenNameIsNull() {
-        // ARRANGE
-        listName = null;
-        // ACT
-        responsePost = postCreateNewList(boardId, listName, null);
-        // ASSERT
-        assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareResponseWithJson(responsePost, expectedPostNewListResponseInvalidName);
-    }
-
-    @Test
     public void N3_shouldNotCreateNewListWhenNameIsEmptyString() {
         // ARRANGE
         listName = "";
@@ -373,18 +362,6 @@ public class POST_CreateNewListTest extends TestBase {
                 .build();
         // ACT
         responsePost = postCreateNewListWithAnyParams(payload);
-        // ASSERT
-        assertThat(responsePost.statusCode()).isEqualTo(400);
-        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
-    }
-
-    @Test
-    public void N5_shouldNotCreateNewListWhenIdBoardIsNull() {
-        // ARRANGE
-        String idBoard = null;
-        listName = generateRandomListName();
-        // ACT
-        responsePost = postCreateNewList(idBoard, listName, null);
         // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);

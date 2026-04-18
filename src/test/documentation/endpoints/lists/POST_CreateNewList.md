@@ -57,7 +57,6 @@ Name for the list.
 #### ❌Negative
 
 - **[ N1 ]** Missing (0 characters)
-- **[ N2 ]** null
 - **[ N3 ]** Empty string ("")
 - **[ 💥 ]** 16385 characters → Can't test it because max URI size is ~2000 characters
 
@@ -83,7 +82,6 @@ Pattern: `^[0-9a-fA-F]{24}$`
 #### ❌Negative
 
 - **[ N4 ]** Missing
-- **[ N5 ]** null
 - **[ N6 ]** Empty string ("")
 - **[ N7 ]** Non-existent
 - **[ N8 ]** Incorrect
