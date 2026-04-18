@@ -58,7 +58,7 @@ things/languages/technologies.
 
 | Tests type   | Quantity | Average execution time |
 |--------------|----------|------------------------|
-| API (Trello) | 117      | 1 min 4 sec            |
+| API (Trello) | 116      | 1 min 4 sec            |
 | Unit tests   | 45       | 2 sec 747 ms           |
 
 ### Details (tests structure) 
@@ -81,7 +81,7 @@ things/languages/technologies.
 │   │   │   │   └───❌Negative: (13)
 │   │   ├───📂emoji
 │   │   │   └───©️GET_ListAvailableEmojiTest
-│   │   │   │   ├───✅Positive: (4)
+│   │   │   │   ├───✅Positive: (3)
 │   │   │   │   └───❌Negative: (1)
 │   │   ├───📂labels
 │   │   │   ├───©️DEL_DeleteLabelTest

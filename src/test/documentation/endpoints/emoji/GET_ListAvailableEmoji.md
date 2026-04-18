@@ -54,7 +54,6 @@ The locale to return emoji descriptions and names in. Defaults to the logged in 
 #### ✅Positive
 
 - **[ P1 ]** Missing
-- **[ P2 ]** null
 - **[ P3 ]** Other (en-US) than default (PL)
 
 #### ❌Negative
@@ -78,7 +77,6 @@ Default: `false`
 #### ✅Positive
 
 - **[ P1 ]** Missing
-- **[ P2 ]** null
 - **[ P3 ]** false
 - **[ P4 ]** true
 

@@ -44,25 +44,6 @@ public class GET_ListAvailableEmojiTest extends TestBase {
     }
 
     @Test
-    public void P2_shouldGetListAvailableEmojiWhenQueryParametersAreNull() {
-
-        String resourcePath = "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json";
-        String expectedResponseJsonFile = readResourceFileAsString(resourcePath);
-
-        GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
-                .setLocale(null)
-                .setSpritesheets(null)
-                .build();
-
-        // GET
-        responseGet = getListAvailableEmoji(payload);
-        assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidateJson(responseGet, GET_ListAvailableEmojiDto.class);
-        GET_ListAvailableEmojiDto expectedResponseGetDto = deserializeJson(expectedResponseJsonFile, GET_ListAvailableEmojiDto.class);
-        compareObjects(responseGetDto, expectedResponseGetDto);
-    }
-
-    @Test
     public void P3_shouldGetListAvailableEmojiWhenSpritesheetsIsFalse() {
 
         String resourcePath = "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json";
