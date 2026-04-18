@@ -36,10 +36,8 @@ Notes.
 
 #### ❌Negative
 
-- **[ N1 ]** API Key missing
-- **[ N2 ]** Token missing
-- **[ N3 ]** Board without access
-- **[ N4 ]** Non-existent board
+- **[ N1 ]** Board without access
+- **[ N2 ]** Non-existent board
 
 ---
 

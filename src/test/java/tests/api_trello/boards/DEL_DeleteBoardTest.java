@@ -98,34 +98,8 @@ public class DEL_DeleteBoardTest extends TestBase {
     // NEGATIVE TESTS
     // ==========================================================================================================
 
-    // TODO: Usunąć jeśli test parametryzowany na Auth zadziała
-
     @Test
-    public void N1_shouldNotDeleteBoardWhenApiKeyIsMissing() {
-        // ACT
-        responseDelete = deleteDeleteBoardWithoutApiKey(boardId);
-        // ASSERT
-        assertThat(responseDelete.statusCode()).isEqualTo(401);
-        assertThat(responseDelete.getBody().asString()).isEqualTo("invalid key");
-    }
-
-    @Test
-    public void N2_shouldNotDeleteBoardWhenTokenIsMissing() {
-        // ARRANGE
-        String expectedResponse = """
-                {
-                  "message": "missing scopes"
-                }
-                """;
-        // ACT
-        responseDelete = deleteDeleteBoardWithoutToken(boardId);
-        // ASSERT
-        assertThat(responseDelete.statusCode()).isEqualTo(401);
-        compareResponseWithJson(responseDelete, expectedResponse);
-    }
-
-    @Test
-    public void N3_shouldNotDeleteBoardWithIdDoesNotHaveAccessTo() {
+    public void N1_shouldNotDeleteBoardWithIdDoesNotHaveAccessTo() {
         // ARRANGE
         String boardId = "5f5127e8f150fe5f98bb1267";
         // ACT
@@ -136,7 +110,7 @@ public class DEL_DeleteBoardTest extends TestBase {
     }
 
     @Test
-    public void N4_shouldNotDeleteNonExistentBoard() {
+    public void N2_shouldNotDeleteNonExistentBoard() {
         // ARRANGE
         String boardId = "68063bdc4bdbd152d658851a";
         // ACT
