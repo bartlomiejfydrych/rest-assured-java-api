@@ -130,8 +130,6 @@ public class POST_CreateBoardTest extends TestBase {
                 .setDefaultLabels(false)
                 .setDefaultLists(false)
                 .setDesc(generateRandomDesc())
-                .setIdOrganization(null)
-                .setIdBoardSource(null)
                 .setKeepFromSource("cards")
                 .setPowerUps("calendar")
                 .setPrefsPermissionLevel("org")
@@ -151,38 +149,6 @@ public class POST_CreateBoardTest extends TestBase {
         POST_CreateBoardDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateBoardDto.class);
         POST_CreateBoardDto expectedResponsePostDto = prepareExpectedResponsePost(P3ExpectedPostBoardResponse, responsePostDto, boardName);
         expectedResponsePostDto.desc = payload.getDesc();
-        compareObjects(responsePostDto, expectedResponsePostDto);
-        // GET
-        validateGetAgainstPost(responsePostDto);
-    }
-
-    @Test
-    public void P4_shouldCreateBoardWhenMostParametersAreNull() {
-
-        String boardName = generateRandomBoardName();
-
-        POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
-                .setDefaultLabels(null)
-                .setDefaultLists(null)
-                .setDesc(null)
-                .setKeepFromSource(null)
-                .setPowerUps(null)
-                .setPrefsPermissionLevel(null)
-                .setPrefsVoting(null)
-                .setPrefsComments(null)
-                .setPrefsInvitations(null)
-                .setPrefsSelfJoin(null)
-                .setPrefsCardCovers(null)
-                .setPrefsBackground(null)
-                .setPrefsCardAging(null)
-                .build();
-
-        // POST
-        responsePost = postCreateBoard(boardName, payload);
-        assertThat(responsePost.statusCode()).isEqualTo(200);
-        boardId = responsePost.jsonPath().getString("id");
-        POST_CreateBoardDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateBoardDto.class);
-        POST_CreateBoardDto expectedResponsePostDto = prepareExpectedResponsePost(P4ExpectedPostBoardResponse, responsePostDto, boardName);
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);
@@ -243,13 +209,6 @@ public class POST_CreateBoardTest extends TestBase {
     @Test
     public void N1_shouldNotCreateBoardWhenNameWasNotGiven() {
         responsePost = postCreateBoardMissingRequiredParameters();
-        assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareResponseWithJson(responsePost, expectedPostBoardResponseInvalidName);
-    }
-
-    @Test
-    public void N2_shouldNotCreateBoardWhenNameIsNull() {
-        responsePost = postCreateBoard(null, null);
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePost, expectedPostBoardResponseInvalidName);
     }

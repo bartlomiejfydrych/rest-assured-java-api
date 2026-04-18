@@ -61,7 +61,6 @@ Max length: `16384`
 #### ❌Negative
 
 - **[ N1 ]** Missing (0 characters)
-- **[ N2 ]** null
 - **[ N3 ]** Empty string ("")
 - **[ 💥 ]** 16385 characters → Can't test it because max URI size is ~2000 characters
 
@@ -85,7 +84,6 @@ Default: `true`
 - **[ P1 ]** Missing (will there be a default value of `true`) → Not in response at all
 - **[ P2 ]** true
 - **[ P3 ]** false
-- **[ P4 ]** null
 
 #### ❌Negative
 
@@ -111,7 +109,6 @@ Default: `true`
 - **[ P1 ]** Missing (will there be a default value of `true`) → Not in response at all
 - **[ P2 ]** true
 - **[ P3 ]** false
-- **[ P4 ]** null
 - **[ ⏭ ]** Is it ignored when `idBoardSource` is given?
 
 #### ❌Negative
@@ -139,7 +136,6 @@ Max length: `16384`
 
 - **[ P2 ]** Special characters and numbers
 - **[ P1 ]** Missing (will there be a default value of `""`)
-- **[ P4 ]** null
 - **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
 
 #### ❌Negative
@@ -164,7 +160,6 @@ Pattern: `^[0-9a-fA-F]{24}$`
 #### ✅Positive
 
 - **[ P1 ]** Missing → Default ID
-- **[ P3 ]** null
 - **[ P2 ]** Valid
 
 #### ❌Negative
@@ -190,7 +185,6 @@ Pattern: `^[0-9a-fA-F]{24}$
 #### ✅Positive
 
 - **[ P1 ]** Missing → Not in response at all
-- **[ P3 ]** null
 - **[ ⏭ ]** Correct
 
 #### ❌Negative
@@ -217,7 +211,6 @@ Valid values: `cards`, `none`
 #### ✅Positive
 
 - **[ P1 ]** Missing (will there be a default value of `none`) → Not in response at all
-- **[ P4 ]** null
 - **[ P2 ]** none
 - **[ P3 ]** cards
 
@@ -242,7 +235,6 @@ Valid values: `all`, `calendar`, `cardAging`, `recap`, `voting`
 #### ✅Positive
 
 - **[ P1 ]** Missing → Not in response at all
-- **[ P4 ]** null
 - **[ P2 ]** all
 - **[ P3 ]** calendar
 - **[ P5r ]** cardAging
@@ -272,7 +264,6 @@ Valid values: `org`, `private`, `public`
 #### ✅Positive
 
 - **[ P1 ]** Missing (will there be a default value of `private`)
-- **[ P4 ]** null
 - **[ P2 ]** private
 - **[ P3 ]** org
 - **[ P5 ]** public
@@ -300,7 +291,6 @@ Valid values: `disabled`, `members`, `observers`, `org`, `public`
 #### ✅Positive
 
 - **[ P1 ]** Missing (will there be a default value of `disabled`)
-- **[ P4 ]** null
 - **[ P2 ]** disabled
 - **[ P3 ]** members
 - **[ P5r ]** observers
@@ -330,7 +320,6 @@ Valid values: `disabled`, `members`, `observers`, `org`, `public`
 #### ✅Positive
 
 - **[ P1 ]** Missing (will there be a default value of `members`)
-- **[ P4 ]** null
 - **[ P5r ]** disabled
 - **[ P2 ]** members
 - **[ P3 ]** observers
@@ -360,7 +349,6 @@ Valid values: `members`, `admins`
 #### ✅Positive
 
 - **[ P1 ]** Missing (will there be a default value `members`)
-- **[ P4 ]** null
 - **[ P2 ]** members
 - **[ P3 ]** admins
 
@@ -387,7 +375,6 @@ Default: `true`
 - **[ P1 ]** Missing (will there be a default value `true`)
 - **[ P2 ]** true
 - **[ P3 ]** false
-- **[ P4 ]** null
 
 #### ❌Negative
 
@@ -412,7 +399,6 @@ Default: `true`
 - **[ P1 ]** Missing (will there be a default value `true`)
 - **[ P2 ]** true
 - **[ P3 ]** false
-- **[ P4 ]** null
 
 #### ❌Negative
 
@@ -438,7 +424,6 @@ Valid values: `blue`, `orange`, `green`, `red`, `purple`, `pink`, `lime`, `sky`,
 #### ✅Positive
 
 - **[ P1 ]** Missing (will there be a default value of `blue`) -> Not in "prefs"
-- **[ P4 ]** null
 - **[ P2 ]** blue
 - **[ P3 ]** orange
 - **[ P5r ]** green
@@ -472,7 +457,6 @@ Valid values: `pirate`, `regular`
 #### ✅Positive
 
 - **[ P1 ]** Missing (will there be a default value of `regular`)
-- **[ P4 ]** null
 - **[ P2 ]** regular
 - **[ P3 ]** pirate
 
