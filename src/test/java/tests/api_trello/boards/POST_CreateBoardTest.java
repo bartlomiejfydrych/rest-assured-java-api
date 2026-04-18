@@ -125,12 +125,11 @@ public class POST_CreateBoardTest extends TestBase {
     public void P3_shouldCreateBoardWhenMostParametersAreGiven() {
 
         String boardName = generateRandomBoardName();
-        String desc = generateRandomDesc();
 
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
                 .setDefaultLabels(false)
                 .setDefaultLists(false)
-                .setDesc(desc)
+                .setDesc(generateRandomDesc())
                 .setIdOrganization(null)
                 .setIdBoardSource(null)
                 .setKeepFromSource("cards")
@@ -151,7 +150,7 @@ public class POST_CreateBoardTest extends TestBase {
         boardId = responsePost.jsonPath().getString("id");
         POST_CreateBoardDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateBoardDto.class);
         POST_CreateBoardDto expectedResponsePostDto = prepareExpectedResponsePost(P3ExpectedPostBoardResponse, responsePostDto, boardName);
-        expectedResponsePostDto.desc = desc;
+        expectedResponsePostDto.desc = payload.getDesc();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
         validateGetAgainstPost(responsePostDto);

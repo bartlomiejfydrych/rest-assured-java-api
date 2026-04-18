@@ -97,6 +97,70 @@ public class PUT_UpdateBoardPayload extends BasePayload {
     }
 
     // ==========================================================================================================
+    // GETTERS
+    // ==========================================================================================================
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public Boolean getClosed() {
+        return closed;
+    }
+
+    public String getSubscribed() {
+        return subscribed;
+    }
+
+    public String getIdOrganization() {
+        return idOrganization;
+    }
+
+    public String getPrefsPermissionLevel() {
+        return prefsPermissionLevel;
+    }
+
+    public Boolean getPrefsSelfJoin() {
+        return prefsSelfJoin;
+    }
+
+    public Boolean getPrefsCardCovers() {
+        return prefsCardCovers;
+    }
+
+    public Boolean getPrefsHideVotes() {
+        return prefsHideVotes;
+    }
+
+    public String getPrefsInvitations() {
+        return prefsInvitations;
+    }
+
+    public String getPrefsVoting() {
+        return prefsVoting;
+    }
+
+    public String getPrefsComments() {
+        return prefsComments;
+    }
+
+    public String getPrefsBackground() {
+        return prefsBackground;
+    }
+
+    public String getPrefsCardAging() {
+        return prefsCardAging;
+    }
+
+    public Boolean getPrefsCalendarFeedEnabled() {
+        return prefsCalendarFeedEnabled;
+    }
+
+    // ==========================================================================================================
     // BUILDER
     // ==========================================================================================================
 

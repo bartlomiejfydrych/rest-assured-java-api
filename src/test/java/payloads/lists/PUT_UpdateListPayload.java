@@ -68,6 +68,30 @@ public class PUT_UpdateListPayload extends BasePayload {
     }
 
     // ==========================================================================================================
+    // GETTERS
+    // ==========================================================================================================
+
+    public String getName() {
+        return name;
+    }
+
+    public Boolean getClosed() {
+        return closed;
+    }
+
+    public String getIdBoard() {
+        return idBoard;
+    }
+
+    public Object getPos() {
+        return pos;
+    }
+
+    public Boolean getSubscribed() {
+        return subscribed;
+    }
+
+    // ==========================================================================================================
     // BUILDER
     // ==========================================================================================================
 
