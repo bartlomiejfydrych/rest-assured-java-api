@@ -78,7 +78,6 @@ New name for the list.
 - **[ P1 ]** Special characters and numbers
 - **[ P2 ]** 1 character
 - **[ P3 ]** Missing (0 characters)
-- **[ P4 ]** null
 - **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
 
 #### ❌Negative
@@ -104,7 +103,6 @@ Whether the list should be closed (archived).
 - **[ P1 ]** true
 - **[ P2 ]** false
 - **[ P3 ]** Missing
-- **[ P4 ]** null
 
 #### ❌Negative
 
@@ -188,7 +186,6 @@ Whether the active member is subscribed to this list.
 - **[ P1 ]** true
 - **[ P2 ]** false
 - **[ P3 ]** Missing
-- **[ P4 ]** null
 
 #### ❌Negative
 

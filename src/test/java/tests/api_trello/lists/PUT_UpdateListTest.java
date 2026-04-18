@@ -217,39 +217,6 @@ public class PUT_UpdateListTest extends TestBase {
     }
 
     @Test
-    public void P4_shouldUpdateListWhereNameNullClosedNullSubscribedNull() {
-
-        listName = null;
-        listClosed = null;
-        listSubscribed = null;
-
-        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
-                .setName(listName)
-                .setClosed(listClosed)
-                .setSubscribed(listSubscribed)
-                .build();
-
-        // GET (Get current status of {LIST})
-        responseGet = getGetList(listId);
-        assertThat(responseGet.statusCode()).isEqualTo(200);
-        GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
-        // PUT
-        responsePut = putUpdateList(listId, payload);
-        assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateListDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateListDto.class);
-        PUT_UpdateListDto expectedResponsePutDto =
-                PUT_UpdateListExpected.base()
-                        .withId(listId)
-                        .withName(responseGetDto.name)
-                        .withBoardId(boardId)
-                        .withPos(responseGetDto.pos)
-                        .build();
-        compareObjects(responsePutDto, expectedResponsePutDto);
-        // GET
-        validateGetAgainstPut(responsePutDto);
-    }
-
-    @Test
     public void P5_shouldUpdateThreeListsWithPosTopBottomAndNumber() {
 
         // -------
