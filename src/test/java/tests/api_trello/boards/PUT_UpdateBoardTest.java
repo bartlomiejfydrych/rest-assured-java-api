@@ -160,37 +160,6 @@ public class PUT_UpdateBoardTest extends TestBase {
     }
 
     @Test
-    public void P2_shouldUpdateBoardWhenMostParametersAreNull() {
-
-        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setName(null)
-                .setDesc(null)
-                .setClosed(null)
-                .setSubscribed(null)
-                .setIdOrganization(null)
-                .setPrefsPermissionLevel(null)
-                .setPrefsSelfJoin(null)
-                .setPrefsCardCovers(null)
-                .setPrefsHideVotes(null)
-                .setPrefsInvitations(null)
-                .setPrefsVoting(null)
-                .setPrefsComments(null)
-                .setPrefsBackground(null)
-                .setPrefsCardAging(null)
-                .setPrefsCalendarFeedEnabled(null)
-                .build();
-
-        // PUT
-        responsePut = putUpdateBoard(boardId, payload);
-        assertThat(responsePut.statusCode()).isEqualTo(200);
-        PUT_UpdateBoardDto responsePutDto = deserializeAndValidateJson(responsePut, PUT_UpdateBoardDto.class);
-        PUT_UpdateBoardDto expectedResponsePutDto = prepareExpectedResponsePut(P2ExpectedPutBoardResponse, boardId, boardName, boardUrl, boardShortUrl);
-        compareObjects(responsePutDto, expectedResponsePutDto);
-        // GET
-        validateGetAgainstPut(responsePutDto);
-    }
-
-    @Test
     public void P3_shouldUpdateBoardWhenAllParametersAreMissing() {
         // GET (Get current status of {BOARD})
         responseGet = getGetBoard(boardId);

@@ -82,7 +82,6 @@ The new name for the board. `1` to `16384` characters long.
 - **[ P1 ]** Special characters and numbers
 - **[ P4 ]** 1 character
 - **[ P3 ]** Missing (0 characters)
-- **[ P2 ]** null
 - **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
 
 #### ❌Negative
@@ -108,7 +107,6 @@ A new description for the board, `0` to `16384` characters long
 
 - **[ P1 ]** Special characters and numbers
 - **[ P3 ]** Missing (0 characters)
-- **[ P2 ]** null
 - **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
 
 #### ❌Negative
@@ -134,7 +132,6 @@ Whether the board is closed
 - **[ P3 ]** Missing
 - **[ P1 ]** true
 - **[ P4 ]** false
-- **[ P2 ]** null
 
 #### ❌Negative
 
@@ -159,7 +156,6 @@ Pattern: `^[0-9a-fA-F]{24}$`
 #### ✅Positive
 
 - **[ P3 ]** Missing
-- **[ P2 ]** null
 - **[ 💥 ]** Correct → I was unable to determine the correct TrelloID
 
 #### ❌Negative
@@ -184,7 +180,6 @@ The id of the Workspace the board should be moved to
 #### ✅Positive
 
 - **[ P3 ]** Missing
-- **[ P2 ]** null
 - **[ P1 ]** Valid
 
 #### ❌Negative
@@ -208,7 +203,6 @@ One of: `org`, `private`, `public`
 #### ✅Positive
 
 - **[ P3 ]** Missing
-- **[ P2 ]** null
 - **[ P1 ]** org
 - **[ P4 ]** private
 - **[ P5 ]** public
@@ -234,7 +228,6 @@ Whether Workspace members can join the board themselves
 - **[ P3 ]** Missing
 - **[ P1 ]** true
 - **[ P4 ]** false
-- **[ P2 ]** null
 
 #### ❌Negative
 
@@ -257,7 +250,6 @@ Whether card covers should be displayed on this board
 - **[ P3 ]** Missing
 - **[ P1 ]** true
 - **[ P4 ]** false
-- **[ P2 ]** null
 
 #### ❌Negative
 
@@ -283,7 +275,6 @@ Determines whether the Voting Power-Up should hide who voted on cards or not.
 - **[ P3 ]** Missing
 - **[ P1 ]** true
 - **[ P4 ]** false
-- **[ P2 ]** null
 
 #### ❌Negative
 
@@ -305,7 +296,6 @@ Who can invite people to this board. One of: `admins`, `members`
 #### ✅Positive
 
 - **[ P3 ]** Missing
-- **[ P2 ]** null
 - **[ P1 ]** admins
 - **[ P4 ]** members
 
@@ -329,7 +319,6 @@ Who can vote on this board. One of `disabled`, `members`, `observers`, `org`, `p
 #### ✅Positive
 
 - **[ P3 ]** Missing
-- **[ P2 ]** null
 - **[ P1 ]** disabled
 - **[ P4 ]** members
 - **[ 💥 ]** observers → Can't test it because "board is not in an organization with observers enabled" and I don't want to change it
@@ -356,7 +345,6 @@ Who can comment on cards on this board. One of: `disabled`, `members`, `observer
 #### ✅Positive
 
 - **[ P3 ]** Missing
-- **[ P2 ]** null
 - **[ P1 ]** disabled
 - **[ P4 ]** members
 - **[ 💥 ]** observers → Can't test it because "board is not in an organization with observers enabled" and I don't want to change it
@@ -384,7 +372,6 @@ The id of a custom background or one of: `blue`, `orange`, `green`, `red`, `purp
 #### ✅Positive
 
 - **[ P3 ]** Missing
-- **[ P2 ]** null
 - **[ P1 ]** blue
 - **[ P4 ]** orange
 - **[ P5r ]** green
@@ -415,7 +402,6 @@ One of: `pirate`, `regular`
 #### ✅Positive
 
 - **[ P3 ]** Missing (will there be a default value of `regular`)
-- **[ P2 ]** null
 - **[ P1 ]** regular
 - **[ P4 ]** pirate
 
@@ -442,7 +428,6 @@ Determines whether the calendar feed is enabled or not.
 - **[ P3 ]** Missing
 - **[ P1 ]** true
 - **[ P4 ]** false
-- **[ P2 ]** null
 
 #### ❌Negative
 
