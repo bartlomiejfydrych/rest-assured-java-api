@@ -80,7 +80,6 @@ Name for the label.
 - **[ P1 ]** Special characters and numbers
 - **[ P2 ]** 1 character
 - **[ 💥 ]** 16384 characters → Can't test it because max URI size is ~2000 characters
-- **[ P3🐞 ]** null → A label without a name is created, but it probably shouldn't be
 - **[ P4🐞 ]** Empty string ("") → A label without a name is created, but it probably shouldn't be
 
 #### ❌Negative

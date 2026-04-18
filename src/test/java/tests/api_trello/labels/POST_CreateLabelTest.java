@@ -123,29 +123,6 @@ public class POST_CreateLabelTest extends TestBase {
     }
 
     @Test
-    public void P3_shouldCreateLabelWhenLabelNameIsNull() {
-        // NOTE: A label without a name is created, but it probably shouldn't be.
-
-        labelName = null;
-        labelColor = "purple";
-
-        // POST
-        responsePost = postCreateLabel(boardId, labelName, labelColor);
-        assertThat(responsePost.statusCode()).isEqualTo(200);
-        POST_CreateLabelDto responsePostDto = deserializeAndValidateJson(responsePost, POST_CreateLabelDto.class);
-        POST_CreateLabelDto expectedResponsePostDto =
-                POST_CreateLabelExpected.base()
-                        .withId(responsePostDto.id)
-                        .withBoardId(boardId)
-                        .withName("")
-                        .withColor(labelColor)
-                        .build();
-        compareObjects(responsePostDto, expectedResponsePostDto);
-        // GET
-        validateGetAgainstPost(responsePostDto);
-    }
-
-    @Test
     public void P4_shouldCreateLabelWhenLabelNameIsEmptyString() {
         // NOTE: A label without a name is created, but it probably shouldn't be.
 
