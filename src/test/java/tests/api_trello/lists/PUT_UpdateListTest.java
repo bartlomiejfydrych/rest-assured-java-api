@@ -1,5 +1,8 @@
 package tests.api_trello.lists;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import tests.base.TestBase;
 import dto.lists.GET_GetListDto;
 import dto.lists.ListBaseDto;
@@ -12,6 +15,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import payloads.lists.PUT_UpdateListPayload;
+
+import java.util.stream.Stream;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
@@ -464,18 +469,26 @@ public class PUT_UpdateListTest extends TestBase {
     // id
     // --
 
-    @Test
-    public void N1_shouldNotUpdateListWhenIdNonExistent() {
-        responsePut = putUpdateList("99", null);
+    @ParameterizedTest(name = "{0} → {1}")
+    @MethodSource("invalidListIdProvider")
+    void shouldNotUpdateListWithInvalidId(
+            String testId,
+            String testDescription,
+            String id
+    ) {
+        // ACT
+        responsePut = putUpdateList(id, null);
+        // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
-        assertThat(responsePut.getBody().asString()).isEqualTo(expectedPutUpdateListResponseInvalidId);
+        assertThat(responsePut.getBody().asString())
+                .isEqualTo(expectedPutUpdateListResponseInvalidId);
     }
 
-    @Test
-    public void N2_shouldNotUpdateListWhenIdIncorrect() {
-        responsePut = putUpdateList("KeK", null);
-        assertThat(responsePut.statusCode()).isEqualTo(400);
-        assertThat(responsePut.getBody().asString()).isEqualTo(expectedPutUpdateListResponseInvalidId);
+    static Stream<Arguments> invalidListIdProvider() {
+        return Stream.of(
+                Arguments.of("N1", "shouldNotUpdateListWhenIdNonExistent", "99"),
+                Arguments.of("N2", "shouldNotUpdateListWhenIdIncorrect", "KeK")
+        );
     }
 
     // ----
@@ -500,19 +513,30 @@ public class PUT_UpdateListTest extends TestBase {
     // idBoard
     // -------
 
-    @Test
-    public void N4_shouldNotUpdateListWhenIdBoardEmptyString() {
+    @ParameterizedTest(name = "{0} → {1}")
+    @MethodSource("invalidBoardIdProvider")
+    void shouldNotUpdateListWithInvalidBoardId(
+            String testId,
+            String testDescription,
+            String idBoard
+    ) {
         // ARRANGE
-        boardIdN = "";
         PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
                 .setName(generateRandomListName())
-                .setIdBoard(boardIdN)
+                .setIdBoard(idBoard)
                 .build();
         // ACT
         responsePut = putUpdateList(listId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePut, expectedPutUpdateListResponseInvalidBoardId);
+    }
+
+    static Stream<Arguments> invalidBoardIdProvider() {
+        return Stream.of(
+                Arguments.of("N4", "shouldNotUpdateListWhenIdBoardEmptyString", ""),
+                Arguments.of("N6", "shouldNotUpdateListWhenIdBoardIncorrect", "KeK")
+        );
     }
 
     @Test
@@ -528,21 +552,6 @@ public class PUT_UpdateListTest extends TestBase {
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(404);
         compareResponseWithJson(responsePut, expectedPutUpdateListResponseBoardNotFound);
-    }
-
-    @Test
-    public void N6_shouldNotUpdateListWhenIdBoardIncorrect() {
-        // ARRANGE
-        boardIdN = "KeK";
-        PUT_UpdateListPayload payload = new PUT_UpdateListPayload.Builder()
-                .setName(generateRandomListName())
-                .setIdBoard(boardIdN)
-                .build();
-        // ACT
-        responsePut = putUpdateList(listId, payload);
-        // ASSERT
-        assertThat(responsePut.statusCode()).isEqualTo(400);
-        compareResponseWithJson(responsePut, expectedPutUpdateListResponseInvalidBoardId);
     }
 
     // ---

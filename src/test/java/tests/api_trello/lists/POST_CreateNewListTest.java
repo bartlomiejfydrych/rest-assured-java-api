@@ -1,5 +1,8 @@
 package tests.api_trello.lists;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import tests.base.TestBase;
 import dto.lists.POST_CreateNewListDto;
 import expected_responses.lists.POST_CreateNewListExpected;
@@ -10,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import payloads.lists.POST_CreateNewListPayload;
 import utils.UtilsString;
+
+import java.util.stream.Stream;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
@@ -367,16 +372,28 @@ public class POST_CreateNewListTest extends TestBase {
         assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
     }
 
-    @Test
-    public void N6_shouldNotCreateNewListWhenIdBoardIsEmptyString() {
+    @ParameterizedTest(name = "{0} → {1}")
+    @MethodSource("invalidBoardIdProvider")
+    void shouldNotCreateNewListWithInvalidBoardId(
+            String testId,
+            String testDescription,
+            String idBoard
+    ) {
         // ARRANGE
-        String idBoard = "";
         listName = generateRandomListName();
         // ACT
         responsePost = postCreateNewList(idBoard, listName, null);
         // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
-        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
+        assertThat(responsePost.getBody().asString())
+                .isEqualTo(expectedPostNewListResponseInvalidIdBoard);
+    }
+
+    static Stream<Arguments> invalidBoardIdProvider() {
+        return Stream.of(
+                Arguments.of("N6", "shouldNotCreateNewListWhenIdBoardIsEmptyString", ""),
+                Arguments.of("N8", "shouldNotCreateNewListWhenIdBoardIsIncorrect", "KeK 123")
+        );
     }
 
     @Test
@@ -389,18 +406,6 @@ public class POST_CreateNewListTest extends TestBase {
         // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(401);
         assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized board list requested " + idBoard);
-    }
-
-    @Test
-    public void N8_shouldNotCreateNewListWhenIdBoardIsIncorrect() {
-        // ARRANGE
-        String idBoard = "KeK 123";
-        listName = generateRandomListName();
-        // ACT
-        responsePost = postCreateNewList(idBoard, listName, null);
-        // ASSERT
-        assertThat(responsePost.statusCode()).isEqualTo(400);
-        assertThat(responsePost.getBody().asString()).isEqualTo(expectedPostNewListResponseInvalidIdBoard);
     }
 
     // ------------

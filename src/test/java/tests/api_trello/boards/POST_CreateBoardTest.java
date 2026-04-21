@@ -1,5 +1,8 @@
 package tests.api_trello.boards;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import tests.base.TestBase;
 import configuration.Config;
 import dto.boards.POST_CreateBoardDto;
@@ -9,6 +12,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import payloads.boards.POST_CreateBoardPayload;
+
+import java.util.stream.Stream;
 
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoardMissingRequiredParameters;
@@ -206,48 +211,59 @@ public class POST_CreateBoardTest extends TestBase {
     // name
     // ----
 
-    @Test
-    public void N1_shouldNotCreateBoardWhenNameWasNotGiven() {
-        responsePost = postCreateBoardMissingRequiredParameters();
+    @ParameterizedTest(name = "{0} → {1}")
+    @MethodSource("invalidNamesProvider")
+    void shouldNotCreateBoardWithInvalidName(
+            String testId,
+            String testDescription,
+            String name
+    ) {
+        // ACT
+        if (name == null) {
+            responsePost = postCreateBoardMissingRequiredParameters();
+        } else {
+            responsePost = postCreateBoard(name, null);
+        }
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePost, expectedPostBoardResponseInvalidName);
     }
 
-    @Test
-    public void N3_shouldNotCreateBoardWhenNameIsEmptyString() {
-        responsePost = postCreateBoard("", null);
-        assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareResponseWithJson(responsePost, expectedPostBoardResponseInvalidName);
+    static Stream<Arguments> invalidNamesProvider() {
+        return Stream.of(
+                Arguments.of("N1", "shouldNotCreateBoardWhenNameWasNotGiven", null),
+                Arguments.of("N3", "shouldNotCreateBoardWhenNameIsEmptyString", "")
+        );
     }
 
     // --------------
     // idOrganization
     // --------------
 
-    @Test
-    public void N4_shouldNotCreateBoardWhenIdOrganizationNonExist() {
+    @ParameterizedTest(name = "{0} → {1}")
+    @MethodSource("invalidOrganizationProvider")
+    void shouldNotCreateBoardWithInvalidOrganization(
+            String testId,
+            String testDescription,
+            String idOrganization
+    ) {
         // ARRANGE
         POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
-                .setIdOrganization("123456789098765432123456")
+                .setIdOrganization(idOrganization)
                 .build();
         // ACT
         responsePost = postCreateBoard(generateRandomBoardName(), payload);
         // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(401);
-        assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized org access");
+        assertThat(responsePost.getBody().asString())
+                .isEqualTo("unauthorized org access");
     }
 
-    @Test
-    public void N5_shouldNotCreateBoardWhenIdOrganizationIsIncompatibleWithRegEx() {
-        // ARRANGE
-        POST_CreateBoardPayload payload = new POST_CreateBoardPayload.Builder()
-                .setIdOrganization("123abc")
-                .build();
-        // ACT
-        responsePost = postCreateBoard(generateRandomBoardName(), payload);
-        // ASSERT
-        assertThat(responsePost.statusCode()).isEqualTo(401);
-        assertThat(responsePost.getBody().asString()).isEqualTo("unauthorized org access");
+    static Stream<Arguments> invalidOrganizationProvider() {
+        return Stream.of(
+                Arguments.of("N4", "shouldNotCreateBoardWhenIdOrganizationNonExist", "123456789098765432123456"),
+                Arguments.of("N5", "shouldNotCreateBoardWhenIdOrganizationIsIncompatibleWithRegEx", "123abc")
+        );
     }
 
     // -------------

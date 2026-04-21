@@ -1,5 +1,8 @@
 package tests.api_trello.boards;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import tests.base.TestBase;
 import configuration.Config;
 import dto.boards.GET_GetBoardDto;
@@ -12,6 +15,7 @@ import payloads.boards.PUT_UpdateBoardPayload;
 import utils.UtilsString;
 
 import java.net.URL;
+import java.util.stream.Stream;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
 import static endpoints.boards.GET_GetBoardEndpoint.getGetBoard;
@@ -310,38 +314,43 @@ public class PUT_UpdateBoardTest extends TestBase {
     // subscribed
     // ----------
 
-    @Test
-    public void N2_shouldNotUpdateBoardWhenSubscribedNotExist() {
+    @ParameterizedTest(name = "{0} → {1}")
+    @MethodSource("invalidSubscribedProvider")
+    void shouldNotUpdateBoardWithInvalidSubscribed(
+            String testId,
+            String testDescription,
+            String subscribed
+    ) {
         // ARRANGE
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setSubscribed("123456789098765432123456")
+                .setSubscribed(subscribed)
                 .build();
         // ACT
         responsePut = putUpdateBoard(boardId, payload);
         // ASSERT
         assertThat(responsePut.statusCode()).isEqualTo(400);
-        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
+        assertThat(responsePut.getBody().asString())
+                .isEqualTo("invalid value for subscribed");
     }
 
-    @Test
-    public void N3_shouldNotUpdateBoardWhenSubscribedIsIncompatibleWithRegEx() {
-        // ARRANGE
-        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setSubscribed("123abc")
-                .build();
-        // ACT
-        responsePut = putUpdateBoard(boardId, payload);
-        // ASSERT
-        assertThat(responsePut.statusCode()).isEqualTo(400);
-        assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for subscribed");
+    static Stream<Arguments> invalidSubscribedProvider() {
+        return Stream.of(
+                Arguments.of("N2", "shouldNotUpdateBoardWhenSubscribedNotExist", "123456789098765432123456"),
+                Arguments.of("N3", "shouldNotUpdateBoardWhenSubscribedIsIncompatibleWithRegEx", "123abc")
+        );
     }
 
     // --------------
     // idOrganization
     // --------------
 
-    @Test
-    public void N4_shouldNotUpdateBoardWhenIdOrganizationNotExist() {
+    @ParameterizedTest(name = "{0} → {1}")
+    @MethodSource("invalidIdOrganizationProvider")
+    void shouldNotUpdateBoardWithInvalidIdOrganization(
+            String testId,
+            String testDescription,
+            String idOrganization
+    ) {
         // ARRANGE
         String expectedResponse = """
                 {
@@ -349,7 +358,7 @@ public class PUT_UpdateBoardTest extends TestBase {
                 }
                 """;
         PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setIdOrganization("123456789098765432123456")
+                .setIdOrganization(idOrganization)
                 .build();
         // ACT
         responsePut = putUpdateBoard(boardId, payload);
@@ -358,22 +367,11 @@ public class PUT_UpdateBoardTest extends TestBase {
         compareResponseWithJson(responsePut, expectedResponse);
     }
 
-    @Test
-    public void N5_shouldNotUpdateBoardWhenIdOrganizationIsIncompatibleWithRegEx() {
-        // ARRANGE
-        String expectedResponse = """
-                {
-                    "message": "unauthorized organization access"
-                }
-                """;
-        PUT_UpdateBoardPayload payload = new PUT_UpdateBoardPayload.Builder()
-                .setIdOrganization("123abc")
-                .build();
-        // ACT
-        responsePut = putUpdateBoard(boardId, payload);
-        // ASSERT
-        assertThat(responsePut.statusCode()).isEqualTo(401);
-        compareResponseWithJson(responsePut, expectedResponse);
+    static Stream<Arguments> invalidIdOrganizationProvider() {
+        return Stream.of(
+                Arguments.of("N4", "shouldNotUpdateBoardWhenIdOrganizationNotExist", "123456789098765432123456"),
+                Arguments.of("N5", "shouldNotUpdateBoardWhenIdOrganizationIsIncompatibleWithRegEx", "123abc")
+        );
     }
 
     // ---------------------
@@ -427,7 +425,9 @@ public class PUT_UpdateBoardTest extends TestBase {
         assertThat(responsePut.getBody().asString()).isEqualTo("invalid value for prefs/voting");
     }
 
+    // --------------
     // prefs/comments
+    // --------------
 
     @Test
     public void N9_shouldNotUpdateBoardWhenPrefsCommentsIsOtherString() {

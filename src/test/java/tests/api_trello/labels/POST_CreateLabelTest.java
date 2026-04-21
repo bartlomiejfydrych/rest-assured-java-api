@@ -1,11 +1,16 @@
 package tests.api_trello.labels;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import tests.base.TestBase;
 import dto.labels.POST_CreateLabelDto;
 import expected_responses.labels.POST_CreateLabelExpected;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import payloads.labels.POST_CreateLabelPayload;
+
+import java.util.stream.Stream;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
@@ -217,32 +222,27 @@ public class POST_CreateLabelTest extends TestBase {
         compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
     }
 
-    @Test
-    public void N2_shouldNotCreateLabelWhenBoardIdIsNull() {
-        responsePost = postCreateLabel(null, "N2 Label Name", "purple");
+    @ParameterizedTest(name = "{0} → {1}")
+    @MethodSource("invalidBoardIdProvider")
+    void shouldNotCreateLabelWithInvalidBoardId(
+            String testId,
+            String testDescription,
+            String boardId
+    ) {
+        // ACT
+        responsePost = postCreateLabel(boardId, testId + " Label Name", "purple");
+        // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
     }
 
-    @Test
-    public void N3_shouldNotCreateLabelWhenBoardIdIsEmptyString() {
-        responsePost = postCreateLabel("", "N3 Label Name", "purple");
-        assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
-    }
-
-    @Test
-    public void N4_shouldNotCreateLabelWhenBoardIdNonExistent() {
-        responsePost = postCreateLabel("999999", "N4 Label Name", "purple");
-        assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
-    }
-
-    @Test
-    public void N5_shouldNotCreateLabelWhenBoardIdIsIncorrect() {
-        responsePost = postCreateLabel("Text", "N5 Label Name", "purple");
-        assertThat(responsePost.statusCode()).isEqualTo(400);
-        compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
+    static Stream<Arguments> invalidBoardIdProvider() {
+        return Stream.of(
+                Arguments.of("N2", "shouldNotCreateLabelWhenBoardIdIsNull", null),
+                Arguments.of("N3", "shouldNotCreateLabelWhenBoardIdIsEmptyString", ""),
+                Arguments.of("N4", "shouldNotCreateLabelWhenBoardIdNonExistent", "999999"),
+                Arguments.of("N5", "shouldNotCreateLabelWhenBoardIdIsIncorrect", "Text")
+        );
     }
 
     // ----
