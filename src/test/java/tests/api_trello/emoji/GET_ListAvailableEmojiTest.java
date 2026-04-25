@@ -9,9 +9,8 @@ import payloads.emoji.GET_ListAvailableEmojiPayload;
 import static endpoints.emoji.GET_ListAvailableEmojiEndpoint.getListAvailableEmoji;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
-import static utils.UtilsFile.readResourceFileAsString;
 import static utils.response.UtilsResponseDeserializer.deserializeAndValidateJson;
-import static utils.response.UtilsResponseDeserializer.deserializeJson;
+import static utils_tests.emoji.GET_ListAvailableEmojiUtils.getExpectedResponseDto;
 
 public class GET_ListAvailableEmojiTest extends TestBase {
 
@@ -25,29 +24,28 @@ public class GET_ListAvailableEmojiTest extends TestBase {
 
     private Response responseGet;
 
+    // ---------------
+    // CLASS VARIABLES
+    // ---------------
+
+    String commonFileName = "ExpectedGetListAvailableEmojiResponse.json";
+
     // ==========================================================================================================
     // POSITIVE TESTS
     // ==========================================================================================================
 
     @Test
     public void P1_shouldGetListAvailableEmojiWhenQueryParametersAreMissing() {
-
-        String resourcePath = "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json";
-        String expectedResponseJsonFile = readResourceFileAsString(resourcePath);
-
         // GET
         responseGet = getListAvailableEmoji(null);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidateJson(responseGet, GET_ListAvailableEmojiDto.class);
-        GET_ListAvailableEmojiDto expectedResponseGetDto = deserializeJson(expectedResponseJsonFile, GET_ListAvailableEmojiDto.class);
+        GET_ListAvailableEmojiDto expectedResponseGetDto = getExpectedResponseDto(commonFileName);
         compareObjects(responseGetDto, expectedResponseGetDto);
     }
 
     @Test
     public void P3_shouldGetListAvailableEmojiWhenSpritesheetsIsFalse() {
-
-        String resourcePath = "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/ExpectedGetListAvailableEmojiResponse.json";
-        String expectedResponseJsonFile = readResourceFileAsString(resourcePath);
 
         GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
                 .setSpritesheets(false)
@@ -57,16 +55,14 @@ public class GET_ListAvailableEmojiTest extends TestBase {
         responseGet = getListAvailableEmoji(payload);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidateJson(responseGet, GET_ListAvailableEmojiDto.class);
-        GET_ListAvailableEmojiDto expectedResponseGetDto = deserializeJson(expectedResponseJsonFile, GET_ListAvailableEmojiDto.class);
+        GET_ListAvailableEmojiDto expectedResponseGetDto = getExpectedResponseDto(commonFileName);
         compareObjects(responseGetDto, expectedResponseGetDto);
     }
 
     @Test
     public void P4_shouldGetListAvailableEmojiWithOtherLocaleAndWhenSpritesheetsIsTrue() {
 
-        String resourcePath = "tests/expected_responses/emoji/GET_ListAvailableEmojiExpected/P4_ExpectedGetListAvailableEmojiResponse.json";
-        String expectedResponseJsonFile = readResourceFileAsString(resourcePath);
-
+        String fileName = "P4_ExpectedGetListAvailableEmojiResponse.json";
         GET_ListAvailableEmojiPayload payload = new GET_ListAvailableEmojiPayload.Builder()
                 .setLocale("en-US")
                 .setSpritesheets(true)
@@ -76,7 +72,7 @@ public class GET_ListAvailableEmojiTest extends TestBase {
         responseGet = getListAvailableEmoji(payload);
         assertThat(responseGet.statusCode()).isEqualTo(200);
         GET_ListAvailableEmojiDto responseGetDto = deserializeAndValidateJson(responseGet, GET_ListAvailableEmojiDto.class);
-        GET_ListAvailableEmojiDto expectedResponseGetDto = deserializeJson(expectedResponseJsonFile, GET_ListAvailableEmojiDto.class);
+        GET_ListAvailableEmojiDto expectedResponseGetDto = getExpectedResponseDto(fileName);
         compareObjects(responseGetDto, expectedResponseGetDto);
     }
 
