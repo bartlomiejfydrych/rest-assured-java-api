@@ -179,7 +179,7 @@ public class PUT_UpdateBoardTest extends TestBase {
     }
 
     @Test
-    public void P4_shouldUpdateBoardWhenMostStringParametersHaveOnlyOneCharacterAndBooleansAreFalse() {
+    public void P4_shouldUpdateBoardWhenNameHaveOnlyOneCharacterAndBooleansAreFalse() {
 
         boardName = UtilsString.getRandomSingleCharAlphanumeric();
 
