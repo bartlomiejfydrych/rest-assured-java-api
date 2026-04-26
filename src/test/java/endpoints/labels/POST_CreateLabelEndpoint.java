@@ -1,5 +1,6 @@
 package endpoints.labels;
 
+import enums.query_parameters_values.interfaces.QueryParamValue;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import payloads.labels.POST_CreateLabelPayload;
@@ -34,6 +35,15 @@ public class POST_CreateLabelEndpoint extends LabelsBaseEndpoint {
                 then().
                     extract().
                     response();
+    }
+
+    public static Response postCreateLabel(String boardId, String labelName, QueryParamValue labelColor) {
+        return createLabel(
+                boardId,
+                labelName,
+                labelColor != null ? labelColor.value() : null,
+                getSpecification()
+        );
     }
 
     public static Response postCreateLabel(String boardId, String labelName, String labelColor) {

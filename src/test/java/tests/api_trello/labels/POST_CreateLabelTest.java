@@ -1,5 +1,6 @@
 package tests.api_trello.labels;
 
+import enums.query_parameters_values.labels.common.Color;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -16,6 +17,7 @@ import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
 import static endpoints.boards.POST_CreateBoardEndpoint.postCreateBoard;
 import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabel;
 import static endpoints.labels.POST_CreateLabelEndpoint.postCreateLabelWithAnyParams;
+import static enums.query_parameters_values.labels.common.Color.*;
 import static expected_responses.labels.POST_CreateLabelExpected.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
@@ -49,7 +51,7 @@ public class POST_CreateLabelTest extends TestBase {
     private String boardId;
     // LABEL
     private String labelName;
-    private String labelColor;
+    private Color labelColor;
 
     // ==========================================================================================================
     // SETUP & TEARDOWN
@@ -87,7 +89,7 @@ public class POST_CreateLabelTest extends TestBase {
     public void P1_shouldCreateLabelWithCorrectValuesAndNameWithSpecialCharactersAndNumbers() {
 
         labelName = getAllCharactersSetInRandomOrder();
-        labelColor = pickRandom("yellow", "purple", "blue", "red", "green", "orange", "black", "sky", "pink", "lime");
+        labelColor = pickRandom(Color.class);
 
         // POST
         responsePost = postCreateLabel(boardId, labelName, labelColor);
@@ -132,7 +134,7 @@ public class POST_CreateLabelTest extends TestBase {
         // NOTE: A label without a name is created, but it probably shouldn't be.
 
         labelName = "";
-        labelColor = "purple";
+        labelColor = PURPLE;
 
         // POST
         responsePost = postCreateLabel(boardId, labelName, labelColor);
@@ -170,7 +172,7 @@ public class POST_CreateLabelTest extends TestBase {
                         .withId(responsePostDto.id)
                         .withBoardId(boardId)
                         .withName(labelName)
-                        .withColor(null)
+                        .withColor((String) null)
                         .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
@@ -182,7 +184,7 @@ public class POST_CreateLabelTest extends TestBase {
         // NOTE: A label without a color is created, but it probably shouldn't be
 
         labelName = getRandomSingleCharAlphanumeric();
-        labelColor = "";
+        String labelColor = "";
 
         // POST
         responsePost = postCreateLabel(boardId, labelName, labelColor);
@@ -193,7 +195,7 @@ public class POST_CreateLabelTest extends TestBase {
                         .withId(responsePostDto.id)
                         .withBoardId(boardId)
                         .withName(labelName)
-                        .withColor(null)
+                        .withColor((String) null)
                         .build();
         compareObjects(responsePostDto, expectedResponsePostDto);
         // GET
@@ -213,7 +215,7 @@ public class POST_CreateLabelTest extends TestBase {
         // ARRANGE
         POST_CreateLabelPayload payload = new POST_CreateLabelPayload.Builder()
                 .setName("N1 Label Name")
-                .setColor("yellow")
+                .setColor(YELLOW)
                 .build();
         // ACT
         responsePost = postCreateLabelWithAnyParams(payload);
@@ -230,7 +232,7 @@ public class POST_CreateLabelTest extends TestBase {
             String boardId
     ) {
         // ACT
-        responsePost = postCreateLabel(boardId, testId + " Label Name", "purple");
+        responsePost = postCreateLabel(boardId, testId + " Label Name", PURPLE);
         // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(400);
         compareResponseWithJson(responsePost, expectedPostLabelResponseInvalidId);
@@ -260,7 +262,7 @@ public class POST_CreateLabelTest extends TestBase {
                 """;
         POST_CreateLabelPayload payload = new POST_CreateLabelPayload.Builder()
                 .setIdBoard(boardId)
-                .setColor("purple")
+                .setColor(PURPLE)
                 .build();
         // ACT
         responsePost = postCreateLabelWithAnyParams(payload);

@@ -1,6 +1,7 @@
 package expected_responses.labels;
 
 import dto.labels.POST_CreateLabelDto;
+import enums.query_parameters_values.labels.common.Color;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,10 +50,19 @@ public class POST_CreateLabelExpected {
         return this;
     }
 
+    // COLOR – START
+
     public POST_CreateLabelExpected withColor(String color) {
         this.color = color;
         return this;
     }
+
+    public POST_CreateLabelExpected withColor(Color color) {
+        this.color = color != null ? color.value() : null;
+        return this;
+    }
+
+    // COLOR – END
 
     public POST_CreateLabelExpected withUses(Integer uses) {
         this.uses = uses;

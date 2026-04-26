@@ -1,5 +1,6 @@
 package payloads.labels;
 
+import enums.query_parameters_values.labels.common.Color;
 import payloads.BasePayload;
 
 import java.util.HashMap;
@@ -94,10 +95,19 @@ public class POST_CreateLabelPayload extends BasePayload {
             return this;
         }
 
+        // COLOR – START
+
         public Builder setColor(String color) {
             this.color = color;
             return this;
         }
+
+        public Builder setColor(Color color) {
+            this.color = color != null ? color.value() : null;
+            return this;
+        }
+
+        // COLOR – END
 
         public POST_CreateLabelPayload build() {
             return new POST_CreateLabelPayload(this);

@@ -31,4 +31,9 @@ public final class UtilsRandom {
         }
         return options.get(ProviderRandom.random().nextInt(options.size()));
     }
+
+    public static <T extends Enum<?>> T pickRandom(Class<T> enumClass) {
+        T[] values = enumClass.getEnumConstants();
+        return values[ProviderRandom.random().nextInt(values.length)];
+    }
 }
