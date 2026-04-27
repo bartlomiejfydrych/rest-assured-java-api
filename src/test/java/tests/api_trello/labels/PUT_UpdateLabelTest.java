@@ -1,5 +1,6 @@
 package tests.api_trello.labels;
 
+import enums.query_parameters_values.labels.common.Color;
 import tests.base.TestBase;
 import dto.labels.GET_GetLabelDto;
 import dto.labels.PUT_UpdateLabelDto;
@@ -51,7 +52,7 @@ public class PUT_UpdateLabelTest extends TestBase {
     // LABEL
     private String labelId;
     private String labelName;
-    private String labelColor;
+    private Color labelColor;
 
     // ==========================================================================================================
     // SETUP & TEARDOWN
@@ -95,7 +96,7 @@ public class PUT_UpdateLabelTest extends TestBase {
     public void P1_shouldUpdateLabelWithCorrectValuesAndNameWithSpecialCharactersAndNumbers() {
 
         labelName = getAllCharactersSetInRandomOrder();
-        labelColor = pickRandom("yellow", "purple", "blue", "red", "green", "orange", "black", "sky", "pink", "lime");
+        labelColor = pickRandom(Color.class);
 
         PUT_UpdateLabelPayload payload = new PUT_UpdateLabelPayload.Builder()
                 .setName(labelName)
@@ -122,7 +123,7 @@ public class PUT_UpdateLabelTest extends TestBase {
     public void P2_shouldUpdateLabelWhenNameHaveOneCharacter() {
 
         labelName = UtilsString.getRandomSingleCharAlphanumeric();
-        labelColor = pickRandom("yellow", "purple", "blue", "red", "green", "orange", "black", "sky", "pink", "lime");
+        labelColor = pickRandom(Color.class);
 
         PUT_UpdateLabelPayload payload = new PUT_UpdateLabelPayload.Builder()
                 .setName(labelName)
@@ -160,14 +161,13 @@ public class PUT_UpdateLabelTest extends TestBase {
         validateGetAgainstPut(responsePutDto);
     }
 
-    /*
+    @Disabled("Flaky test – Sometimes fields become empty/null, sometimes they are not changed at all")
+    @Tag(testTagFlaky)
     @Test
     public void P5_shouldUpdateLabelWhenNameAndColorAreEmptyString() {
-        // NOTE: Flaky test. Sometimes the fields become empty/null, sometimes they are not changed at all.
-
         // NOTE: When we insert empty strings directly in parameters, REST Assured ignores them. When we insert them using variables, it does not.
         labelName = "";
-        labelColor = "";
+        String labelColor = "";
 
         PUT_UpdateLabelPayload payload = new PUT_UpdateLabelPayload.Builder()
                 .setName(labelName)
@@ -190,7 +190,7 @@ public class PUT_UpdateLabelTest extends TestBase {
                         .withId(responsePutDto.id)
                         .withBoardId(boardId)
                         .withName(labelName)
-                        .withColor(null)
+                        .withColor((String) null)
                         .build();
         assertThat(responsePutDto).satisfiesAnyOf(
                 dto -> compareObjects(dto, expectedResponsePutDto),   // IF DATA CHANGE
@@ -205,7 +205,6 @@ public class PUT_UpdateLabelTest extends TestBase {
                 dto -> compareObjects(dto, responseGetDto)            // IF DATA NOT CHANGE (Except label {id})
         );
     }
-    */
 
     // ==========================================================================================================
     // NEGATIVE TESTS

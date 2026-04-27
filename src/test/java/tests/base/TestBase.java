@@ -40,6 +40,7 @@ public class TestBase {
     // -----
 
     // Test tags
+    protected static final String testTagFlaky = "flaky";
     protected static final String testTagPositive = "positive";
     protected static final String testTagNegative = "negative";
 

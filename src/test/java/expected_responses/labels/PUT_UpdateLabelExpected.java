@@ -1,6 +1,7 @@
 package expected_responses.labels;
 
 import dto.labels.PUT_UpdateLabelDto;
+import enums.query_parameters_values.labels.common.Color;
 
 public class PUT_UpdateLabelExpected {
 
@@ -45,10 +46,19 @@ public class PUT_UpdateLabelExpected {
         return this;
     }
 
+    // COLOR – START
+
     public PUT_UpdateLabelExpected withColor(String color) {
         this.color = color;
         return this;
     }
+
+    public PUT_UpdateLabelExpected withColor(Color color) {
+        this.color = color != null ? color.value() : null;
+        return this;
+    }
+
+    // COLOR – END
 
     public PUT_UpdateLabelExpected withUses(Integer uses) {
         this.uses = uses;

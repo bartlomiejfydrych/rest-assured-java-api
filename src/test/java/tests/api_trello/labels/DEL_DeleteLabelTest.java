@@ -1,5 +1,6 @@
 package tests.api_trello.labels;
 
+import org.junit.jupiter.api.TestInstance;
 import tests.base.TestBase;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareResponseWithJson;
 import static utils_tests.boards.POST_CreateBoardUtils.generateRandomBoardName;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DEL_DeleteLabelTest extends TestBase {
 
     // ==========================================================================================================
