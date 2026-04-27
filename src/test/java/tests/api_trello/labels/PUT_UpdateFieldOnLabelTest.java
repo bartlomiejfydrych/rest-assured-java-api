@@ -1,5 +1,6 @@
 package tests.api_trello.labels;
 
+import enums.query_parameters_values.labels.common.Color;
 import tests.base.TestBase;
 import dto.labels.POST_CreateLabelDto;
 import dto.labels.PUT_UpdateFieldOnLabelDto;
@@ -149,7 +150,8 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
     @Test
     public void P4_shouldUpdateLabelFieldColorWithOneOfCorrectColors() {
 
-        labelFieldValue = pickRandom("yellow", "purple", "blue", "red", "green", "orange", "black", "sky", "pink", "lime");
+        Color randomColor = pickRandom(Color.values());
+        labelFieldValue = randomColor.value();
         responsePostDto.color = labelFieldValue;
 
         // PUT
