@@ -1,15 +1,12 @@
 package tests.api_trello.labels;
 
 import enums.query_parameters_values.labels.common.Color;
+import org.junit.jupiter.api.*;
 import tests.base.TestBase;
 import dto.labels.POST_CreateLabelDto;
 import dto.labels.PUT_UpdateFieldOnLabelDto;
 import enums.query_parameters.labels.LabelBaseQueryParameters;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import utils.UtilsString;
 
 import static endpoints.boards.DEL_DeleteBoardEndpoint.deleteDeleteBoard;
@@ -127,6 +124,8 @@ public class PUT_UpdateFieldOnLabelTest extends TestBase {
         validateGetAgainstPut(responsePutDto);
     }
 
+    @Disabled("Flaky test – Sometimes fields become empty/null, sometimes they are not changed at all")
+    @Tag(testTagFlaky)
     @Test
     public void P3_shouldUpdateLabelFieldNameWithEmptyString() {
         // WARNING: Flaky test – Data shouldn't change, but sometimes it does.
