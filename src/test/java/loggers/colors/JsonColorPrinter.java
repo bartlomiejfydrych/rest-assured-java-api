@@ -1,4 +1,4 @@
-package loggers.custom;
+package loggers.colors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.fusesource.jansi.Ansi;

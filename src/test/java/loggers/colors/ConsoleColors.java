@@ -1,4 +1,4 @@
-package loggers.custom;
+package loggers.colors;
 
 import org.fusesource.jansi.Ansi;
 

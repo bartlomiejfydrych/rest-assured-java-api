@@ -5,17 +5,13 @@ import com.github.javafaker.Faker;
 import configuration.Config;
 import enums.configuration.LogsMode;
 import io.restassured.RestAssured;
-import io.restassured.filter.Filter;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
-import loggers.ResponseLogFilterShort;
-import loggers.custom.ResponseLogFilterCustom;
+import loggers.UnifiedLoggingFilter;
 import org.junit.jupiter.api.BeforeAll;
 import providers.ProviderRandom;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import static configuration.ConfigRequestSpec.getRequestSpecification;
@@ -78,36 +74,29 @@ public class TestBase {
 
         Config.validateLogsConfig();
 
-        LogsMode logsMode = Config.getLogsMode();
-        List<Filter> additionalFilters = new ArrayList<>();
+        RestAssured.reset();
 
-        switch (logsMode) {
+        if (Config.getLogsMode() == LogsMode.FULL) {
 
-            case OFF:
-                break;
+            RestAssured.filters(
+                    new RequestLoggingFilter(),
+                    new ResponseLoggingFilter(),
+                    new UnifiedLoggingFilter(
+                            Config.getLogsMode(),
+                            Config.getLogsCustomOptional(),
+                            Config.getLogsCustomColor()
+                    )
+            );
 
-            case FULL:
-                additionalFilters.add(new RequestLoggingFilter());
-                additionalFilters.add(new ResponseLoggingFilter());
-                break;
-
-            case CUSTOM:
-                boolean optional = Config.getLogsCustomOptional();
-                boolean color = Config.getLogsCustomColor();
-
-                additionalFilters.add(new ResponseLogFilterCustom(optional, color));
-                break;
-
-            case SHORT:
-                additionalFilters.add(new ResponseLogFilterShort());
-                break;
+            return;
         }
 
-        // Get current filters (e.g. Allure added globally)
-        List<Filter> currentFilters = new ArrayList<>(RestAssured.filters());
-        // Add new filters
-        currentFilters.addAll(additionalFilters);
-        // Set everything up again
-        RestAssured.replaceFiltersWith(currentFilters);
+        RestAssured.filters(
+                new UnifiedLoggingFilter(
+                        Config.getLogsMode(),
+                        Config.getLogsCustomOptional(),
+                        Config.getLogsCustomColor()
+                )
+        );
     }
 }

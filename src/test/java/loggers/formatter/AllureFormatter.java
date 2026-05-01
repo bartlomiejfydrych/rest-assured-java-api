@@ -1,13 +1,8 @@
-package loggers;
+package loggers.formatter;
 
-import io.qameta.allure.Allure;
-import io.restassured.filter.Filter;
-import io.restassured.filter.FilterContext;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
-import io.restassured.specification.FilterableResponseSpecification;
-import utils.loggers.UtilsSensitiveDataMasker;
 
 import java.net.URI;
 import java.util.LinkedHashMap;
@@ -18,19 +13,13 @@ import static providers.ProviderObjectMapper.getObjectMapper;
 import static utils.loggers.UtilsSensitiveDataMasker.maskAll;
 import static utils.loggers.UtilsSensitiveDataMasker.sanitizeUrl;
 
-public class AllureRestAssuredEnhanced implements Filter {
+public class AllureFormatter {
 
-    // ==========================================================================================================
-    // METHODS – MAIN
-    // ==========================================================================================================
-
-    @Override
-    public Response filter(
+    public AllureAttachment format(
             FilterableRequestSpecification requestSpec,
-            FilterableResponseSpecification responseSpec,
-            FilterContext ctx) {
-
-        Response response = ctx.next(requestSpec, responseSpec);
+            Response response,
+            String responseBody
+    ) {
 
         String url = sanitizeUrl(requestSpec.getURI());
         String method = requestSpec.getMethod();
@@ -39,26 +28,14 @@ public class AllureRestAssuredEnhanced implements Filter {
         boolean isError = statusCode >= 400;
 
         String title = buildTitle(method, statusCode, isError, url);
+        String content = buildContent(requestSpec, response, responseBody);
 
-        String content = buildContent(requestSpec, response);
-
-        Allure.addAttachment(
-                title,
-                "application/json",
-                content,
-                ".json"
-        );
-
-        return response;
+        return new AllureAttachment(title, content);
     }
 
     // ==========================================================================================================
-    // METHODS – SUB
-    // ==========================================================================================================
-
-    // -----
     // TITLE
-    // -----
+    // ==========================================================================================================
 
     private String buildTitle(String method, int statusCode, boolean isError, String url) {
 
@@ -71,10 +48,6 @@ public class AllureRestAssuredEnhanced implements Filter {
         return "✅ Response – " + statusCode + " | " + method + " | " + endpoint;
     }
 
-    // ----------------
-    // EXTRACT ENDPOINT
-    // ----------------
-
     private String extractEndpoint(String url) {
 
         try {
@@ -86,7 +59,6 @@ public class AllureRestAssuredEnhanced implements Filter {
                 return "/";
             }
 
-            // Opcjonalnie: usuń pierwszy segment wersji API (/1)
             String[] parts = path.split("/");
 
             if (parts.length > 2) {
@@ -100,30 +72,32 @@ public class AllureRestAssuredEnhanced implements Filter {
         }
     }
 
-    // -------
+    // ==========================================================================================================
     // CONTENT
-    // -------
+    // ==========================================================================================================
 
     private String buildContent(
             FilterableRequestSpecification requestSpec,
-            Response response) {
+            Response response,
+            String responseBody
+    ) {
 
         StringBuilder sb = new StringBuilder();
 
-        String method = requestSpec.getMethod();
-        UtilsSensitiveDataMasker.MaskedRequest masked = maskAll(requestSpec);
+        var masked = maskAll(requestSpec);
 
+        String method = requestSpec.getMethod();
         String url = masked.url;
+
         long timeMs = response.getTimeIn(TimeUnit.MILLISECONDS);
-        int responseSize = 0;
+
+        int responseSize = responseBody != null
+                ? responseBody.getBytes().length
+                : 0;
 
         Map<String, String> maskedHeaders = masked.headers;
         Map<String, Object> maskedQueryParams = masked.queryParams;
         Map<String, String> responseHeaders = headersToMap(response.getHeaders());
-
-        if (response.getBody() != null) {
-            responseSize = response.getBody().asByteArray().length;
-        }
 
         sb.append("==========================================================================================================\n");
         sb.append("HTTP CALL\n");
@@ -161,9 +135,9 @@ public class AllureRestAssuredEnhanced implements Filter {
         sb.append("------------\n");
         sb.append("Request body\n");
         sb.append("------------\n\n");
-        sb.append(formatBody(requestSpec.getBody() != null
-                ? requestSpec.getBody().toString()
-                : null)).append("\n\n");
+        sb.append(formatBody(
+                requestSpec.getBody() != null ? requestSpec.getBody().toString() : null
+        )).append("\n\n");
 
         sb.append("==========================================================================================================\n");
         sb.append("RESPONSE DATA\n");
@@ -172,9 +146,9 @@ public class AllureRestAssuredEnhanced implements Filter {
         sb.append("-------------\n");
         sb.append("Response body\n");
         sb.append("-------------\n\n");
-        sb.append(formatBody(response.getBody() != null
-                ? response.getBody().asString()
-                : null)).append("\n\n");
+        sb.append(formatBody(
+                response.getBody() != null ? responseBody : null
+        )).append("\n\n");
 
         sb.append("----------------\n");
         sb.append("Response headers\n");
@@ -184,18 +158,14 @@ public class AllureRestAssuredEnhanced implements Filter {
         return sb.toString();
     }
 
-    // -----------
-    // FORMAT SIZE
-    // -----------
+    // ==========================================================================================================
+    // HELPERS
+    // ==========================================================================================================
 
     private String formatSize(int bytes) {
         if (bytes < 1024) return bytes + " B";
         return String.format("%.2f KB", bytes / 1024.0);
     }
-
-    // -----------------------
-    // FORMAT BODY (JSON SAFE)
-    // -----------------------
 
     private String formatBody(String body) {
 
@@ -211,14 +181,9 @@ public class AllureRestAssuredEnhanced implements Filter {
                     .writeValueAsString(json);
 
         } catch (Exception e) {
-            // Fallback, jeśli JSON jest zepsuty
             return body;
         }
     }
-
-    // --------------
-    // FORMAT HEADERS
-    // --------------
 
     private Map<String, String> headersToMap(Iterable<Header> headers) {
 
@@ -251,10 +216,6 @@ public class AllureRestAssuredEnhanced implements Filter {
         }
     }
 
-    // ----------------------
-    // FORMAT PATH PARAMETERS
-    // ----------------------
-
     private String formatPathParams(FilterableRequestSpecification requestSpec) {
 
         try {
@@ -273,10 +234,6 @@ public class AllureRestAssuredEnhanced implements Filter {
         }
     }
 
-    // -----------------------
-    // FORMAT QUERY PARAMETERS
-    // -----------------------
-
     private String formatQueryParams(Map<String, ?> queryParams) {
 
         try {
@@ -292,10 +249,6 @@ public class AllureRestAssuredEnhanced implements Filter {
             return "[FAILED TO FORMAT QUERY PARAMETERS]";
         }
     }
-
-    // ----------------------
-    // FORMAT FORM PARAMETERS
-    // ----------------------
 
     private String formatFormParams(FilterableRequestSpecification requestSpec) {
 
