@@ -6,4 +6,5 @@ TODO – LISTA RZECZY DO ZROBIENIA
 – Zrobić ewentualne poprawki po CR
 – Zaktualizować czas trwania wszystkich testów API po wszystkich poprawkach
 – Uwzględnić testy pominięte
+– Dodać jakieś screeny z testów na sam dół głównego README
 – Usunąć plik TODO.txt
