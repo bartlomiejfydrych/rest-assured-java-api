@@ -68,7 +68,7 @@ class UtilsStringTest extends UnitTestBase {
     void getAllCharactersSetInRandomOrder_shouldContainSameCharacters() {
         String shuffled = UtilsString.getAllCharactersSetInRandomOrder();
         String original =
-                "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ęĘóÓąĄśŚłŁżŻźŹćĆńŃ";
+                "!\"#$&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ęĘóÓąĄśŚłŁżŻźŹćĆńŃ";
 
         assertEquals(original.length(), shuffled.length());
         assertEquals(

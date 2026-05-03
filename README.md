@@ -56,10 +56,10 @@ things/languages/technologies.
 
 ### Summary
 
-| Tests type   | Quantity | Average execution time |
-|--------------|----------|------------------------|
-| API (Trello) | 110      | 52 sec 808 ms          |
-| Unit tests   | 45       | 2 sec 747 ms           |
+| Tests type   | Quantity         | Average execution time |
+|--------------|------------------|------------------------|
+| API (Trello) | 108 (+2 skipped) | 52 sec 808 ms          |
+| Unit tests   | 59               | 854 ms                 |
 
 ### Details (tests structure) 
 
@@ -91,11 +91,13 @@ things/languages/technologies.
 │   │   │   │   ├───✅Positive: (5)
 │   │   │   │   └───❌Negative: (7)
 │   │   │   ├───©️PUT_UpdateFieldOnLabelTest
-│   │   │   │   ├───✅Positive: (6)
-│   │   │   │   └───❌Negative: (5)
+│   │   │   │   ├───✅Positive: (5)
+│   │   │   │   ├───❌Negative: (5)
+│   │   │   │   └───⏭️Skipped: (1)
 │   │   │   └───©️PUT_UpdateLabelTest
 │   │   │   │   ├───✅Positive: (3)
-│   │   │   │   └───❌Negative: (3)
+│   │   │   │   ├───❌Negative: (3)
+│   │   │   │   └───⏭️Skipped: (1)
 │   │   └───📂lists
 │   │       ├───©️POST_CreateNewListTest
 │   │       │   ├───✅Positive: (6)

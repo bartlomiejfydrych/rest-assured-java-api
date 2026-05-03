@@ -33,6 +33,9 @@ public final class UtilsResponseValidator {
 
     public static <T> void validateDtoList(Iterable<T> dtos) {
         for (T dto : dtos) {
+            if (dto == null) {
+                throw new ExceptionDtoValidation("Validation failed: DTO in list is null");
+            }
             validateDto(dto);
         }
     }
@@ -42,6 +45,10 @@ public final class UtilsResponseValidator {
     // ------------
 
     public static <T> void validateDto(T dto) {
+        if (dto == null) {
+            throw new ExceptionDtoValidation("Validation failed: DTO is null");
+        }
+
         Set<ConstraintViolation<T>> violations = VALIDATOR.validate(dto);
 
         if (!violations.isEmpty()) {
