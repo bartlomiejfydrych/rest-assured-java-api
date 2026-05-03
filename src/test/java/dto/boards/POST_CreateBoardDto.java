@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import dto.boards.board.DescData;
 import dto.boards.board.LabelNames;
 import dto.boards.board.Prefs;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import java.net.URL;
