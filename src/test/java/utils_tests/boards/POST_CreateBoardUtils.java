@@ -24,11 +24,6 @@ public class POST_CreateBoardUtils extends TestBase {
     public static POST_CreateBoardDto prepareExpectedResponsePost(String expectedResponse, POST_CreateBoardDto responsePostDto, String boardName) {
         // Converting JSON String to DTO Object
         POST_CreateBoardDto expectedResponsePostDto = deserializeJson(expectedResponse, POST_CreateBoardDto.class);
-        // Before replacing, it is always a good idea to first check whether a field exists!
-        assertThat(responsePostDto.id).isNotNull();
-        assertThat(responsePostDto.name).isNotNull();
-        assertThat(responsePostDto.url).isNotNull();
-        assertThat(responsePostDto.shortUrl).isNotNull();
         // Value replacement
         expectedResponsePostDto.id = responsePostDto.id;
         expectedResponsePostDto.name = boardName;

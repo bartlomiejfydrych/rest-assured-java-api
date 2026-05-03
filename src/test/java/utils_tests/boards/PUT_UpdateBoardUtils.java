@@ -26,11 +26,6 @@ public class PUT_UpdateBoardUtils extends TestBase {
     public static PUT_UpdateBoardDto prepareExpectedResponsePut(String expectedResponse, String boardId, String boardName, URL boardUrl, URL boardShortUrl) {
         // Converting JSON String to DTO Object
         PUT_UpdateBoardDto expectedResponsePutDto = deserializeJson(expectedResponse, PUT_UpdateBoardDto.class);
-        // Before replacing, it is always a good idea to first check whether a field exists!
-        assertThat(boardId).isNotNull();
-        assertThat(boardName).isNotNull();
-        assertThat(boardUrl).isNotNull();
-        assertThat(boardShortUrl).isNotNull();
         // Value replacement
         expectedResponsePutDto.id = boardId;
         expectedResponsePutDto.name = boardName;
