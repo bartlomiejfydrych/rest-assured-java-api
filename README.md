@@ -268,3 +268,69 @@ The course consisted of 3 parts:
 - Comparing two responses/JSONs without having to create objects for them in the code (mainly for negative tests)
 - Reading and comparing the expected response from a file (for large JSONs)
 - Masking the API key and token in logs and Allure reports
+
+## ️▶️How to run tests
+
+### Prerequisites
+
+Make sure you have installed:
+- Java 21 (JDK recommended version 21)
+- No need to install Maven (Maven Wrapper is included)
+- IntelliJ IDEA
+
+By default:
+- API tests are executed
+- Unit tests are excluded (tag: `unit`)
+
+### Environment variables (Windows)
+
+1. Open **This Computer**
+2. Right-click -> **Properties**
+3. Click **Advanced system settings**
+4. Keep the **Advanced** tab active
+5. Click **Environment Variables...**
+6. *User Variables for Admin* → Click **New**
+   - Variable name: `JAVA_HOME`
+   - Variable value: path to your JDK 21 installation (e.g.`C:\Users\Admin\.jdks\corretto-21.0.11`)
+7. *System variables* → Click **New**
+    - Variable name: `JAVA_HOME`
+    - Variable value: path to your JDK 21 installation (e.g.`C:\Users\Admin\.jdks\corretto-21.0.11`)
+8. *User Variables for Admin*:
+    - Select **Path**
+    - Click **Edit...**
+    - Click **New**
+    - Paste: `%JAVA_HOME%\bin`
+9. *System variables*:
+    - Select **Path**
+    - Click **Edit...**
+    - Click **New**
+    - Paste: `%JAVA_HOME%\bin`
+
+Verify in console:  
+`java -version`
+
+### Steps
+
+1. Install **IntelliJ IDEA**
+2. Download this repository from **GitLab** to your computer
+3. Open this project in your **IDE**
+4. Open catalog **environment**
+5. Copy the file `.env.example`
+6. Paste in the same place as a file named `.env`
+   You will be interested in these variables:  
+   - `TRELLO_API_KEY`
+   - `TRELLO_TOKEN`
+   - `TRELLO_ID` (Without this, only 1 or a few tests will fail.)
+7. Create and configure your Trello account by following these instructions:  
+   [documents/trello-configuration/README.md](documents/trello-configuration/README.md)  
+   (Documentation is in Polish — you may need to translate it)
+
+### Run via IDE
+
+1. Right-click on the `src/test/java/tests` directory
+2. Click `Run 'Tests in 'tests'`
+
+### Run via Console
+
+1. Open console in project directory
+2. `.\mvnw.cmd clean test`

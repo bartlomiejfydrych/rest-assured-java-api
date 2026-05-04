@@ -31,6 +31,7 @@
         <jakartaEl.version>4.0.2</jakartaEl.version>
         <jakartaElApi.version>6.0.1</jakartaElApi.version>
         <!-- PLUGINS -->
+        <mavenWrapperPlugin.version>3.2.0</mavenWrapperPlugin.version>
         <mavenSurefirePlugin.version>3.2.5</mavenSurefirePlugin.version>
     </properties>
 
@@ -140,6 +141,15 @@
 
     <build>
         <plugins>
+            <!-- This means you don't need to install Maven to run tests in the console. -->
+            <!-- To initialize them in the project directory, run the console with this command: mvn -N wrapper:wrapper -->
+            <!-- To run tests on Linux/Mac: ./mvnw clean test -->
+            <!-- To run tests on Windows (PowerShell): .\mvnw.cmd clean test -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-wrapper-plugin</artifactId>
+                <version>${mavenWrapperPlugin.version}</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
