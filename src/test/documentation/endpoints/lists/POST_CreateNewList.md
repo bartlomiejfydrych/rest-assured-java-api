@@ -146,18 +146,18 @@ Position of the list.
 
 ```json
 {
-    "id": "690f8836a26231502a0a1bed",
-    "name": "Vłh-N <tXR'7dGĘŚP,ŹFŻYńz&*52+ŃZ0W}/CO?(vUATkĆs9E3]\\)[fói;ębqeJ\\j$#up1@x:no8ÓśżĄS\\IćgM_Krą^`~mHcQ=\"|BDź6Ll!Ł4a%.{>wy",
-    "closed": false,
-    "color": null,
-    "idBoard": "690f88356a13c24b8dafaeb1",
-    "pos": 140737488322560,
-    "type": null,
-    "datasource": {
-        "filter": false
-    },
-    "limits": {
-        
-    }
+  "limits" : { },
+  "id" : "69ff0744a9612e90181aa5ba",
+  "name" : "aÓxA@I!fD}W4ł(cXŁźb3^=QęUo:_'`zJE&mhG~9Z]\\/Pw2C#[VBt)HŻ5ĘjŃKĆ-{lśńOrYSv0T\"kN>LŚ18iĄ|q;6ć$yóą,pF*egd. nMużŹ+R?<7s",
+  "closed" : false,
+  "color" : null,
+  "idBoard" : "69ff0740485b3b3223b5f922",
+  "pos" : 140737488289792,
+  "subscribed" : false,
+  "softLimit" : null,
+  "type" : null,
+  "datasource" : {
+    "filter" : false
+  }
 }
 ```

@@ -425,7 +425,7 @@ public class POST_CreateNewListTest extends TestBase {
         responsePost = postCreateNewList(boardId, listName, payload);
         // ASSERT
         assertThat(responsePost.statusCode()).isEqualTo(404);
-        assertThat(responsePost.getBody().asString()).isEqualTo("List not found");
+        assertThat(responsePost.getBody().asString()).isEqualTo("Source list not found");
     }
 
     @Test

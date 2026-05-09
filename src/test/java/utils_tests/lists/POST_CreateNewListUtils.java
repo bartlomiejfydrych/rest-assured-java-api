@@ -5,6 +5,7 @@ import dto.lists.GET_GetListDto;
 import dto.lists.POST_CreateNewListDto;
 import io.restassured.response.Response;
 
+import static dto.lists.POST_CreateNewListDto.*;
 import static endpoints.lists.GET_GetListEndpoint.getGetList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static utils.UtilsCompare.compareObjects;
@@ -33,6 +34,6 @@ public class POST_CreateNewListUtils extends TestBase {
         assertThat(responseGet.statusCode()).isEqualTo(200);
 
         GET_GetListDto responseGetDto = deserializeAndValidateJson(responseGet, GET_GetListDto.class);
-        compareObjects(responsePostDto, responseGetDto, POST_CreateNewListDto.FIELD_LIMITS);
+        compareObjects(responsePostDto, responseGetDto, FIELD_LIMITS, FIELD_SUBSCRIBED, FIELD_SOFTLIMIT);
     }
 }

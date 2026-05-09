@@ -20,6 +20,8 @@ public class POST_CreateNewListDto extends ListBaseDto {
     public static final String FIELD_TYPE = "type";
     public static final String FIELD_DATASOURCE = "datasource";
     public static final String FIELD_LIMITS = "limits";
+    public static final String FIELD_SUBSCRIBED = "subscribed";
+    public static final String FIELD_SOFTLIMIT = "softLimit";
 
     // ==========================================================================================================
     // FIELDS – VALIDATION CONSTRAINTS
@@ -35,6 +37,10 @@ public class POST_CreateNewListDto extends ListBaseDto {
     // @Valid // <-- validates nested fields if object exists
     public Object limits;
 
+    public Boolean subscribed;
+
+    public String softLimit;
+
     // ==========================================================================================================
     // CONSTRUCTORS
     // ==========================================================================================================
@@ -49,12 +55,16 @@ public class POST_CreateNewListDto extends ListBaseDto {
             @JsonProperty(value = FIELD_POS, required = true) Long pos,
             @JsonProperty(value = FIELD_TYPE, required = true) String type,
             @JsonProperty(value = FIELD_DATASOURCE, required = true) DataSource datasource,
-            @JsonProperty(value = FIELD_LIMITS, required = true) Object limits
+            @JsonProperty(value = FIELD_LIMITS, required = true) Object limits,
+            @JsonProperty(value = FIELD_SUBSCRIBED, required = true) Boolean subscribed,
+            @JsonProperty(value = FIELD_SOFTLIMIT, required = true) String softLimit
     ) {
         super(id, name, closed, color, idBoard, pos);
         this.type = type;
         this.datasource = datasource;
         this.limits = limits;
+        this.subscribed = subscribed;
+        this.softLimit = softLimit;
     }
 
     // Empty constructor - needed to be able to assign values manually

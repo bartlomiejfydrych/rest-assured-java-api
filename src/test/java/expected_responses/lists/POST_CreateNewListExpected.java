@@ -21,6 +21,8 @@ public class POST_CreateNewListExpected {
     private String type = null;
     private DataSource datasource = new DataSource(false);
     private Map<String, Object> limits = new HashMap<>(); // new Object(); <- This broke the comparison to the empty object ({})
+    private Boolean subscribed = false;
+    private String softLimit = null;
 
     // ==========================================================================================================
     // CONSTRUCTORS
@@ -72,7 +74,9 @@ public class POST_CreateNewListExpected {
                 pos,
                 type,
                 datasource,
-                limits
+                limits,
+                subscribed,
+                softLimit
         );
     }
 
