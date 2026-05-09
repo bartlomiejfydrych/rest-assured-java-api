@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="project_banner.jpeg" alt="project banner, rest assured and java logo, project name">
+  <img src="images/project_banner.jpeg" alt="project banner, rest assured and java logo, project name">
 </div>
 
 # 📑Information about this repository (for recruiters)
@@ -58,8 +58,8 @@ things/languages/technologies.
 
 | Tests type   | Quantity         | Average execution time |
 |--------------|------------------|------------------------|
-| API (Trello) | 108 (+2 skipped) | 52 sec 808 ms          |
-| Unit tests   | 59               | 854 ms                 |
+| API (Trello) | 109 (+2 skipped) | 55 sec 698 ms          |
+| Unit tests   | 59               | 1 sec 61 ms            |
 
 ### Details (tests structure) 
 
@@ -334,3 +334,25 @@ Verify in console:
 
 1. Open console in project directory
 2. `.\mvnw.cmd clean test`
+
+## 🖼️Screenshots from project
+
+<div align="center">
+  <img src="images/s_console.png" alt="Sample tests in the IDE console">
+</div>
+
+<div align="center">
+  <img src="images/s_allure_1.png" alt="Allure report 1">
+</div>
+
+<div align="center">
+  <img src="images/s_allure_2.png" alt="Allure report 2">
+</div>
+
+<div align="center">
+  <img src="images/s_allure_3.png" alt="Allure report 3">
+</div>
+
+<div align="center">
+  <img src="images/s_allure_4.png" alt="Allure report 4">
+</div>
